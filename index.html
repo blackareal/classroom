@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>เช็คชื่อ — อ.อนุพงศ์</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:#f0f4f8;color:#1a202c;font-size:15px;min-height:100vh}
+:root{--blue:#2b6cb0;--blue-dark:#1a4a7a;--red:#e53e3e;--red-bg:#fff5f5;--red-border:#fc8181;--yellow:#d69e2e;--yel-bg:#fffff0;--yel-border:#ecc94b;--green:#276749;--green-bg:#f0fff4;--radius:10px}
+.top{background:var(--blue);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center}
+.top-left h1{font-size:17px;font-weight:bold}
+.top-left p{font-size:11px;opacity:.8;margin-top:1px}
+.count-pill{background:rgba(255,255,255,.2);padding:5px 12px;border-radius:20px;font-size:13px;font-weight:bold;text-align:center}
+.count-pill span{display:block;font-size:10px;opacity:.8;font-weight:normal}
+.ctrl-bar{background:#fff;padding:10px 14px;border-bottom:1px solid #e2e8f0;display:flex;flex-wrap:wrap;gap:8px}
+.ctrl-row{display:flex;gap:8px;width:100%;flex-wrap:wrap}
+select,input{padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;background:#fff;flex:1;min-width:0;outline:none}
+select:focus,input:focus{border-color:var(--blue)}
+.legend-bar{display:flex;gap:14px;padding:8px 14px;background:#f7f9fc;border-bottom:1px solid #e2e8f0;font-size:12px;color:#4a5568}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:3px}
+.dot.a{background:#fc8181}.dot.l{background:#f6e05e;border:1px solid #ecc94b}.dot.p{background:#9ae6b4;border:1px solid #48bb78}
+.grid-wrap{padding:10px 12px;padding-bottom:90px}
+.section-label{font-size:11px;font-weight:bold;color:#718096;text-transform:uppercase;letter-spacing:.5px;margin:8px 0 6px;padding-left:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:7px}
+@media(min-width:500px){.grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}}
+@media(min-width:768px){.grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px}}
+.card{border:1.5px solid #e2e8f0;border-radius:var(--radius);padding:8px 6px;cursor:pointer;background:#fff;text-align:center;transition:transform .08s,box-shadow .08s;-webkit-user-select:none;user-select:none;min-height:64px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.card:active{transform:scale(.94)}
+.card.absent{background:var(--red-bg);border-color:var(--red-border)}
+.card.late{background:var(--yel-bg);border-color:var(--yel-border)}
+.card .no{font-size:10px;color:#a0aec0}
+.card.absent .no{color:#fc8181}.card.late .no{color:#d69e2e}
+.card .name{font-size:11.5px;font-weight:bold;line-height:1.3;color:#2d3748}
+.card.absent .name{color:#c53030}.card.late .name{color:#975a16}
+.card .badge{font-size:10px;height:13px;color:#a0aec0}
+.card.absent .badge{color:var(--red-border)}.card.late .badge{color:var(--yel-border)}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid #e2e8f0;padding:10px 14px;display:flex;gap:8px;align-items:center;z-index:10}
+.chips{flex:1;display:flex;gap:6px;flex-wrap:wrap;min-width:0}
+.chip{padding:3px 10px;border-radius:16px;font-size:12px;font-weight:bold;white-space:nowrap}
+.chip.a{background:var(--red-bg);color:var(--red)}.chip.l{background:var(--yel-bg);color:var(--yellow)}.chip.p{background:var(--green-bg);color:var(--green)}
+.btn-ok{background:var(--blue);color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:bold;font-family:inherit;white-space:nowrap;flex-shrink:0}
+.btn-ok:active{background:var(--blue-dark)}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;align-items:flex-end;justify-content:center}
+.overlay.show{display:flex}
+.sheet{background:#fff;border-radius:16px 16px 0 0;padding:20px 18px 30px;width:100%;max-width:600px;max-height:80vh;overflow-y:auto}
+.sheet h2{font-size:16px;font-weight:bold;margin-bottom:12px;color:var(--blue)}
+.result-box{background:#f7f9fc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-size:13.5px;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#1a202c;font-family:'Sarabun',sans-serif}
+.all-ok{background:var(--green-bg);border-color:#9ae6b4;text-align:center;padding:14px;font-weight:bold;color:var(--green);font-size:14px}
+.sheet-btns{display:flex;gap:8px;margin-top:14px}
+.btn-copy{background:#48bb78;color:#fff;border:none;padding:10px 0;border-radius:8px;cursor:pointer;font-size:14px;font-weight:bold;font-family:inherit;flex:1}
+.btn-copy:active{background:#38a169}
+.btn-close{background:#e2e8f0;color:#4a5568;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:14px;font-family:inherit}
+.btn-clear{background:none;border:none;color:#a0aec0;font-size:12px;cursor:pointer;padding:4px 8px;font-family:inherit;text-decoration:underline}
+.copy-done{background:#276749 !important}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="top-left">
+    <h1>เช็คชื่อนักเรียน</h1>
+    <p>วังกระแสวิทยาคม · อ.อนุพงศ์</p>
+  </div>
+  <div class="count-pill" id="top-count">0<span>ขาด/สาย</span></div>
+</div>
+
+<div class="ctrl-bar">
+  <div class="ctrl-row">
+    <select id="sel-class" onchange="changeClass()">
+      <option value="M1_1">ม.1/1 (21 คน)</option>
+      <option value="M2_1">ม.2/1 (28 คน)</option>
+      <option value="M4_1" selected>ม.4/1 (47 คน)</option>
+      <option value="M5_1">ม.5/1 (31 คน)</option>
+      <option value="M6_1">ม.6/1 (35 คน)</option>
+    </select>
+    <select id="sel-course"></select>
+  </div>
+  <div class="ctrl-row">
+    <input type="date" id="inp-date">
+    <input type="number" id="inp-period" min="1" max="8" value="1" placeholder="คาบ" style="max-width:80px">
+    <input type="text" id="inp-topic" placeholder="หัวข้อ (ไม่บังคับ)">
+  </div>
+</div>
+
+<div class="legend-bar">
+  <span><span class="dot p"></span>ปกติ</span>
+  <span><span class="dot a"></span>ขาด (แตะ 1×)</span>
+  <span><span class="dot l"></span>สาย (แตะ 2×)</span>
+  <span style="color:#cbd5e0">ปกติ (แตะ 3×)</span>
+</div>
+
+<div class="grid-wrap">
+  <div id="grid-male"></div>
+  <div id="grid-female"></div>
+</div>
+
+<div class="footer">
+  <div class="chips" id="chips"></div>
+  <button class="btn-clear" onclick="clearAll()">ล้าง</button>
+  <button class="btn-ok" onclick="showResult()">บันทึก ✓</button>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeOverlay(event)">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <h2>สำเนาสำหรับส่ง Claude</h2>
+    <div class="result-box" id="result-box"></div>
+    <div class="sheet-btns">
+      <button class="btn-copy" id="btn-copy" onclick="doCopy()">📋 คัดลอก</button>
+      <button class="btn-close" onclick="closeOverlay()">ปิด</button>
+    </div>
+    <p style="font-size:11px;color:#a0aec0;margin-top:10px;text-align:center">คัดลอกแล้วส่งใน Claude เพื่อบันทึกลงระบบ</p>
+  </div>
+</div>
+
+<script>
+const D={"M1_1":{"c":"ม.1/1","cr":[{"id":"ค21101","n":"คณิตศาสตร์พื้นฐาน 1"}],"s":[{"no":1,"id":"03081","n":"กฤษฎา ไชยรี","g":"ช"},{"no":2,"id":"03082","n":"กล้าณรงค์ สนธิ์ใหม่","g":"ช"},{"no":3,"id":"03083","n":"เจษฎา สิมลี","g":"ช"},{"no":4,"id":"03086","n":"ชวรัตน์ คำต้อง","g":"ช"},{"no":5,"id":"03090","n":"ชัชวาล แสงอินทร์","g":"ช"},{"no":6,"id":"03093","n":"ณัฐภูมิ ก่านเหลือง","g":"ช"},{"no":7,"id":"03095","n":"ธนพนธ์ สีชื่น","g":"ช"},{"no":8,"id":"03097","n":"ธนวินท์ หาใหญ่","g":"ช"},{"no":9,"id":"03098","n":"บุริศรี ระยับศรี","g":"ช"},{"no":10,"id":"03099","n":"พัทร์นนท์ สิงหา","g":"ช"},{"no":11,"id":"03101","n":"พีรณัฐ ปาวัน","g":"ช"},{"no":12,"id":"03102","n":"ภูบดินทร์ บำรุงศิลป์","g":"ช"},{"no":13,"id":"03103","n":"วชิรวิชญ์ ไชยรี","g":"ช"},{"no":14,"id":"03104","n":"ศิรภัทร สีคำดี","g":"ช"},{"no":15,"id":"03105","n":"อดิเทพ พรมนาม","g":"ช"},{"no":16,"id":"03106","n":"พิมพ์ณภัทร โคตรพันธ์","g":"ญ"},{"no":17,"id":"03110","n":"พรกมล ถิ่นวาสนา","g":"ญ"},{"no":18,"id":"03113","n":"นภัสศร ขอนสงเคราะห์","g":"ญ"},{"no":19,"id":"03115","n":"ปริชาติ พาบัว","g":"ญ"},{"no":20,"id":"03117","n":"อารยา ปัญญาชัย","g":"ญ"},{"no":21,"id":"03118","n":"อารียา คมพานิช","g":"ญ"}]},"M2_1":{"c":"ม.2/1","cr":[{"id":"ค22101","n":"คณิตศาสตร์พื้นฐาน 3"}],"s":[{"no":1,"id":"02924","n":"กันต์กวี มชาลี","g":"ช"},{"no":2,"id":"02925","n":"กิติศักดิ์ ดวงสิม","g":"ช"},{"no":3,"id":"02926","n":"จตุพร ก่ำคำ","g":"ช"},{"no":4,"id":"02927","n":"จิรายุ อินแสงแวง","g":"ช"},{"no":5,"id":"02928","n":"ชนานน เสนศรี","g":"ช"},{"no":6,"id":"02929","n":"ณัฐภูมินทร์ บุตรดี","g":"ช"},{"no":7,"id":"02930","n":"ทักษ์ดนัย อินแสงแวง","g":"ช"},{"no":8,"id":"02931","n":"เทวิน ศรีวิลัย","g":"ช"},{"no":9,"id":"02933","n":"ปัณณธร ก่ำคำ","g":"ช"},{"no":10,"id":"02934","n":"พลังพล อินทร์พิมพ์","g":"ช"},{"no":11,"id":"02935","n":"พสิษฐ์ สินปรุ","g":"ช"},{"no":12,"id":"02936","n":"พีรภัทร นวลจันทร์","g":"ช"},{"no":13,"id":"02937","n":"วีระพงษ์ สองบัว","g":"ช"},{"no":14,"id":"02938","n":"ฐิติมา จันเทพา","g":"ญ"},{"no":15,"id":"02939","n":"ธัญชนก อุ่นการม","g":"ญ"},{"no":16,"id":"02940","n":"ธิญาดา ก้อนวัน","g":"ญ"},{"no":17,"id":"03016","n":"พัณณิตา สมกอง","g":"ญ"},{"no":18,"id":"02942","n":"พิชชญา ลายศิลา","g":"ญ"},{"no":19,"id":"02943","n":"พิชชาพร ภูจอมนิล","g":"ญ"},{"no":20,"id":"03017","n":"พิมพ์ชนก ปากดี","g":"ญ"},{"no":21,"id":"02945","n":"มนชยาภา เหมาะจูม","g":"ญ"},{"no":22,"id":"02946","n":"วันเมษา สุวรรณแดง","g":"ญ"},{"no":23,"id":"02947","n":"แสงประกาย นาบุญ","g":"ญ"},{"no":24,"id":"03075","n":"ธันยมัย พระแสง","g":"ญ"},{"no":25,"id":"03080","n":"พชรพล จูมแดง","g":"ช"},{"no":26,"id":"02733","n":"ธีรโชติ ทองรี","g":"ช"},{"no":27,"id":"02842","n":"พีรพัฒน์ ยาหัส","g":"ช"},{"no":28,"id":"02913","n":"ธีรวัฒน์ แปทา","g":"ช"}]},"M4_1":{"c":"ม.4/1","cr":[{"id":"ค31101","n":"คณิตศาสตร์พื้นฐาน 1"}],"s":[{"no":1,"id":"02761","n":"คิรินทร ลาเสือ","g":"ช"},{"no":2,"id":"02736","n":"เจตนิพัทย์ จ่าวงค์","g":"ช"},{"no":3,"id":"03119","n":"ชลทิศ สีระพล","g":"ช"},{"no":4,"id":"02738","n":"ชลสิทธิ์ พูดดี","g":"ช"},{"no":5,"id":"02739","n":"ณัฐกร เดชทะสอน","g":"ช"},{"no":6,"id":"02824","n":"เตวิช ไตรแก้ว","g":"ช"},{"no":7,"id":"03120","n":"นิภัช แก้วพริ้ง","g":"ช"},{"no":8,"id":"02765","n":"บุณยกร ปาวัน","g":"ช"},{"no":9,"id":"02740","n":"ปฐพี พิมเสน","g":"ช"},{"no":10,"id":"03123","n":"พงศธร ไชยรี","g":"ช"},{"no":11,"id":"03124","n":"พชร นูนวน","g":"ช"},{"no":12,"id":"02767","n":"รัชชานนท์ โวเบ้า","g":"ช"},{"no":13,"id":"02768","n":"วรภพ บุตรดี","g":"ช"},{"no":14,"id":"03127","n":"วายุ จันตา","g":"ช"},{"no":15,"id":"02744","n":"วายุ มิควาฬ","g":"ช"},{"no":16,"id":"02770","n":"ศิริโชค หอมยา","g":"ช"},{"no":17,"id":"02771","n":"ศุภกฤต สิมดา","g":"ช"},{"no":18,"id":"02909","n":"ศุภณัฐ วารี","g":"ช"},{"no":19,"id":"02773","n":"อัษดล แดนรักษ์","g":"ช"},{"no":20,"id":"03140","n":"กมลชนก มาดา","g":"ญ"},{"no":21,"id":"02684","n":"กุลนิษฐ์ พลมาตย์","g":"ญ"},{"no":22,"id":"03142","n":"ครองขวัญ นาบุญ","g":"ญ"},{"no":23,"id":"02778","n":"ชลธิชา นาบุญ","g":"ญ"},{"no":24,"id":"03143","n":"ณัฐฐิตา รักเสมอวงศ์","g":"ญ"},{"no":25,"id":"02688","n":"ประกายดาว พาบัว","g":"ญ"},{"no":26,"id":"03144","n":"ปวีณ์ธิดา อินทรง","g":"ญ"},{"no":27,"id":"03145","n":"ปุณยาพร ศรีระวรณ์","g":"ญ"},{"no":28,"id":"03146","n":"สิรินทิพย์ ดวงสิม","g":"ญ"},{"no":29,"id":"03147","n":"สุมิตา วารี","g":"ญ"},{"no":30,"id":"03148","n":"อริยา นาบุญ","g":"ญ"},{"no":31,"id":"02786","n":"อัมพวา คำศรี","g":"ญ"},{"no":32,"id":"02976","n":"ธนกฤต รูปทอง","g":"ช"},{"no":33,"id":"03066","n":"นภนที เทศอ่อน","g":"ช"},{"no":34,"id":"03068","n":"รัฐศาสตร์ นวลจันทร์","g":"ช"},{"no":35,"id":"02993","n":"จุลดา ยาหัส","g":"ญ"},{"no":36,"id":"02997","n":"นิภารัตน์ สิมลี","g":"ญ"},{"no":37,"id":"02994","n":"ทิพวรรณ จันทะผล","g":"ญ"},{"no":38,"id":"02884","n":"ทรงพล ศรีเนตร","g":"ช"},{"no":39,"id":"02886","n":"ธีรวัฒน์ ปาวัน","g":"ช"},{"no":40,"id":"02888","n":"วีรภัทร ว่องไว","g":"ช"},{"no":41,"id":"02895","n":"ธันยพร วังคำ","g":"ญ"},{"no":42,"id":"02898","n":"พัชราภา ทองผลา","g":"ญ"},{"no":43,"id":"02907","n":"ธีรพัฒน์ นาบุญ","g":"ช"},{"no":44,"id":"02908","n":"ธีรวุฒิ อินแสงแวง","g":"ช"},{"no":45,"id":"02910","n":"นนทวัฒ ปาวัน","g":"ช"},{"no":46,"id":"02912","n":"พัฒศกร แก้วใส","g":"ช"},{"no":47,"id":"02919","n":"รักษิณา คานจำปา","g":"ญ"}]},"M5_1":{"c":"ม.5/1","cr":[{"id":"ค32201","n":"คณิตศาสตร์เพิ่มเติม 3"}],"s":[{"no":1,"id":"03063","n":"กฤตยชญ์ อินแสงแวง","g":"ช"},{"no":2,"id":"02973","n":"กิตติพงษ์ หาวงศ์","g":"ช"},{"no":3,"id":"02974","n":"ขจรศักดิ์ นูนวน","g":"ช"},{"no":4,"id":"02975","n":"จักรกฤษณ์ นาบุญ","g":"ช"},{"no":5,"id":"03064","n":"ธนวันต์ ผิวทอง","g":"ช"},{"no":6,"id":"02978","n":"ธัชพล บุญชิต","g":"ช"},{"no":7,"id":"02979","n":"ธีรพงศ์ วงสุดาวรรณ","g":"ช"},{"no":8,"id":"03067","n":"ปัณณธร โสมี","g":"ช"},{"no":9,"id":"02982","n":"พัทธนันท์ สิงมอญ","g":"ช"},{"no":10,"id":"02983","n":"ภูมิรพี อินรักษา","g":"ช"},{"no":11,"id":"03070","n":"วรโชติ อินทร์พิมพ์","g":"ช"},{"no":12,"id":"02986","n":"วัชรวัฒน์ เกิดคำ","g":"ช"},{"no":13,"id":"03072","n":"อภิชาติ แสงบุญ","g":"ช"},{"no":14,"id":"03073","n":"กมลรัตน์ จันดา","g":"ญ"},{"no":15,"id":"02990","n":"เกศินี ชาหาจัก","g":"ญ"},{"no":16,"id":"03074","n":"เขมนิจ พุ่มกลับ","g":"ญ"},{"no":17,"id":"02992","n":"จิตรรัตร์ดา หอมยา","g":"ญ"},{"no":18,"id":"02995","n":"ธันย์ชนก นูนวน","g":"ญ"},{"no":19,"id":"02996","n":"นิชานันท์ ไชยรี","g":"ญ"},{"no":20,"id":"02999","n":"ปาณิศา นันสี","g":"ญ"},{"no":21,"id":"03000","n":"พัชรี ญาปัน","g":"ญ"},{"no":22,"id":"03001","n":"พิชญธิดา ปาวัน","g":"ญ"},{"no":23,"id":"03002","n":"พิทยาภรณ์ อินแสงแวง","g":"ญ"},{"no":24,"id":"03003","n":"พิมผกา เหล็กวงค์","g":"ญ"},{"no":25,"id":"03004","n":"พิไลวรรณ วิชัยสา","g":"ญ"},{"no":26,"id":"03005","n":"ภัทรวรินทร์ อินแสงแวง","g":"ญ"},{"no":27,"id":"03006","n":"รัตนาวดี ศรีสด","g":"ญ"},{"no":28,"id":"03008","n":"ศุภาวรรณ เฮ้าสา","g":"ญ"},{"no":29,"id":"03009","n":"สาธิตา วีระกูลชวาล","g":"ญ"},{"no":30,"id":"03011","n":"ธีรเดช นาบุญ","g":"ช"},{"no":31,"id":"03015","n":"ฐิตาภา ปาวัน","g":"ญ"}]},"M6_1":{"c":"ม.6/1","cr":[{"id":"ค33101","n":"คณิตศาสตร์พื้นฐาน 5"},{"id":"ค33201","n":"คณิตศาสตร์เพิ่มเติม 5"}],"s":[{"no":1,"id":"02881","n":"ไกรวิชญ์ นาบุญ","g":"ช"},{"no":2,"id":"02882","n":"ชนกานต์ พิลาพอง","g":"ช"},{"no":3,"id":"02883","n":"ชยากร สุครีพ","g":"ช"},{"no":4,"id":"02885","n":"ทิวากร ใจหาญ","g":"ช"},{"no":5,"id":"02887","n":"ภูมิศักดิ์ วารี","g":"ช"},{"no":6,"id":"02889","n":"ศุภกฤต อินแสงแวง","g":"ช"},{"no":7,"id":"02890","n":"ศุภโชค แทบทาม","g":"ช"},{"no":8,"id":"02891","n":"อัจฉริยะ พิมพ์ทวด","g":"ช"},{"no":9,"id":"02892","n":"จินตนา วารี","g":"ญ"},{"no":10,"id":"02893","n":"จิรวรรณ คำจันทร์","g":"ญ"},{"no":11,"id":"02896","n":"ปรียาภัทร โสมี","g":"ญ"},{"no":12,"id":"02897","n":"ปิยธิดา อุดหนุน","g":"ญ"},{"no":13,"id":"02899","n":"ภัทรภร พันมงคล","g":"ญ"},{"no":14,"id":"02900","n":"มลิสา ลุนลาน","g":"ญ"},{"no":15,"id":"02901","n":"รุ่งระวี บัวคำ","g":"ญ"},{"no":16,"id":"02902","n":"ลลิตา ไชยรี","g":"ญ"},{"no":17,"id":"02903","n":"สุวิชาดา แปทา","g":"ญ"},{"no":18,"id":"02904","n":"สุภาวดี หอมจันทร์","g":"ญ"},{"no":19,"id":"02905","n":"สุดารัตน์ วารี","g":"ญ"},{"no":20,"id":"02906","n":"ชนันธร ลอยขุนทด","g":"ช"},{"no":21,"id":"02911","n":"เสกสรร บุญรอด","g":"ช"},{"no":22,"id":"02916","n":"มิธิดา ต้นคำ","g":"ญ"},{"no":23,"id":"02917","n":"กุลธิดา ชัยศรีสร้อย","g":"ญ"},{"no":24,"id":"03010","n":"รุ่งตะวัน เทียมราช","g":"ญ"},{"no":25,"id":"02697","n":"ดริว วีรกูลชวาล","g":"ช"},{"no":26,"id":"02713","n":"จิราพัชร นูนวน","g":"ญ"},{"no":27,"id":"02726","n":"เสกสรร ศรีเนตร","g":"ช"},{"no":28,"id":"02799","n":"กรรณิการ์ พรมดี","g":"ญ"},{"no":29,"id":"02801","n":"ชญาดา จันทร","g":"ญ"},{"no":30,"id":"02803","n":"ชลิตา ทุมกิ่ง","g":"ญ"},{"no":31,"id":"02804","n":"ณัฎฐณิชา ปทุมวัน","g":"ญ"},{"no":32,"id":"02810","n":"บัณฑิตา เอกพันธ์","g":"ญ"},{"no":33,"id":"02814","n":"พรนภา โชคชัยบารมี","g":"ญ"},{"no":34,"id":"02816","n":"วีรดา แผ่นไธสง","g":"ญ"},{"no":35,"id":"02818","n":"อรวรา จันทร์เพ็ง","g":"ญ"}]}};
+
+let st={},cls='M4_1';
+
+function getToday(){return new Date().toISOString().split('T')[0];}
+function thDate(iso){const d=new Date(iso+'T00:00:00');const m=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];return `${d.getDate()} ${m[d.getMonth()]} ${d.getFullYear()+543}`;}
+
+function changeClass(){cls=document.getElementById('sel-class').value;st={};buildCourses();buildGrid();updateChips();}
+
+function buildCourses(){
+  const c=D[cls].cr,s=document.getElementById('sel-course');
+  s.innerHTML=c.map(x=>`<option value="${x.id}">${x.id} ${x.n}</option>`).join('');
+}
+
+function buildGrid(){
+  const all=D[cls].s;
+  const males=all.filter(s=>s.g==='ช');
+  const females=all.filter(s=>s.g==='ญ');
+  function cards(arr){return arr.map(s=>{
+    const v=st[s.id]||'';
+    return `<div class="card ${v}" onclick="tap('${s.id}')" id="c${s.id}"><div class="no">เลขที่ ${s.no}</div><div class="name">${s.n}</div><div class="badge">${v==='absent'?'ขาด':v==='late'?'สาย':''}</div></div>`;
+  }).join('');}
+  document.getElementById('grid-male').innerHTML=males.length?`<div class="section-label">ชาย (${males.length} คน)</div><div class="grid">${cards(males)}</div>`:'';
+  document.getElementById('grid-female').innerHTML=females.length?`<div class="section-label" style="margin-top:10px">หญิง (${females.length} คน)</div><div class="grid">${cards(females)}</div>`:'';
+}
+
+function tap(id){
+  const cur=st[id]||'';
+  st[id]=cur===''?'absent':cur==='absent'?'late':'';
+  const card=document.getElementById('c'+id);
+  card.className='card'+(st[id]?' '+st[id]:'');
+  card.querySelector('.badge').textContent=st[id]==='absent'?'ขาด':st[id]==='late'?'สาย':'';
+  updateChips();
+}
+
+function updateChips(){
+  const total=D[cls].s.length;
+  const absent=Object.values(st).filter(v=>v==='absent').length;
+  const late=Object.values(st).filter(v=>v==='late').length;
+  const present=total-absent-late;
+  document.getElementById('top-count').innerHTML=`${absent+late}<span>ขาด/สาย</span>`;
+  document.getElementById('chips').innerHTML=`
+    <span class="chip p">มา ${present}</span>
+    ${absent?`<span class="chip a">ขาด ${absent}</span>`:''}
+    ${late?`<span class="chip l">สาย ${late}</span>`:''}
+  `;
+}
+
+function clearAll(){st={};buildGrid();updateChips();}
+
+function showResult(){
+  const cd=D[cls];
+  const date=document.getElementById('inp-date').value||getToday();
+  const course=document.getElementById('sel-course').value;
+  const period=document.getElementById('inp-period').value||'?';
+  const topic=document.getElementById('inp-topic').value;
+  const absent=cd.s.filter(s=>st[s.id]==='absent');
+  const late=cd.s.filter(s=>st[s.id]==='late');
+  const present=cd.s.length-absent.length-late.length;
+  let txt=`เช็คชื่อ ${cd.c} ${course} วันที่ ${thDate(date)} คาบ ${period}`;
+  if(topic) txt+=` หัวข้อ: ${topic}`;
+  txt+=`\nนักเรียนทั้งหมด: ${cd.s.length} คน  มา: ${present} คน`;
+  if(!absent.length&&!late.length) txt+='\nมาเรียนครบทุกคน ✓';
+  else {
+    if(absent.length) txt+='\nขาด: '+absent.map(s=>`${s.no}) ${s.n}`).join(', ');
+    if(late.length) txt+='\nสาย: '+late.map(s=>`${s.no}) ${s.n}`).join(', ');
+  }
+  document.getElementById('result-box').textContent=txt;
+  document.getElementById('btn-copy').textContent='📋 คัดลอก';
+  document.getElementById('btn-copy').className='btn-copy';
+  document.getElementById('overlay').classList.add('show');
+}
+
+function doCopy(){
+  const txt=document.getElementById('result-box').textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const b=document.getElementById('btn-copy');
+    b.textContent='✓ คัดลอกแล้ว!';
+    b.className='btn-copy copy-done';
+    setTimeout(()=>{b.textContent='📋 คัดลอก';b.className='btn-copy';},2000);
+  }).catch(()=>{
+    const r=document.getElementById('result-box');
+    r.focus();document.execCommand('selectAll');
+  });
+}
+
+function closeOverlay(e){
+  if(!e||e.target===document.getElementById('overlay'))
+    document.getElementById('overlay').classList.remove('show');
+}
+
+document.getElementById('inp-date').value=getToday();
+buildCourses();
+buildGrid();
+updateChips();
+</script>
+</body>
+</html>
