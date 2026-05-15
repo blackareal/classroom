@@ -52,7 +52,12 @@ select:focus,input:focus{border-color:var(--blue)}
 .btn-copy:active{background:#38a169}
 .btn-close{background:#e2e8f0;color:#4a5568;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:14px;font-family:inherit}
 .btn-clear{background:none;border:none;color:#a0aec0;font-size:12px;cursor:pointer;padding:4px 8px;font-family:inherit;text-decoration:underline}
-.copy-done{background:#276749 !important}
+.saving{background:#718096 !important;pointer-events:none}
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:24px;font-size:14px;font-weight:bold;z-index:100;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.ok{background:#276749;color:#fff}
+.toast.err{background:#c53030;color:#fff}
+.toast.show{opacity:1}
+.fallback-link{font-size:11px;color:#a0aec0;text-align:center;margin-top:8px;cursor:pointer;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -97,12 +102,14 @@ select:focus,input:focus{border-color:var(--blue)}
 <div class="footer">
   <div class="chips" id="chips"></div>
   <button class="btn-clear" onclick="clearAll()">ล้าง</button>
-  <button class="btn-ok" onclick="showResult()">บันทึก ✓</button>
+  <button class="btn-ok" id="btn-save" onclick="saveData()">บันทึก ✓</button>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <div class="overlay" id="overlay" onclick="closeOverlay(event)">
   <div class="sheet" onclick="event.stopPropagation()">
-    <h2>สำเนาสำหรับส่ง Claude</h2>
+    <h2>บันทึกไม่สำเร็จ — คัดลอกแทน</h2>
     <div class="result-box" id="result-box"></div>
     <div class="sheet-btns">
       <button class="btn-copy" id="btn-copy" onclick="doCopy()">📋 คัดลอก</button>
@@ -113,6 +120,9 @@ select:focus,input:focus{border-color:var(--blue)}
 </div>
 
 <script>
+// ใส่ URL ที่ได้จาก Deploy Apps Script ตรงนี้
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw33kblH5p1guQ7P25R92Aiz2AK1pPb5WlugC744lBZY2BLzoXHQmz19pb3WMCiNvE_/exec';
+
 const D={"M1_1":{"c":"ม.1/1","cr":[{"id":"ค21101","n":"คณิตศาสตร์พื้นฐาน 1"}],"s":[{"no":1,"id":"03081","n":"กฤษฎา ไชยรี","g":"ช"},{"no":2,"id":"03082","n":"กล้าณรงค์ สนธิ์ใหม่","g":"ช"},{"no":3,"id":"03083","n":"เจษฎา สิมลี","g":"ช"},{"no":4,"id":"03086","n":"ชวรัตน์ คำต้อง","g":"ช"},{"no":5,"id":"03090","n":"ชัชวาล แสงอินทร์","g":"ช"},{"no":6,"id":"03093","n":"ณัฐภูมิ ก่านเหลือง","g":"ช"},{"no":7,"id":"03095","n":"ธนพนธ์ สีชื่น","g":"ช"},{"no":8,"id":"03097","n":"ธนวินท์ หาใหญ่","g":"ช"},{"no":9,"id":"03098","n":"บุริศรี ระยับศรี","g":"ช"},{"no":10,"id":"03099","n":"พัทร์นนท์ สิงหา","g":"ช"},{"no":11,"id":"03101","n":"พีรณัฐ ปาวัน","g":"ช"},{"no":12,"id":"03102","n":"ภูบดินทร์ บำรุงศิลป์","g":"ช"},{"no":13,"id":"03103","n":"วชิรวิชญ์ ไชยรี","g":"ช"},{"no":14,"id":"03104","n":"ศิรภัทร สีคำดี","g":"ช"},{"no":15,"id":"03105","n":"อดิเทพ พรมนาม","g":"ช"},{"no":16,"id":"03106","n":"พิมพ์ณภัทร โคตรพันธ์","g":"ญ"},{"no":17,"id":"03110","n":"พรกมล ถิ่นวาสนา","g":"ญ"},{"no":18,"id":"03113","n":"นภัสศร ขอนสงเคราะห์","g":"ญ"},{"no":19,"id":"03115","n":"ปริชาติ พาบัว","g":"ญ"},{"no":20,"id":"03117","n":"อารยา ปัญญาชัย","g":"ญ"},{"no":21,"id":"03118","n":"อารียา คมพานิช","g":"ญ"}]},"M2_1":{"c":"ม.2/1","cr":[{"id":"ค22101","n":"คณิตศาสตร์พื้นฐาน 3"}],"s":[{"no":1,"id":"02924","n":"กันต์กวี มชาลี","g":"ช"},{"no":2,"id":"02925","n":"กิติศักดิ์ ดวงสิม","g":"ช"},{"no":3,"id":"02926","n":"จตุพร ก่ำคำ","g":"ช"},{"no":4,"id":"02927","n":"จิรายุ อินแสงแวง","g":"ช"},{"no":5,"id":"02928","n":"ชนานน เสนศรี","g":"ช"},{"no":6,"id":"02929","n":"ณัฐภูมินทร์ บุตรดี","g":"ช"},{"no":7,"id":"02930","n":"ทักษ์ดนัย อินแสงแวง","g":"ช"},{"no":8,"id":"02931","n":"เทวิน ศรีวิลัย","g":"ช"},{"no":9,"id":"02933","n":"ปัณณธร ก่ำคำ","g":"ช"},{"no":10,"id":"02934","n":"พลังพล อินทร์พิมพ์","g":"ช"},{"no":11,"id":"02935","n":"พสิษฐ์ สินปรุ","g":"ช"},{"no":12,"id":"02936","n":"พีรภัทร นวลจันทร์","g":"ช"},{"no":13,"id":"02937","n":"วีระพงษ์ สองบัว","g":"ช"},{"no":14,"id":"02938","n":"ฐิติมา จันเทพา","g":"ญ"},{"no":15,"id":"02939","n":"ธัญชนก อุ่นการม","g":"ญ"},{"no":16,"id":"02940","n":"ธิญาดา ก้อนวัน","g":"ญ"},{"no":17,"id":"03016","n":"พัณณิตา สมกอง","g":"ญ"},{"no":18,"id":"02942","n":"พิชชญา ลายศิลา","g":"ญ"},{"no":19,"id":"02943","n":"พิชชาพร ภูจอมนิล","g":"ญ"},{"no":20,"id":"03017","n":"พิมพ์ชนก ปากดี","g":"ญ"},{"no":21,"id":"02945","n":"มนชยาภา เหมาะจูม","g":"ญ"},{"no":22,"id":"02946","n":"วันเมษา สุวรรณแดง","g":"ญ"},{"no":23,"id":"02947","n":"แสงประกาย นาบุญ","g":"ญ"},{"no":24,"id":"03075","n":"ธันยมัย พระแสง","g":"ญ"},{"no":25,"id":"03080","n":"พชรพล จูมแดง","g":"ช"},{"no":26,"id":"02733","n":"ธีรโชติ ทองรี","g":"ช"},{"no":27,"id":"02842","n":"พีรพัฒน์ ยาหัส","g":"ช"},{"no":28,"id":"02913","n":"ธีรวัฒน์ แปทา","g":"ช"}]},"M4_1":{"c":"ม.4/1","cr":[{"id":"ค31101","n":"คณิตศาสตร์พื้นฐาน 1"}],"s":[{"no":1,"id":"02761","n":"คิรินทร ลาเสือ","g":"ช"},{"no":2,"id":"02736","n":"เจตนิพัทย์ จ่าวงค์","g":"ช"},{"no":3,"id":"03119","n":"ชลทิศ สีระพล","g":"ช"},{"no":4,"id":"02738","n":"ชลสิทธิ์ พูดดี","g":"ช"},{"no":5,"id":"02739","n":"ณัฐกร เดชทะสอน","g":"ช"},{"no":6,"id":"02824","n":"เตวิช ไตรแก้ว","g":"ช"},{"no":7,"id":"03120","n":"นิภัช แก้วพริ้ง","g":"ช"},{"no":8,"id":"02765","n":"บุณยกร ปาวัน","g":"ช"},{"no":9,"id":"02740","n":"ปฐพี พิมเสน","g":"ช"},{"no":10,"id":"03123","n":"พงศธร ไชยรี","g":"ช"},{"no":11,"id":"03124","n":"พชร นูนวน","g":"ช"},{"no":12,"id":"02767","n":"รัชชานนท์ โวเบ้า","g":"ช"},{"no":13,"id":"02768","n":"วรภพ บุตรดี","g":"ช"},{"no":14,"id":"03127","n":"วายุ จันตา","g":"ช"},{"no":15,"id":"02744","n":"วายุ มิควาฬ","g":"ช"},{"no":16,"id":"02770","n":"ศิริโชค หอมยา","g":"ช"},{"no":17,"id":"02771","n":"ศุภกฤต สิมดา","g":"ช"},{"no":18,"id":"02909","n":"ศุภณัฐ วารี","g":"ช"},{"no":19,"id":"02773","n":"อัษดล แดนรักษ์","g":"ช"},{"no":20,"id":"03140","n":"กมลชนก มาดา","g":"ญ"},{"no":21,"id":"02684","n":"กุลนิษฐ์ พลมาตย์","g":"ญ"},{"no":22,"id":"03142","n":"ครองขวัญ นาบุญ","g":"ญ"},{"no":23,"id":"02778","n":"ชลธิชา นาบุญ","g":"ญ"},{"no":24,"id":"03143","n":"ณัฐฐิตา รักเสมอวงศ์","g":"ญ"},{"no":25,"id":"02688","n":"ประกายดาว พาบัว","g":"ญ"},{"no":26,"id":"03144","n":"ปวีณ์ธิดา อินทรง","g":"ญ"},{"no":27,"id":"03145","n":"ปุณยาพร ศรีระวรณ์","g":"ญ"},{"no":28,"id":"03146","n":"สิรินทิพย์ ดวงสิม","g":"ญ"},{"no":29,"id":"03147","n":"สุมิตา วารี","g":"ญ"},{"no":30,"id":"03148","n":"อริยา นาบุญ","g":"ญ"},{"no":31,"id":"02786","n":"อัมพวา คำศรี","g":"ญ"},{"no":32,"id":"02976","n":"ธนกฤต รูปทอง","g":"ช"},{"no":33,"id":"03066","n":"นภนที เทศอ่อน","g":"ช"},{"no":34,"id":"03068","n":"รัฐศาสตร์ นวลจันทร์","g":"ช"},{"no":35,"id":"02993","n":"จุลดา ยาหัส","g":"ญ"},{"no":36,"id":"02997","n":"นิภารัตน์ สิมลี","g":"ญ"},{"no":37,"id":"02994","n":"ทิพวรรณ จันทะผล","g":"ญ"},{"no":38,"id":"02884","n":"ทรงพล ศรีเนตร","g":"ช"},{"no":39,"id":"02886","n":"ธีรวัฒน์ ปาวัน","g":"ช"},{"no":40,"id":"02888","n":"วีรภัทร ว่องไว","g":"ช"},{"no":41,"id":"02895","n":"ธันยพร วังคำ","g":"ญ"},{"no":42,"id":"02898","n":"พัชราภา ทองผลา","g":"ญ"},{"no":43,"id":"02907","n":"ธีรพัฒน์ นาบุญ","g":"ช"},{"no":44,"id":"02908","n":"ธีรวุฒิ อินแสงแวง","g":"ช"},{"no":45,"id":"02910","n":"นนทวัฒ ปาวัน","g":"ช"},{"no":46,"id":"02912","n":"พัฒศกร แก้วใส","g":"ช"},{"no":47,"id":"02919","n":"รักษิณา คานจำปา","g":"ญ"}]},"M5_1":{"c":"ม.5/1","cr":[{"id":"ค32201","n":"คณิตศาสตร์เพิ่มเติม 3"}],"s":[{"no":1,"id":"03063","n":"กฤตยชญ์ อินแสงแวง","g":"ช"},{"no":2,"id":"02973","n":"กิตติพงษ์ หาวงศ์","g":"ช"},{"no":3,"id":"02974","n":"ขจรศักดิ์ นูนวน","g":"ช"},{"no":4,"id":"02975","n":"จักรกฤษณ์ นาบุญ","g":"ช"},{"no":5,"id":"03064","n":"ธนวันต์ ผิวทอง","g":"ช"},{"no":6,"id":"02978","n":"ธัชพล บุญชิต","g":"ช"},{"no":7,"id":"02979","n":"ธีรพงศ์ วงสุดาวรรณ","g":"ช"},{"no":8,"id":"03067","n":"ปัณณธร โสมี","g":"ช"},{"no":9,"id":"02982","n":"พัทธนันท์ สิงมอญ","g":"ช"},{"no":10,"id":"02983","n":"ภูมิรพี อินรักษา","g":"ช"},{"no":11,"id":"03070","n":"วรโชติ อินทร์พิมพ์","g":"ช"},{"no":12,"id":"02986","n":"วัชรวัฒน์ เกิดคำ","g":"ช"},{"no":13,"id":"03072","n":"อภิชาติ แสงบุญ","g":"ช"},{"no":14,"id":"03073","n":"กมลรัตน์ จันดา","g":"ญ"},{"no":15,"id":"02990","n":"เกศินี ชาหาจัก","g":"ญ"},{"no":16,"id":"03074","n":"เขมนิจ พุ่มกลับ","g":"ญ"},{"no":17,"id":"02992","n":"จิตรรัตร์ดา หอมยา","g":"ญ"},{"no":18,"id":"02995","n":"ธันย์ชนก นูนวน","g":"ญ"},{"no":19,"id":"02996","n":"นิชานันท์ ไชยรี","g":"ญ"},{"no":20,"id":"02999","n":"ปาณิศา นันสี","g":"ญ"},{"no":21,"id":"03000","n":"พัชรี ญาปัน","g":"ญ"},{"no":22,"id":"03001","n":"พิชญธิดา ปาวัน","g":"ญ"},{"no":23,"id":"03002","n":"พิทยาภรณ์ อินแสงแวง","g":"ญ"},{"no":24,"id":"03003","n":"พิมผกา เหล็กวงค์","g":"ญ"},{"no":25,"id":"03004","n":"พิไลวรรณ วิชัยสา","g":"ญ"},{"no":26,"id":"03005","n":"ภัทรวรินทร์ อินแสงแวง","g":"ญ"},{"no":27,"id":"03006","n":"รัตนาวดี ศรีสด","g":"ญ"},{"no":28,"id":"03008","n":"ศุภาวรรณ เฮ้าสา","g":"ญ"},{"no":29,"id":"03009","n":"สาธิตา วีระกูลชวาล","g":"ญ"},{"no":30,"id":"03011","n":"ธีรเดช นาบุญ","g":"ช"},{"no":31,"id":"03015","n":"ฐิตาภา ปาวัน","g":"ญ"}]},"M6_1":{"c":"ม.6/1","cr":[{"id":"ค33101","n":"คณิตศาสตร์พื้นฐาน 5"},{"id":"ค33201","n":"คณิตศาสตร์เพิ่มเติม 5"}],"s":[{"no":1,"id":"02881","n":"ไกรวิชญ์ นาบุญ","g":"ช"},{"no":2,"id":"02882","n":"ชนกานต์ พิลาพอง","g":"ช"},{"no":3,"id":"02883","n":"ชยากร สุครีพ","g":"ช"},{"no":4,"id":"02885","n":"ทิวากร ใจหาญ","g":"ช"},{"no":5,"id":"02887","n":"ภูมิศักดิ์ วารี","g":"ช"},{"no":6,"id":"02889","n":"ศุภกฤต อินแสงแวง","g":"ช"},{"no":7,"id":"02890","n":"ศุภโชค แทบทาม","g":"ช"},{"no":8,"id":"02891","n":"อัจฉริยะ พิมพ์ทวด","g":"ช"},{"no":9,"id":"02892","n":"จินตนา วารี","g":"ญ"},{"no":10,"id":"02893","n":"จิรวรรณ คำจันทร์","g":"ญ"},{"no":11,"id":"02896","n":"ปรียาภัทร โสมี","g":"ญ"},{"no":12,"id":"02897","n":"ปิยธิดา อุดหนุน","g":"ญ"},{"no":13,"id":"02899","n":"ภัทรภร พันมงคล","g":"ญ"},{"no":14,"id":"02900","n":"มลิสา ลุนลาน","g":"ญ"},{"no":15,"id":"02901","n":"รุ่งระวี บัวคำ","g":"ญ"},{"no":16,"id":"02902","n":"ลลิตา ไชยรี","g":"ญ"},{"no":17,"id":"02903","n":"สุวิชาดา แปทา","g":"ญ"},{"no":18,"id":"02904","n":"สุภาวดี หอมจันทร์","g":"ญ"},{"no":19,"id":"02905","n":"สุดารัตน์ วารี","g":"ญ"},{"no":20,"id":"02906","n":"ชนันธร ลอยขุนทด","g":"ช"},{"no":21,"id":"02911","n":"เสกสรร บุญรอด","g":"ช"},{"no":22,"id":"02916","n":"มิธิดา ต้นคำ","g":"ญ"},{"no":23,"id":"02917","n":"กุลธิดา ชัยศรีสร้อย","g":"ญ"},{"no":24,"id":"03010","n":"รุ่งตะวัน เทียมราช","g":"ญ"},{"no":25,"id":"02697","n":"ดริว วีรกูลชวาล","g":"ช"},{"no":26,"id":"02713","n":"จิราพัชร นูนวน","g":"ญ"},{"no":27,"id":"02726","n":"เสกสรร ศรีเนตร","g":"ช"},{"no":28,"id":"02799","n":"กรรณิการ์ พรมดี","g":"ญ"},{"no":29,"id":"02801","n":"ชญาดา จันทร","g":"ญ"},{"no":30,"id":"02803","n":"ชลิตา ทุมกิ่ง","g":"ญ"},{"no":31,"id":"02804","n":"ณัฎฐณิชา ปทุมวัน","g":"ญ"},{"no":32,"id":"02810","n":"บัณฑิตา เอกพันธ์","g":"ญ"},{"no":33,"id":"02814","n":"พรนภา โชคชัยบารมี","g":"ญ"},{"no":34,"id":"02816","n":"วีรดา แผ่นไธสง","g":"ญ"},{"no":35,"id":"02818","n":"อรวรา จันทร์เพ็ง","g":"ญ"}]}};
 
 let st={},cls='M4_1';
@@ -163,7 +173,7 @@ function updateChips(){
 
 function clearAll(){st={};buildGrid();updateChips();}
 
-function showResult(){
+function buildPayload(){
   const cd=D[cls];
   const date=document.getElementById('inp-date').value||getToday();
   const course=document.getElementById('sel-course').value;
@@ -171,18 +181,60 @@ function showResult(){
   const topic=document.getElementById('inp-topic').value;
   const absent=cd.s.filter(s=>st[s.id]==='absent');
   const late=cd.s.filter(s=>st[s.id]==='late');
+  return {
+    date:thDate(date), cls:cd.c, course, period, topic,
+    records:[
+      ...absent.map(s=>({no:s.no,name:s.n,id:s.id,status:'absent'})),
+      ...late.map(s=>({no:s.no,name:s.n,id:s.id,status:'late'}))
+    ]
+  };
+}
+
+function showToast(msg,type,dur=2500){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast ${type} show`;
+  setTimeout(()=>t.className='toast',dur);
+}
+
+function saveData(){
+  if(SCRIPT_URL==='YOUR_APPS_SCRIPT_URL_HERE'){
+    showFallback(); return;
+  }
+  const btn=document.getElementById('btn-save');
+  btn.textContent='กำลังบันทึก...';btn.className='btn-ok saving';
+  const payload=buildPayload();
+  const form=new URLSearchParams();
+  form.append('data',JSON.stringify(payload));
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:form})
+    .then(()=>{
+      btn.textContent='บันทึก ✓';btn.className='btn-ok';
+      const n=payload.records.length;
+      showToast(n===0?'✓ มาครบ — บันทึกแล้ว':`✓ บันทึกแล้ว (ขาด/สาย ${n} คน)`,'ok');
+      setTimeout(()=>clearAll(),1200);
+    })
+    .catch(()=>{
+      btn.textContent='บันทึก ✓';btn.className='btn-ok';
+      showToast('เชื่อมต่อไม่ได้ — ใช้ copy แทน','err',3500);
+      showFallback();
+    });
+}
+
+function showFallback(){
+  const payload=buildPayload();
+  const cd=D[cls];
+  const absent=payload.records.filter(r=>r.status==='absent');
+  const late=payload.records.filter(r=>r.status==='late');
   const present=cd.s.length-absent.length-late.length;
-  let txt=`เช็คชื่อ ${cd.c} ${course} วันที่ ${thDate(date)} คาบ ${period}`;
-  if(topic) txt+=` หัวข้อ: ${topic}`;
+  let txt=`เช็คชื่อ ${payload.cls} ${payload.course} วันที่ ${payload.date} คาบ ${payload.period}`;
+  if(payload.topic) txt+=` หัวข้อ: ${payload.topic}`;
   txt+=`\nนักเรียนทั้งหมด: ${cd.s.length} คน  มา: ${present} คน`;
   if(!absent.length&&!late.length) txt+='\nมาเรียนครบทุกคน ✓';
-  else {
-    if(absent.length) txt+='\nขาด: '+absent.map(s=>`${s.no}) ${s.n}`).join(', ');
-    if(late.length) txt+='\nสาย: '+late.map(s=>`${s.no}) ${s.n}`).join(', ');
+  else{
+    if(absent.length) txt+='\nขาด: '+absent.map(r=>`${r.no}) ${r.name}`).join(', ');
+    if(late.length) txt+='\nสาย: '+late.map(r=>`${r.no}) ${r.name}`).join(', ');
   }
   document.getElementById('result-box').textContent=txt;
   document.getElementById('btn-copy').textContent='📋 คัดลอก';
-  document.getElementById('btn-copy').className='btn-copy';
   document.getElementById('overlay').classList.add('show');
 }
 
@@ -190,13 +242,9 @@ function doCopy(){
   const txt=document.getElementById('result-box').textContent;
   navigator.clipboard.writeText(txt).then(()=>{
     const b=document.getElementById('btn-copy');
-    b.textContent='✓ คัดลอกแล้ว!';
-    b.className='btn-copy copy-done';
-    setTimeout(()=>{b.textContent='📋 คัดลอก';b.className='btn-copy';},2000);
-  }).catch(()=>{
-    const r=document.getElementById('result-box');
-    r.focus();document.execCommand('selectAll');
-  });
+    b.textContent='✓ คัดลอกแล้ว!';b.style.background='#276749';
+    setTimeout(()=>{b.textContent='📋 คัดลอก';b.style.background='';},2000);
+  }).catch(()=>{document.getElementById('result-box').select&&document.getElementById('result-box').select();});
 }
 
 function closeOverlay(e){
