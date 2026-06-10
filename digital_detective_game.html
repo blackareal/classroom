@@ -339,8 +339,16 @@ const totalGames = 4;
 const TOTAL = 15;
 
 /* ===================== SOUND (WebAudio synth) ===================== */
-let actx = null, soundOn = true;
-function initAudio(){ if(!actx){ try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } }
+let actx = null, soundOn = true, musicBus = null; const MUSIC_VOL = 0.5;
+function initAudio(){
+  if(!actx){
+    try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return; }
+    musicBus = actx.createGain();
+    musicBus.gain.value = soundOn ? MUSIC_VOL : 0;
+    musicBus.connect(actx.destination);
+  }
+  if(actx.state==='suspended') actx.resume();
+}
 function tone(freq, start, dur, type, vol){
   if(!actx||!soundOn) return;
   const o = actx.createOscillator(), g = actx.createGain();
@@ -359,6 +367,58 @@ function sndWin(){
   const notes=[523,659,784,1047,784,1047,1319];
   notes.forEach((f,i)=>tone(f,i*0.12,0.3,'triangle',0.16));
 }
+
+/* ===================== BACKGROUND MUSIC (procedural loop) ===================== */
+function midiFreq(m){ return 440*Math.pow(2,(m-69)/12); }
+function mnote(freq,time,dur,type,vol){
+  if(!actx||!musicBus) return;
+  const o=actx.createOscillator(), g=actx.createGain();
+  o.type=type||'sine'; o.frequency.value=freq;
+  g.gain.setValueAtTime(0,time);
+  g.gain.linearRampToValueAtTime(vol,time+0.03);
+  g.gain.exponentialRampToValueAtTime(0.0001,time+dur);
+  o.connect(g); g.connect(musicBus);
+  o.start(time); o.stop(time+dur+0.04);
+}
+const music = {
+  on:false, timer:null, step:0, nextTime:0, tempo:100,
+  bass:[45,48,52,48, 41,45,48,45, 48,52,55,52, 43,47,50,47,
+        50,53,57,53, 45,48,52,48, 40,44,47,44, 45,48,52,48],
+  pad:[[57,60,64],[53,57,60],[60,64,67],[55,59,62],
+       [50,53,57],[57,60,64],[52,56,59],[57,60,64]],
+  mel:[69,0,72,76,0,72,69,0, 69,0,72,74,0,69,0,0,
+       76,0,79,76,0,72,76,0, 79,0,76,72,0,69,0,0,
+       74,0,77,81,0,77,74,0, 81,0,79,76,0,72,76,0,
+       76,0,80,76,0,72,0,0,  72,0,69,72,0,69,0,0],
+  start(){
+    if(this.on||!actx) return;
+    this.on=true; this.step=0; this.nextTime=actx.currentTime+0.15;
+    this._tick();
+  },
+  stop(){ this.on=false; clearTimeout(this.timer); },
+  _tick(){
+    if(!this.on||!actx) return;
+    const spb=60/this.tempo, eighth=spb/2;
+    while(this.nextTime < actx.currentTime + 0.18){
+      this._schedule(this.step, this.nextTime, spb, eighth);
+      this.nextTime += eighth;
+      this.step = (this.step+1) % 64;
+    }
+    this.timer = setTimeout(()=>this._tick(), 25);
+  },
+  _schedule(step,t,spb,eighth){
+    const mn=this.mel[step];
+    if(mn) mnote(midiFreq(mn), t, eighth*1.4, 'triangle', 0.12);
+    if(step%2===0){
+      const bn=this.bass[step/2];
+      if(bn) mnote(midiFreq(bn), t, spb*0.9, 'sine', 0.16);
+    }
+    if(step%8===0){
+      this.pad[step/8].forEach(n=> mnote(midiFreq(n), t, spb*3.4, 'sine', 0.05));
+    }
+    if(step%2===1) mnote(1600, t, 0.05, 'square', 0.012);
+  }
+};
 
 /* ===================== CONFETTI ===================== */
 const cvs = document.getElementById('confetti');
@@ -591,6 +651,7 @@ function startGame(){
   intro.classList.add('hide');
   setTimeout(()=>{ intro.classList.add('gone'); }, 500);
   document.getElementById('game').style.display='flex';
+  music.start();
   cur=1; prevSlide=1; renderSlide();
 }
 function replay(){
@@ -606,6 +667,11 @@ document.getElementById('replay-btn').onclick=replay;
 document.getElementById('sound-toggle').onclick=function(){
   soundOn=!soundOn;
   this.textContent=soundOn?'🔊':'🔇';
+  if(actx && musicBus){
+    if(actx.state==='suspended') actx.resume();
+    musicBus.gain.cancelScheduledValues(actx.currentTime);
+    musicBus.gain.linearRampToValueAtTime(soundOn?MUSIC_VOL:0, actx.currentTime+0.25);
+  }
   if(soundOn) sndClick();
 };
 
