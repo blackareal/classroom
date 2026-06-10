@@ -4,13 +4,94 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>ภารกิจนักสืบตัวน้อย</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700;800&family=Mali:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100%;height:100%;background:#0a1628;font-family:'Sarabun',sans-serif;overflow:hidden;}
-#game{width:100%;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.slide-wrap{width:100%;max-width:700px;position:relative;}
-.slide-img{width:100%;display:block;border-radius:12px;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Sarabun',sans-serif;}
+body{
+  background:#070f1f;
+  background-image:
+    radial-gradient(circle at 50% 18%, rgba(255,215,0,0.10), transparent 45%),
+    radial-gradient(circle at 12% 90%, rgba(25,118,210,0.18), transparent 40%),
+    radial-gradient(circle at 88% 80%, rgba(123,31,162,0.16), transparent 40%),
+    linear-gradient(160deg,#0a1730 0%,#070f1f 60%,#0a1024 100%);
+}
+h1,h2,h3,.brand{font-family:'Mali','Sarabun',sans-serif;}
 
+/* floating detective doodles in background */
+.bg-fx{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.bg-fx span{position:absolute;font-size:42px;opacity:0.07;animation:float 14s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-26px) rotate(8deg)}}
+
+#game{position:relative;z-index:1;width:100%;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
+
+/* ===== Top HUD ===== */
+.hud{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  width:100%;max-width:700px;padding:10px 14px 4px;
+}
+.rank-badge{
+  display:flex;align-items:center;gap:7px;
+  background:linear-gradient(135deg,#FFD700,#FFB300);
+  color:#3a2a00;font-weight:800;font-size:13px;
+  padding:7px 13px;border-radius:30px;
+  box-shadow:0 4px 14px rgba(255,179,0,0.35);
+  font-family:'Mali',sans-serif;white-space:nowrap;
+  transition:transform .25s;
+}
+.rank-badge.bump{animation:bump .5s;}
+@keyframes bump{0%,100%{transform:scale(1)}40%{transform:scale(1.18)}}
+.hud-right{display:flex;align-items:center;gap:8px;}
+.score-pill{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.10);
+  border:1px solid rgba(255,255,255,0.18);
+  color:#fff;font-weight:800;font-size:15px;
+  padding:6px 13px;border-radius:30px;font-family:'Mali',sans-serif;
+}
+.score-pill .star{filter:drop-shadow(0 0 6px rgba(255,215,0,.7));}
+.score-pill.pop{animation:bump .5s;}
+.icon-btn{
+  width:40px;height:40px;border:none;border-radius:50%;
+  background:rgba(255,255,255,0.10);
+  border:1px solid rgba(255,255,255,0.18);
+  color:#fff;font-size:19px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .12s,background .2s;
+}
+.icon-btn:active{transform:scale(0.9);}
+
+/* ===== Slide ===== */
+.slide-wrap{width:100%;max-width:700px;position:relative;}
+.slide-img{
+  width:100%;display:block;border-radius:16px;
+  box-shadow:0 14px 40px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.05);
+}
+.slide-img.animate{animation:slideIn .45s cubic-bezier(.2,.9,.25,1.1);}
+@keyframes slideIn{0%{opacity:0;transform:translateX(var(--dir,40px)) scale(.97)}100%{opacity:1;transform:none}}
+
+/* mascot */
+.mascot{
+  position:absolute;top:10px;left:10px;z-index:5;
+  display:flex;align-items:center;gap:8px;pointer-events:none;
+}
+.mascot-face{
+  font-size:34px;
+  filter:drop-shadow(0 3px 6px rgba(0,0,0,.5));
+  animation:bobble 3s ease-in-out infinite;
+}
+.mascot.react .mascot-face{animation:pop .55s;}
+@keyframes bobble{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-5px) rotate(3deg)}}
+@keyframes pop{0%{transform:scale(.6)}55%{transform:scale(1.25)}100%{transform:scale(1)}}
+.bubble{
+  background:#fff;color:#13233f;font-weight:700;font-size:13px;
+  padding:6px 11px;border-radius:14px;border-bottom-left-radius:3px;
+  font-family:'Mali',sans-serif;box-shadow:0 4px 10px rgba(0,0,0,.3);
+  opacity:0;transform:translateY(4px) scale(.9);transition:.25s;max-width:170px;
+}
+.bubble.show{opacity:1;transform:none;}
+
+/* ===== Choices ===== */
 .choice-overlay{
   position:absolute;bottom:0;left:0;right:0;
   display:flex;flex-direction:column;gap:10px;
@@ -18,104 +99,189 @@ html,body{width:100%;height:100%;background:#0a1628;font-family:'Sarabun',sans-s
 }
 .choice-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .choice-row.single{grid-template-columns:1fr;}
-
 .btn-choice{
-  padding:14px 10px;
-  border:none;border-radius:10px;
-  font-size:16px;font-weight:700;
-  font-family:'Sarabun',sans-serif;
-  cursor:pointer;
-  transition:transform 0.1s,opacity 0.2s;
-  line-height:1.3;
+  padding:14px 10px;border:none;border-radius:14px;
+  font-size:16px;font-weight:700;font-family:'Sarabun',sans-serif;
+  cursor:pointer;line-height:1.3;position:relative;overflow:hidden;
   display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 5px 0 rgba(0,0,0,0.22),0 8px 18px rgba(0,0,0,0.3);
+  transition:transform .12s,box-shadow .12s,opacity .25s;
+  animation:btnIn .4s backwards;
 }
-.btn-choice:active{transform:scale(0.96);}
-.btn-green{background:#4CAF50;color:#fff;}
-.btn-orange{background:#FF8C00;color:#fff;}
-.btn-blue{background:#1976D2;color:#fff;}
-.btn-red{background:#E53935;color:#fff;}
-.btn-purple{background:#7B1FA2;color:#fff;}
-
-.btn-choice.correct{background:#27AE60 !important;color:#fff;border:3px solid #fff;}
-.btn-choice.wrong{opacity:0.4;}
+@keyframes btnIn{0%{opacity:0;transform:translateY(16px) scale(.9)}100%{opacity:1;transform:none}}
+.btn-choice:hover{transform:translateY(-3px);box-shadow:0 8px 0 rgba(0,0,0,0.22),0 12px 22px rgba(0,0,0,0.4);}
+.btn-choice:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,0.22);}
+.btn-green{background:linear-gradient(135deg,#5CC85F,#3a9d3e);color:#fff;}
+.btn-orange{background:linear-gradient(135deg,#FFA733,#F57C00);color:#fff;}
+.btn-blue{background:linear-gradient(135deg,#42A5F5,#1565C0);color:#fff;}
+.btn-red{background:linear-gradient(135deg,#EF5350,#C62828);color:#fff;}
+.btn-purple{background:linear-gradient(135deg,#AB47BC,#6A1B9A);color:#fff;}
+.btn-choice.correct{
+  background:linear-gradient(135deg,#2ec36b,#1aa14f)!important;color:#fff;
+  outline:3px solid #fff;outline-offset:-3px;
+  animation:correctPulse .6s;
+}
+@keyframes correctPulse{0%{transform:scale(1)}30%{transform:scale(1.06)}100%{transform:scale(1)}}
+.btn-choice.wrong{opacity:0.35;}
+.btn-choice.shake{animation:shake .45s;}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
 .btn-choice.disabled{pointer-events:none;}
 
 .feedback-box{
-  background:rgba(10,22,40,0.92);
-  border-radius:10px;
-  padding:12px 14px;
-  color:#fff;
-  font-size:14px;
-  line-height:1.6;
-  text-align:center;
-  display:none;
+  background:rgba(8,18,34,0.95);border-radius:14px;padding:12px 14px;
+  color:#fff;font-size:14px;line-height:1.6;text-align:center;display:none;
+  font-family:'Sarabun',sans-serif;
 }
-.feedback-box.show{display:block;}
-.feedback-correct{border:2px solid #4CAF50;}
-.feedback-wrong{border:2px solid #E53935;}
-
-.nav-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 16px;
-  width:100%;max-width:700px;
-}
-.nav-btn{
-  background:rgba(255,255,255,0.15);
-  border:none;border-radius:8px;
-  color:#fff;font-size:22px;
-  width:44px;height:44px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-}
-.nav-btn:disabled{opacity:0.25;cursor:default;}
-.nav-btn:active{background:rgba(255,255,255,0.3);}
-
-.dots{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;max-width:240px;}
-.dot{
-  width:10px;height:10px;border-radius:50%;
-  background:rgba(255,255,255,0.25);
-  transition:background 0.2s;
-  cursor:pointer;
-}
-.dot.active{background:#fff;}
-.dot.game{background:#FFD700;opacity:0.6;}
-.dot.game.active{opacity:1;}
-.dot.done{background:#4CAF50;}
-
-.score-bar{
-  color:rgba(255,255,255,0.7);
-  font-size:13px;font-family:'Sarabun',sans-serif;
-}
+.feedback-box.show{display:block;animation:fbIn .4s;}
+@keyframes fbIn{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+.feedback-correct{border:2px solid #4CAF50;box-shadow:0 0 22px rgba(76,175,80,.35);}
+.feedback-wrong{border:2px solid #E53935;box-shadow:0 0 22px rgba(229,57,53,.3);}
 
 .next-btn{
-  background:#1976D2;color:#fff;
-  border:none;border-radius:10px;
-  padding:12px 24px;
-  font-size:16px;font-weight:700;
-  font-family:'Sarabun',sans-serif;
-  cursor:pointer;
-  margin-top:6px;
-  width:100%;
-  display:none;
+  background:linear-gradient(135deg,#FFD54F,#FFB300);color:#3a2a00;
+  border:none;border-radius:14px;padding:13px 24px;
+  font-size:17px;font-weight:800;font-family:'Mali',sans-serif;
+  cursor:pointer;margin-top:4px;width:100%;display:none;
+  box-shadow:0 5px 0 #c98f00,0 9px 18px rgba(0,0,0,.35);
+  animation:btnIn .4s backwards;
 }
 .next-btn.show{display:block;}
-.next-btn:active{transform:scale(0.97);}
+.next-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #c98f00;}
+
+/* ===== Bottom nav ===== */
+.nav-row{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 14px;width:100%;max-width:700px;}
+.nav-btn{
+  background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,.15);
+  border-radius:12px;color:#fff;font-size:22px;width:46px;height:46px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;
+}
+.nav-btn:disabled{opacity:0.2;cursor:default;}
+.nav-btn:not(:disabled):hover{background:rgba(255,255,255,0.22);}
+.nav-btn:active{transform:scale(.92);}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:260px;}
+.dot{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,0.22);transition:.2s;cursor:pointer;}
+.dot:hover{transform:scale(1.3);}
+.dot.active{background:#fff;box-shadow:0 0 8px rgba(255,255,255,.8);}
+.dot.game{background:#FFD700;opacity:0.55;}
+.dot.game.active{opacity:1;box-shadow:0 0 9px rgba(255,215,0,.9);}
+.dot.done{background:#4CAF50;opacity:1;}
+
+/* ===== Screens (intro/result) ===== */
+.screen{
+  position:fixed;inset:0;z-index:50;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:24px;gap:14px;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255,215,0,0.12), transparent 50%),
+    linear-gradient(160deg,#0a1730,#070f1f 70%);
+  transition:opacity .5s;
+}
+.screen.hide{opacity:0;pointer-events:none;}
+.screen.gone{display:none;}
+
+/* spotlight + magnifier intro */
+.spotlight{
+  position:relative;width:150px;height:150px;display:flex;align-items:center;justify-content:center;
+}
+.spotlight::before{
+  content:"";position:absolute;inset:-30px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,215,0,.28),transparent 70%);
+  animation:glow 2.4s ease-in-out infinite;
+}
+@keyframes glow{0%,100%{transform:scale(.92);opacity:.7}50%{transform:scale(1.08);opacity:1}}
+.magnifier{font-size:96px;animation:scan 3.5s ease-in-out infinite;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5));}
+@keyframes scan{0%,100%{transform:rotate(-12deg) translateX(-8px)}50%{transform:rotate(12deg) translateX(8px)}}
+
+.title{
+  font-size:34px;font-weight:700;color:#fff;line-height:1.2;
+  text-shadow:0 3px 14px rgba(0,0,0,.5);
+}
+.title .hl{color:#FFD700;}
+.subtitle{font-size:16px;color:#cfe0f5;max-width:430px;line-height:1.6;}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:440px;}
+.chip{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:#dbe7f7;font-size:13px;padding:7px 13px;border-radius:20px;font-weight:700;
+}
+.big-btn{
+  margin-top:6px;
+  background:linear-gradient(135deg,#FFD54F,#FF9800);
+  color:#3a2200;border:none;border-radius:18px;
+  padding:18px 40px;font-size:22px;font-weight:800;font-family:'Mali',sans-serif;
+  cursor:pointer;box-shadow:0 7px 0 #c96e00,0 14px 30px rgba(0,0,0,.45);
+  transition:transform .12s,box-shadow .12s;animation:pulseBtn 1.8s ease-in-out infinite;
+}
+@keyframes pulseBtn{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.big-btn:active{transform:translateY(3px) scale(.98);box-shadow:0 3px 0 #c96e00;}
+
+/* result screen */
+.result-badge{font-size:104px;animation:pop .7s,bobble 3s ease-in-out infinite .7s;}
+.result-rank{font-size:30px;font-weight:700;color:#FFD700;text-shadow:0 2px 12px rgba(0,0,0,.5);}
+.result-stars{font-size:46px;letter-spacing:6px;}
+.result-stars .s{opacity:.22;}
+.result-stars .s.on{opacity:1;filter:drop-shadow(0 0 10px rgba(255,215,0,.85));animation:pop .5s backwards;}
+.result-score{font-size:20px;color:#fff;font-weight:700;}
+.result-msg{font-size:16px;color:#cfe0f5;max-width:420px;line-height:1.6;}
+
+#confetti{position:fixed;inset:0;z-index:60;pointer-events:none;}
+
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;}
+@media(max-height:680px){.title{font-size:27px}.magnifier{font-size:74px}.spotlight{width:120px;height:120px}.result-badge{font-size:80px}}
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">ภารกิจนักสืบตัวน้อย: เกมเรียนรู้การแยกแยะข่าวจริงและข่าวปลอมออนไลน์</h2>
-<div id="game">
-  <div class="nav-row">
-    <button class="nav-btn" id="prev-btn" onclick="goSlide(cur-1)" disabled>&#8592;</button>
-    <div class="dots" id="dots"></div>
-    <div class="score-bar" id="score-bar">คะแนน: 0/4</div>
-    <button class="nav-btn" id="next-btn-nav" onclick="goSlide(cur+1)">&#8594;</button>
+<h2 class="sr-only">ภารกิจนักสืบตัวน้อย: เกมเรียนรู้การแยกแยะข่าวจริงและข่าวปลอมออนไลน์</h2>
+
+<div class="bg-fx" id="bg-fx"></div>
+<canvas id="confetti"></canvas>
+
+<!-- ===== INTRO ===== -->
+<div class="screen" id="intro">
+  <div class="spotlight"><div class="magnifier">🔍</div></div>
+  <h1 class="title">ภารกิจ<span class="hl">นักสืบ</span>ตัวน้อย</h1>
+  <p class="subtitle">สวมบทนักสืบดิจิทัล! ออกตามล่าหา <b>ข่าวปลอม</b> และ <b>ภาพ AI</b> ที่แอบซ่อนอยู่บนโลกออนไลน์ พร้อมหรือยังนักสืบ?</p>
+  <div class="chips">
+    <span class="chip">🕵️ 4 ภารกิจสืบสวน</span>
+    <span class="chip">⭐ สะสมดาว</span>
+    <span class="chip">🏆 เลื่อนขั้นนักสืบ</span>
   </div>
+  <button class="big-btn" id="start-btn">🔍 เริ่มภารกิจ!</button>
+</div>
+
+<!-- ===== GAME ===== -->
+<div id="game" style="display:none">
+  <div class="hud">
+    <div class="rank-badge" id="rank-badge">🔍 ว่าที่นักสืบ</div>
+    <div class="hud-right">
+      <div class="score-pill" id="score-pill"><span class="star">⭐</span><span id="score-num">0/4</span></div>
+      <button class="icon-btn" id="sound-toggle" title="เปิด/ปิดเสียง">🔊</button>
+    </div>
+  </div>
+
   <div class="slide-wrap" id="slide-wrap">
+    <div class="mascot" id="mascot">
+      <div class="mascot-face" id="mascot-face">🕵️</div>
+      <div class="bubble" id="mascot-bubble"></div>
+    </div>
     <img class="slide-img" id="slide-img" src="" alt="">
     <div class="choice-overlay" id="choice-overlay"></div>
   </div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prev-btn" onclick="goSlide(cur-1)" disabled>&#8592;</button>
+    <div class="dots" id="dots"></div>
+    <button class="nav-btn" id="next-btn-nav" onclick="goSlide(cur+1)">&#8594;</button>
+  </div>
+</div>
+
+<!-- ===== RESULT ===== -->
+<div class="screen gone" id="result">
+  <div class="result-badge" id="result-badge">🏅</div>
+  <div class="result-rank" id="result-rank">นักสืบฝึกหัด</div>
+  <div class="result-stars" id="result-stars"></div>
+  <div class="result-score" id="result-score">คะแนน 0/4</div>
+  <p class="result-msg" id="result-msg"></p>
+  <button class="big-btn" id="replay-btn">🔁 เล่นอีกครั้ง</button>
 </div>
 
 <script>
@@ -124,7 +290,6 @@ const slides = {"1": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQ
 const gameSlides = {
   3: {
     layout: "two",
-    feedback_before: "",
     choices: [
       {text:"📷 A. น่าเชื่อถือ\n(มีรูปถ่ายนี่นา!)", cls:"btn-green", correct:false},
       {text:"🔍 B. ไม่แน่ใจ\n(ต้องสืบดูก่อน!)", cls:"btn-orange", correct:true}
@@ -169,99 +334,284 @@ const gameSlides = {
 let cur = 1;
 let score = 0;
 let answered = {};
+let prevSlide = 1;
 const totalGames = 4;
+const TOTAL = 15;
 
+/* ===================== SOUND (WebAudio synth) ===================== */
+let actx = null, soundOn = true;
+function initAudio(){ if(!actx){ try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } }
+function tone(freq, start, dur, type, vol){
+  if(!actx||!soundOn) return;
+  const o = actx.createOscillator(), g = actx.createGain();
+  o.type = type||'sine'; o.frequency.value = freq;
+  const t0 = actx.currentTime + start;
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(vol||0.18, t0+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+  o.connect(g); g.connect(actx.destination);
+  o.start(t0); o.stop(t0+dur+0.02);
+}
+function sndClick(){ tone(520,0,0.08,'triangle',0.10); }
+function sndCorrect(){ [523,659,784,1047].forEach((f,i)=>tone(f,i*0.09,0.22,'sine',0.16)); }
+function sndWrong(){ tone(220,0,0.18,'sawtooth',0.14); tone(170,0.12,0.28,'sawtooth',0.13); }
+function sndWin(){
+  const notes=[523,659,784,1047,784,1047,1319];
+  notes.forEach((f,i)=>tone(f,i*0.12,0.3,'triangle',0.16));
+}
+
+/* ===================== CONFETTI ===================== */
+const cvs = document.getElementById('confetti');
+const ctx = cvs.getContext('2d');
+let parts = [], rafOn = false;
+function sizeCanvas(){ cvs.width = innerWidth; cvs.height = innerHeight; }
+sizeCanvas(); addEventListener('resize', sizeCanvas);
+const COLORS = ['#FFD700','#FF8C00','#4CAF50','#42A5F5','#E53935','#AB47BC','#FFFFFF'];
+function burst(n, originY){
+  for(let i=0;i<n;i++){
+    parts.push({
+      x: innerWidth/2 + (Math.random()-0.5)*innerWidth*0.5,
+      y: (originY!=null?originY:innerHeight*0.4),
+      vx:(Math.random()-0.5)*9, vy:-(Math.random()*9+5),
+      g:0.28+Math.random()*0.12, s:6+Math.random()*7,
+      rot:Math.random()*6, vr:(Math.random()-0.5)*0.4,
+      c:COLORS[(Math.random()*COLORS.length)|0], life:1
+    });
+  }
+  if(!rafOn){ rafOn=true; requestAnimationFrame(loop); }
+}
+function loop(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  parts.forEach(p=>{
+    p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
+    if(p.y>innerHeight*0.55) p.life-=0.012;
+    ctx.save(); ctx.globalAlpha=Math.max(p.life,0);
+    ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillStyle=p.c;
+    ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6); ctx.restore();
+  });
+  parts = parts.filter(p=>p.life>0 && p.y<innerHeight+40);
+  if(parts.length){ requestAnimationFrame(loop); } else { rafOn=false; ctx.clearRect(0,0,cvs.width,cvs.height); }
+}
+
+/* ===================== BACKGROUND DOODLES ===================== */
+(function(){
+  const icons=['🔍','🕵️','📰','🤖','❓','📷','🧩','💡'];
+  const wrap=document.getElementById('bg-fx');
+  for(let i=0;i<10;i++){
+    const s=document.createElement('span');
+    s.textContent=icons[i%icons.length];
+    s.style.left=(Math.random()*92)+'%';
+    s.style.top=(Math.random()*88)+'%';
+    s.style.fontSize=(30+Math.random()*40)+'px';
+    s.style.animationDelay=(Math.random()*8)+'s';
+    s.style.animationDuration=(11+Math.random()*8)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ===================== MASCOT ===================== */
+let bubbleTimer=null;
+function mascot(face, text, react){
+  const m=document.getElementById('mascot');
+  document.getElementById('mascot-face').textContent=face;
+  const b=document.getElementById('mascot-bubble');
+  if(text){ b.textContent=text; b.classList.add('show'); }
+  else b.classList.remove('show');
+  if(react){ m.classList.remove('react'); void m.offsetWidth; m.classList.add('react'); }
+  clearTimeout(bubbleTimer);
+  if(text){ bubbleTimer=setTimeout(()=>b.classList.remove('show'), 2600); }
+}
+
+/* ===================== RANKS ===================== */
+function rankFor(s){
+  if(s>=4) return {icon:'🏆', name:'ยอดนักสืบ'};
+  if(s>=3) return {icon:'🥇', name:'นักสืบมือฉมัง'};
+  if(s>=1) return {icon:'🔎', name:'นักสืบฝึกหัด'};
+  return {icon:'🔍', name:'ว่าที่นักสืบ'};
+}
+function updateHUD(bump){
+  const r=rankFor(score);
+  const rb=document.getElementById('rank-badge');
+  rb.textContent=r.icon+' '+r.name;
+  document.getElementById('score-num').textContent=score+'/'+totalGames;
+  if(bump){
+    rb.classList.remove('bump'); void rb.offsetWidth; rb.classList.add('bump');
+    const sp=document.getElementById('score-pill');
+    sp.classList.remove('pop'); void sp.offsetWidth; sp.classList.add('pop');
+  }
+}
+
+/* ===================== DOTS ===================== */
 function buildDots(){
-  const d = document.getElementById('dots');
-  d.innerHTML = '';
-  for(let i=1;i<=15;i++){
-    const dot = document.createElement('div');
-    dot.className = 'dot' + (gameSlides[i]?' game':'') + (i===cur?' active':'') + (answered[i]!==undefined&&answered[i]?' done':'');
-    dot.onclick = ()=>goSlide(i);
-    dot.title = 'สไลด์ '+i;
+  const d=document.getElementById('dots'); d.innerHTML='';
+  for(let i=1;i<=TOTAL;i++){
+    const dot=document.createElement('div');
+    dot.className='dot'+(gameSlides[i]?' game':'')+(i===cur?' active':'')+((answered[i]!==undefined&&answered[i])?' done':'');
+    dot.onclick=()=>{ sndClick(); goSlide(i); };
+    dot.title='สไลด์ '+i;
     d.appendChild(dot);
   }
 }
 
+/* ===================== NAVIGATION / RENDER ===================== */
 function goSlide(n){
-  if(n<1||n>15)return;
-  cur=n;
-  renderSlide();
+  if(n<1||n>TOTAL) return;
+  prevSlide=cur; cur=n; renderSlide();
 }
 
 function renderSlide(){
-  const img = document.getElementById('slide-img');
-  img.src = 'data:image/jpeg;base64,'+slides[cur];
-  img.alt = 'สไลด์ที่ '+cur;
+  const img=document.getElementById('slide-img');
+  img.style.setProperty('--dir', (cur>=prevSlide?'40px':'-40px'));
+  img.classList.remove('animate'); void img.offsetWidth; img.classList.add('animate');
+  img.src='data:image/jpeg;base64,'+slides[cur];
+  img.alt='สไลด์ที่ '+cur;
 
   document.getElementById('prev-btn').disabled = cur===1;
-  document.getElementById('next-btn-nav').disabled = cur===15;
+  document.getElementById('next-btn-nav').disabled = cur===TOTAL;
 
-  const overlay = document.getElementById('choice-overlay');
+  const overlay=document.getElementById('choice-overlay');
   overlay.innerHTML='';
 
-  if(gameSlides[cur]){
-    const gs = gameSlides[cur];
-    const alreadyAnswered = answered[cur]!==undefined;
+  // mascot idle hint
+  if(gameSlides[cur] && answered[cur]===undefined){
+    mascot('🕵️','คิดดีๆ นะ!', true);
+  } else if(cur===TOTAL){
+    mascot('🎉','ภารกิจสำเร็จ!', true);
+  } else {
+    mascot('🕵️','', false);
+  }
 
-    const choiceRow = document.createElement('div');
-    choiceRow.className = gs.layout==='three' ? 'choice-row' : 'choice-row';
-    if(gs.layout==='three') choiceRow.style.gridTemplateColumns='1fr 1fr 1fr';
+  if(gameSlides[cur]){
+    const gs=gameSlides[cur];
+    const done = answered[cur]!==undefined;
+
+    const row=document.createElement('div');
+    row.className='choice-row';
+    if(gs.layout==='three') row.style.gridTemplateColumns='1fr 1fr 1fr';
 
     gs.choices.forEach((c,i)=>{
-      const btn = document.createElement('button');
-      btn.className = 'btn-choice '+c.cls;
-      btn.innerHTML = c.text.replace('\n','<br>');
-      if(alreadyAnswered){
+      const btn=document.createElement('button');
+      btn.className='btn-choice '+c.cls;
+      btn.style.animationDelay=(i*0.07)+'s';
+      btn.innerHTML=c.text.split('\n').join('<br>');
+      if(done){
         btn.classList.add('disabled');
         if(c.correct) btn.classList.add('correct');
         else btn.classList.add('wrong');
       } else {
-        btn.onclick = ()=>pick(cur,i);
+        btn.onclick=()=>pick(cur,i,btn);
       }
-      choiceRow.appendChild(btn);
+      row.appendChild(btn);
     });
-    overlay.appendChild(choiceRow);
+    overlay.appendChild(row);
 
-    const fb = document.createElement('div');
-    fb.className = 'feedback-box';
-    if(alreadyAnswered){
-      fb.textContent = answered[cur] ? gs.correctFeedback : gs.wrongFeedback;
+    const fb=document.createElement('div');
+    fb.className='feedback-box';
+    if(done){
+      fb.textContent=answered[cur]?gs.correctFeedback:gs.wrongFeedback;
       fb.classList.add('show', answered[cur]?'feedback-correct':'feedback-wrong');
     }
     overlay.appendChild(fb);
 
-    if(alreadyAnswered){
-      const nextBtn = document.createElement('button');
-      nextBtn.className = 'next-btn show';
-      nextBtn.textContent = cur===12 ? 'ดูสรุป ➜' : 'ไปต่อ ➜';
-      nextBtn.onclick = ()=>goSlide(gs.nextSlide);
-      overlay.appendChild(nextBtn);
+    if(done){
+      const nb=document.createElement('button');
+      nb.className='next-btn show';
+      nb.textContent = cur===12 ? 'ดูสรุป ➜' : 'ไปต่อ ➜';
+      nb.onclick=()=>{ sndClick(); goSlide(gs.nextSlide); };
+      overlay.appendChild(nb);
     }
   }
 
-  buildDots();
-  document.getElementById('score-bar').textContent = 'คะแนน: '+score+'/'+totalGames;
-}
-
-function pick(slideNum, choiceIdx){
-  const gs = gameSlides[slideNum];
-  if(answered[slideNum]!==undefined) return;
-
-  let isCorrect;
-  if(slideNum===12){
-    isCorrect = gs.choices[choiceIdx].correct;
-  } else {
-    isCorrect = gs.choices[choiceIdx].correct;
+  // finish button on last slide
+  if(cur===TOTAL){
+    const nb=document.createElement('button');
+    nb.className='next-btn show';
+    nb.textContent='🏆 ดูผลภารกิจ';
+    nb.onclick=showResult;
+    overlay.appendChild(nb);
   }
 
-  answered[slideNum] = isCorrect;
-  if(isCorrect) score++;
-
-  renderSlide();
+  buildDots();
+  updateHUD(false);
 }
 
+function pick(slideNum, choiceIdx, btn){
+  const gs=gameSlides[slideNum];
+  if(answered[slideNum]!==undefined) return;
+  const isCorrect=gs.choices[choiceIdx].correct;
+  answered[slideNum]=isCorrect;
+
+  if(isCorrect){
+    score++;
+    sndCorrect();
+    const rect=btn.getBoundingClientRect();
+    burst(70, rect.top);
+    mascot('😎','เก่งมาก!', true);
+    updateHUD(true);
+  } else {
+    sndWrong();
+    btn.classList.remove('shake'); void btn.offsetWidth; btn.classList.add('shake');
+    mascot('🤔','ลองดูอีกที!', true);
+  }
+  setTimeout(renderSlide, isCorrect?260:480);
+}
+
+/* ===================== RESULT SCREEN ===================== */
+function showResult(){
+  sndWin();
+  const r=rankFor(score);
+  document.getElementById('result-badge').textContent=r.icon;
+  document.getElementById('result-rank').textContent=r.name;
+  document.getElementById('result-score').textContent='คะแนน '+score+'/'+totalGames;
+
+  let stars='';
+  for(let i=0;i<totalGames;i++){
+    stars+='<span class="s'+(i<score?' on':'')+'" style="animation-delay:'+(i*0.12)+'s">⭐</span>';
+  }
+  document.getElementById('result-stars').innerHTML=stars;
+
+  const msgs={
+    4:'สุดยอด! คุณคือนักสืบดิจิทัลตัวจริง ตรวจจับข่าวปลอมและภาพ AI ได้ครบทุกข้อ! 🎯',
+    3:'เยี่ยมมาก! คุณมีสายตาคมกริบของนักสืบ อีกนิดเดียวก็ครบแล้ว! 💪',
+    2:'ดีมาก! คุณเริ่มจับสังเกตได้แล้ว ลองเล่นอีกรอบเพื่อเก็บดาวให้ครบนะ! 🔍',
+    1:'เริ่มต้นได้ดี! อย่าลืม "หยุด-คิด-ตรวจสอบ" ก่อนเชื่อทุกครั้งนะนักสืบ! 🌱',
+    0:'ไม่เป็นไรนะ! นักสืบเก่งๆ ต้องฝึกฝน ลองเล่นอีกครั้งแล้วสืบให้ละเอียดขึ้น! 🌱'
+  };
+  document.getElementById('result-msg').textContent=msgs[score]||msgs[0];
+
+  const res=document.getElementById('result');
+  res.classList.remove('gone'); void res.offsetWidth; res.classList.remove('hide');
+  setTimeout(()=>{ burst(120); if(score>=3) setTimeout(()=>burst(120),350); }, 250);
+}
+
+/* ===================== START / REPLAY / SOUND ===================== */
+function startGame(){
+  initAudio(); sndClick();
+  const intro=document.getElementById('intro');
+  intro.classList.add('hide');
+  setTimeout(()=>{ intro.classList.add('gone'); }, 500);
+  document.getElementById('game').style.display='flex';
+  cur=1; prevSlide=1; renderSlide();
+}
+function replay(){
+  initAudio(); sndClick();
+  score=0; answered={}; cur=1; prevSlide=1;
+  const res=document.getElementById('result');
+  res.classList.add('hide');
+  setTimeout(()=>res.classList.add('gone'),500);
+  renderSlide();
+}
+document.getElementById('start-btn').onclick=startGame;
+document.getElementById('replay-btn').onclick=replay;
+document.getElementById('sound-toggle').onclick=function(){
+  soundOn=!soundOn;
+  this.textContent=soundOn?'🔊':'🔇';
+  if(soundOn) sndClick();
+};
+
+// preload first slide so it appears instantly
 renderSlide();
+document.getElementById('game').style.display='none';
 </script>
 </body>
 </html>
