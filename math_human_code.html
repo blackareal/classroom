@@ -236,15 +236,15 @@ const SLIDES = [
   {id:'q4',type:'q',num:4,tier:1,t:60,compact:true,lines:['🌞 + 🌞 = 12','🌞 × ⭐ = 18','⭐ − 🌙 = 1','🌞 + ⭐ + 🌙 = ?']},
   {id:'a4',type:'ans',qid:'q4',num:4,digits:['1','1'],ans:'11',formula:'🌞 = 6,  ⭐ = 3,  🌙 = 2  →  6 + 3 + 2 = 11'},
 
-  // Tactical Timeout
-  {id:'timeout',type:'timeout',t:180},
-
   // Tier 2
   {id:'t2ann',type:'tier-ann',tier:2,qRange:'ข้อ 5 – 12',detail:'โจทย์ระดับกลาง — เพิ่มความท้าทาย',bullets:['ท่า นอนราบบนพื้น','คำตอบ 2–3 หลัก']},
 
   {id:'i5',type:'intro',num:5,tier:2},
   {id:'q5',type:'q',num:5,tier:2,t:60,lines:['1, 3, 6, 10, 15, ... ?','หาพจน์ถัดไปของอนุกรม']},
   {id:'a5',type:'ans',qid:'q5',num:5,digits:['2','1'],ans:'21',formula:'เลขสามเหลี่ยม: +2,+3,+4,+5,+6  →  15 + 6 = 21'},
+
+  // Tactical Timeout (หลังข้อ 5 — ได้สัมผัส 2 คน/segment แล้ว 1 ข้อ)
+  {id:'timeout',type:'timeout',t:180},
 
   {id:'i6',type:'intro',num:6,tier:2},
   {id:'q6',type:'q',num:6,tier:2,t:60,lines:['นาฬิกาบอกเวลา 15:00 น.','เข็มสั้นและเข็มยาวทำมุมกันกี่องศา?']},
@@ -471,8 +471,7 @@ function buildSlides() {
       const qCls=s.compact?'q-text compact':'q-text';
       inner=`<div class="${t.poseCls} pose-badge">${t.label} · ${t.ppsLabel}</div>
         <div class="tag tag-cyan">ข้อที่ ${s.num}</div>
-        <div class="${qCls}">${s.lines[0]}</div>
-        ${s.lines.slice(1).map(l=>`<div class="q-sub">${l}</div>`).join('')}
+        ${s.lines.map(l=>`<div class="${qCls}">${l}</div>`).join('')}
         <div class="timer-wrap">
           <div class="timer-digits" id="td-${s.id}">--:--</div>
           <div class="timer-row">
