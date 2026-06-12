@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>STEM Camp — ซุ้มรับเงิน</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, 'TH Sarabun New', sans-serif; background: #f0f4f0; min-height: 100vh; }
+
+.header { background: #1D9E75; color: #fff; padding: 14px 16px 12px; text-align: center; }
+.header .shop-name { font-size: 20px; font-weight: bold; }
+.header .sub { font-size: 13px; opacity: 0.8; margin-top: 2px; }
+
+.card { background: #fff; border-radius: 12px; margin: 12px; padding: 16px; }
+
+.label { font-size: 12px; color: #888; margin-bottom: 5px; display: block; }
+input, select, textarea {
+  width: 100%; padding: 11px 13px;
+  border: 1.5px solid #ddd; border-radius: 9px;
+  font-size: 15px; background: #fafafa; color: #111;
+}
+input:focus, select:focus { outline: none; border-color: #1D9E75; background: #fff; }
+
+.btn { width: 100%; padding: 13px; border-radius: 10px; border: none;
+  font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 8px;
+  transition: opacity 0.15s; }
+.btn:active { opacity: 0.75; }
+.btn-green  { background: #1D9E75; color: #fff; }
+.btn-blue   { background: #378ADD; color: #fff; }
+.btn-gray   { background: #eee; color: #555; font-weight: normal; font-size: 14px; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.amount-quick { display: flex; gap: 8px; margin-top: 8px; }
+.amount-quick button { flex: 1; padding: 9px 4px; border-radius: 8px; border: 1.5px solid #1D9E75;
+  background: #fff; color: #1D9E75; font-size: 14px; font-weight: bold; cursor: pointer; }
+.amount-quick button:active { background: #E1F5EE; }
+
+.customer-box { background: #E1F5EE; border-radius: 10px; padding: 13px 15px; margin: 0 0 4px; }
+.customer-id   { font-size: 11px; color: #888; font-family: monospace; }
+.customer-name { font-size: 20px; font-weight: bold; color: #0F6E56; margin: 3px 0; }
+.customer-bal  { font-size: 15px; color: #1D9E75; }
+
+.scanner-wrap { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 200;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+.scanner-wrap p { color: #fff; font-size: 14px; }
+#reader { width: 280px; max-width: 88vw; border-radius: 10px; overflow: hidden; }
+.close-scan { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.15);
+  border: none; color: #fff; font-size: 16px; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+
+.toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+  padding: 13px 22px; border-radius: 10px; font-size: 15px; font-weight: bold;
+  color: #fff; z-index: 999; pointer-events: none; opacity: 0;
+  transition: opacity 0.25s; text-align: center; min-width: 240px; white-space: pre-line; }
+.toast.show  { opacity: 1; }
+.toast.ok    { background: #1D9E75; }
+.toast.err   { background: #D85A30; }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.section-head { font-size: 11px; font-weight: bold; color: #999; text-transform: uppercase;
+  letter-spacing: 0.06em; margin-bottom: 10px; }
+.divider { border: none; border-top: 1px solid #f0f0f0; margin: 10px 0; }
+
+/* shop select screen */
+.shop-select-screen { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 24px; background: #f0f4f0; }
+.shop-select-screen h2 { font-size: 22px; font-weight: bold; color: #0F6E56; margin-bottom: 6px; }
+.shop-select-screen p { font-size: 14px; color: #888; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<!-- ======= แก้ URL นี้หลัง Deploy Apps Script ======= -->
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyre2rmUtVs5l1n7JE7rxSHsq0fxrYbbmqIwbRDx4lDCy67t-ZUd3ZuEZ-OMZ1iAa4AjQ/exec';
+</script>
+<!-- ================================================== -->
+
+<!-- หน้าเลือกซุ้ม -->
+<div id="setup-screen" class="shop-select-screen">
+  <h2>🏕️ STEM Camp</h2>
+  <p>เลือกซุ้มของคุณก่อนเริ่มรับเงิน</p>
+  <span class="label">ซุ้มของฉัน</span>
+  <select id="setup-shop-sel"><option value="">กำลังโหลด...</option></select>
+  <button class="btn btn-green" style="margin-top:16px;" onclick="selectShop()">เข้าสู่ซุ้ม →</button>
+</div>
+
+<!-- หน้าหลัก -->
+<div id="main-screen" style="display:none;">
+  <div class="header">
+    <div class="shop-name" id="header-shop-name">ซุ้ม</div>
+    <div class="sub">แตะ "สแกน QR" แล้วจ่อกล้องที่ป้ายชื่อลูกค้า</div>
+  </div>
+
+  <!-- ขั้น 1: ระบุลูกค้า -->
+  <div class="card">
+    <div class="section-head">ผู้ซื้อ</div>
+    <div id="buyer-display" style="display:none; margin-bottom:12px;">
+      <div class="customer-box">
+        <div class="customer-id" id="disp-id"></div>
+        <div class="customer-name" id="disp-name"></div>
+        <div class="customer-bal" id="disp-bal"></div>
+      </div>
+      <button class="btn btn-gray" onclick="resetBuyer()">↩ เปลี่ยนลูกค้า</button>
+    </div>
+    <div id="buyer-input-section">
+      <span class="label">รหัสนักเรียน / ครู</span>
+      <input id="buyer-id-input" type="text" placeholder="เช่น EIS-111"
+        style="font-family:monospace;font-size:18px;text-transform:uppercase;"
+        onkeydown="if(event.key==='Enter') lookupBuyer()" autocomplete="off" />
+      <button class="btn btn-blue" onclick="openScanner()" style="margin-top:8px;">📷 สแกน QR Code</button>
+      <button class="btn btn-green" onclick="lookupBuyer()">🔍 ค้นหา</button>
+    </div>
+  </div>
+
+  <!-- ขั้น 2: รายการ + จ่าย -->
+  <div id="payment-section" class="card" style="display:none;">
+    <div class="section-head">รายการที่ซื้อ</div>
+    <span class="label">ชื่อสินค้า / กิจกรรม</span>
+    <input id="item-input" type="text" placeholder="เช่น น้ำส้มสด, เล่นเกม..." autocomplete="off" />
+    <div class="divider"></div>
+    <span class="label">จำนวนเหรียญ</span>
+    <input id="amount-input" type="number" min="1" max="500" placeholder="0"
+      style="font-size:26px;font-weight:bold;text-align:center;" />
+    <div class="amount-quick">
+      <button onclick="setAmt(10)">10</button>
+      <button onclick="setAmt(20)">20</button>
+      <button onclick="setAmt(30)">30</button>
+      <button onclick="setAmt(50)">50</button>
+    </div>
+    <button class="btn btn-green" id="pay-btn" onclick="confirmPay()" style="margin-top:14px;font-size:18px;padding:15px;">
+      💳 ยืนยันจ่ายเงิน
+    </button>
+    <button class="btn btn-gray" onclick="resetBuyer()">ยกเลิก</button>
+  </div>
+
+  <div style="text-align:center;padding:12px;font-size:11px;color:#bbb;">
+    <span id="footer-shop-id"></span> &nbsp;·&nbsp;
+    <a href="#" onclick="changeShop()" style="color:#aaa;">เปลี่ยนซุ้ม</a>
+  </div>
+</div>
+
+<!-- Scanner overlay -->
+<div id="scanner-overlay" style="display:none;" class="scanner-wrap">
+  <button class="close-scan" onclick="closeScanner()">✕ ปิด</button>
+  <p>จ่อกล้องที่ QR Code บนป้ายชื่อ</p>
+  <div id="reader"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+let scanner    = null;
+let myShopId   = '';
+let myShopName = '';
+let currentBuyer = null;
+let allShops   = [];
+
+async function loadShops() {
+  try {
+    const r = await fetch(SCRIPT_URL + '?action=shops');
+    const d = await r.json();
+    allShops = d.shops || [];
+    const sel = document.getElementById('setup-shop-sel');
+    sel.innerHTML = '<option value="">— เลือกซุ้มของคุณ —</option>' +
+      allShops.map(s => '<option value="' + s.id + '">' + s.name + ' (' + s.id + ')</option>').join('');
+  } catch(e) {
+    document.getElementById('setup-shop-sel').innerHTML = '<option>โหลดไม่ได้ — ตรวจสอบ SCRIPT_URL</option>';
+  }
+}
+
+function selectShop() {
+  const sel = document.getElementById('setup-shop-sel');
+  myShopId = sel.value;
+  const shop = allShops.find(s => s.id === myShopId);
+  if (!myShopId || !shop) { alert('กรุณาเลือกซุ้มก่อน'); return; }
+  myShopName = shop.name;
+  document.getElementById('setup-screen').style.display   = 'none';
+  document.getElementById('main-screen').style.display    = 'block';
+  document.getElementById('header-shop-name').textContent = myShopName;
+  document.getElementById('footer-shop-id').textContent   = myShopId;
+}
+
+function changeShop() {
+  if (!confirm('เปลี่ยนซุ้ม?')) return;
+  document.getElementById('setup-screen').style.display = 'flex';
+  document.getElementById('main-screen').style.display  = 'none';
+  resetBuyer();
+}
+
+async function lookupBuyer() {
+  const id = document.getElementById('buyer-id-input').value.trim().toUpperCase();
+  if (!id) { showToast('กรอกรหัสก่อน', 'err'); return; }
+  try {
+    const r = await fetch(SCRIPT_URL + '?action=participant&id=' + encodeURIComponent(id));
+    const d = await r.json();
+    if (!d.found) { showToast(d.error || 'ไม่พบรหัส ' + id, 'err'); return; }
+    currentBuyer = d;
+    document.getElementById('disp-id').textContent   = d.id;
+    document.getElementById('disp-name').textContent = d.name;
+    document.getElementById('disp-bal').textContent  = '💰 ' + d.balance + ' เหรียญ';
+    document.getElementById('buyer-input-section').style.display = 'none';
+    document.getElementById('buyer-display').style.display       = 'block';
+    document.getElementById('payment-section').style.display     = 'block';
+    document.getElementById('item-input').focus();
+  } catch(e) { showToast('เชื่อมต่อไม่ได้', 'err'); }
+}
+
+async function confirmPay() {
+  if (!currentBuyer) return;
+  const item   = document.getElementById('item-input').value.trim();
+  const amount = parseInt(document.getElementById('amount-input').value);
+  if (!item)   { showToast('กรอกชื่อสินค้าก่อน', 'err'); return; }
+  if (!amount || amount < 1) { showToast('กรอกจำนวนเหรียญ', 'err'); return; }
+  if (amount > currentBuyer.balance) { showToast('⚠️ เหรียญไม่พอ!\nมีแค่ ' + currentBuyer.balance + ' เหรียญ', 'err'); return; }
+
+  const btn = document.getElementById('pay-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ กำลังดำเนินการ...';
+
+  try {
+    const url = SCRIPT_URL
+      + '?action=pay'
+      + '&buyerId=' + encodeURIComponent(currentBuyer.id)
+      + '&shopId='  + encodeURIComponent(myShopId)
+      + '&amount='  + amount
+      + '&item='    + encodeURIComponent(item);
+    const r = await fetch(url);
+    const d = await r.json();
+
+    if (d.success) {
+      showToast('✅ ' + d.buyerName + '\nจ่าย ' + amount + ' เหรียญ\nเหลือ ' + d.newBalance + ' เหรียญ', 'ok');
+      setTimeout(resetBuyer, 2800);
+    } else {
+      showToast('❌ ' + (d.error || 'เกิดข้อผิดพลาด'), 'err');
+      btn.disabled = false;
+      btn.textContent = '💳 ยืนยันจ่ายเงิน';
+    }
+  } catch(e) {
+    showToast('เชื่อมต่อไม่ได้', 'err');
+    btn.disabled = false;
+    btn.textContent = '💳 ยืนยันจ่ายเงิน';
+  }
+}
+
+function resetBuyer() {
+  currentBuyer = null;
+  document.getElementById('buyer-id-input').value = '';
+  document.getElementById('item-input').value     = '';
+  document.getElementById('amount-input').value   = '';
+  document.getElementById('buyer-input-section').style.display = 'block';
+  document.getElementById('buyer-display').style.display       = 'none';
+  document.getElementById('payment-section').style.display     = 'none';
+  const btn = document.getElementById('pay-btn');
+  btn.disabled = false;
+  btn.textContent = '💳 ยืนยันจ่ายเงิน';
+}
+
+function setAmt(n) { document.getElementById('amount-input').value = n; }
+
+function openScanner() {
+  document.getElementById('scanner-overlay').style.display = 'flex';
+  scanner = new Html5Qrcode('reader');
+
+  var onScan = function(text) {
+    document.getElementById('buyer-id-input').value = text.toUpperCase().trim();
+    closeScanner();
+    setTimeout(lookupBuyer, 300);
+  };
+  var onErr = function() {};
+  var config = { fps: 10, qrbox: { width: 240, height: 240 } };
+
+  // ดึงรายการกล้องก่อน — แก้ปัญหา iOS Chrome
+  Html5Qrcode.getCameras().then(function(devices) {
+    if (!devices || devices.length === 0) {
+      showToast('ไม่พบกล้องในอุปกรณ์นี้', 'err');
+      closeScanner();
+      return;
+    }
+    // เลือกกล้องหลัง (index สุดท้าย) ถ้ามีมากกว่า 1
+    var camId = devices[devices.length - 1].id;
+    scanner.start(camId, config, onScan, onErr).catch(function() {
+      // fallback: ลองกล้องหน้า
+      scanner.start(devices[0].id, config, onScan, onErr).catch(function() {
+        showToast('ไม่สามารถเปิดกล้องได้\nกรอก ID ด้วยตัวเองแทน', 'err');
+        closeScanner();
+      });
+    });
+  }).catch(function() {
+    // fallback เดิมถ้า getCameras ล้มเหลว
+    scanner.start(
+      { facingMode: 'environment' },
+      config, onScan, onErr
+    ).catch(function() {
+      showToast('ไม่สามารถเปิดกล้องได้\nกรอก ID ด้วยตัวเองแทน', 'err');
+      closeScanner();
+    });
+  });
+}
+
+function closeScanner() {
+  document.getElementById('scanner-overlay').style.display = 'none';
+  if (scanner) { scanner.stop().catch(function(){}); scanner = null; }
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function(){ t.className = 'toast'; }, 3200);
+}
+
+window.onload = loadShops;
+</script>
+</body>
+</html>
