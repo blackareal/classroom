@@ -3,300 +3,302 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>STEM Camp — ซุ้มรับเงิน</title>
+<title>EIS Camp — ซุ้ม</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: Arial, 'TH Sarabun New', sans-serif; background: #f0f4f0; min-height: 100vh; }
+body { font-family: 'TH Sarabun New', Arial, sans-serif; background: #f0f4f0; min-height: 100vh; }
 
-.header { background: #1D9E75; color: #fff; padding: 14px 16px 12px; text-align: center; }
-.header .shop-name { font-size: 20px; font-weight: bold; }
+/* ===== HEADER ===== */
+.header { background: #1D9E75; color: #fff; padding: 12px 16px 10px; text-align: center; }
+.header .shop-name { font-size: 22px; font-weight: bold; }
 .header .sub { font-size: 13px; opacity: 0.8; margin-top: 2px; }
 
-.card { background: #fff; border-radius: 12px; margin: 12px; padding: 16px; }
+/* ===== CARDS ===== */
+.card { background: #fff; border-radius: 14px; margin: 10px 12px; padding: 14px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
 
-.label { font-size: 12px; color: #888; margin-bottom: 5px; display: block; }
-input, select, textarea {
-  width: 100%; padding: 11px 13px;
-  border: 1.5px solid #ddd; border-radius: 9px;
-  font-size: 15px; background: #fafafa; color: #111;
+/* ===== SCAN BUTTON ===== */
+.scan-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 18px; border-radius: 14px; border: none;
+  background: #1D9E75; color: #fff; font-size: 20px; font-weight: bold;
+  cursor: pointer; transition: opacity 0.15s; margin: 10px 12px; width: calc(100% - 24px);
 }
-input:focus, select:focus { outline: none; border-color: #1D9E75; background: #fff; }
+.scan-btn:active { opacity: 0.75; }
+.scan-btn .icon { font-size: 28px; }
 
-.btn { width: 100%; padding: 13px; border-radius: 10px; border: none;
-  font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 8px;
-  transition: opacity 0.15s; }
-.btn:active { opacity: 0.75; }
-.btn-green  { background: #1D9E75; color: #fff; }
-.btn-blue   { background: #378ADD; color: #fff; }
-.btn-gray   { background: #eee; color: #555; font-weight: normal; font-size: 14px; }
-.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+/* ===== CUSTOMER BOX ===== */
+.customer-box {
+  background: #E1F5EE; border-radius: 12px; padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.customer-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #1D9E75; color: #fff; font-size: 20px; font-weight: bold;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.customer-info { flex: 1; min-width: 0; }
+.customer-name { font-size: 18px; font-weight: bold; color: #0F6E56; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.customer-id { font-size: 11px; color: #888; font-family: monospace; }
+.customer-bal { font-size: 15px; color: #1D9E75; font-weight: bold; margin-top: 2px; }
+.customer-reset { flex-shrink: 0; background: #eee; border: none; border-radius: 8px; padding: 8px 12px; font-size: 13px; color: #555; cursor: pointer; }
 
-.amount-quick { display: flex; gap: 8px; margin-top: 8px; }
-.amount-quick button { flex: 1; padding: 9px 4px; border-radius: 8px; border: 1.5px solid #1D9E75;
-  background: #fff; color: #1D9E75; font-size: 14px; font-weight: bold; cursor: pointer; }
-.amount-quick button:active { background: #E1F5EE; }
+/* ===== MENU ===== */
+.menu-label { font-size: 11px; font-weight: bold; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+.menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.menu-item {
+  background: #f8f8f8; border: 2px solid #ddd; border-radius: 14px;
+  padding: 16px 10px; text-align: center; cursor: pointer;
+  transition: all 0.15s; -webkit-tap-highlight-color: transparent;
+}
+.menu-item.active { background: #fff; border-color: #1D9E75; }
+.menu-item.active:active { background: #E1F5EE; transform: scale(0.96); }
+.menu-item.disabled { opacity: 0.4; cursor: not-allowed; }
+.menu-item .item-name { font-size: 16px; font-weight: bold; color: #222; margin-bottom: 4px; }
+.menu-item .item-price { font-size: 20px; font-weight: bold; color: #1D9E75; }
+.menu-item .item-price span { font-size: 12px; color: #888; font-weight: normal; }
 
-.customer-box { background: #E1F5EE; border-radius: 10px; padding: 13px 15px; margin: 0 0 4px; }
-.customer-id   { font-size: 11px; color: #888; font-family: monospace; }
-.customer-name { font-size: 20px; font-weight: bold; color: #0F6E56; margin: 3px 0; }
-.customer-bal  { font-size: 15px; color: #1D9E75; }
+/* ===== CONFIRM OVERLAY ===== */
+.confirm-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  z-index: 300; display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.confirm-sheet {
+  background: #fff; border-radius: 20px 20px 0 0;
+  width: 100%; max-width: 480px; padding: 24px 20px 32px;
+  animation: slideUp 0.2s ease;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.confirm-title { font-size: 14px; color: #888; text-align: center; margin-bottom: 4px; }
+.confirm-item-name { font-size: 26px; font-weight: bold; color: #111; text-align: center; margin-bottom: 2px; }
+.confirm-amount { font-size: 38px; font-weight: bold; color: #1D9E75; text-align: center; margin-bottom: 16px; }
+.confirm-amount span { font-size: 16px; color: #888; font-weight: normal; }
+.confirm-customer { background: #f4f4f4; border-radius: 10px; padding: 10px 14px; margin-bottom: 20px; text-align: center; }
+.confirm-customer .name { font-size: 18px; font-weight: bold; }
+.confirm-customer .bal { font-size: 14px; color: #888; margin-top: 2px; }
+.confirm-customer .bal.warn { color: #D85A30; }
+.confirm-btns { display: flex; gap: 10px; }
+.btn-cancel { flex: 1; padding: 14px; border-radius: 12px; border: 1.5px solid #ddd; background: #fff; color: #555; font-size: 16px; cursor: pointer; }
+.btn-pay { flex: 2; padding: 14px; border-radius: 12px; border: none; background: #1D9E75; color: #fff; font-size: 17px; font-weight: bold; cursor: pointer; }
+.btn-pay:disabled { opacity: 0.5; }
+.btn-pay:active { opacity: 0.8; }
 
-.scanner-wrap { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 200;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+/* ===== SCANNER ===== */
+.scanner-wrap {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+  z-index: 200; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px;
+}
 .scanner-wrap p { color: #fff; font-size: 14px; }
-#reader { width: 280px; max-width: 88vw; border-radius: 10px; overflow: hidden; }
-.close-scan { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.15);
-  border: none; color: #fff; font-size: 16px; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+#reader { width: 280px; max-width: 88vw; border-radius: 12px; overflow: hidden; }
+.close-scan { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.15); border: none; color: #fff; font-size: 15px; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
 
-.toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
-  padding: 13px 22px; border-radius: 10px; font-size: 15px; font-weight: bold;
+/* ===== TOAST ===== */
+.toast {
+  position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
+  padding: 14px 24px; border-radius: 12px; font-size: 16px; font-weight: bold;
   color: #fff; z-index: 999; pointer-events: none; opacity: 0;
-  transition: opacity 0.25s; text-align: center; min-width: 240px; white-space: pre-line; }
-.toast.show  { opacity: 1; }
-.toast.ok    { background: #1D9E75; }
-.toast.err   { background: #D85A30; }
+  transition: opacity 0.25s; text-align: center; min-width: 250px;
+  white-space: pre-line; line-height: 1.4;
+}
+.toast.show { opacity: 1; }
+.toast.ok  { background: #1D9E75; }
+.toast.err { background: #D85A30; }
 
-.screen { display: none; }
-.screen.active { display: block; }
+/* ===== SETUP ===== */
+.setup-screen {
+  min-height: 100vh; display: flex; flex-direction: column;
+  justify-content: center; padding: 28px; background: #f0f4f0;
+}
+.setup-screen h2 { font-size: 26px; font-weight: bold; color: #0F6E56; margin-bottom: 6px; }
+.setup-screen p  { font-size: 15px; color: #888; margin-bottom: 20px; }
+.label { font-size: 12px; color: #888; margin-bottom: 6px; display: block; }
+select { width: 100%; padding: 12px 14px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 16px; background: #fafafa; color: #111; }
+.btn-setup { width: 100%; padding: 14px; border-radius: 12px; border: none; background: #1D9E75; color: #fff; font-size: 17px; font-weight: bold; cursor: pointer; margin-top: 14px; }
 
-.section-head { font-size: 11px; font-weight: bold; color: #999; text-transform: uppercase;
-  letter-spacing: 0.06em; margin-bottom: 10px; }
-.divider { border: none; border-top: 1px solid #f0f0f0; margin: 10px 0; }
-
-/* shop select screen */
-.shop-select-screen { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 24px; background: #f0f4f0; }
-.shop-select-screen h2 { font-size: 22px; font-weight: bold; color: #0F6E56; margin-bottom: 6px; }
-.shop-select-screen p { font-size: 14px; color: #888; margin-bottom: 20px; }
+.footer { text-align: center; padding: 10px; font-size: 11px; color: #bbb; }
+.footer a { color: #aaa; }
 </style>
 </head>
 <body>
 
-<!-- ======= แก้ URL นี้หลัง Deploy Apps Script ======= -->
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyre2rmUtVs5l1n7JE7rxSHsq0fxrYbbmqIwbRDx4lDCy67t-ZUd3ZuEZ-OMZ1iAa4AjQ/exec';
 </script>
-<!-- ================================================== -->
 
-<!-- หน้าเลือกซุ้ม -->
-<div id="setup-screen" class="shop-select-screen">
-  <h2>🏕️ STEM Camp</h2>
-  <p>เลือกซุ้มของคุณก่อนเริ่มรับเงิน</p>
+<!-- ===== หน้าเลือกซุ้ม ===== -->
+<div id="setup-screen" class="setup-screen">
+  <h2>🏕️ EIS Camp</h2>
+  <p>เลือกซุ้มของคุณก่อนเริ่ม</p>
   <span class="label">ซุ้มของฉัน</span>
   <select id="setup-shop-sel"><option value="">กำลังโหลด...</option></select>
-  <button class="btn btn-green" style="margin-top:16px;" onclick="selectShop()">เข้าสู่ซุ้ม →</button>
+  <button class="btn-setup" onclick="selectShop()">เข้าสู่ซุ้ม →</button>
 </div>
 
-<!-- หน้าหลัก -->
+<!-- ===== หน้าหลัก ===== -->
 <div id="main-screen" style="display:none;">
   <div class="header">
     <div class="shop-name" id="header-shop-name">ซุ้ม</div>
-    <div class="sub">แตะ "สแกน QR" แล้วจ่อกล้องที่ป้ายชื่อลูกค้า</div>
+    <div class="sub" id="header-sub">สแกน QR Code ของลูกค้า</div>
   </div>
 
-  <!-- ขั้น 1: ระบุลูกค้า -->
-  <div class="card">
-    <div class="section-head">ผู้ซื้อ</div>
-    <div id="buyer-display" style="display:none; margin-bottom:12px;">
-      <div class="customer-box">
-        <div class="customer-id" id="disp-id"></div>
-        <div class="customer-name" id="disp-name"></div>
-        <div class="customer-bal" id="disp-bal"></div>
-      </div>
-      <button class="btn btn-gray" onclick="resetBuyer()">↩ เปลี่ยนลูกค้า</button>
-    </div>
-    <div id="buyer-input-section">
-      <span class="label">รหัสนักเรียน / ครู</span>
-      <input id="buyer-id-input" type="text" placeholder="เช่น EIS-111"
-        style="font-family:monospace;font-size:18px;text-transform:uppercase;"
-        onkeydown="if(event.key==='Enter') lookupBuyer()" autocomplete="off" />
-      <button class="btn btn-blue" onclick="openScanner()" style="margin-top:8px;">📷 สแกน QR Code</button>
-      <button class="btn btn-green" onclick="lookupBuyer()">🔍 ค้นหา</button>
-    </div>
-  </div>
-
-  <!-- ขั้น 2: รายการ + จ่าย -->
-  <div id="payment-section" class="card" style="display:none;">
-    <div class="section-head">รายการที่ซื้อ</div>
-    <span class="label">ชื่อสินค้า / กิจกรรม</span>
-    <input id="item-input" type="text" placeholder="เช่น น้ำส้มสด, เล่นเกม..." autocomplete="off" />
-    <div class="divider"></div>
-    <span class="label">จำนวนเหรียญ</span>
-    <input id="amount-input" type="number" min="1" max="500" placeholder="0"
-      style="font-size:26px;font-weight:bold;text-align:center;" />
-    <div class="amount-quick">
-      <button onclick="setAmt(10)">10</button>
-      <button onclick="setAmt(20)">20</button>
-      <button onclick="setAmt(30)">30</button>
-      <button onclick="setAmt(50)">50</button>
-    </div>
-    <button class="btn btn-green" id="pay-btn" onclick="confirmPay()" style="margin-top:14px;font-size:18px;padding:15px;">
-      💳 ยืนยันจ่ายเงิน
+  <!-- ปุ่มสแกน / แสดงลูกค้า -->
+  <div id="scan-area" style="margin-top:4px;">
+    <!-- ก่อนสแกน -->
+    <button class="scan-btn" id="scan-btn" onclick="openScanner()">
+      <span class="icon">📷</span> สแกน QR Code
     </button>
-    <button class="btn btn-gray" onclick="resetBuyer()">ยกเลิก</button>
+    <!-- หลังสแกน -->
+    <div class="card" id="customer-card" style="display:none;">
+      <div class="customer-box">
+        <div class="customer-avatar" id="cust-avatar">?</div>
+        <div class="customer-info">
+          <div class="customer-name" id="cust-name">—</div>
+          <div class="customer-id"  id="cust-id">—</div>
+          <div class="customer-bal" id="cust-bal">—</div>
+        </div>
+        <button class="customer-reset" onclick="resetCustomer()">✕ ถัดไป</button>
+      </div>
+    </div>
   </div>
 
-  <div style="text-align:center;padding:12px;font-size:11px;color:#bbb;">
+  <!-- เมนูรายการ -->
+  <div class="card">
+    <div class="menu-label">รายการ — แตะเพื่อจ่าย</div>
+    <div class="menu-grid" id="menu-grid">
+      <!-- โหลดจาก API -->
+    </div>
+  </div>
+
+  <div class="footer">
     <span id="footer-shop-id"></span> &nbsp;·&nbsp;
-    <a href="#" onclick="changeShop()" style="color:#aaa;">เปลี่ยนซุ้ม</a>
+    <a href="#" onclick="changeShop()">เปลี่ยนซุ้ม</a>
   </div>
 </div>
 
-<!-- Scanner overlay -->
+<!-- ===== Confirm Sheet ===== -->
+<div id="confirm-overlay" class="confirm-overlay" style="display:none;" onclick="cancelConfirm(event)">
+  <div class="confirm-sheet" onclick="event.stopPropagation()">
+    <div class="confirm-title">ยืนยันการจ่ายเงิน</div>
+    <div class="confirm-item-name" id="conf-item-name">—</div>
+    <div class="confirm-amount" id="conf-amount">0 <span>เหรียญ</span></div>
+    <div class="confirm-customer">
+      <div class="name" id="conf-cust-name">—</div>
+      <div class="bal" id="conf-cust-bal">—</div>
+    </div>
+    <div class="confirm-btns">
+      <button class="btn-cancel" onclick="cancelConfirm()">ยกเลิก</button>
+      <button class="btn-pay" id="btn-pay" onclick="doPay()">✅ ยืนยัน</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Scanner ===== -->
 <div id="scanner-overlay" style="display:none;" class="scanner-wrap">
   <button class="close-scan" onclick="closeScanner()">✕ ปิด</button>
   <p>จ่อกล้องที่ QR Code บนป้ายชื่อ</p>
   <div id="reader"></div>
 </div>
 
-<!-- Toast -->
+<!-- ===== Toast ===== -->
 <div class="toast" id="toast"></div>
 
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
-let scanner    = null;
-let myShopId   = '';
-let myShopName = '';
-let currentBuyer = null;
-let allShops   = [];
+var scanner     = null;
+var myShopId    = '';
+var myShopName  = '';
+var myShopItems = [];   // [{name, price}]
+var currentBuyer = null;
+var pendingItem  = null;  // {name, price}
+var allShops    = [];
 
+// ===== โหลดซุ้ม =====
 async function loadShops() {
   try {
-    const r = await fetch(SCRIPT_URL + '?action=shops');
-    const d = await r.json();
+    var r = await fetch(SCRIPT_URL + '?action=shops');
+    var d = await r.json();
     allShops = d.shops || [];
-    const sel = document.getElementById('setup-shop-sel');
+    var sel = document.getElementById('setup-shop-sel');
     sel.innerHTML = '<option value="">— เลือกซุ้มของคุณ —</option>' +
-      allShops.map(s => '<option value="' + s.id + '">' + s.name + ' (' + s.id + ')</option>').join('');
+      allShops.map(function(s) {
+        return '<option value="' + s.id + '">' + s.name + '</option>';
+      }).join('');
   } catch(e) {
-    document.getElementById('setup-shop-sel').innerHTML = '<option>โหลดไม่ได้ — ตรวจสอบ SCRIPT_URL</option>';
+    document.getElementById('setup-shop-sel').innerHTML = '<option>โหลดไม่ได้ — ตรวจสอบการเชื่อมต่อ</option>';
   }
 }
 
 function selectShop() {
-  const sel = document.getElementById('setup-shop-sel');
+  var sel  = document.getElementById('setup-shop-sel');
   myShopId = sel.value;
-  const shop = allShops.find(s => s.id === myShopId);
+  var shop = allShops.find(function(s) { return s.id === myShopId; });
   if (!myShopId || !shop) { alert('กรุณาเลือกซุ้มก่อน'); return; }
-  myShopName = shop.name;
-  document.getElementById('setup-screen').style.display   = 'none';
-  document.getElementById('main-screen').style.display    = 'block';
+  myShopName  = shop.name;
+  myShopItems = shop.items || [];
+
+  document.getElementById('setup-screen').style.display  = 'none';
+  document.getElementById('main-screen').style.display   = 'block';
   document.getElementById('header-shop-name').textContent = myShopName;
-  document.getElementById('footer-shop-id').textContent   = myShopId;
+  document.getElementById('footer-shop-id').textContent  = myShopId;
+  buildMenu();
 }
 
 function changeShop() {
   if (!confirm('เปลี่ยนซุ้ม?')) return;
+  resetCustomer();
   document.getElementById('setup-screen').style.display = 'flex';
   document.getElementById('main-screen').style.display  = 'none';
-  resetBuyer();
 }
 
-async function lookupBuyer() {
-  const id = document.getElementById('buyer-id-input').value.trim().toUpperCase();
-  if (!id) { showToast('กรอกรหัสก่อน', 'err'); return; }
-  try {
-    const r = await fetch(SCRIPT_URL + '?action=participant&id=' + encodeURIComponent(id));
-    const d = await r.json();
-    if (!d.found) { showToast(d.error || 'ไม่พบรหัส ' + id, 'err'); return; }
-    currentBuyer = d;
-    document.getElementById('disp-id').textContent   = d.id;
-    document.getElementById('disp-name').textContent = d.name;
-    document.getElementById('disp-bal').textContent  = '💰 ' + d.balance + ' เหรียญ';
-    document.getElementById('buyer-input-section').style.display = 'none';
-    document.getElementById('buyer-display').style.display       = 'block';
-    document.getElementById('payment-section').style.display     = 'block';
-    document.getElementById('item-input').focus();
-  } catch(e) { showToast('เชื่อมต่อไม่ได้', 'err'); }
-}
-
-async function confirmPay() {
-  if (!currentBuyer) return;
-  const item   = document.getElementById('item-input').value.trim();
-  const amount = parseInt(document.getElementById('amount-input').value);
-  if (!item)   { showToast('กรอกชื่อสินค้าก่อน', 'err'); return; }
-  if (!amount || amount < 1) { showToast('กรอกจำนวนเหรียญ', 'err'); return; }
-  if (amount > currentBuyer.balance) { showToast('⚠️ เหรียญไม่พอ!\nมีแค่ ' + currentBuyer.balance + ' เหรียญ', 'err'); return; }
-
-  const btn = document.getElementById('pay-btn');
-  btn.disabled = true;
-  btn.textContent = '⏳ กำลังดำเนินการ...';
-
-  try {
-    const url = SCRIPT_URL
-      + '?action=pay'
-      + '&buyerId=' + encodeURIComponent(currentBuyer.id)
-      + '&shopId='  + encodeURIComponent(myShopId)
-      + '&amount='  + amount
-      + '&item='    + encodeURIComponent(item);
-    const r = await fetch(url);
-    const d = await r.json();
-
-    if (d.success) {
-      showToast('✅ ' + d.buyerName + '\nจ่าย ' + amount + ' เหรียญ\nเหลือ ' + d.newBalance + ' เหรียญ', 'ok');
-      setTimeout(resetBuyer, 2800);
-    } else {
-      showToast('❌ ' + (d.error || 'เกิดข้อผิดพลาด'), 'err');
-      btn.disabled = false;
-      btn.textContent = '💳 ยืนยันจ่ายเงิน';
-    }
-  } catch(e) {
-    showToast('เชื่อมต่อไม่ได้', 'err');
-    btn.disabled = false;
-    btn.textContent = '💳 ยืนยันจ่ายเงิน';
+// ===== สร้างปุ่มเมนู =====
+function buildMenu() {
+  var grid = document.getElementById('menu-grid');
+  if (!myShopItems.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#aaa;padding:20px;font-size:14px;">ยังไม่มีรายการ<br>เพิ่มในคอลัมน์ items ใน Google Sheet</div>';
+    return;
   }
+  grid.innerHTML = myShopItems.map(function(item, i) {
+    return '<button class="menu-item disabled" id="menu-' + i + '" onclick="selectItem(' + i + ')" disabled>' +
+      '<div class="item-name">' + item.name + '</div>' +
+      '<div class="item-price">' + item.price + ' <span>เหรียญ</span></div>' +
+    '</button>';
+  }).join('');
 }
 
-function resetBuyer() {
-  currentBuyer = null;
-  document.getElementById('buyer-id-input').value = '';
-  document.getElementById('item-input').value     = '';
-  document.getElementById('amount-input').value   = '';
-  document.getElementById('buyer-input-section').style.display = 'block';
-  document.getElementById('buyer-display').style.display       = 'none';
-  document.getElementById('payment-section').style.display     = 'none';
-  const btn = document.getElementById('pay-btn');
-  btn.disabled = false;
-  btn.textContent = '💳 ยืนยันจ่ายเงิน';
+function activateMenu(on) {
+  myShopItems.forEach(function(_, i) {
+    var btn = document.getElementById('menu-' + i);
+    if (!btn) return;
+    if (on) { btn.classList.remove('disabled'); btn.classList.add('active'); btn.disabled = false; }
+    else     { btn.classList.add('disabled');    btn.classList.remove('active'); btn.disabled = true; }
+  });
 }
 
-function setAmt(n) { document.getElementById('amount-input').value = n; }
-
+// ===== สแกน QR =====
 function openScanner() {
   document.getElementById('scanner-overlay').style.display = 'flex';
   scanner = new Html5Qrcode('reader');
 
   var onScan = function(text) {
-    document.getElementById('buyer-id-input').value = text.toUpperCase().trim();
     closeScanner();
-    setTimeout(lookupBuyer, 300);
+    lookupBuyer(text.toUpperCase().trim());
   };
-  var onErr = function() {};
-  var config = { fps: 10, qrbox: { width: 240, height: 240 } };
+  var cfg = { fps: 10, qrbox: { width: 240, height: 240 } };
 
-  // ดึงรายการกล้องก่อน — แก้ปัญหา iOS Chrome
   Html5Qrcode.getCameras().then(function(devices) {
-    if (!devices || devices.length === 0) {
-      showToast('ไม่พบกล้องในอุปกรณ์นี้', 'err');
-      closeScanner();
-      return;
+    if (!devices || !devices.length) {
+      showToast('ไม่พบกล้อง', 'err'); closeScanner(); return;
     }
-    // เลือกกล้องหลัง (index สุดท้าย) ถ้ามีมากกว่า 1
     var camId = devices[devices.length - 1].id;
-    scanner.start(camId, config, onScan, onErr).catch(function() {
-      // fallback: ลองกล้องหน้า
-      scanner.start(devices[0].id, config, onScan, onErr).catch(function() {
-        showToast('ไม่สามารถเปิดกล้องได้\nกรอก ID ด้วยตัวเองแทน', 'err');
-        closeScanner();
+    scanner.start(camId, cfg, onScan, function(){}).catch(function() {
+      scanner.start(devices[0].id, cfg, onScan, function(){}).catch(function() {
+        showToast('เปิดกล้องไม่ได้', 'err'); closeScanner();
       });
     });
   }).catch(function() {
-    // fallback เดิมถ้า getCameras ล้มเหลว
-    scanner.start(
-      { facingMode: 'environment' },
-      config, onScan, onErr
-    ).catch(function() {
-      showToast('ไม่สามารถเปิดกล้องได้\nกรอก ID ด้วยตัวเองแทน', 'err');
-      closeScanner();
+    scanner.start({ facingMode:'environment' }, cfg, onScan, function(){}).catch(function() {
+      showToast('เปิดกล้องไม่ได้', 'err'); closeScanner();
     });
   });
 }
@@ -306,12 +308,101 @@ function closeScanner() {
   if (scanner) { scanner.stop().catch(function(){}); scanner = null; }
 }
 
+// ===== ค้นหาผู้ซื้อ =====
+async function lookupBuyer(id) {
+  try {
+    var r = await fetch(SCRIPT_URL + '?action=participant&id=' + encodeURIComponent(id));
+    var d = await r.json();
+    if (!d.found) { showToast('ไม่พบรหัส ' + id, 'err'); return; }
+    currentBuyer = d;
+    // แสดงข้อมูล
+    var initial = d.name.replace(/^(เด็กชาย|เด็กหญิง|นาย|นางสาว|นาง)\s*/,'').charAt(0);
+    document.getElementById('cust-avatar').textContent = initial;
+    document.getElementById('cust-name').textContent   = d.name;
+    document.getElementById('cust-id').textContent     = d.id;
+    document.getElementById('cust-bal').textContent    = '💰 ' + d.balance + ' เหรียญ';
+    document.getElementById('scan-btn').style.display  = 'none';
+    document.getElementById('customer-card').style.display = 'block';
+    activateMenu(true);
+  } catch(e) { showToast('เชื่อมต่อไม่ได้', 'err'); }
+}
+
+function resetCustomer() {
+  currentBuyer = null;
+  document.getElementById('scan-btn').style.display      = 'flex';
+  document.getElementById('customer-card').style.display = 'none';
+  activateMenu(false);
+}
+
+// ===== เลือกรายการ =====
+function selectItem(idx) {
+  if (!currentBuyer) return;
+  pendingItem = myShopItems[idx];
+
+  document.getElementById('conf-item-name').textContent = pendingItem.name;
+  document.getElementById('conf-amount').innerHTML = pendingItem.price + ' <span>เหรียญ</span>';
+  document.getElementById('conf-cust-name').textContent = currentBuyer.name;
+
+  var balAfter = currentBuyer.balance - pendingItem.price;
+  var balEl = document.getElementById('conf-cust-bal');
+  if (balAfter < 0) {
+    balEl.textContent = '⚠️ เหรียญไม่พอ! (มี ' + currentBuyer.balance + ')';
+    balEl.className = 'bal warn';
+    document.getElementById('btn-pay').disabled = true;
+  } else {
+    balEl.textContent = 'เหลือ ' + balAfter + ' เหรียญ';
+    balEl.className = 'bal';
+    document.getElementById('btn-pay').disabled = false;
+  }
+  document.getElementById('confirm-overlay').style.display = 'flex';
+}
+
+function cancelConfirm(e) {
+  if (e && e.target !== document.getElementById('confirm-overlay')) return;
+  document.getElementById('confirm-overlay').style.display = 'none';
+  pendingItem = null;
+}
+
+// ===== จ่ายเงิน =====
+async function doPay() {
+  if (!currentBuyer || !pendingItem) return;
+  var btn = document.getElementById('btn-pay');
+  btn.disabled = true; btn.textContent = '⏳ กำลังดำเนินการ...';
+
+  try {
+    var url = SCRIPT_URL
+      + '?action=pay'
+      + '&buyerId=' + encodeURIComponent(currentBuyer.id)
+      + '&shopId='  + encodeURIComponent(myShopId)
+      + '&amount='  + pendingItem.price
+      + '&item='    + encodeURIComponent(pendingItem.name);
+    var r = await fetch(url);
+    var d = await r.json();
+
+    document.getElementById('confirm-overlay').style.display = 'none';
+
+    if (d.success) {
+      showToast('✅ ' + d.buyerName + '\n' + pendingItem.name + ' — ' + pendingItem.price + ' เหรียญ\nเหลือ ' + d.newBalance + ' เหรียญ', 'ok');
+      setTimeout(resetCustomer, 2000);
+    } else {
+      showToast('❌ ' + (d.error || 'เกิดข้อผิดพลาด'), 'err');
+      btn.disabled = false; btn.textContent = '✅ ยืนยัน';
+    }
+  } catch(e) {
+    showToast('เชื่อมต่อไม่ได้', 'err');
+    btn.disabled = false; btn.textContent = '✅ ยืนยัน';
+  } finally {
+    pendingItem = null;
+  }
+}
+
+// ===== Toast =====
 function showToast(msg, type) {
-  const t = document.getElementById('toast');
+  var t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast show ' + type;
-  clearTimeout(t._timer);
-  t._timer = setTimeout(function(){ t.className = 'toast'; }, 3200);
+  clearTimeout(t._t);
+  t._t = setTimeout(function(){ t.className = 'toast'; }, 3000);
 }
 
 window.onload = loadShops;
