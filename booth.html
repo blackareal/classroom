@@ -42,6 +42,14 @@ body { font-family: 'TH Sarabun New', Arial, sans-serif; background: #f0f4f0; mi
 .customer-bal { font-size: 15px; color: #1D9E75; font-weight: bold; margin-top: 2px; }
 .customer-reset { flex-shrink: 0; background: #eee; border: none; border-radius: 8px; padding: 8px 12px; font-size: 13px; color: #555; cursor: pointer; }
 
+/* same-group warning */
+.blocked-box {
+  background: #FFF3CD; border: 1.5px solid #FFA500; border-radius: 12px;
+  padding: 14px 16px; margin-top: 8px; display: flex; align-items: flex-start; gap: 10px;
+}
+.blocked-box .icon { font-size: 24px; flex-shrink: 0; }
+.blocked-box .msg { font-size: 15px; color: #7D4E00; line-height: 1.4; font-weight: 600; }
+
 /* ===== MENU ===== */
 .menu-label { font-size: 11px; font-weight: bold; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
 .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -208,6 +216,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyre2rmUtVs5l1n7JE7r
 var scanner     = null;
 var myShopId    = '';
 var myShopName  = '';
+var myShopGroup = '';   // กลุ่มของซุ้มนี้
 var myShopItems = [];   // [{name, price}]
 var currentBuyer = null;
 var pendingItem  = null;  // {name, price}
@@ -235,6 +244,7 @@ function selectShop() {
   var shop = allShops.find(function(s) { return s.id === myShopId; });
   if (!myShopId || !shop) { alert('กรุณาเลือกซุ้มก่อน'); return; }
   myShopName  = shop.name;
+  myShopGroup = shop.group || '';
   myShopItems = shop.items || [];
 
   document.getElementById('setup-screen').style.display  = 'none';
@@ -315,7 +325,10 @@ async function lookupBuyer(id) {
     var d = await r.json();
     if (!d.found) { showToast('ไม่พบรหัส ' + id, 'err'); return; }
     currentBuyer = d;
-    // แสดงข้อมูล
+
+    // ตรวจสอบกฎ: ห้ามซื้อซุ้มกลุ่มตัวเอง
+    var sameGroup = myShopGroup && d.group && d.group === myShopGroup;
+
     var initial = d.name.replace(/^(เด็กชาย|เด็กหญิง|นาย|นางสาว|นาง)\s*/,'').charAt(0);
     document.getElementById('cust-avatar').textContent = initial;
     document.getElementById('cust-name').textContent   = d.name;
@@ -323,7 +336,22 @@ async function lookupBuyer(id) {
     document.getElementById('cust-bal').textContent    = '💰 ' + d.balance + ' เหรียญ';
     document.getElementById('scan-btn').style.display  = 'none';
     document.getElementById('customer-card').style.display = 'block';
-    activateMenu(true);
+
+    // ลบ/เพิ่ม blocked warning
+    var old = document.getElementById('blocked-warning');
+    if (old) old.remove();
+
+    if (sameGroup) {
+      var warn = document.createElement('div');
+      warn.id = 'blocked-warning';
+      warn.className = 'blocked-box';
+      warn.innerHTML = '<span class="icon">🚫</span>' +
+        '<span class="msg">อยู่' + d.group + ' ไม่สามารถซื้อซุ้มของกลุ่มตัวเองได้<br>กรุณาไปที่ซุ้มอื่น</span>';
+      document.getElementById('customer-card').after(warn);
+      activateMenu(false);
+    } else {
+      activateMenu(true);
+    }
   } catch(e) { showToast('เชื่อมต่อไม่ได้', 'err'); }
 }
 
@@ -331,6 +359,8 @@ function resetCustomer() {
   currentBuyer = null;
   document.getElementById('scan-btn').style.display      = 'flex';
   document.getElementById('customer-card').style.display = 'none';
+  var old = document.getElementById('blocked-warning');
+  if (old) old.remove();
   activateMenu(false);
 }
 
@@ -384,6 +414,9 @@ async function doPay() {
     if (d.success) {
       showToast('✅ ' + d.buyerName + '\n' + pendingItem.name + ' — ' + pendingItem.price + ' เหรียญ\nเหลือ ' + d.newBalance + ' เหรียญ', 'ok');
       setTimeout(resetCustomer, 2000);
+    } else if (d.sameGroup) {
+      showToast('🚫 ' + (d.error || 'ห้ามซื้อซุ้มกลุ่มตัวเอง'), 'err');
+      btn.disabled = false; btn.textContent = '✅ ยืนยัน';
     } else {
       showToast('❌ ' + (d.error || 'เกิดข้อผิดพลาด'), 'err');
       btn.disabled = false; btn.textContent = '✅ ยืนยัน';
