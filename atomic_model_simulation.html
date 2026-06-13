@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ทะลุมิติ ตะลุย 5 ยุคแห่งอะตอม!</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap');
+
+  :root {
+    --gold: #f5c518;
+    --neon-blue: #00d4ff;
+    --neon-purple: #b300ff;
+    --neon-green: #00ff88;
+    --dark: #0a0a1a;
+    --card-bg: rgba(255,255,255,0.05);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--dark);
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    text-align: center;
+    padding: 40px 20px 20px;
+    background: linear-gradient(180deg, #0d0d2e 0%, #0a0a1a 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(0,212,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #f5c518, #ff6b35, #b300ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    line-height: 1.2;
+  }
+  header p {
+    font-size: 1.1rem;
+    color: #aaa;
+    margin-top: 8px;
+  }
+
+  /* ===== TIMELINE NAV ===== */
+  .timeline-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    padding: 30px 20px;
+    overflow-x: auto;
+    position: relative;
+    z-index: 10;
+  }
+  .timeline-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .timeline-connector {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #333, #555);
+    margin-top: -30px;
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .timeline-connector.active-line {
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+  }
+  .timeline-dot {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: #111;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 2;
+  }
+  .timeline-item:hover .timeline-dot,
+  .timeline-item.active .timeline-dot {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 20px var(--neon-blue), 0 0 40px rgba(0,212,255,0.3);
+    transform: scale(1.1);
+  }
+  .timeline-label {
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: #888;
+    text-align: center;
+    max-width: 80px;
+    transition: color 0.3s;
+  }
+  .timeline-year {
+    font-size: 0.65rem;
+    color: #555;
+    margin-top: 2px;
+  }
+  .timeline-item.active .timeline-label { color: var(--neon-blue); }
+  .timeline-item.active .timeline-year { color: var(--gold); }
+
+  /* ===== MAIN CONTENT ===== */
+  .content-area {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .model-section {
+    display: none;
+    animation: fadeIn 0.5s ease;
+  }
+  .model-section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== MODEL CARD ===== */
+  .model-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+  }
+  .model-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  .model-badge {
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .model-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+  }
+  .model-scientist {
+    font-size: 1rem;
+    color: var(--gold);
+  }
+
+  .model-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: start;
+  }
+  @media (max-width: 700px) {
+    .model-body { grid-template-columns: 1fr; }
+    .model-title { font-size: 1.5rem; }
+    header h1 { font-size: 1.8rem; }
+  }
+
+  /* ===== CANVAS AREA ===== */
+  .canvas-container {
+    position: relative;
+    background: rgba(0,0,0,0.4);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .canvas-label {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    white-space: nowrap;
+  }
+
+  /* ===== INFO CARDS ===== */
+  .info-col { display: flex; flex-direction: column; gap: 16px; }
+
+  .fact-card {
+    background: rgba(255,255,255,0.04);
+    border-left: 4px solid var(--neon-blue);
+    border-radius: 10px;
+    padding: 14px 18px;
+  }
+  .fact-card.green { border-left-color: var(--neon-green); }
+  .fact-card.gold { border-left-color: var(--gold); }
+  .fact-card.purple { border-left-color: var(--neon-purple); }
+  .fact-card.red { border-left-color: #ff4444; }
+
+  .fact-card h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--neon-blue);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .fact-card.green h3 { color: var(--neon-green); }
+  .fact-card.gold h3 { color: var(--gold); }
+  .fact-card.purple h3 { color: var(--neon-purple); }
+  .fact-card.red h3 { color: #ff4444; }
+
+  .fact-card p {
+    font-size: 0.95rem;
+    color: #ccc;
+    line-height: 1.6;
+  }
+
+  /* ===== INTERACTIVE ELEMENTS ===== */
+  .interactive-box {
+    background: rgba(0,212,255,0.05);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 20px;
+  }
+  .interactive-box h3 {
+    font-size: 0.9rem;
+    color: var(--neon-blue);
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    color: #fff;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,212,255,0.4); }
+  .btn-secondary {
+    background: rgba(255,255,255,0.08);
+    color: #ccc;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.14); color: #fff; }
+
+  /* ===== SLIDER ===== */
+  .slider-container { margin-top: 10px; }
+  .slider-container label {
+    font-size: 0.85rem;
+    color: #aaa;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.1);
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--neon-blue);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--neon-blue);
+  }
+
+  /* ===== SPECTRUM BAR ===== */
+  .spectrum-bar {
+    height: 30px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #ff0000, #ff7700, #ffff00, #00ff00, #0000ff, #8b00ff);
+    position: relative;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  .spectrum-line {
+    position: absolute;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 0 6px rgba(255,255,255,0.8);
+    transition: left 0.3s;
+  }
+
+  /* ===== ELECTRON CLOUD ===== */
+  .probability-bar {
+    height: 12px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.05);
+    margin: 6px 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .probability-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.5s;
+  }
+
+  /* ===== NAV BUTTONS ===== */
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .progress-text {
+    font-size: 0.85rem;
+    color: #555;
+  }
+
+  /* ===== SUMMARY TABLE ===== */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.9rem;
+  }
+  .summary-table th {
+    background: rgba(0,212,255,0.1);
+    color: var(--neon-blue);
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0,212,255,0.2);
+  }
+  .summary-table td {
+    padding: 11px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: #ccc;
+    vertical-align: top;
+  }
+  .summary-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: linear-gradient(135deg, #1a1a3e, #0d0d2e);
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 12px;
+    padding: 12px 24px;
+    color: #fff;
+    font-size: 0.9rem;
+    transition: transform 0.4s;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ===== QUIZ ===== */
+  .quiz-box {
+    background: rgba(255,200,0,0.05);
+    border: 1px solid rgba(255,200,0,0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+  }
+  .quiz-box h3 {
+    color: var(--gold);
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+  .quiz-q { font-size: 1rem; color: #ddd; margin-bottom: 12px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #ccc;
+    font-size: 0.9rem;
+    text-align: left;
+  }
+  .quiz-opt:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .quiz-opt.correct { background: rgba(0,255,136,0.15); border-color: var(--neon-green); color: #fff; }
+  .quiz-opt.wrong { background: rgba(255,68,68,0.15); border-color: #ff4444; color: #fff; }
+  .quiz-feedback { margin-top: 10px; font-size: 0.9rem; min-height: 22px; }
+
+  /* ===== TABS ===== */
+  .tab-bar { display:flex; gap:8px; margin-bottom:10px; }
+  .tab-btn {
+    padding:8px 16px; border:1px solid rgba(255,255,255,0.1); border-radius:8px;
+    background:rgba(255,255,255,0.04); color:#777; font-family:'Sarabun',sans-serif;
+    font-size:0.82rem; cursor:pointer; transition:all 0.2s; font-weight:600; flex:1; text-align:center;
+  }
+  .tab-btn.active { background:rgba(0,212,255,0.12); border-color:var(--neon-blue); color:var(--neon-blue); }
+  .tab-btn.exp-tab.active { background:rgba(255,165,0,0.12); border-color:var(--gold); color:var(--gold); }
+  .tab-btn:hover:not(.active) { background:rgba(255,255,255,0.08); color:#ccc; }
+
+  /* Stars background */
+  .stars {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle var(--d, 3s) infinite alternate;
+  }
+  @keyframes twinkle {
+    from { opacity: 0.1; }
+    to { opacity: 0.6; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<header>
+  <h1>⚛️ ทะลุมิติ ตะลุย 5 ยุคแห่งอะตอม!</h1>
+  <p>ผจญภัยไปกับประวัติศาสตร์การค้นพบที่เปลี่ยนโลก — ฉบับ Interactive</p>
+</header>
+
+<!-- TIMELINE NAV -->
+<div class="timeline-nav" id="timelineNav">
+  <div class="timeline-item active" onclick="goTo(0)">
+    <div class="timeline-dot">⚫</div>
+    <div class="timeline-label">ดอลตัน</div>
+    <div class="timeline-year">ค.ศ. 1803</div>
+  </div>
+  <div class="timeline-connector" id="line0"></div>
+  <div class="timeline-item" onclick="goTo(1)">
+    <div class="timeline-dot">🍩</div>
+    <div class="timeline-label">ทอมสัน</div>
+    <div class="timeline-year">ค.ศ. 1897</div>
+  </div>
+  <div class="timeline-connector" id="line1"></div>
+  <div class="timeline-item" onclick="goTo(2)">
+    <div class="timeline-dot">☀️</div>
+    <div class="timeline-label">รัทเทอร์ฟอร์ด</div>
+    <div class="timeline-year">ค.ศ. 1911</div>
+  </div>
+  <div class="timeline-connector" id="line2"></div>
+  <div class="timeline-item" onclick="goTo(3)">
+    <div class="timeline-dot">🪜</div>
+    <div class="timeline-label">โบร์</div>
+    <div class="timeline-year">ค.ศ. 1913</div>
+  </div>
+  <div class="timeline-connector" id="line3"></div>
+  <div class="timeline-item" onclick="goTo(4)">
+    <div class="timeline-dot">🌌</div>
+    <div class="timeline-label">ควอนตัม</div>
+    <div class="timeline-year">ทศวรรษ 1920s</div>
+  </div>
+</div>
+
+<div class="content-area" style="position:relative;z-index:1;">
+
+<!-- ========== MODEL 1: DALTON ========== -->
+<div class="model-section active" id="model0">
+  <div class="model-card">
+    <div class="model-header">
+      <span class="model-badge">แบบจำลองที่ 1</span>
+      <div>
+        <div class="model-title">ลูกเปตองทึบแสงของดอลตัน</div>
+        <div class="model-scientist">John Dalton · เมืองแมนเชสเตอร์ อังกฤษ</div>
+      </div>
+    </div>
+    <div class="model-body">
+      <div>
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(0,0,this)">⚫ แบบจำลองอะตอม</button>
+          <button class="tab-btn exp-tab" onclick="switchTab(0,1,this)">🧪 การทดลองสำคัญ</button>
+        </div>
+        <div class="canvas-container">
+          <canvas id="c0" width="400" height="320"></canvas>
+          <div class="canvas-label" id="cl0">อะตอม = ทรงกลมทึบตัน ไม่มีอะไรข้างใน</div>
+        </div>
+        <div class="interactive-box" style="margin-top:16px;" id="expbox0">
+          <h3>🧪 ทดลอง: กฎสัดส่วนคงที่</h3>
+          <p style="font-size:0.85rem;color:#aaa;margin-bottom:10px;">สารเคมีรวมตัวด้วย "อัตราส่วนที่ลงตัวเป๊ะ" เพราะอะตอมมีขนาดแน่นอน</p>
+          <div class="slider-container">
+            <label>
+              <span>จำนวนอะตอม H</span>
+              <span id="daltonRatio">H:O = 2:1 (น้ำ)</span>
+            </label>
+            <input type="range" min="1" max="4" value="2" id="daltonSlider" oninput="updateDaltonRatio(this.value)">
+          </div>
+          <p id="daltonResult" style="font-size:0.85rem;color:var(--gold);margin-top:8px;">💧 น้ำ (H₂O)</p>
+        </div>
+      </div>
+      <div class="info-col">
+        <div class="fact-card gold">
+          <h3>💡 แนวคิดหลัก</h3>
+          <p>สารทุกชนิดประกอบด้วยอนุภาคที่เล็กที่สุดจนตัดแบ่งไม่ได้อีก เรียกว่า <strong>"อะตอม" (Atom)</strong> — ทรงกลมตัน ทึบ ไม่มีอะไรข้างใน</p>
+        </div>
+        <div class="fact-card">
+          <h3>📏 คุณสมบัติ</h3>
+          <p>• อะตอมไม่สามารถสร้างหรือทำลายได้<br>• อะตอมของธาตุชนิดเดียวกันเหมือนกันทุกประการ<br>• อะตอมต่างธาตุมีมวลต่างกัน</p>
+        </div>
+        <div class="fact-card green">
+          <h3>✅ จุดแข็ง</h3>
+          <p>อธิบายกฎสัดส่วนคงที่และกฎสัดส่วนพหุคูณได้ — เป็นรากฐานของเคมีสมัยใหม่!</p>
+        </div>
+        <div class="fact-card red">
+          <h3>❌ จุดอ่อน (ค้นพบทีหลัง)</h3>
+          <p>ความจริงอะตอมไม่ได้ตัน — มีอนุภาคย่อยซ่อนอยู่ข้างใน! ทอมสันค้นพบในปี 1897</p>
+        </div>
+        <div class="quiz-box">
+          <h3>🎯 ทดสอบความเข้าใจ</h3>
+          <p class="quiz-q">ดอลตันอธิบายว่าอะตอมมีลักษณะอย่างไร?</p>
+          <div class="quiz-options" id="q0">
+            <button class="quiz-opt" onclick="checkQ(0,0,2)">A. ลูกบอลกลวงมีประจุบวกข้างใน</button>
+            <button class="quiz-opt" onclick="checkQ(0,1,2)">B. ลูกบอลทึบตันแบ่งแยกไม่ได้</button>
+            <button class="quiz-opt" onclick="checkQ(0,2,2)">C. มีนิวเคลียสอยู่ตรงกลาง</button>
+            <button class="quiz-opt" onclick="checkQ(0,3,2)">D. กลุ่มหมอกอิเล็กตรอน</button>
+          </div>
+          <p class="quiz-feedback" id="qf0"></p>
+        </div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <span class="progress-text">1 / 5</span>
+      <button class="btn btn-primary" onclick="goTo(1)">ถัดไป: ทอมสัน →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODEL 2: THOMSON ========== -->
+<div class="model-section" id="model1">
+  <div class="model-card">
+    <div class="model-header">
+      <span class="model-badge">แบบจำลองที่ 2</span>
+      <div>
+        <div class="model-title">ขนมปังลูกเกดของทอมสัน</div>
+        <div class="model-scientist">J.J. Thomson · ค.ศ. 1897 · การค้นพบอิเล็กตรอน</div>
+      </div>
+    </div>
+    <div class="model-body">
+      <div>
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(1,0,this)">🍩 แบบจำลองอะตอม</button>
+          <button class="tab-btn exp-tab" onclick="switchTab(1,1,this)">⚡ การทดลองสำคัญ</button>
+        </div>
+        <div class="canvas-container">
+          <canvas id="c1" width="400" height="320"></canvas>
+          <div class="canvas-label" id="cl1">ขนมปังลูกเกด — อิเล็กตรอนฝังในเนื้อบวก</div>
+        </div>
+        <div class="interactive-box" style="margin-top:16px;display:none;" id="expbox1">
+          <h3>⚡ ทดลอง: หลอดรังสีแคโทด (Cathode Ray Tube)</h3>
+          <p style="font-size:0.85rem;color:#aaa;margin-bottom:10px;">รังสีเบนเข้าหาขั้วบวกของแม่เหล็ก → ต้องมีประจุลบซ่อนอยู่!</p>
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="toggleMagnet()">🔋 เปิด/ปิดแม่เหล็ก</button>
+            <button class="btn btn-secondary" onclick="resetThomson()">↺ รีเซ็ต</button>
+          </div>
+          <p id="thomsonStatus" style="font-size:0.85rem;color:var(--neon-green);margin-top:8px;">สถานะ: ไม่มีแม่เหล็ก — รังสีตรง</p>
+        </div>
+      </div>
+      <div class="info-col">
+        <div class="fact-card gold">
+          <h3>💡 การค้นพบสำคัญ</h3>
+          <p>ค้นพบ <strong>อิเล็กตรอน (Electron)</strong> — อนุภาคประจุลบที่มีขนาดเล็กกว่าอะตอมถึง <strong>2,000 เท่า!</strong></p>
+        </div>
+        <div class="fact-card purple">
+          <h3>🍩 โมเดลขนมปังลูกเกด</h3>
+          <p>อะตอม = เนื้อบวก (แป้ง) กระจายอยู่ทั่วไป + อิเล็กตรอน (ลูกเกด) ฝังอยู่ประปราย เพื่อรักษาสมดุล</p>
+        </div>
+        <div class="fact-card">
+          <h3>📐 ขนาด</h3>
+          <p>อิเล็กตรอนเล็กกว่าอะตอมมาก มวลน้อยมาก แต่มีประจุลบที่ชัดเจน → ทำลายทฤษฎีดอลตันที่บอกว่าอะตอมตัน!</p>
+        </div>
+        <div class="fact-card red">
+          <h3>❌ ถูกล้มล้าง (1911)</h3>
+          <p>รัทเทอร์ฟอร์ดยิงอนุภาคแอลฟาผ่านทองคำ พบว่า 1 ใน 20,000 ตัว สะท้อนกลับ — โมเดลนี้ผิด!</p>
+        </div>
+        <div class="quiz-box">
+          <h3>🎯 ทดสอบความเข้าใจ</h3>
+          <p class="quiz-q">รังสีในหลอดแคโทดเบนเข้าหาขั้วบวก แสดงว่ามันคืออะไร?</p>
+          <div class="quiz-options" id="q1">
+            <button class="quiz-opt" onclick="checkQ(1,0,3)">A. แสงธรรมดา (ไม่มีประจุ)</button>
+            <button class="quiz-opt" onclick="checkQ(1,1,3)">B. อนุภาคประจุบวก</button>
+            <button class="quiz-opt" onclick="checkQ(1,2,3)">C. อนุภาคประจุลบ (อิเล็กตรอน)</button>
+            <button class="quiz-opt" onclick="checkQ(1,3,3)">D. นิวตรอน</button>
+          </div>
+          <p class="quiz-feedback" id="qf1"></p>
+        </div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="goTo(0)">← ดอลตัน</button>
+      <span class="progress-text">2 / 5</span>
+      <button class="btn btn-primary" onclick="goTo(2)">ถัดไป: รัทเทอร์ฟอร์ด →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODEL 3: RUTHERFORD ========== -->
+<div class="model-section" id="model2">
+  <div class="model-card">
+    <div class="model-header">
+      <span class="model-badge">แบบจำลองที่ 3</span>
+      <div>
+        <div class="model-title">ระบบสุริยะจิ๋วของรัทเทอร์ฟอร์ด</div>
+        <div class="model-scientist">Ernest Rutherford · ค.ศ. 1911 · การทดลองแผ่นทองคำ</div>
+      </div>
+    </div>
+    <div class="model-body">
+      <div>
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(2,0,this)">☀️ แบบจำลองอะตอม</button>
+          <button class="tab-btn exp-tab" onclick="switchTab(2,1,this)">🎯 การทดลองสำคัญ</button>
+        </div>
+        <div class="canvas-container">
+          <canvas id="c2" width="400" height="320"></canvas>
+          <div class="canvas-label" id="cl2">ระบบสุริยะจิ๋ว — นิวเคลียสตรงกลาง อิเล็กตรอนวิ่งรอบ</div>
+        </div>
+        <div class="interactive-box" style="margin-top:16px;display:none;" id="expbox2">
+          <h3>🎯 ทดลอง: ยิงอนุภาคแอลฟาใส่แผ่นทองคำ</h3>
+          <p style="font-size:0.85rem;color:#aaa;margin-bottom:10px;">ทุก 20,000 ตัว จะมี 1 ตัวที่สะท้อนกลับ!</p>
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="fireAlpha()">🔫 ยิงอนุภาคแอลฟา!</button>
+            <button class="btn btn-secondary" onclick="resetRutherford()">↺ รีเซ็ต</button>
+          </div>
+          <p id="ruthStats" style="font-size:0.85rem;color:var(--gold);margin-top:8px;">ยิงไป: 0 | ผ่านทะลุ: 0 | สะท้อน: 0</p>
+        </div>
+      </div>
+      <div class="info-col">
+        <div class="fact-card gold">
+          <h3>💡 การค้นพบ</h3>
+          <p>ค้นพบ <strong>นิวเคลียส</strong> — ก้อนประจุบวกที่หนาแน่นมากอยู่ตรงกลาง และอะตอม 99.99% คือพื้นที่ว่าง!</p>
+        </div>
+        <div class="fact-card">
+          <h3>☀️ โมเดลระบบสุริยะ</h3>
+          <p>• <strong>นิวเคลียส</strong> = ดวงอาทิตย์ (ประจุบวก หนัก หนาแน่น)<br>• <strong>อิเล็กตรอน</strong> = ดาวเคราะห์ วิ่งวนรอบนอก<br>• <strong>ช่องว่าง</strong> = อวกาศกว้างใหญ่</p>
+        </div>
+        <div class="fact-card green">
+          <h3>🔬 ผลการทดลอง</h3>
+          <p>ยิง α ใส่แผ่นทอง:<br>• 19,999/20,000 → ผ่านทะลุ (พื้นที่ว่าง)<br>• 1/20,000 → สะท้อนกลับ (ชนนิวเคลียส!)</p>
+        </div>
+        <div class="fact-card red">
+          <h3>❌ ปัญหาที่โบร์แก้ (1913)</h3>
+          <p>ถ้าอิเล็กตรอนวิ่งสะปะสะปะ มันต้องสูญเสียพลังงาน แล้วร่วงลงชนนิวเคลียส → อะตอมพัง! แต่จริงๆ ไม่พัง!</p>
+        </div>
+        <div class="quiz-box">
+          <h3>🎯 ทดสอบความเข้าใจ</h3>
+          <p class="quiz-q">เหตุใดอนุภาคแอลฟาส่วนใหญ่จึงผ่านทะลุแผ่นทองได้?</p>
+          <div class="quiz-options" id="q2">
+            <button class="quiz-opt" onclick="checkQ(2,0,3)">A. อนุภาคแอลฟาเล็กมาก</button>
+            <button class="quiz-opt" onclick="checkQ(2,1,3)">B. แผ่นทองบางมาก</button>
+            <button class="quiz-opt" onclick="checkQ(2,2,3)">C. อะตอมส่วนใหญ่คือพื้นที่ว่าง</button>
+            <button class="quiz-opt" onclick="checkQ(2,3,3)">D. ทองคำไม่มีอิเล็กตรอน</button>
+          </div>
+          <p class="quiz-feedback" id="qf2"></p>
+        </div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="goTo(1)">← ทอมสัน</button>
+      <span class="progress-text">3 / 5</span>
+      <button class="btn btn-primary" onclick="goTo(3)">ถัดไป: โบร์ →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODEL 4: BOHR ========== -->
+<div class="model-section" id="model3">
+  <div class="model-card">
+    <div class="model-header">
+      <span class="model-badge">แบบจำลองที่ 4</span>
+      <div>
+        <div class="model-title">วงโคจรขั้นบันไดของโบร์</div>
+        <div class="model-scientist">Niels Bohr · ค.ศ. 1913 · โคเปนเฮเกน เดนมาร์ก</div>
+      </div>
+    </div>
+    <div class="model-body">
+      <div>
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(3,0,this)">🪜 แบบจำลองอะตอม</button>
+          <button class="tab-btn exp-tab" onclick="switchTab(3,1,this)">🌈 การทดลองสำคัญ</button>
+        </div>
+        <div class="canvas-container">
+          <canvas id="c3" width="400" height="320"></canvas>
+          <div class="canvas-label" id="cl3">วงโคจรขั้นบันได — อิเล็กตรอนอยู่เฉพาะระดับแน่นอน</div>
+        </div>
+        <div class="interactive-box" style="margin-top:16px;display:none;" id="expbox3">
+          <h3>🌈 ทดลอง: สเปกตรัมแสงของไฮโดรเจน</h3>
+          <p style="font-size:0.85rem;color:#aaa;margin-bottom:8px;">อิเล็กตรอนกระโดดลง → ปล่อยแสงสีเฉพาะตัว!</p>
+          <div class="spectrum-bar">
+            <div class="spectrum-line" id="specLine"></div>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="exciteElectron(3)">⬆️ กระตุ้น n=4</button>
+            <button class="btn btn-primary" onclick="exciteElectron(2)">⬆️ กระตุ้น n=3</button>
+            <button class="btn btn-secondary" onclick="relaxElectron()">⬇️ คายพลังงาน</button>
+          </div>
+          <p id="bohrStatus" style="font-size:0.85rem;color:var(--neon-blue);margin-top:8px;">อิเล็กตรอนอยู่ที่ n=1 (ระดับพื้น)</p>
+        </div>
+      </div>
+      <div class="info-col">
+        <div class="fact-card gold">
+          <h3>💡 แนวคิดหลัก</h3>
+          <p>อิเล็กตรอนวิ่งได้เฉพาะบน <strong>"วงโคจรพลังงานแน่นอน"</strong> (ขั้นบันได) เท่านั้น ห้ามอยู่ระหว่างขั้น!</p>
+        </div>
+        <div class="fact-card purple">
+          <h3>🌈 การปล่อยแสง</h3>
+          <p>เมื่ออิเล็กตรอน<strong>กระโดดลง</strong>จากระดับสูงสู่ต่ำ → ปล่อยแสง<strong>สีเฉพาะตัว</strong> (สเปกตรัม) ขึ้นอยู่กับระยะที่กระโดด</p>
+        </div>
+        <div class="fact-card green">
+          <h3>✅ แก้ปัญหารัทเทอร์ฟอร์ด</h3>
+          <p>อิเล็กตรอนในวงโคจรของตัวเองจะ<strong>ไม่สูญเสียพลังงาน</strong> → อะตอมจึงเสถียร! (ไม่พัง)</p>
+        </div>
+        <div class="fact-card">
+          <h3>🎯 ระดับพลังงาน n</h3>
+          <p>n=1 (ใกล้นิวเคลียส พลังงานต่ำ)<br>n=2, 3, 4... (ไกลออกไป พลังงานสูงขึ้น)<br>กระโดดข้ามขั้น = ดูดหรือคายพลังงาน</p>
+        </div>
+        <div class="quiz-box">
+          <h3>🎯 ทดสอบความเข้าใจ</h3>
+          <p class="quiz-q">อะตอมไฮโดรเจนปล่อยแสงสีแดง แสดงว่าเกิดอะไรขึ้น?</p>
+          <div class="quiz-options" id="q3">
+            <button class="quiz-opt" onclick="checkQ(3,0,3)">A. อิเล็กตรอนดูดกลืนพลังงาน</button>
+            <button class="quiz-opt" onclick="checkQ(3,1,3)">B. อิเล็กตรอนกระโดดขึ้นสู่ระดับสูง</button>
+            <button class="quiz-opt" onclick="checkQ(3,2,3)">C. อิเล็กตรอนกระโดดลงสู่ระดับต่ำกว่า</button>
+            <button class="quiz-opt" onclick="checkQ(3,3,3)">D. นิวเคลียสแตก</button>
+          </div>
+          <p class="quiz-feedback" id="qf3"></p>
+        </div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="goTo(2)">← รัทเทอร์ฟอร์ด</button>
+      <span class="progress-text">4 / 5</span>
+      <button class="btn btn-primary" onclick="goTo(4)">ถัดไป: ควอนตัม →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODEL 5: QUANTUM ========== -->
+<div class="model-section" id="model4">
+  <div class="model-card">
+    <div class="model-header">
+      <span class="model-badge">แบบจำลองที่ 5</span>
+      <div>
+        <div class="model-title">กลุ่มหมอกควอนตัมแห่งอนาคต</div>
+        <div class="model-scientist">Schrödinger, Heisenberg · ทศวรรษ 1920s · กลศาสตร์ควอนตัม</div>
+      </div>
+    </div>
+    <div class="model-body">
+      <div>
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab(4,0,this)">🌌 แบบจำลองอะตอม</button>
+          <button class="tab-btn exp-tab" onclick="switchTab(4,1,this)">⚛️ การทดลองสำคัญ</button>
+        </div>
+        <div class="canvas-container">
+          <canvas id="c4" width="400" height="320"></canvas>
+          <div class="canvas-label" id="cl4">กลุ่มหมอก — บอกได้แค่โอกาสพบอิเล็กตรอน</div>
+        </div>
+        <div class="interactive-box" style="margin-top:16px;display:none;" id="expbox4">
+          <h3>⚛️ หลักความไม่แน่นอน (Uncertainty Principle)</h3>
+          <p style="font-size:0.85rem;color:#aaa;margin-bottom:8px;">ยิ่งรู้ตำแหน่งชัด → ยิ่งไม่รู้ความเร็ว และในทางกลับกัน!</p>
+          <div class="slider-container">
+            <label><span>ความแม่นยำตำแหน่ง (Δx)</span><span id="uncertVal">กลาง</span></label>
+            <input type="range" min="1" max="100" value="50" id="uncertSlider" oninput="updateUncertainty(this.value)">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+            <div style="text-align:center;background:rgba(0,212,255,0.08);border-radius:8px;padding:8px;">
+              <div style="font-size:0.75rem;color:#aaa;">ความไม่แน่นอนตำแหน่ง Δx</div>
+              <div id="dxBar" style="height:8px;background:var(--neon-blue);border-radius:4px;margin-top:6px;transition:width 0.3s;width:50%;"></div>
+            </div>
+            <div style="text-align:center;background:rgba(255,165,0,0.08);border-radius:8px;padding:8px;">
+              <div style="font-size:0.75rem;color:#aaa;">ความไม่แน่นอนความเร็ว Δp</div>
+              <div id="dpBar" style="height:8px;background:var(--gold);border-radius:4px;margin-top:6px;transition:width 0.3s;width:50%;"></div>
+            </div>
+          </div>
+          <p id="uncertMsg" style="font-size:0.82rem;color:var(--neon-purple);margin-top:8px;text-align:center;">Δx · Δp ≥ ℏ/2</p>
+        </div>
+      </div>
+      <div class="info-col">
+        <div class="fact-card purple">
+          <h3>💡 แนวคิดหลัก</h3>
+          <p><strong>หลักความไม่แน่นอน (Uncertainty Principle)</strong> ของไฮเซนเบิร์ก: เราไม่มีวันรู้ตำแหน่ง + ความเร็วของอิเล็กตรอนพร้อมกันได้!</p>
+        </div>
+        <div class="fact-card">
+          <h3>☁️ กลุ่มหมอก</h3>
+          <p>อิเล็กตรอนไม่ได้วิ่งเป็นเส้น แต่อยู่เป็น <strong>"กลุ่มหมอก"</strong> — บอกได้แค่โอกาสที่จะ<strong>เจออิเล็กตรอน</strong>ในบริเวณนั้น</p>
+        </div>
+        <div class="fact-card green">
+          <h3>✅ แม่นยำที่สุดในปัจจุบัน</h3>
+          <p>อธิบายปรากฏการณ์ทางเคมีและฟิสิกส์ได้แม่นยำที่สุด! ใช้ในการออกแบบ CPU, Laser, MRI และเทคโนโลยีสมัยใหม่</p>
+        </div>
+        <div class="fact-card gold">
+          <h3>🌊 คลื่น-อนุภาค</h3>
+          <p>อิเล็กตรอนมีสมบัติเป็นทั้ง<strong>อนุภาค</strong>และ<strong>คลื่น</strong>พร้อมกัน! (Wave-particle duality) — แปลกประหลาดกว่าที่คิด</p>
+        </div>
+        <div class="quiz-box">
+          <h3>🎯 ทดสอบความเข้าใจ</h3>
+          <p class="quiz-q">กลุ่มหมอกของอิเล็กตรอนบอกอะไรเราได้?</p>
+          <div class="quiz-options" id="q4">
+            <button class="quiz-opt" onclick="checkQ(4,0,3)">A. ตำแหน่งที่แน่นอนของอิเล็กตรอน</button>
+            <button class="quiz-opt" onclick="checkQ(4,1,3)">B. เส้นทางวงโคจรที่ชัดเจน</button>
+            <button class="quiz-opt" onclick="checkQ(4,2,3)">C. ความน่าจะเป็นที่จะพบอิเล็กตรอน</button>
+            <button class="quiz-opt" onclick="checkQ(4,3,3)">D. มวลของอิเล็กตรอน</button>
+          </div>
+          <p class="quiz-feedback" id="qf4"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ SCORE CARD -->
+    <div id="scoreCard" style="display:none;margin-top:28px;background:linear-gradient(135deg,rgba(0,212,255,0.07),rgba(180,0,255,0.07));border:1px solid rgba(0,212,255,0.25);border-radius:16px;padding:22px 24px;">
+      <p style="color:var(--gold);font-size:1.05rem;font-weight:700;margin-bottom:14px;">📝 ผลการทำแบบทดสอบความเข้าใจ</p>
+      <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+        <div style="font-size:2.8rem;font-weight:800;color:var(--neon-blue);min-width:80px;" id="scoreNum">0 / 5</div>
+        <div style="flex:1;min-width:160px;">
+          <div style="background:rgba(255,255,255,0.08);border-radius:8px;height:12px;overflow:hidden;">
+            <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--neon-blue),var(--neon-green));border-radius:8px;transition:width 0.5s ease;"></div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+            <span id="sdot0" style="font-size:1.1rem;opacity:0.3;">⬜</span>
+            <span id="sdot1" style="font-size:1.1rem;opacity:0.3;">⬜</span>
+            <span id="sdot2" style="font-size:1.1rem;opacity:0.3;">⬜</span>
+            <span id="sdot3" style="font-size:1.1rem;opacity:0.3;">⬜</span>
+            <span id="sdot4" style="font-size:1.1rem;opacity:0.3;">⬜</span>
+          </div>
+        </div>
+      </div>
+      <p id="scoreMsg" style="margin-top:14px;font-size:0.95rem;color:rgba(255,255,255,0.45);"></p>
+    </div>
+
+    <!-- SUMMARY TABLE -->
+    <div style="margin-top:30px;">
+      <h3 style="color:var(--gold);margin-bottom:16px;">📊 สรุปวิวัฒนาการ 5 แบบจำลอง</h3>
+      <div style="overflow-x:auto;">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>นักวิทยาศาสตร์</th>
+              <th>ปี</th>
+              <th>โมเดล</th>
+              <th>การค้นพบหลัก</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>⚫ ดอลตัน</td><td>1803</td><td>ลูกเปตองทึบ</td><td>อะตอมเป็นหน่วยย่อยสุด</td></tr>
+            <tr><td>🍩 ทอมสัน</td><td>1897</td><td>ขนมปังลูกเกด</td><td>ค้นพบอิเล็กตรอน</td></tr>
+            <tr><td>☀️ รัทเทอร์ฟอร์ด</td><td>1911</td><td>ระบบสุริยะ</td><td>นิวเคลียส + พื้นที่ว่าง</td></tr>
+            <tr><td>🪜 โบร์</td><td>1913</td><td>วงโคจรขั้นบันได</td><td>ระดับพลังงานแน่นอน</td></tr>
+            <tr><td>🌌 ควอนตัม</td><td>1920s</td><td>กลุ่มหมอก</td><td>ความน่าจะเป็น + ความไม่แน่นอน</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);border-radius:12px;padding:16px;margin-top:20px;">
+      <p style="color:var(--neon-green);font-size:1rem;font-weight:700;">🏆 บทสรุป: ธรรมชาติของวิทยาศาสตร์</p>
+      <p style="color:#ccc;margin-top:8px;line-height:1.7;">วิทยาศาสตร์ไม่มีทฤษฎีไหนอยู่ค้ำฟ้า — หากมีหลักฐานใหม่ที่พิสูจน์ได้ดีกว่า ทฤษฎีเก่าก็พร้อมหลีกทางให้เสมอ! วิวัฒนาการของแบบจำลองอะตอมไม่ใช่การลบล้างความผิดพลาด แต่คือการก้าวเดินไปข้างหน้า สู่ความเข้าใจจักรวาลที่ลึกซึ้งยิ่งขึ้น</p>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="goTo(3)">← โบร์</button>
+      <span class="progress-text">5 / 5 ✓</span>
+      <button class="btn btn-primary" onclick="goTo(0)">↺ เริ่มใหม่</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content-area -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== STARS =====
+const starsEl = document.getElementById('stars');
+for(let i=0;i<80;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  const size=Math.random()*2+0.5;
+  s.style.cssText=`width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s`;
+  starsEl.appendChild(s);
+}
+
+// ===== NAVIGATION =====
+let currentModel = 0;
+const animations = [];
+
+function goTo(n) {
+  document.querySelectorAll('.model-section').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.timeline-item').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.timeline-connector').forEach((l,i)=>l.classList.toggle('active-line',i<n));
+  currentModel = n;
+  stopAllAnimations();
+  setTimeout(()=>startAnimation(n), 100);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+// ===== QUIZ =====
+const quizAnswered = {}; // track which qids have been answered
+function checkQ(qid, chosen, correct) {
+  if(quizAnswered[qid]) return; // prevent re-answer
+  quizAnswered[qid] = chosen === correct-1 ? 'correct' : 'wrong';
+  const opts = document.querySelectorAll(`#q${qid} .quiz-opt`);
+  const fb = document.getElementById(`qf${qid}`);
+  opts.forEach((o,i)=>{
+    if(i===correct-1) o.classList.add('correct');
+    else if(i===chosen) o.classList.add('wrong');
+    o.disabled=true;
+  });
+  if(chosen===correct-1){
+    fb.innerHTML = '✅ ถูกต้อง! เยี่ยมมาก!';
+    fb.style.color='var(--neon-green)';
+    showToast('🎉 ถูกต้อง!');
+  } else {
+    fb.innerHTML = '❌ ยังไม่ใช่ — ดูคำอธิบายอีกรอบนะ';
+    fb.style.color='#ff6b6b';
+  }
+  updateQuizScore();
+}
+
+function updateQuizScore(){
+  const total=5;
+  const answered=Object.keys(quizAnswered).length;
+  const correct=Object.values(quizAnswered).filter(v=>v==='correct').length;
+  const card=document.getElementById('scoreCard');
+  if(!card) return;
+  document.getElementById('scoreNum').textContent=`${correct} / ${total}`;
+  // Progress bar
+  document.getElementById('scoreBar').style.width=`${(correct/total)*100}%`;
+  // Per-question indicators
+  for(let i=0;i<total;i++){
+    const dot=document.getElementById(`sdot${i}`);
+    if(!dot) continue;
+    if(!quizAnswered[i]) { dot.textContent='⬜'; dot.style.opacity='0.3'; }
+    else if(quizAnswered[i]==='correct'){ dot.textContent='✅'; dot.style.opacity='1'; }
+    else { dot.textContent='❌'; dot.style.opacity='1'; }
+  }
+  // Message
+  const msg=document.getElementById('scoreMsg');
+  if(answered<total){ msg.textContent=`ตอบแล้ว ${answered}/${total} ข้อ — ไปต่อได้เลย!`; msg.style.color='rgba(255,255,255,0.45)'; }
+  else if(correct===5){ msg.textContent='🏆 เพอร์เฟกต์! คุณเข้าใจแบบจำลองอะตอมครบทุกยุค!'; msg.style.color='var(--gold)'; }
+  else if(correct>=4){ msg.textContent='🌟 ยอดเยี่ยม! เกือบสมบูรณ์แล้ว!'; msg.style.color='var(--neon-green)'; }
+  else if(correct>=3){ msg.textContent='👍 ดีมาก! ลองทบทวนข้อที่พลาดอีกครั้งนะ'; msg.style.color='var(--neon-blue)'; }
+  else { msg.textContent='📖 ลองกลับไปอ่านเนื้อหาแต่ละยุคอีกรอบนะ!'; msg.style.color='#ff9966'; }
+  card.style.display='block';
+}
+
+// ===== DALTON RATIO =====
+const daltonMolecules={1:'H₁O — ไม่มีสารนี้ (อัตราส่วนผิด)',2:'💧 น้ำ (H₂O)',3:'H₃O⁺ — ไอออนไฮโดรเนียม',4:'H₄O — ไม่มีในธรรมชาติ'};
+function updateDaltonRatio(v){
+  document.getElementById('daltonRatio').textContent=`H:O = ${v}:1`;
+  document.getElementById('daltonResult').textContent=daltonMolecules[v];
+}
+
+// ===== THOMSON =====
+let magnetOn=false;
+function toggleMagnet(){
+  magnetOn=!magnetOn;
+  document.getElementById('thomsonStatus').textContent=magnetOn?'สถานะ: แม่เหล็กเปิด — รังสีเบนเข้าหาขั้วบวก!':'สถานะ: ไม่มีแม่เหล็ก — รังสีตรง';
+  document.getElementById('thomsonStatus').style.color=magnetOn?'var(--gold)':'var(--neon-green)';
+}
+function resetThomson(){magnetOn=false;toggleMagnet();}
+
+// ===== RUTHERFORD =====
+let rutherfordFired=0,rutherfordPass=0,rutherfordBounce=0;
+let alphas=[];
+function fireAlpha(){
+  const n=Math.floor(Math.random()*8)+3;
+  for(let i=0;i<n;i++){
+    const bounce=Math.random()<0.00005||rutherfordFired<20&&Math.random()<0.03;
+    alphas.push({x:20,y:100+Math.random()*120,vx:3+Math.random()*2,vy:(Math.random()-0.5)*1.5,bounce:bounce,done:false,t:0});
+    rutherfordFired++;
+    if(bounce)rutherfordBounce++;else rutherfordPass++;
+  }
+  document.getElementById('ruthStats').textContent=`ยิงไป: ${rutherfordFired} | ผ่านทะลุ: ${rutherfordPass} | สะท้อน: ${rutherfordBounce}`;
+}
+function resetRutherford(){alphas=[];rutherfordFired=rutherfordPass=rutherfordBounce=0;document.getElementById('ruthStats').textContent='ยิงไป: 0 | ผ่านทะลุ: 0 | สะท้อน: 0';}
+
+// ===== BOHR =====
+let bohrLevel=0;
+let bohrElAngle=0;
+function exciteElectron(level){
+  bohrLevel=level;
+  document.getElementById('bohrStatus').textContent=`อิเล็กตรอนกระโดดขึ้นสู่ n=${level+1} (Excited State!)`;
+  document.getElementById('specLine').style.left='0%';
+  showToast('⚡ อิเล็กตรอนดูดกลืนพลังงาน!');
+}
+function relaxElectron(){
+  if(bohrLevel===0){showToast('อยู่ที่ระดับพื้นแล้ว!');return;}
+  const colors=['15%','35%','55%','72%'];
+  document.getElementById('specLine').style.left=colors[bohrLevel-1]||'50%';
+  const names=['แดง','น้ำเงิน-เขียว','น้ำเงิน','ม่วง'];
+  document.getElementById('bohrStatus').textContent=`ปล่อยแสงสี${names[bohrLevel-1]||'ม่วง'}! กลับสู่ n=1`;
+  showToast('🌈 ปล่อยแสงสเปกตรัม!');
+  bohrLevel=0;
+}
+
+// ===== TAB SYSTEM =====
+const atomTabs=[0,0,0,0,0];
+const tabLabels=[
+  ['อะตอม = ทรงกลมทึบตัน ไม่มีอะไรข้างใน','กฎสัดส่วนคงที่ — เลื่อน slider เพื่อดูการรวมตัว'],
+  ['ขนมปังลูกเกด — อิเล็กตรอนฝังในเนื้อบวก','กด "เปิดแม่เหล็ก" เพื่อดูการเบนของรังสี'],
+  ['ระบบสุริยะจิ๋ว — นิวเคลียสตรงกลาง อิเล็กตรอนวิ่งรอบ','คลิก "ยิง" เพื่อส่งอนุภาคแอลฟาใส่แผ่นทอง'],
+  ['วงโคจรขั้นบันได — อิเล็กตรอนอยู่เฉพาะระดับแน่นอน','กระตุ้นอิเล็กตรอนแล้วดูสเปกตรัมแสงที่ปล่อยออกมา'],
+  ['กลุ่มหมอก — บอกได้แค่โอกาสพบอิเล็กตรอน','เลื่อน slider เพื่อสัมผัสหลักความไม่แน่นอน']
+];
+
+function switchTab(modelIdx,tabIdx,btn){
+  atomTabs[modelIdx]=tabIdx;
+  const bar=btn.closest('.tab-bar');
+  bar.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===tabIdx));
+  const cl=document.getElementById('cl'+modelIdx);
+  if(cl) cl.textContent=tabLabels[modelIdx][tabIdx];
+  const eb=document.getElementById('expbox'+modelIdx);
+  if(eb) eb.style.display=tabIdx===1?'block':'none';
+  stopAllAnimations();
+  setTimeout(()=>startAnimation(modelIdx),50);
+}
+
+function updateUncertainty(v){
+  const dx=parseInt(v); const dp=Math.round(100*(100-dx)/100+1);
+  document.getElementById('dxBar').style.width=dx+'%';
+  document.getElementById('dpBar').style.width=dp+'%';
+  const msgs=['ตำแหน่งชัดมาก → ความเร็วไม่รู้เลย!','ตำแหน่งพอรู้ → ความเร็วพอรู้','ความเร็วชัดมาก → ตำแหน่งไม่รู้เลย!'];
+  const idx=dx>66?0:dx>33?1:2;
+  document.getElementById('uncertMsg').textContent=['Δx น้อย → Δp มาก!','Δx · Δp ≥ ℏ/2','Δx มาก → Δp น้อย!'][idx];
+  document.getElementById('uncertVal').textContent=dx>66?'แม่นยำสูง':dx>33?'ปานกลาง':'แม่นยำต่ำ';
+}
+
+// ===== CANVAS ANIMATIONS =====
+let rafIds={};
+
+function stopAllAnimations(){
+  Object.values(rafIds).forEach(id=>cancelAnimationFrame(id));
+  rafIds={};
+}
+
+function startAnimation(n){
+  const tab=atomTabs[n];
+  if(n===0){ tab===0?animDaltonModel():animDaltonExperiment(); }
+  else if(n===1){ tab===0?animThomsonModel():animThomsonExperiment(); }
+  else if(n===2){ tab===0?animRutherfordModel():animRutherfordExperiment(); }
+  else if(n===3){ tab===0?animBohrModel():animBohrExperiment(); }
+  else if(n===4){ tab===0?animQuantumModel():animQuantumExperiment(); }
+}
+
+// ---- DALTON MODEL ----
+function animDaltonModel(){
+  const cv=document.getElementById('c0');const ctx=cv.getContext('2d');let t=0;
+  const atomTypes=[
+    {x:110,y:160,r:38,c0:'#aaa',c1:'#444',label:'อะตอม A',sub:'ธาตุชนิดที่ 1'},
+    {x:220,y:160,r:38,c0:'#6af',c1:'#036',label:'อะตอม B',sub:'ธาตุชนิดที่ 2'},
+    {x:330,y:160,r:38,c0:'#fa6',c1:'#630',label:'อะตอม C',sub:'ธาตุชนิดที่ 3'},
+  ];
+  function drawAtom(ax,ay,ar,ac0,ac1,lbl,sub,pulse){
+    const g=ctx.createRadialGradient(ax-ar*0.3,ay-ar*0.3,2,ax,ay,ar+pulse);
+    g.addColorStop(0,ac0);g.addColorStop(0.6,ac1);g.addColorStop(1,'#0a0a1a');
+    ctx.beginPath();ctx.arc(ax,ay,ar+pulse,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+    const hl=ctx.createRadialGradient(ax-ar*0.35,ay-ar*0.35,1,ax-ar*0.35,ay-ar*0.35,ar*0.4);
+    hl.addColorStop(0,'rgba(255,255,255,0.35)');hl.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(ax-ar*0.35,ay-ar*0.35,ar*0.4,0,Math.PI*2);ctx.fillStyle=hl;ctx.fill();
+    ctx.font='bold 13px Sarabun';ctx.fillStyle='rgba(255,255,255,0.85)';ctx.textAlign='center';
+    ctx.fillText(lbl,ax,ay+4);
+    ctx.font='10px Sarabun';ctx.fillStyle='rgba(255,255,255,0.4)';ctx.fillText(sub,ax,ay+18);
+  }
+  function draw(){
+    ctx.clearRect(0,0,400,320);
+    const bg=ctx.createLinearGradient(0,0,0,320);bg.addColorStop(0,'#111128');bg.addColorStop(1,'#0a0a1a');
+    ctx.fillStyle=bg;ctx.fillRect(0,0,400,320);
+    // Title
+    ctx.font='bold 15px Sarabun';ctx.fillStyle='rgba(245,197,24,0.9)';ctx.textAlign='center';
+    ctx.fillText('แบบจำลองดอลตัน (ค.ศ. 1803)',200,28);
+    // Atoms
+    atomTypes.forEach((a,i)=>drawAtom(a.x,a.y,a.r,a.c0,a.c1,a.label,a.sub,Math.sin(t*0.03+i)*2));
+    // Properties boxes
+    const props=[['ทรงกลมตัน','ไม่กลวง'],['แบ่งแยกไม่ได้','หน่วยเล็กสุด'],['ชนิดเดียวกัน','เหมือนกันทุกประการ']];
+    props.forEach((p,i)=>{
+      const px=110+i*110,py=230;
+      ctx.fillStyle='rgba(255,255,255,0.05)';ctx.beginPath();ctx.roundRect?ctx.roundRect(px-45,py-16,90,38,6):ctx.rect(px-45,py-16,90,38);ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=1;ctx.stroke();
+      ctx.font='bold 11px Sarabun';ctx.fillStyle='rgba(245,197,24,0.8)';ctx.textAlign='center';
+      ctx.fillText(p[0],px,py+1);
+      ctx.font='9px Sarabun';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fillText(p[1],px,py+14);
+    });
+    // Bottom note
+    ctx.font='11px Sarabun';ctx.fillStyle='rgba(0,212,255,0.55)';ctx.textAlign='center';
+    ctx.fillText('อะตอมต่างธาตุ → ขนาดและมวลต่างกัน',200,300);
+    t++;rafIds[0]=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ---- DALTON EXPERIMENT ----
+function animDaltonExperiment(){
+  const cv=document.getElementById('c0');const ctx=cv.getContext('2d');let t=0;
+  // molecule configs: name, atoms array [{color,label,count}], result
+  const molecules=[
+    {name:'H₂O (น้ำ)',atoms:[{c:'#6af',l:'H',n:2},{c:'#f55',l:'O',n:1}],ratio:'2:1',color:'#6af'},
+    {name:'CO₂ (คาร์บอนไดออกไซด์)',atoms:[{c:'#888',l:'C',n:1},{c:'#f55',l:'O',n:2}],ratio:'1:2',color:'#fa6'},
+    {name:'NH₃ (แอมโมเนีย)',atoms:[{c:'#8f8',l:'N',n:1},{c:'#fff',l:'H',n:3}],ratio:'1:3',color:'#8f8'},
+  ];
+  const molIdx=Math.floor((t/300))%3;
+  function draw(){
+    ctx.clearRect(0,0,400,320);
+    const bg=ctx.createLinearGradient(0,0,0,320);bg.addColorStop(0,'#111128');bg.addColorStop(1,'#0a0a1a');
+    ctx.fillStyle=bg;ctx.fillRect(0,0,400,320);
+    ctx.font='bold 14px Sarabun';ctx.fillStyle='rgba(245,197,24,0.9)';ctx.textAlign='center';
+    ctx.fillText('กฎสัดส่วนคงที่ของดอลตัน',200,28);
+
+    const mi=Math.floor(t/260)%3;
+    const mol=molecules[mi];
+    const phase=(t%260)/260; // 0→1 animation phase
+    // Show atoms separating/combining
+    const cx=200,cy=145;
+    let xOff=-70;
+    // Draw each atom type
+    mol.atoms.forEach((a,ai)=>{
+      for(let k=0;k<a.n;k++){
+        const targetX=cx+xOff+(k-a.n/2+0.5)*40;
+        const startX=targetX+(ai===0?-120:120);
+        const px=phase<0.5?startX+(targetX-startX)*phase*2:targetX;
+        const py=cy;
+        const r=phase>0.5?22:20;
+        const g=ctx.createRadialGradient(px-7,py-7,2,px,py,r);
+        g.addColorStop(0,a.c);g.addColorStop(1,'rgba(0,0,0,0.5)');
+        ctx.beginPath();ctx.arc(px,py,r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+        // bond line when combined
+        if(phase>0.6&&k>0){
+          ctx.strokeStyle='rgba(255,255,255,0.3)';ctx.lineWidth=3;
+          ctx.beginPath();ctx.moveTo(px-40,py);ctx.lineTo(px,py);ctx.stroke();
+        }
+        ctx.font='bold 14px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';
+        ctx.fillText(a.l,px,py+5);
+      }
+      xOff+=a.n*42+12;
+    });
+    // Arrows and ratio
+    if(phase>0.5){
+      ctx.font='bold 22px Arial';ctx.fillStyle=mol.color;ctx.textAlign='center';
+      ctx.fillText(mol.name,200,210);
+      ctx.font='13px Sarabun';ctx.fillStyle='rgba(255,255,255,0.55)';
+      ctx.fillText(`อัตราส่วน ${mol.ratio} — ลงตัวเป๊ะ!`,200,235);
+    }
+    // Molecule counter dots
+    const dotColors=['#6af','#fa6','#8f8'];
+    molecules.forEach((_,i)=>{
+      ctx.beginPath();ctx.arc(175+i*25,285,i===mi?6:4,0,Math.PI*2);
+      ctx.fillStyle=i===mi?dotColors[i]:'rgba(255,255,255,0.2)';ctx.fill();
+    });
+    ctx.font='11px Sarabun';ctx.fillStyle='rgba(255,255,255,0.35)';ctx.textAlign='center';
+    ctx.fillText('เปลี่ยนสารอัตโนมัติ',200,305);
+    t++;rafIds[0]=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ---- THOMSON MODEL (Plum Pudding) ----
+function animThomsonModel(){
+  const cv=document.getElementById('c1');const ctx=cv.getContext('2d');
+  // Fixed electron positions — no movement (static plum pudding)
+  const electrons=[
+    {angle:0,r:42},{angle:Math.PI*2/9,r:58},{angle:Math.PI*4/9,r:70},
+    {angle:Math.PI*6/9,r:55},{angle:Math.PI*8/9,r:40},{angle:Math.PI*10/9,r:65},
+    {angle:Math.PI*12/9,r:72},{angle:Math.PI*14/9,r:50},{angle:Math.PI*16/9,r:60}
+  ];
+  ctx.clearRect(0,0,400,320);
+  ctx.fillStyle='#0d0d20';ctx.fillRect(0,0,400,320);
+  ctx.font='bold 14px Sarabun';ctx.fillStyle='rgba(245,197,24,0.9)';ctx.textAlign='center';
+  ctx.fillText('แบบจำลองทอมสัน (ค.ศ. 1897)',200,28);
+  // Positive dough (glowing blob)
+  for(let layer=3;layer>=0;layer--){
+    const r=85-layer*5;const alpha=0.08+layer*0.04;
+    const g=ctx.createRadialGradient(200,165,5,200,165,r);
+    g.addColorStop(0,`rgba(255,100,80,${alpha*3})`);
+    g.addColorStop(0.6,`rgba(220,60,40,${alpha})`);
+    g.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(200,165,r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+  }
+  ctx.beginPath();ctx.arc(200,165,85,0,Math.PI*2);
+  ctx.strokeStyle='rgba(255,100,80,0.4)';ctx.lineWidth=2;ctx.stroke();
+  ctx.font='bold 13px Sarabun';ctx.fillStyle='rgba(255,150,120,0.8)';ctx.textAlign='center';
+  ctx.fillText('เนื้อบวก (+)',200,162);
+  ctx.font='10px Sarabun';ctx.fillStyle='rgba(255,150,120,0.5)';
+  ctx.fillText('(Positive Sphere)',200,178);
+  // Static electrons
+  electrons.forEach(e=>{
+    const x=200+Math.cos(e.angle)*e.r,y=165+Math.sin(e.angle)*e.r;
+    const glow=ctx.createRadialGradient(x,y,1,x,y,12);
+    glow.addColorStop(0,'rgba(0,255,100,0.4)');glow.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(x,y,12,0,Math.PI*2);ctx.fillStyle=glow;ctx.fill();
+    const eg=ctx.createRadialGradient(x-2,y-2,1,x,y,6);
+    eg.addColorStop(0,'#afffcc');eg.addColorStop(1,'#006630');
+    ctx.beginPath();ctx.arc(x,y,6,0,Math.PI*2);ctx.fillStyle=eg;ctx.fill();
+    ctx.font='bold 10px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';
+    ctx.fillText('−',x,y+3.5);
+  });
+  ctx.fillStyle='rgba(255,100,80,0.7)';ctx.font='12px Sarabun';ctx.textAlign='left';
+  ctx.fillText('🔴 เนื้อบวก = ประจุ + กระจายทั่ว',40,255);
+  ctx.fillStyle='rgba(0,255,100,0.7)';
+  ctx.fillText('🟢 อิเล็กตรอน = ประจุ − ฝังอยู่นิ่ง (9 ตัว)',40,272);
+  // Charge balance callout
+  ctx.fillStyle='rgba(255,220,80,0.9)';ctx.font='bold 11px Sarabun';ctx.textAlign='center';
+  ctx.fillText('⚖️ ประจุบวกรวม = ประจุลบรวม → อะตอมเป็นกลางทางไฟฟ้า',200,292);
+  ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='10px Sarabun';
+  ctx.fillText('"ขนมปังลูกเกด" — Plum Pudding Model',200,310);
+  // No animation loop needed — draw once only
+}
+
+// ---- THOMSON EXPERIMENT (Cathode Ray Tube) ----
+function animThomsonExperiment(){
+  const cv=document.getElementById('c1');
+  const ctx=cv.getContext('2d');
+  let t=0;
+
+  // Beam particles
+  const particles=[];
+  function spawnParticle(){
+    particles.push({x:52,y:160,vx:3.5,vy:0,alpha:1,trail:[]});
+  }
+  let spawnTimer=0;
+
+  function drawTube(){
+    // Glass tube body
+    const tx=40,ty=130,tw=320,th=60,tr=8;
+    ctx.beginPath();
+    ctx.moveTo(tx+tr,ty);ctx.lineTo(tx+tw-tr,ty);ctx.arcTo(tx+tw,ty,tx+tw,ty+tr,tr);
+    ctx.lineTo(tx+tw,ty+th-tr);ctx.arcTo(tx+tw,ty+th,tx+tw-tr,ty+th,tr);
+    ctx.lineTo(tx+tr,ty+th);ctx.arcTo(tx,ty+th,tx,ty+th-tr,tr);
+    ctx.lineTo(tx,ty+tr);ctx.arcTo(tx,ty,tx+tr,ty,tr);ctx.closePath();
+    ctx.fillStyle='rgba(150,220,255,0.07)';ctx.fill();
+    ctx.strokeStyle='rgba(150,220,255,0.35)';ctx.lineWidth=2;ctx.stroke();
+
+    // Cathode (left plate) — dark
+    ctx.fillStyle='#555';
+    ctx.fillRect(40,128,14,64);
+    ctx.fillStyle='#888';
+    ctx.fillRect(40,128,4,64);
+    // Cathode label
+    ctx.font='bold 11px Sarabun';ctx.fillStyle='rgba(255,150,150,0.9)';ctx.textAlign='center';
+    ctx.fillText('แคโทด',47,200);
+    ctx.font='10px Arial';ctx.fillStyle='rgba(255,100,100,0.6)';
+    ctx.fillText('(−)',47,213);
+
+    // Anode (right plate) — glowing
+    const ag=ctx.createLinearGradient(346,128,360,128);
+    ag.addColorStop(0,'#888');ag.addColorStop(1,'#555');
+    ctx.fillStyle=ag;ctx.fillRect(346,128,14,64);
+    // Hole in anode
+    ctx.fillStyle='#0a0a1a';ctx.fillRect(352,150,8,20);
+    ctx.font='bold 11px Sarabun';ctx.fillStyle='rgba(150,255,150,0.9)';ctx.textAlign='center';
+    ctx.fillText('แอโนด',353,200);
+    ctx.font='10px Arial';ctx.fillStyle='rgba(100,255,100,0.6)';
+    ctx.fillText('(+)',353,213);
+
+    // Screen on right end
+    ctx.fillStyle='rgba(0,50,80,0.6)';ctx.fillRect(358,120,12,80);
+    ctx.strokeStyle='rgba(0,200,255,0.4)';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.font='10px Sarabun';ctx.fillStyle='rgba(0,200,255,0.6)';ctx.textAlign='center';
+    ctx.fillText('จอ',364,230);
+  }
+
+  function drawMagnet(){
+    if(!magnetOn) return;
+    // Top magnet pole (N — positive, attracts negative)
+    const mgx=180,mgtop=60,mgbot=128;
+    // N pole bar (top)
+    const ng=ctx.createLinearGradient(mgx-30,mgtop,mgx+30,mgtop);
+    ng.addColorStop(0,'#cc2200');ng.addColorStop(1,'#ff4422');
+    ctx.fillStyle=ng;
+    ctx.fillRect(mgx-30,mgtop,60,30);
+    ctx.strokeStyle='#ff6644';ctx.lineWidth=1;ctx.strokeRect(mgx-30,mgtop,60,30);
+    ctx.font='bold 13px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';
+    ctx.fillText('N  (+)',mgx,mgtop+20);
+
+    // S pole bar (bottom)
+    const sg=ctx.createLinearGradient(mgx-30,192,mgx+30,192);
+    sg.addColorStop(0,'#0044cc');sg.addColorStop(1,'#2266ff');
+    ctx.fillStyle=sg;
+    ctx.fillRect(mgx-30,192,60,30);
+    ctx.strokeStyle='#4488ff';ctx.lineWidth=1;ctx.strokeRect(mgx-30,192,60,30);
+    ctx.font='bold 13px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';
+    ctx.fillText('S  (−)',mgx,192+20);
+
+    // Field lines (dashed)
+    ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(255,200,100,0.2)';ctx.lineWidth=1;
+    for(let xi=-20;xi<=20;xi+=10){
+      ctx.beginPath();ctx.moveTo(mgx+xi,mgtop+30);ctx.lineTo(mgx+xi,192);ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // Label
+    ctx.font='10px Sarabun';ctx.fillStyle='rgba(255,200,100,0.5)';ctx.textAlign='center';
+    ctx.fillText('สนามแม่เหล็ก',mgx,250);
+  }
+
+  function drawGlowOnScreen(y){
+    // Impact glow on screen
+    const gx=362, gy=y;
+    const gg=ctx.createRadialGradient(gx,gy,1,gx,gy,14);
+    gg.addColorStop(0,'rgba(0,255,200,0.9)');gg.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(gx,gy,14,0,Math.PI*2);ctx.fillStyle=gg;ctx.fill();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,400,320);
+    // BG
+    ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,400,320);
+    // subtle grid
+    ctx.strokeStyle='rgba(255,255,255,0.02)';ctx.lineWidth=1;
+    for(let x=0;x<400;x+=20){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,320);ctx.stroke();}
+    for(let y=0;y<320;y+=20){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(400,y);ctx.stroke();}
+
+    drawMagnet();
+    drawTube();
+
+    // Spawn particles
+    spawnTimer++;
+    if(spawnTimer%18===0) spawnParticle();
+
+    // Update & draw particles
+    const deflect=magnetOn?-0.18:0;
+    particles.forEach((p,idx)=>{
+      p.vy+=deflect;
+      p.x+=p.vx;p.y+=p.vy;
+      p.trail.push({x:p.x,y:p.y});
+      if(p.trail.length>22) p.trail.shift();
+
+      if(p.x>370){p.done=true;return;}
+
+      // Draw trail
+      p.trail.forEach((pt,i)=>{
+        const a=(i/p.trail.length)*0.5;
+        const r=magnetOn?'0,255,136':'0,212,255';
+        ctx.beginPath();ctx.arc(pt.x,pt.y,2.5,0,Math.PI*2);
+        ctx.fillStyle=`rgba(${r},${a})`;ctx.fill();
+      });
+      // Draw particle
+      ctx.beginPath();ctx.arc(p.x,p.y,4.5,0,Math.PI*2);
+      const pg=ctx.createRadialGradient(p.x,p.y,1,p.x,p.y,4.5);
+      if(magnetOn){
+        pg.addColorStop(0,'#afffdd');pg.addColorStop(1,'rgba(0,255,136,0.2)');
+      } else {
+        pg.addColorStop(0,'#aaeeff');pg.addColorStop(1,'rgba(0,212,255,0.2)');
+      }
+      ctx.fillStyle=pg;ctx.fill();
+    });
+
+    // Remove done
+    for(let i=particles.length-1;i>=0;i--) if(particles[i].done) particles.splice(i,1);
+
+    // Screen hit position
+    const hitY=magnetOn?130:160;
+    drawGlowOnScreen(hitY);
+
+    // Title label
+    ctx.font='bold 12px Sarabun';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.textAlign='center';
+    ctx.fillText(magnetOn?'รังสีเบนขึ้นหาขั้วบวก (N)!':'รังสีเดินทางตรง',200,28);
+
+    // Deflection arrow when magnet on
+    if(magnetOn){
+      ctx.strokeStyle='rgba(255,220,80,0.7)';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(180,160);ctx.lineTo(180,138);
+      ctx.stroke();
+      // arrowhead
+      ctx.beginPath();ctx.moveTo(180,132);ctx.lineTo(175,142);ctx.lineTo(185,142);ctx.closePath();
+      ctx.fillStyle='rgba(255,220,80,0.7)';ctx.fill();
+      ctx.font='10px Sarabun';ctx.fillStyle='rgba(255,220,80,0.7)';ctx.textAlign='left';
+      ctx.fillText('เบนขึ้น',186,140);
+    }
+
+    t++;rafIds[1]=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ---- RUTHERFORD MODEL (Solar System) ----
+function animRutherfordModel(){
+  const cv=document.getElementById('c2');const ctx=cv.getContext('2d');let t=0;
+  const orbs=[
+    {r:55,speed:0.025,angle:0,color:'rgba(0,212,255,0.9)',size:6},
+    {r:85,speed:0.016,angle:Math.PI,color:'rgba(0,255,136,0.9)',size:6},
+    {r:115,speed:0.011,angle:Math.PI*0.7,color:'rgba(180,100,255,0.9)',size:5},
+  ];
+  function draw(){
+    ctx.clearRect(0,0,400,320);
+    const bg=ctx.createRadialGradient(200,155,5,200,155,200);
+    bg.addColorStop(0,'#050d18');bg.addColorStop(1,'#0a0a1a');
+    ctx.fillStyle=bg;ctx.fillRect(0,0,400,320);
+    ctx.font='bold 14px Sarabun';ctx.fillStyle='rgba(245,197,24,0.9)';ctx.textAlign='center';
+    ctx.fillText('แบบจำลองรัทเทอร์ฟอร์ด (ค.ศ. 1911)',200,28);
+    // Empty space label
+    ctx.font='10px Sarabun';ctx.fillStyle='rgba(255,255,255,0.12)';ctx.textAlign='center';
+    ctx.fillText('← พื้นที่ว่าง 99.99% →',200,155);
+    // Orbit rings
+    orbs.forEach((o,i)=>{
+      ctx.beginPath();ctx.arc(200,155,o.r,0,Math.PI*2);
+      ctx.strokeStyle=o.color.replace('0.9','0.25');ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.font='10px Arial';ctx.fillStyle=o.color.replace('0.9','0.55');ctx.textAlign='left';
+      ctx.fillText(`e⁻`,200+o.r+4,155);
+    });
+    // Nucleus (sun) — big glow
+    for(let g=4;g>=0;g--){
+      const gr=ctx.createRadialGradient(200,155,1,200,155,8+g*5);
+      gr.addColorStop(0,'rgba(255,220,50,0.3)');gr.addColorStop(1,'transparent');
+      ctx.beginPath();ctx.arc(200,155,8+g*5,0,Math.PI*2);ctx.fillStyle=gr;ctx.fill();
+    }
+    const ng=ctx.createRadialGradient(197,152,1,200,155,12);
+    ng.addColorStop(0,'#fff8aa');ng.addColorStop(0.5,'#f5c518');ng.addColorStop(1,'#b8860b');
+    ctx.beginPath();ctx.arc(200,155,12,0,Math.PI*2);ctx.fillStyle=ng;ctx.fill();
+    ctx.font='bold 10px Arial';ctx.fillStyle='#000';ctx.textAlign='center';ctx.fillText('+',200,159);
+    // Nucleus label
+    ctx.font='bold 11px Sarabun';ctx.fillStyle='rgba(245,197,24,0.8)';ctx.textAlign='center';
+    ctx.fillText('นิวเคลียส',200,185);ctx.font='9px Sarabun';ctx.fillStyle='rgba(245,197,24,0.5)';
+    ctx.fillText('(ประจุ+ หนาแน่น)',200,197);
+    // Electrons orbiting
+    orbs.forEach(o=>{
+      o.angle+=o.speed;
+      const ex=200+Math.cos(o.angle)*o.r,ey=155+Math.sin(o.angle)*o.r;
+      // Trail dots
+      for(let tr=1;tr<=5;tr++){
+        const ta=o.angle-o.speed*tr*2;
+        const tx=200+Math.cos(ta)*o.r,ty=155+Math.sin(ta)*o.r;
+        ctx.beginPath();ctx.arc(tx,ty,o.size*(1-tr*0.15),0,Math.PI*2);
+        ctx.fillStyle=o.color.replace('0.9',`${0.4-tr*0.07}`);ctx.fill();
+      }
+      const eg=ctx.createRadialGradient(ex-2,ey-2,1,ex,ey,o.size);
+      eg.addColorStop(0,'#ffffff');eg.addColorStop(1,o.color.replace('0.9','0.7'));
+      ctx.beginPath();ctx.arc(ex,ey,o.size,0,Math.PI*2);ctx.fillStyle=eg;ctx.fill();
+      ctx.font='bold 9px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';
+      ctx.fillText('e⁻',ex,ey+3);
+    });
+    // Legend
+    ctx.fillStyle='rgba(245,197,24,0.6)';ctx.font='11px Sarabun';ctx.textAlign='left';
+    ctx.fillText('☀ นิวเคลียส = ดวงอาทิตย์ (ประจุ+)',30,270);
+    ctx.fillStyle='rgba(0,212,255,0.6)';
+    ctx.fillText('● อิเล็กตรอน = ดาวเคราะห์ (ประจุ−)',30,290);
+    t++;rafIds[2]=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ---- RUTHERFORD EXPERIMENT (Gold Foil) ----
+function animRutherfordExperiment(){
+  const cv=document.getElementById('c2');const ctx=cv.getContext('2d');let t=0;
+  function draw(){
+    ctx.clearRect(0,0,400,320);
+    ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,400,320);
+    ctx.font='bold 13px Sarabun';ctx.fillStyle='rgba(245,197,24,0.85)';ctx.textAlign='center';
+    ctx.fillText('การทดลองแผ่นทองคำ (Geiger–Marsden)',200,22);
+    // Gold foil
+    const gfg=ctx.createLinearGradient(194,0,206,0);
+    gfg.addColorStop(0,'rgba(245,197,24,0.05)');gfg.addColorStop(0.5,'rgba(245,197,24,0.25)');gfg.addColorStop(1,'rgba(245,197,24,0.05)');
+    ctx.fillStyle=gfg;ctx.fillRect(194,40,12,250);
+    ctx.strokeStyle='rgba(245,197,24,0.6)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(200,40);ctx.lineTo(200,290);ctx.stroke();
+    ctx.font='10px Sarabun';ctx.fillStyle='rgba(245,197,24,0.6)';ctx.textAlign='center';
+    ctx.fillText('แผ่นทองคำบางเฉียบ',200,36);
+    // Nuclei on foil
+    for(let i=0;i<5;i++){
+      const ny=65+i*50;
+      const ng=ctx.createRadialGradient(200,ny,1,200,ny,6);
+      ng.addColorStop(0,'#ffe066');ng.addColorStop(1,'rgba(184,134,11,0.4)');
+      ctx.beginPath();ctx.arc(200,ny,6,0,Math.PI*2);ctx.fillStyle=ng;ctx.fill();
+      // mini electron orbit
+      ctx.strokeStyle='rgba(0,212,255,0.18)';ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.arc(200,ny,14,0,Math.PI*2);ctx.stroke();
+      const ea=t*0.04+i;
+      ctx.beginPath();ctx.arc(200+Math.cos(ea)*14,ny+Math.sin(ea)*14,2.5,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,212,255,0.7)';ctx.fill();
+    }
+    // Alpha particles
+    alphas.forEach(a=>{
+      if(a.done)return;
+      a.x+=a.vx;a.t++;
+      if(a.bounce&&a.x>190&&!a.bounced){a.bounced=true;a.vx=-Math.abs(a.vx)*0.85;a.vy=(Math.random()-0.5)*2.5;}
+      a.y+=a.vy;
+      if(a.x>430||a.x<-30){a.done=true;return;}
+      // Trail
+      ctx.strokeStyle=a.bounce&&a.bounced?'rgba(255,80,80,0.4)':'rgba(255,140,40,0.35)';
+      ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(a.x-a.vx*6,a.y-a.vy*6);ctx.stroke();
+      const ag=ctx.createRadialGradient(a.x,a.y,1,a.x,a.y,5);
+      ag.addColorStop(0,a.bounce&&a.bounced?'#ff8888':'#ffcc66');
+      ag.addColorStop(1,a.bounce&&a.bounced?'rgba(255,0,0,0.1)':'rgba(255,120,0,0.1)');
+      ctx.beginPath();ctx.arc(a.x,a.y,5,0,Math.PI*2);ctx.fillStyle=ag;ctx.fill();
+      ctx.font='8px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('α',a.x,a.y+3);
+    });
+    ctx.font='10px Sarabun';ctx.fillStyle='rgba(255,140,40,0.65)';ctx.textAlign='left';
+    ctx.fillText('→ อนุภาคแอลฟา (α)',8,300);
+    ctx.fillStyle='rgba(255,80,80,0.65)';ctx.textAlign='right';
+    ctx.fillText('↩ สะท้อนกลับ (1/20,000)',392,300);
+    t++;rafIds[2]=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ---- BOHR MODEL ----
+function animBohrModel(){
+  const cv=document.getElementById('c3');
+  const ctx=cv.getContext('2d');
+  let t=0;
+  const orbits=[45,75,105,135];
+  const orbitColors=['rgba(255,100,80,0.4)','rgba(0,212,255,0.4)','rgba(0,255,136,0.4)','rgba(180,0,255,0.4)'];
+  const speeds=[0.03,0.02,0.015,0.011];
+  function draw(){
+    ctx.clearRect(0,0,400,320);
+    const bg=ctx.createRadialGradient(200,160,5,200,160,180);
+    bg.addColorStop(0,'#0d1a2e');bg.addColorStop(1,'#0a0a1a');
+    ctx.fillStyle=bg;ctx.fillRect(0,0,400,320);
+    ctx.font='bold 14px Sarabun';ctx.fillStyle='rgba(245,197,24,0.9)';ctx.textAlign='center';
+    ctx.fillText('แบบจำลองโบร์ (ค.ศ. 1913)',200,24);
+    // Orbits
+    orbits.forEach((r,i)=>{
+      ctx.beginPath();ctx.arc(200,160,r,0,Math.PI*2);
+      ctx.strokeStyle=orbitColors[i];ctx.lineWidth=i===bohrLevel?2.5:1;ctx.stroke();
+      ctx.font='bold 10px Arial';ctx.fillStyle=orbitColors[i].replace('0.4','0.8');ctx.textAlign='left';
+      ctx.fillText(`n=${i+1}`,200+r+4,160);
+    });
+    // Nucleus
+    const ng=ctx.createRadialGradient(200,160,2,200,160,18);
+    ng.addColorStop(0,'#ffe066');ng.addColorStop(1,'#b8860b');
+    ctx.beginPath();ctx.arc(200,160,18,0,Math.PI*2);ctx.fillStyle=ng;ctx.fill();
+    ctx.font='bold 11px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';
+    ctx.fillText('+',200,165);
+    // Electron on current level
+    const eidx=bohrLevel;
+    const r=orbits[eidx];
+    const angle=t*speeds[eidx];
+    const ex=200+Math.cos(angle)*r;
+    const ey=160+Math.sin(angle)*r;
+    // Glow
+    const glow=ctx.createRadialGradient(ex,ey,1,ex,ey,12);
+    glow.addColorStop(0,orbitColors[eidx].replace('0.4','0.6'));glow.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(ex,ey,12,0,Math.PI*2);ctx.fillStyle=glow;ctx.fill();
+    ctx.beginPath();ctx.arc(ex,ey,6,0,Math.PI*2);
+    ctx.fillStyle=orbitColors[eidx].replace('0.4','1');ctx.fill();
+    ctx.font='9px Arial';ctx.fillStyle='#fff';ctx.fillText('e⁻',ex,ey+3);
+    // Photon flash when electron drops
+    if(bohrLevel>0&&Math.sin(t*0.08)>0.95){
+      const fx=200+Math.cos(t*0.015)*orbits[bohrLevel]*0.7;
+      const fy=160+Math.sin(t*0.015)*orbits[bohrLevel]*0.7;
+      const fc=orbitColors[bohrLevel-1].replace('0.4','0.7');
+      ctx.beginPath();ctx.arc(fx,fy,8,0,Math.PI*2);
+      const fg=ctx.createRadialGradient(fx,fy,1,fx,fy,8);
+      fg.addColorStop(0,'rgba(255,255,255,0.9)');fg.addColorStop(1,fc.replace('0.7','0'));
+      ctx.fillStyle=fg;ctx.fill();
+    }
+    // Legend
+    ctx.font='11px Sarabun';ctx.textAlign='left';ctx.fillStyle='rgba(255,255,255,0.4)';
+    ctx.fillText('⚠️ อิเล็กตรอนอยู่เฉพาะ "ขั้นบันได" ห้ามอยู่ระหว่างขั้น!',20,300);
+    t++;rafIds[3]=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ---- BOHR EXPERIMENT (Spectral Lines) ----
+function animBohrExperiment(){
+  const cv=document.getElementById('c3');const ctx=cv.getContext('2d');let t=0;
+  const lineData=[
+    {pos:0.10,color:'#cc0000',label:'656nm แดง',from:3,to:2},
+    {pos:0.27,color:'#4488ff',label:'486nm น้ำเงิน',from:4,to:2},
+    {pos:0.37,color:'#2244ee',label:'434nm ฟ้า',from:5,to:2},
+    {pos:0.44,color:'#8800cc',label:'410nm ม่วง',from:6,to:2},
+  ];
+  const orbits=[55,85,110,130,148,163];
+  const orbColors=['#cc4422','#4488ff','#2244ee','#8800cc','#aaaaff','#ddddff'];
+  let activeJump=null,jumpT=0;
+  function triggerJump(li){activeJump=li;jumpT=0;}
+  // Auto trigger every 120f
+  function draw(){
+    ctx.clearRect(0,0,400,320);
+    const bg=ctx.createRadialGradient(200,150,5,200,150,200);
+    bg.addColorStop(0,'#050d18');bg.addColorStop(1,'#0a0a1a');
+    ctx.fillStyle=bg;ctx.fillRect(0,0,400,320);
+    ctx.font='bold 13px Sarabun';ctx.fillStyle='rgba(245,197,24,0.85)';ctx.textAlign='center';
+    ctx.fillText('สเปกตรัมการปล่อยแสงของไฮโดรเจน',200,22);
+    // Orbits
+    orbits.forEach((r,i)=>{
+      ctx.beginPath();ctx.arc(105,155,r,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(${i===1?'68,136,255':i===0?'204,68,34':'120,120,180'},0.3)`;
+      ctx.lineWidth=1;ctx.stroke();
+      ctx.font='9px Arial';ctx.fillStyle='rgba(255,255,255,0.35)';ctx.textAlign='left';
+      ctx.fillText(`n=${i+1}`,105+r+3,155);
+    });
+    // Nucleus
+    const ng=ctx.createRadialGradient(103,153,1,105,155,10);
+    ng.addColorStop(0,'#fff8aa');ng.addColorStop(1,'#b8860b');
+    ctx.beginPath();ctx.arc(105,155,10,0,Math.PI*2);ctx.fillStyle=ng;ctx.fill();
+    // Auto jump trigger
+    if(t%140===0){const li=lineData[Math.floor(t/140)%lineData.length];triggerJump(li);}
+    // Jump animation
+    if(activeJump){
+      jumpT++;
+      const fromR=orbits[activeJump.from-1]||70;
+      const toR=orbits[activeJump.to-1]||50;
+      const prog=Math.min(jumpT/40,1);
+      const curR=fromR+(toR-fromR)*prog;
+      const angle=-Math.PI/4;
+      const ex=105+Math.cos(angle)*curR,ey=155+Math.sin(angle)*curR;
+      // photon burst at end
+      if(prog>0.85){
+        const pr=(prog-0.85)/0.15;
+        ctx.beginPath();ctx.arc(ex,ey,10*pr,0,Math.PI*2);
+        const pg=ctx.createRadialGradient(ex,ey,1,ex,ey,10*pr);
+        pg.addColorStop(0,activeJump.color);pg.addColorStop(1,'transparent');
+        ctx.fillStyle=pg;ctx.fill();
+      }
+      // electron
+      const eg=ctx.createRadialGradient(ex-2,ey-2,1,ex,ey,7);
+      eg.addColorStop(0,'#fff');eg.addColorStop(1,activeJump.color+'88');
+      ctx.beginPath();ctx.arc(ex,ey,7,0,Math.PI*2);ctx.fillStyle=eg;ctx.fill();
+      ctx.font='bold 9px Arial';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('e⁻',ex,ey+3);
+      if(jumpT>50){activeJump=null;}
+    }
+    // Spectrum display (right side)
+    const sx=230,sw=160,sy=60,sh=22;
+    ctx.font='bold 11px Sarabun';ctx.fillStyle='rgba(255,255,255,0.6)';ctx.textAlign='left';
+    ctx.fillText('สเปกตรัมแสง H (Balmer):',sx,sy-10);
+    // Dark background
+    ctx.fillStyle='#000';ctx.fillRect(sx,sy,sw,sh);
+    // Spectral lines
+    lineData.forEach(ld=>{
+      const lx=sx+ld.pos*sw;
+      const lw=3+Math.sin(t*0.05+ld.pos*10)*1;
+      ctx.fillStyle=ld.color;ctx.fillRect(lx,sy,lw,sh);
+      // glow
+      ctx.shadowBlur=8;ctx.shadowColor=ld.color;
+      ctx.fillRect(lx,sy,lw,sh);ctx.shadowBlur=0;
+    });
+    // White light compare
+    const wg=ctx.createLinearGradient(sx,sy+sh+12,sx+sw,sy+sh+12);
+    wg.addColorStop(0,'#f00');wg.addColorStop(0.17,'#f70');wg.addColorStop(0.33,'#ff0');
+    wg.addColorStop(0.5,'#0f0');wg.addColorStop(0.67,'#00f');wg.addColorStop(1,'#80f');
+    ctx.fillStyle=wg;ctx.fillRect(sx,sy+sh+10,sw,16);
+    ctx.font='9px Sarabun';ctx.fillStyle='rgba(255,255,255,0.35)';ctx.textAlign='left';
+    ctx.fillText('แสงต่อเนื่อง (เปรียบเทียบ)',sx,sy+sh+38);
+    // Line labels
+    lineData.forEach(ld=>{
+      const lx=sx+ld.pos*sw+2;
+      ctx.save();ctx.translate(lx,sy+sh+55);ctx.rotate(-Math.PI/2);
+      ctx.font='8px Arial';ctx.fillStyle=ld.color;ctx.textAlign='right';
+      ctx.fillText(ld.label,0,0);ctx.restore();
+    });
+    // Explanation
+    if(activeJump){
+      ctx.font='11px Sarabun';ctx.fillStyle=activeJump.color;ctx.textAlign='center';
+      ctx.fillText(`e⁻ กระโดด n=${activeJump.from}→n=${activeJump.to} → ปล่อย${activeJump.label}`,200,300);
+    } else {
+      ctx.font='10px Sarabun';ctx.fillStyle='rgba(255,255,255,0.35)';ctx.textAlign='center';
+      ctx.fillText('อิเล็กตรอนกระโดดลง = ปล่อยแสงสีเฉพาะตัว!',200,300);
+    }
+    t++;rafIds[3]=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ---- QUANTUM MODEL (Electron Cloud) ----
+function animQuantumModel(){
+  const cv=document.getElementById('c4');const ctx=cv.getContext('2d');let t=0;
+  const dots=[];
+  for(let i=0;i<350;i++){
+    const r=Math.abs((Math.random()+Math.random())*72);
+    const angle=Math.random()*Math.PI*2;
+    dots.push({x:200+Math.cos(angle)*r,y:160+Math.sin(angle)*r,r,
+      opacity:Math.max(0.1,0.95-r/95),phase:Math.random()*Math.PI*2,
+      color:r<35?`rgba(0,255,200,`:`rgba(0,180,255,`});
+  }
+  function draw(){
+    ctx.clearRect(0,0,400,320);
+    const bg=ctx.createRadialGradient(200,160,5,200,160,200);
+    bg.addColorStop(0,'#0a1020');bg.addColorStop(1,'#050510');
+    ctx.fillStyle=bg;ctx.fillRect(0,0,400,320);
+    ctx.font='bold 14px Sarabun';ctx.fillStyle='rgba(0,212,255,0.85)';ctx.textAlign='center';
+    ctx.fillText('แบบจำลองกลุ่มหมอกควอนตัม',200,24);
+    // Cloud density rings (background)
+    [90,70,50,30].forEach((r,i)=>{
+      const a=[0.04,0.07,0.12,0.18][i];
+      const g=ctx.createRadialGradient(200,160,r*0.3,200,160,r);
+      g.addColorStop(0,`rgba(0,212,255,${a*2})`);g.addColorStop(1,`rgba(0,212,255,${a})`);
+      ctx.beginPath();ctx.arc(200,160,r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+    });
+    // Dots
+    dots.forEach(d=>{
+      const pulse=0.5+0.5*Math.sin(t*0.025+d.phase);
+      ctx.beginPath();ctx.arc(d.x,d.y,1.8,0,Math.PI*2);
+      ctx.fillStyle=`${d.color}${(d.opacity*pulse).toFixed(2)})`;ctx.fill();
+    });
+    // Nucleus glow
+    for(let g=3;g>=0;g--){
+      const gr=ctx.createRadialGradient(200,160,1,200,160,8+g*6);
+      gr.addColorStop(0,'rgba(255,220,50,0.2)');gr.addColorStop(1,'transparent');
+      ctx.beginPath();ctx.arc(200,160,8+g*6,0,Math.PI*2);ctx.fillStyle=gr;ctx.fill();
+    }
+    const ng=ctx.createRadialGradient(198,158,1,200,160,12);
+    ng.addColorStop(0,'#fffacc');ng.addColorStop(1,'#b8860b');
+    ctx.beginPath();ctx.arc(200,160,12,0,Math.PI*2);ctx.fillStyle=ng;ctx.fill();
+    ctx.font='bold 10px Arial';ctx.fillStyle='#000';ctx.textAlign='center';ctx.fillText('+',200,164);
+    // Density legend
+    const ldx=310,ldy=80;
+    ctx.font='bold 10px Sarabun';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.textAlign='left';
+    ctx.fillText('ความหนาแน่น:',ldx,ldy);
+    [{c:'rgba(0,255,200,0.8)',t:'หมอกทึบ = พบe⁻มาก'},{c:'rgba(0,180,255,0.4)',t:'หมอกบาง = พบน้อย'}].forEach((it,i)=>{
+      ctx.fillStyle=it.c;ctx.fillRect(ldx,ldy+14+i*20,14,10);
+      ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='9px Sarabun';ctx.fillText(it.t,ldx+18,ldy+23+i*20);
+    });
+    ctx.font='10px Sarabun';ctx.fillStyle='rgba(0,212,255,0.45)';ctx.textAlign='center';
+    ctx.fillText('ไม่มีวงโคจรชัดเจน — มีแค่ "โอกาส" พบอิเล็กตรอน',200,300);
+    t++;rafIds[4]=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ---- QUANTUM EXPERIMENT (Uncertainty Principle) ----
+function animQuantumExperiment(){
+  const cv=document.getElementById('c4');const ctx=cv.getContext('2d');let t=0;
+  function draw(){
+    ctx.clearRect(0,0,400,320);
+    ctx.fillStyle='#080818';ctx.fillRect(0,0,400,320);
+    ctx.font='bold 13px Sarabun';ctx.fillStyle='rgba(180,0,255,0.9)';ctx.textAlign='center';
+    ctx.fillText('หลักความไม่แน่นอนของไฮเซนเบิร์ก',200,24);
+    ctx.font='11px Sarabun';ctx.fillStyle='rgba(255,255,255,0.4)';
+    ctx.fillText('Δx · Δp ≥ ℏ/2',200,42);
+    // Two panels
+    const slVal=parseInt(document.getElementById('uncertSlider')?.value||50);
+    const dxPct=slVal/100;const dpPct=1-dxPct*0.9;
+    // Panel: Position wave
+    const pw=170,ph=100,px=20,py=65;
+    ctx.fillStyle='rgba(0,212,255,0.05)';ctx.fillRect(px,py,pw,ph);
+    ctx.strokeStyle='rgba(0,212,255,0.2)';ctx.lineWidth=1;ctx.strokeRect(px,py,pw,ph);
+    ctx.font='10px Sarabun';ctx.fillStyle='rgba(0,212,255,0.7)';ctx.textAlign='center';
+    ctx.fillText('ตำแหน่ง (Δx)',px+pw/2,py-6);
+    // Wave packet for position
+    ctx.beginPath();ctx.strokeStyle='rgba(0,212,255,0.8)';ctx.lineWidth=2;
+    const sigma=pw*(1-dxPct*0.8)*0.25+8;
+    for(let xi=0;xi<pw;xi++){
+      const xn=(xi-pw/2)/sigma;const env=Math.exp(-xn*xn/2);
+      const wave=env*Math.cos((xi-pw/2)*0.3+t*0.05)*35;
+      if(xi===0)ctx.moveTo(px+xi,py+ph/2-wave);else ctx.lineTo(px+xi,py+ph/2-wave);
+    }
+    ctx.stroke();
+    const dxLbl=dxPct>0.7?'กว้าง (ไม่แน่)':dxPct>0.3?'ปานกลาง':'แคบ (แน่นอน)';
+    ctx.font='9px Sarabun';ctx.fillStyle='rgba(0,212,255,0.5)';ctx.fillText(`Δx: ${dxLbl}`,px+pw/2,py+ph+14);
+    // Panel: Momentum wave
+    const mpx=210,mpy=65;
+    ctx.fillStyle='rgba(255,165,0,0.05)';ctx.fillRect(mpx,mpy,pw,ph);
+    ctx.strokeStyle='rgba(255,165,0,0.2)';ctx.lineWidth=1;ctx.strokeRect(mpx,mpy,pw,ph);
+    ctx.font='10px Sarabun';ctx.fillStyle='rgba(255,165,0,0.7)';ctx.textAlign='center';
+    ctx.fillText('ความเร็ว (Δp)',mpx+pw/2,mpy-6);
+    ctx.beginPath();ctx.strokeStyle='rgba(255,165,0,0.8)';ctx.lineWidth=2;
+    const sigma2=pw*(1-dpPct*0.8)*0.25+8;
+    for(let xi=0;xi<pw;xi++){
+      const xn=(xi-pw/2)/sigma2;const env=Math.exp(-xn*xn/2);
+      const wave=env*Math.cos((xi-pw/2)*0.35-t*0.05)*35;
+      if(xi===0)ctx.moveTo(mpx+xi,mpy+ph/2-wave);else ctx.lineTo(mpx+xi,mpy+ph/2-wave);
+    }
+    ctx.stroke();
+    const dpLbl=dpPct>0.7?'กว้าง (ไม่แน่)':dpPct>0.3?'ปานกลาง':'แคบ (แน่นอน)';
+    ctx.font='9px Sarabun';ctx.fillStyle='rgba(255,165,0,0.5)';ctx.fillText(`Δp: ${dpLbl}`,mpx+pw/2,mpy+ph+14);
+    // Equation display
+    ctx.font='bold 18px Arial';ctx.textAlign='center';
+    const eq1col=dxPct<0.3?'rgba(0,255,200,0.9)':'rgba(0,212,255,0.6)';
+    const eq2col=dpPct>0.7?'rgba(255,100,100,0.9)':'rgba(255,165,0,0.6)';
+    ctx.fillStyle=eq1col;ctx.fillText(`Δx=${dxPct<0.3?'เล็ก':dxPct>0.7?'ใหญ่':'กลาง'}`,110,210);
+    ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fillText('×',200,210);
+    ctx.fillStyle=eq2col;ctx.fillText(`Δp=${dpPct>0.7?'ใหญ่':dpPct<0.3?'เล็ก':'กลาง'}`,290,210);
+    ctx.font='13px Sarabun';ctx.fillStyle='rgba(255,255,255,0.3)';ctx.fillText('≥ ℏ/2 เสมอ!',200,235);
+    // Insight
+    const msg=dxPct<0.3?'📍 รู้ตำแหน่งชัดมาก → ความเร็วไม่รู้เลย!':
+               dxPct>0.7?'💨 รู้ความเร็วชัด → ตำแหน่งไม่รู้เลย!':
+               '⚖️ สมดุลกัน — ไม่ชัดทั้งคู่';
+    ctx.font='12px Sarabun';ctx.fillStyle='rgba(180,0,255,0.8)';ctx.fillText(msg,200,270);
+    ctx.font='10px Sarabun';ctx.fillStyle='rgba(255,255,255,0.25)';
+    ctx.fillText('← เลื่อน slider ด้านล่างเพื่อเปลี่ยนความแม่นยำ →',200,295);
+    t++;rafIds[4]=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// Init
+startAnimation(0);
+</script>
+</body>
+</html>
