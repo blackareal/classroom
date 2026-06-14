@@ -321,6 +321,47 @@
     }
     .status-msg .icon { font-size: 40px; display: block; margin-bottom: 10px; }
 
+    /* ── ROUND SUB-TABS ── */
+    .round-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .round-tab {
+      padding: 6px 18px;
+      border-radius: 20px;
+      border: 1.5px solid rgba(255,255,255,.14);
+      background: transparent;
+      color: rgba(255,255,255,.4);
+      font-size: 13px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .round-tab:hover { border-color: var(--orange); color: var(--orange); }
+    .round-tab.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(255,109,0,.35);
+    }
+    .round-tab.best-tab.active {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      color: #050d1f;
+      box-shadow: 0 0 12px rgba(0,229,255,.35);
+    }
+    .round-tab.best-tab:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    /* highlight the focused round column */
+    .score-table th.focused-col,
+    .score-table td.focused-col {
+      background: rgba(255,109,0,.07);
+    }
+    .score-table th.focused-col { color: var(--orange) !important; }
+
     /* Checkered footer */
     .checkered-footer {
       height: 6px;
@@ -368,10 +409,19 @@
       <div class="section-line"></div>
       <span class="team-count" id="teamCount"></span>
     </div>
+
+    <!-- Round sub-tabs -->
+    <div class="round-tabs">
+      <button class="round-tab best-tab active" onclick="setRound('best', this)">🏆 ภาพรวม (ดีที่สุด)</button>
+      <button class="round-tab" onclick="setRound(0, this)">🚗 รอบที่ 1</button>
+      <button class="round-tab" onclick="setRound(1, this)">🚗 รอบที่ 2</button>
+      <button class="round-tab" onclick="setRound(2, this)">🚗 รอบที่ 3</button>
+    </div>
+
     <div id="content">
       <div class="status-msg">
-        <span class="icon">⚙️</span>
-        กรุณากด ⚙️ ด้านบนขวาแล้วใส่ Google Sheet ID เพื่อเริ่มต้น
+        <span class="icon">🏁</span>
+        กำลังโหลดข้อมูล...
       </div>
     </div>
   </main>
@@ -393,6 +443,7 @@
 
     // ─── State ───
     let currentLevel = 'ม.ต้น';
+    let currentRound = 'best'; // 'best' | 0 | 1 | 2
     let allData      = [];
     let refreshTimer = null;
 
@@ -413,6 +464,13 @@
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('sectionTitle').textContent = '🎓 ' + level;
+      render();
+    }
+
+    function setRound(round, btn) {
+      currentRound = round;
+      document.querySelectorAll('.round-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
       render();
     }
 
@@ -482,14 +540,35 @@
         return;
       }
 
-      const teams = filtered
-        .map(d => ({ ...d, best: getBest(d.rounds) }))
-        .sort((a, b) => {
-          if (a.best === null && b.best === null) return 0;
-          if (a.best === null) return 1;
-          if (b.best === null) return -1;
-          return a.best - b.best;
-        });
+      const isBestView = currentRound === 'best';
+
+      // คำนวณ score ที่ใช้จัดอันดับ
+      const teams = filtered.map(d => {
+        const best = getBest(d.rounds);
+        const roundScore = isBestView ? null : d.rounds[currentRound];
+        return { ...d, best, rankScore: isBestView ? best : roundScore };
+      });
+
+      // เรียงลำดับ: valid number น้อยสุดขึ้นก่อน, null (ยังไม่ปล่อย) และ F (ฟาวล์) ลงท้าย
+      teams.sort((a, b) => {
+        const aVal = typeof a.rankScore === 'number' ? a.rankScore : Infinity;
+        const bVal = typeof b.rankScore === 'number' ? b.rankScore : Infinity;
+        // ฟาวล์หลังกว่า null
+        const aOrder = a.rankScore === 'F' ? 2 : a.rankScore === null ? 1 : 0;
+        const bOrder = b.rankScore === 'F' ? 2 : b.rankScore === null ? 1 : 0;
+        if (aOrder !== bOrder) return aOrder - bOrder;
+        return aVal - bVal;
+      });
+
+      // header columns
+      const roundHeaders = [0,1,2].map(i => {
+        const focused = !isBestView && currentRound === i ? ' focused-col' : '';
+        return `<th style="width:90px" class="${focused}">รอบ ${i+1}</th>`;
+      }).join('');
+
+      const lastColHeader = isBestView
+        ? `<th style="width:110px">ดีที่สุด</th>`
+        : `<th style="width:110px" class="focused-col">อันดับรอบนี้</th>`;
 
       let html = `
         <table class="score-table">
@@ -497,35 +576,50 @@
             <tr>
               <th style="width:56px">อันดับ</th>
               <th class="left">ทีม</th>
-              <th style="width:90px">รอบ 1</th>
-              <th style="width:90px">รอบ 2</th>
-              <th style="width:90px">รอบ 3</th>
-              <th style="width:110px">ดีที่สุด</th>
+              ${roundHeaders}
+              ${lastColHeader}
             </tr>
           </thead>
           <tbody>
       `;
 
-      teams.forEach((team, idx) => {
-        const rank = idx + 1;
-        const isDNF = team.best === null;
-        const rowClass = isDNF ? 'dnf-row' : rank <= 3 ? `rank-${rank}` : '';
+      // นับอันดับเฉพาะทีมที่มี valid score
+      let rankCounter = 0;
+      teams.forEach((team) => {
+        const hasScore = typeof team.rankScore === 'number';
+        if (hasScore) rankCounter++;
+        const rank = hasScore ? rankCounter : null;
 
-        const badgeClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : 'normal';
-        const badgeLabel = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+        const isDNF = team.best === null;
+        const isNoResult = team.rankScore === null || team.rankScore === 'F';
+        const rowClass = isNoResult ? 'dnf-row' : rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+
+        const badgeClass = !rank ? 'normal' : rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : 'normal';
+        const badgeLabel = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank ?? '–';
 
         const color = COLOR_MAP[team.team] || '#7986cb';
 
-        const roundCells = team.rounds.map(r => {
-          if (r === null)   return `<td><span class="rv empty">–</span></td>`;
-          if (r === 'F')    return `<td><span class="rv foul">ฟาวล์</span></td>`;
-          const isBest = r === team.best;
-          return `<td><span class="rv ${isBest ? 'best' : ''}">${r} cm</span></td>`;
+        // round cells — highlight focused round
+        const roundCells = team.rounds.map((r, i) => {
+          const focused = !isBestView && currentRound === i ? ' focused-col' : '';
+          if (r === null) return `<td class="${focused}"><span class="rv empty">–</span></td>`;
+          if (r === 'F')  return `<td class="${focused}"><span class="rv foul">ฟาวล์</span></td>`;
+          const markBest = isBestView && r === team.best;
+          const markFocused = !isBestView && i === currentRound;
+          return `<td class="${focused}"><span class="rv ${markBest || markFocused ? 'best' : ''}">${r} cm</span></td>`;
         }).join('');
 
-        const bestCell = isDNF
-          ? `<span class="best-dist dnf">ไม่มีผล</span>`
-          : `<span class="best-dist">${team.best} cm</span>`;
+        // last column
+        let lastCell;
+        if (isBestView) {
+          lastCell = isDNF
+            ? `<span class="best-dist dnf">ไม่มีผล</span>`
+            : `<span class="best-dist">${team.best} cm</span>`;
+        } else {
+          if (team.rankScore === null) lastCell = `<span class="rv empty">ยังไม่ปล่อย</span>`;
+          else if (team.rankScore === 'F') lastCell = `<span class="rv foul">ฟาวล์</span>`;
+          else lastCell = `<span class="best-dist">${team.rankScore} cm</span>`;
+        }
 
         html += `
           <tr class="${rowClass}">
@@ -537,7 +631,7 @@
               </div>
             </td>
             ${roundCells}
-            <td>${bestCell}</td>
+            <td class="${isBestView ? '' : 'focused-col'}">${lastCell}</td>
           </tr>
         `;
       });
