@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🏁 STEM Challenge – Scoreboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cyan:   #00e5ff;
+      --orange: #ff6d00;
+      --green:  #00e676;
+      --red:    #ff5252;
+      --gold:   #ffd700;
+      --bg:     #050d1f;
+      --card:   #0a1628;
+    }
+
+    body {
+      background: var(--bg);
+      color: #fff;
+      font-family: 'Sarabun', 'Tahoma', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #07102a 0%, #0d1e50 100%);
+      border-bottom: 2px solid transparent;
+      border-image: linear-gradient(90deg, transparent, var(--cyan) 30%, var(--orange) 70%, transparent) 1;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 30px rgba(0,0,0,.5);
+    }
+
+    /* grid bg effect */
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+
+    .header-brand {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+      z-index: 1;
+    }
+    .header-brand h1 {
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .header-brand .sub {
+      font-size: 11px;
+      color: var(--cyan);
+      margin-top: 2px;
+      opacity: .85;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .tab-btn {
+      padding: 8px 26px;
+      border-radius: 30px;
+      border: 2px solid rgba(255,255,255,.18);
+      background: transparent;
+      color: rgba(255,255,255,.45);
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .3px;
+    }
+    .tab-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+    .tab-btn.active {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      color: #050d1f;
+      box-shadow: 0 0 16px rgba(0,229,255,.35);
+    }
+
+    /* Refresh status */
+    .refresh-status {
+      position: relative; z-index: 1;
+      text-align: right;
+      font-size: 11px;
+      color: rgba(255,255,255,.35);
+      line-height: 1.7;
+    }
+    .live-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      margin-right: 4px;
+      animation: livepulse 2s ease-in-out infinite;
+      vertical-align: middle;
+    }
+    @keyframes livepulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--green); }
+      50%       { opacity: .3; box-shadow: none; }
+    }
+
+    /* Settings gear */
+    .gear-btn {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: rgba(255,255,255,.4);
+      font-size: 16px;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative; z-index: 1;
+    }
+    .gear-btn:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+    /* ── CONFIG PANEL ── */
+    .config-panel {
+      background: linear-gradient(135deg, rgba(255,109,0,.12), rgba(255,109,0,.05));
+      border: 1px solid rgba(255,109,0,.35);
+      border-radius: 10px;
+      margin: 20px 28px 0;
+      padding: 16px 20px;
+      display: none;
+    }
+    .config-panel.open { display: block; }
+    .config-panel h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 10px;
+    }
+    .config-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .config-row label { font-size: 13px; color: rgba(255,255,255,.65); white-space: nowrap; }
+    .config-row input {
+      flex: 1;
+      min-width: 200px;
+      background: rgba(0,0,0,.5);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 7px;
+      padding: 7px 14px;
+      color: #fff;
+      font-size: 13px;
+      font-family: 'Courier New', monospace;
+    }
+    .config-row input:focus { outline: none; border-color: var(--orange); }
+    .config-row button {
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 7px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .2s;
+    }
+    .config-row button:hover { background: #e65100; }
+    .config-hint {
+      margin-top: 8px;
+      font-size: 11px;
+      color: rgba(255,255,255,.35);
+      line-height: 1.6;
+    }
+    .config-hint a { color: var(--cyan); }
+
+    /* ── MAIN CONTENT ── */
+    main {
+      padding: 22px 28px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--cyan);
+      letter-spacing: .5px;
+    }
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(0,229,255,.3), transparent);
+    }
+    .team-count {
+      font-size: 11px;
+      color: rgba(255,255,255,.3);
+    }
+
+    /* ── TABLE ── */
+    .score-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 5px;
+    }
+
+    .score-table thead tr {
+      background: transparent;
+    }
+    .score-table th {
+      padding: 6px 14px;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      text-align: center;
+    }
+    .score-table th.left { text-align: left; }
+
+    .score-table tbody tr {
+      background: var(--card);
+      border-radius: 10px;
+      transition: background .15s;
+    }
+    .score-table tbody tr:hover { background: #0f1e3a; }
+
+    .score-table tbody tr.rank-1 { background: rgba(255,215,0,.07); }
+    .score-table tbody tr.rank-2 { background: rgba(192,192,192,.05); }
+    .score-table tbody tr.rank-3 { background: rgba(205,127,50,.05); }
+    .score-table tbody tr.dnf-row { opacity: .5; }
+
+    .score-table td {
+      padding: 12px 14px;
+      text-align: center;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+    .score-table td:first-child { border-radius: 10px 0 0 10px; }
+    .score-table td:last-child  { border-radius: 0 10px 10px 0; }
+    .score-table td.left { text-align: left; }
+
+    /* Rank badge */
+    .rank-badge {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .rank-badge.gold   { background: linear-gradient(135deg,#ffd700,#ff8c00); color:#000; box-shadow:0 0 14px rgba(255,215,0,.4); }
+    .rank-badge.silver { background: linear-gradient(135deg,#d0d0d0,#888); color:#000; }
+    .rank-badge.bronze { background: linear-gradient(135deg,#cd7f32,#7a4010); color:#fff; }
+    .rank-badge.normal { background: rgba(255,255,255,.07); color: rgba(255,255,255,.4); font-size:12px; }
+
+    /* Team cell */
+    .team-cell {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+    .color-swatch {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,.25);
+    }
+    .team-name { font-weight: 700; font-size: 15px; }
+
+    /* Round values */
+    .rv { font-size: 13px; color: rgba(255,255,255,.45); }
+    .rv.best { color: var(--green); font-weight: 700; }
+    .rv.foul {
+      color: var(--red);
+      font-weight: 700;
+      font-size: 11px;
+      background: rgba(255,82,82,.12);
+      padding: 2px 7px;
+      border-radius: 10px;
+    }
+    .rv.empty { color: rgba(255,255,255,.15); }
+
+    /* Best distance */
+    .best-dist { font-size: 19px; font-weight: 800; color: var(--cyan); letter-spacing: .5px; }
+    .best-dist.dnf { font-size: 12px; color: var(--red); font-weight: 700;
+      background: rgba(255,82,82,.1); padding: 3px 10px; border-radius: 10px; }
+
+    /* Status messages */
+    .status-msg {
+      text-align: center;
+      padding: 80px 20px;
+      color: rgba(255,255,255,.25);
+      font-size: 15px;
+    }
+    .status-msg .icon { font-size: 40px; display: block; margin-bottom: 10px; }
+
+    /* Checkered footer */
+    .checkered-footer {
+      height: 6px;
+      background-image: repeating-linear-gradient(90deg,
+        #fff 0, #fff 8px,
+        #050d1f 8px, #050d1f 16px);
+      opacity: .1;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-brand">
+      <h1>🏁 STEM Challenge – Scoreboard</h1>
+      <div class="sub">"ออกแบบและสร้างรางรถพิชิตเป้าหมาย"</div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-junior"  onclick="setLevel('ม.ต้น',this)">🎓 ม.ต้น</button>
+      <button class="tab-btn"        id="tab-senior"  onclick="setLevel('ม.ปลาย',this)">🎓 ม.ปลาย</button>
+    </div>
+
+    <div class="refresh-status">
+      <span class="live-dot"></span>รีเฟรชทุก 15 วิ<br/>
+      <span id="lastUpdate">–</span>
+    </div>
+
+    <button class="gear-btn" onclick="toggleConfig()" title="ตั้งค่า" style="display:none">⚙️</button>
+  </header>
+
+  <!-- CONFIG PANEL (hidden – URL hardcoded) -->
+  <div class="config-panel" id="configPanel" style="display:none">
+    <div class="config-row">
+      <button onclick="saveAndLoad()">ปิด</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main>
+    <div class="section-header">
+      <span class="section-title" id="sectionTitle">🎓 ม.ต้น</span>
+      <div class="section-line"></div>
+      <span class="team-count" id="teamCount"></span>
+    </div>
+    <div id="content">
+      <div class="status-msg">
+        <span class="icon">⚙️</span>
+        กรุณากด ⚙️ ด้านบนขวาแล้วใส่ Google Sheet ID เพื่อเริ่มต้น
+      </div>
+    </div>
+  </main>
+
+  <div class="checkered-footer"></div>
+
+  <script>
+    // ─── สีของแต่ละทีม (แก้ไขตรงนี้ตามสีจริงของกิจกรรม) ───
+    const COLOR_MAP = {
+      'ม่วง':    '#9c27b0',
+      'น้ำเงิน': '#1565c0',
+      'ฟ้า':     '#29b6f6',
+      'เขียว':   '#43a047',
+      'เหลือง':  '#fdd835',
+      'ส้ม':     '#fb8c00',
+      'แดง':     '#e53935',
+      'ชมพู':    '#e91e63',
+    };
+
+    // ─── State ───
+    let currentLevel = 'ม.ต้น';
+    let allData      = [];
+    let refreshTimer = null;
+
+    // ── URL ของ Google Sheet (Publish to web → CSV) ──
+    const SHEET_CSV_URL =
+      'https://docs.google.com/spreadsheets/d/e/2PACX-1vSknlyGrdeCjrj6-twKaHye9uYpwmVeCzZ-zZ3M8L9BP4NFjzBw-_GE4ewQtfdqL3r24NrXap7UDtfY/pub?gid=0&single=true&output=csv';
+
+    // โหลดทันทีที่เปิดหน้า
+    startRefresh();
+
+    // ─── UI Controls ───
+    function toggleConfig() {
+      document.getElementById('configPanel').classList.toggle('open');
+    }
+
+    function setLevel(level, btn) {
+      currentLevel = level;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('sectionTitle').textContent = '🎓 ' + level;
+      render();
+    }
+
+    function saveAndLoad() {
+      document.getElementById('configPanel').classList.remove('open');
+      startRefresh();
+    }
+
+    // ─── Data Fetching (CSV) ───
+    function startRefresh() {
+      loadData();
+      if (refreshTimer) clearInterval(refreshTimer);
+      refreshTimer = setInterval(loadData, 15000);
+    }
+
+    async function loadData() {
+      try {
+        const res  = await fetch(SHEET_CSV_URL);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const text = await res.text();
+        allData = parseCSV(text);
+        document.getElementById('lastUpdate').textContent =
+          'อัปเดต ' + new Date().toLocaleTimeString('th-TH');
+        render();
+      } catch(e) {
+        document.getElementById('content').innerHTML =
+          `<div class="status-msg"><span class="icon">⚠️</span>โหลดข้อมูลไม่สำเร็จ: ${e.message}</div>`;
+      }
+    }
+
+    // ─── Parse CSV ───
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      const rows  = [];
+      for (let i = 0; i < lines.length; i++) {
+        const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+        const team  = cols[0] || '';
+        const level = cols[1] || '';
+        // ข้ามแถวหัวตาราง
+        if (!team || team === 'ทีม' || team === 'สี' || team === 'team') continue;
+
+        const rounds = [cols[2], cols[3], cols[4]].map(v => {
+          if (!v || v === '') return null;
+          const n = parseFloat(v);
+          return isNaN(n) ? 'F' : n;
+        });
+
+        rows.push({ team, level, rounds, note: cols[5] || '' });
+      }
+      return rows;
+    }
+
+    // ─── Compute best distance ───
+    function getBest(rounds) {
+      const valid = rounds.filter(r => typeof r === 'number');
+      return valid.length ? Math.min(...valid) : null;
+    }
+
+    // ─── Render Scoreboard ───
+    function render() {
+      const filtered = allData.filter(d => d.level === currentLevel);
+      document.getElementById('teamCount').textContent = `${filtered.length} ทีม`;
+
+      if (!filtered.length) {
+        document.getElementById('content').innerHTML =
+          `<div class="status-msg"><span class="icon">📋</span>ยังไม่มีข้อมูลทีม ${currentLevel}</div>`;
+        return;
+      }
+
+      const teams = filtered
+        .map(d => ({ ...d, best: getBest(d.rounds) }))
+        .sort((a, b) => {
+          if (a.best === null && b.best === null) return 0;
+          if (a.best === null) return 1;
+          if (b.best === null) return -1;
+          return a.best - b.best;
+        });
+
+      let html = `
+        <table class="score-table">
+          <thead>
+            <tr>
+              <th style="width:56px">อันดับ</th>
+              <th class="left">ทีม</th>
+              <th style="width:90px">รอบ 1</th>
+              <th style="width:90px">รอบ 2</th>
+              <th style="width:90px">รอบ 3</th>
+              <th style="width:110px">ดีที่สุด</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      teams.forEach((team, idx) => {
+        const rank = idx + 1;
+        const isDNF = team.best === null;
+        const rowClass = isDNF ? 'dnf-row' : rank <= 3 ? `rank-${rank}` : '';
+
+        const badgeClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : 'normal';
+        const badgeLabel = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+
+        const color = COLOR_MAP[team.team] || '#7986cb';
+
+        const roundCells = team.rounds.map(r => {
+          if (r === null)   return `<td><span class="rv empty">–</span></td>`;
+          if (r === 'F')    return `<td><span class="rv foul">ฟาวล์</span></td>`;
+          const isBest = r === team.best;
+          return `<td><span class="rv ${isBest ? 'best' : ''}">${r} cm</span></td>`;
+        }).join('');
+
+        const bestCell = isDNF
+          ? `<span class="best-dist dnf">ไม่มีผล</span>`
+          : `<span class="best-dist">${team.best} cm</span>`;
+
+        html += `
+          <tr class="${rowClass}">
+            <td><span class="rank-badge ${badgeClass}">${badgeLabel}</span></td>
+            <td class="left">
+              <div class="team-cell">
+                <div class="color-swatch" style="background:${color}"></div>
+                <span class="team-name">${team.team}</span>
+              </div>
+            </td>
+            ${roundCells}
+            <td>${bestCell}</td>
+          </tr>
+        `;
+      });
+
+      html += `</tbody></table>`;
+      document.getElementById('content').innerHTML = html;
+    }
+  </script>
+</body>
+</html>
