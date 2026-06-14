@@ -122,19 +122,21 @@
       50%       { opacity: .3; box-shadow: none; }
     }
 
-    /* Settings gear */
+    /* Fullscreen button */
     .gear-btn {
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.12);
       border-radius: 8px;
-      padding: 8px 10px;
-      color: rgba(255,255,255,.4);
-      font-size: 16px;
+      padding: 8px 12px;
+      color: rgba(255,255,255,.5);
+      font-size: 20px;
+      line-height: 1;
       cursor: pointer;
       transition: all .2s;
       position: relative; z-index: 1;
     }
-    .gear-btn:hover { background: rgba(255,255,255,.12); color: #fff; }
+    .gear-btn:hover { background: rgba(255,255,255,.14); color: #fff; border-color: var(--cyan); }
+    :fullscreen .gear-btn, :-webkit-full-screen .gear-btn { font-size: 20px; }
 
     /* ── CONFIG PANEL ── */
     .config-panel {
@@ -354,6 +356,29 @@
       box-shadow: 0 0 12px rgba(0,229,255,.35);
     }
     .round-tab.best-tab:hover { border-color: var(--cyan); color: var(--cyan); }
+    .round-tab.score-tab.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: #050d1f;
+      box-shadow: 0 0 12px rgba(0,230,118,.35);
+    }
+    .round-tab.score-tab:hover { border-color: var(--green); color: var(--green); }
+
+    /* Score pts badge */
+    .pts-badge {
+      display: inline-block;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--green);
+    }
+    .pts-badge.zero { color: rgba(255,255,255,.2); font-size: 13px; }
+    .total-pts {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--gold);
+      text-shadow: 0 0 12px rgba(255,215,0,.4);
+    }
+    .pts-cell { min-width: 70px; }
 
     /* highlight the focused round column */
     .score-table th.focused-col,
@@ -392,7 +417,7 @@
       <span id="lastUpdate">–</span>
     </div>
 
-    <button class="gear-btn" onclick="toggleConfig()" title="ตั้งค่า" style="display:none">⚙️</button>
+    <button class="gear-btn" id="fsBtn" onclick="toggleFullscreen()" title="เต็มจอ">⛶</button>
   </header>
 
   <!-- CONFIG PANEL (hidden – URL hardcoded) -->
@@ -412,10 +437,11 @@
 
     <!-- Round sub-tabs -->
     <div class="round-tabs">
-      <button class="round-tab best-tab active" onclick="setRound('best', this)">🏆 ภาพรวม (ดีที่สุด)</button>
+      <button class="round-tab best-tab active" onclick="setRound('best', this)">🏆 ภาพรวม</button>
       <button class="round-tab" onclick="setRound(0, this)">🚗 รอบที่ 1</button>
       <button class="round-tab" onclick="setRound(1, this)">🚗 รอบที่ 2</button>
       <button class="round-tab" onclick="setRound(2, this)">🚗 รอบที่ 3</button>
+      <button class="round-tab score-tab" onclick="setRound('score', this)">📊 คะแนนรวม</button>
     </div>
 
     <div id="content">
@@ -458,6 +484,19 @@
     function toggleConfig() {
       document.getElementById('configPanel').classList.toggle('open');
     }
+
+    function toggleFullscreen() {
+      const btn = document.getElementById('fsBtn');
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen();
+      }
+    }
+    document.addEventListener('fullscreenchange', () => {
+      document.getElementById('fsBtn').textContent = document.fullscreenElement ? '✕' : '⛶';
+      document.getElementById('fsBtn').title = document.fullscreenElement ? 'ออกจากเต็มจอ' : 'เต็มจอ';
+    });
 
     function setLevel(level, btn) {
       currentLevel = level;
@@ -529,6 +568,26 @@
       return valid.length ? Math.min(...valid) : null;
     }
 
+    // ─── Compute points per round (rank 1 = 8pts, rank 2 = 7pts, ...) ───
+    function computePoints(teams) {
+      // map: teamName → { pts: [r0,r1,r2], total }
+      const map = {};
+      teams.forEach(t => { map[t.team] = { pts: [0, 0, 0], total: 0 }; });
+
+      for (let r = 0; r < 3; r++) {
+        const valid = teams
+          .filter(t => typeof t.rounds[r] === 'number')
+          .sort((a, b) => a.rounds[r] - b.rounds[r]);
+
+        valid.forEach((t, idx) => {
+          const p = Math.max(0, 8 - idx); // 8,7,6,...1
+          map[t.team].pts[r] = p;
+          map[t.team].total += p;
+        });
+      }
+      return map;
+    }
+
     // ─── Render Scoreboard ───
     function render() {
       const filtered = allData.filter(d => d.level === currentLevel);
@@ -540,7 +599,66 @@
         return;
       }
 
-      const isBestView = currentRound === 'best';
+      const isBestView  = currentRound === 'best';
+      const isScoreView = currentRound === 'score';
+
+      // ── Score view ──
+      if (isScoreView) {
+        const ptsMap = computePoints(filtered);
+        const ranked = filtered
+          .map(d => ({ ...d, pts: ptsMap[d.team].pts, total: ptsMap[d.team].total }))
+          .sort((a, b) => b.total - a.total);
+
+        let html = `
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th style="width:56px">อันดับ</th>
+                <th class="left">ทีม</th>
+                <th class="pts-cell">รอบ 1</th>
+                <th class="pts-cell">รอบ 2</th>
+                <th class="pts-cell">รอบ 3</th>
+                <th style="width:120px">คะแนนรวม</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        ranked.forEach((team, idx) => {
+          const rank = idx + 1;
+          const rowClass = rank <= 3 ? `rank-${rank}` : '';
+          const badgeClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : 'normal';
+          const badgeLabel = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+          const color = COLOR_MAP[team.team] || '#7986cb';
+
+          const ptsCells = team.pts.map((p, i) => {
+            const dist = team.rounds[i];
+            const distLabel = dist === null ? '–' : dist === 'F' ? 'ฟาวล์' : `${dist} cm`;
+            const tooltip = `title="${distLabel}"`;
+            return `<td class="pts-cell"><span class="pts-badge ${p === 0 ? 'zero' : ''}" ${tooltip}>${p > 0 ? '+' + p : '–'}</span></td>`;
+          }).join('');
+
+          html += `
+            <tr class="${rowClass}">
+              <td><span class="rank-badge ${badgeClass}">${badgeLabel}</span></td>
+              <td class="left">
+                <div class="team-cell">
+                  <div class="color-swatch" style="background:${color}"></div>
+                  <span class="team-name">${team.team}</span>
+                </div>
+              </td>
+              ${ptsCells}
+              <td><span class="total-pts">${team.total}</span></td>
+            </tr>
+          `;
+        });
+
+        html += `</tbody></table>`;
+        document.getElementById('content').innerHTML = html;
+        return;
+      }
+
+      const isBestView2 = isBestView; // alias for block below
 
       // คำนวณ score ที่ใช้จัดอันดับ
       const teams = filtered.map(d => {
