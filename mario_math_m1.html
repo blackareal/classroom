@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mario Math — จำนวนเต็ม ม.1</title>
+<style>
+:root {
+  --sky:#5c94fc; --sky2:#3a78e8;
+  --ground:#58a827; --ground2:#4a8f1f;
+  --brick:#c8761a; --qblock:#e8a020;
+  --red:#e52c2c; --blue:#2b3cc8; --yellow:#ffd700;
+  --skin:#fdbcb4; --brown:#5c3a1e;
+  --green:#27ae60; --dark:#222; --white:#fff;
+  --shadow:rgba(0,0,0,.25);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:'Segoe UI',Tahoma,sans-serif;}
+
+/* ────────── SCREENS ────────── */
+.screen{position:fixed;inset:0;display:none;flex-direction:column;overflow:hidden;}
+.screen.active{display:flex;}
+
+/* ══════════════════════════════
+   START SCREEN
+══════════════════════════════ */
+#scr-start{
+  background:linear-gradient(180deg,var(--sky) 68%,var(--ground) 68%,var(--ground2) 100%);
+  align-items:center; justify-content:center; gap:16px; padding:24px 20px;
+}
+.logo-box{
+  background:var(--red); border-radius:16px; padding:10px 28px;
+  box-shadow:0 6px 0 #a00,0 8px 16px var(--shadow);
+  text-align:center;
+}
+.logo-box h1{color:var(--yellow);font-size:2.4rem;font-weight:900;letter-spacing:2px;text-shadow:3px 3px 0 #a00;}
+.logo-box p{color:#fff;font-size:1rem;margin-top:4px;}
+
+.mario-scene-start{height:90px;position:relative;width:100%;}
+
+.start-form{width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;}
+.start-form label{color:#fff;font-size:1rem;font-weight:600;text-shadow:1px 1px 2px var(--shadow);}
+.start-form input{
+  width:100%;padding:14px 16px;font-size:1.1rem;border:none;border-radius:12px;
+  background:rgba(255,255,255,.92);color:var(--dark);outline:none;
+  box-shadow:0 4px 0 rgba(0,0,0,.2);
+}
+.btn-start{
+  background:var(--green);color:#fff;border:none;border-radius:14px;
+  padding:16px;font-size:1.2rem;font-weight:700;cursor:pointer;
+  box-shadow:0 6px 0 #1a7a40,0 8px 12px var(--shadow);
+  transition:transform .1s,box-shadow .1s;
+  letter-spacing:1px;
+}
+.btn-start:active{transform:translateY(3px);box-shadow:0 3px 0 #1a7a40;}
+
+.coins-row{display:flex;gap:10px;justify-content:center;}
+.coin-deco{
+  width:32px;height:32px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#ffe566,var(--yellow),#c8920a);
+  box-shadow:0 3px 6px var(--shadow);
+  animation:coinBob .8s ease-in-out infinite alternate;
+}
+.coin-deco:nth-child(2){animation-delay:.2s;}
+.coin-deco:nth-child(3){animation-delay:.4s;}
+@keyframes coinBob{from{transform:translateY(0);}to{transform:translateY(-6px);}}
+
+/* ══════════════════════════════
+   GAME SCREEN
+══════════════════════════════ */
+#scr-game{background:#000;gap:0;}
+
+/* Header */
+.game-header{
+  background:linear-gradient(90deg,#1a1a2e,#16213e);
+  padding:10px 14px 8px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:2px solid #ffd700;
+  flex-shrink:0;
+}
+.lives-row{display:flex;gap:5px;}
+.heart{font-size:1.4rem;transition:transform .2s,opacity .3s;}
+.heart.lost{opacity:.25;transform:scale(.8);}
+.q-counter{color:var(--yellow);font-size:.95rem;font-weight:700;}
+.score-badge{
+  background:var(--yellow);color:#000;border-radius:20px;
+  padding:4px 12px;font-size:.9rem;font-weight:800;
+}
+
+/* Progress bar */
+.progress-bar{height:6px;background:#333;flex-shrink:0;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#27ae60,#2ecc71);transition:width .4s ease;}
+
+/* Scene */
+.game-scene{
+  height:130px;
+  background:linear-gradient(180deg,var(--sky) 72%,#6cc23a 72%,var(--ground2) 100%);
+  position:relative;overflow:hidden;flex-shrink:0;
+  border-bottom:3px solid var(--ground2);
+}
+.ground-strip{
+  position:absolute;bottom:0;left:0;right:0;height:38px;
+  background:repeating-linear-gradient(90deg,var(--ground) 0px,var(--ground) 30px,var(--ground2) 30px,var(--ground2) 32px);
+  animation:scrollGround 1.2s linear infinite;
+}
+.ground-strip.paused{animation-play-state:paused;}
+@keyframes scrollGround{from{background-position:0 0;}to{background-position:-32px 0;}}
+
+/* Mario SVG character */
+.mario-wrap{
+  position:absolute;bottom:38px;left:40px;
+  width:48px;height:56px;
+  animation:marioRun .3s steps(2) infinite;
+}
+.mario-wrap.paused{animation-play-state:paused;}
+.mario-wrap.hurt{animation:marioHurt .5s ease;}
+@keyframes marioRun{from{transform:scaleX(1);}to{transform:scaleX(1) translateY(-1px);}}
+@keyframes marioHurt{0%{transform:translateX(-4px);}25%{transform:translateX(4px);}50%{transform:translateX(-4px);}75%{transform:translateX(4px);}100%{transform:translateX(0);}}
+
+/* Question block */
+.qblock{
+  position:absolute;bottom:75px;right:60px;
+  width:44px;height:44px;border-radius:6px;
+  background:var(--qblock);border:3px solid #b06000;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;font-weight:900;color:#7a3f00;
+  box-shadow:3px 3px 0 #7a3f00;
+  animation:blockBounce .6s ease-out;
+  transform-origin:bottom center;
+}
+@keyframes blockBounce{0%{transform:translateY(0);}40%{transform:translateY(-18px);}70%{transform:translateY(-6px);}100%{transform:translateY(0);}}
+
+/* Coin pop */
+.coin-pop{
+  position:absolute;bottom:120px;right:66px;
+  font-size:1.5rem;animation:coinRise 1s ease-out forwards;pointer-events:none;
+}
+@keyframes coinRise{0%{opacity:1;transform:translateY(0) scale(1);}100%{opacity:0;transform:translateY(-70px) scale(1.3);}}
+
+/* Clouds */
+.cloud{position:absolute;background:#fff;border-radius:50px;opacity:.85;}
+.cloud::before,.cloud::after{content:'';position:absolute;background:#fff;border-radius:50%;}
+.cloud1{width:60px;height:20px;top:12px;left:20%;animation:cloudMove 18s linear infinite;}
+.cloud2{width:80px;height:24px;top:24px;left:60%;animation:cloudMove 25s linear infinite;}
+.cloud1::before{width:30px;height:30px;bottom:8px;left:8px;}
+.cloud1::after{width:22px;height:22px;bottom:8px;right:8px;}
+.cloud2::before{width:38px;height:38px;bottom:10px;left:10px;}
+.cloud2::after{width:28px;height:28px;bottom:10px;right:10px;}
+@keyframes cloudMove{from{transform:translateX(0);}to{transform:translateX(-110vw);}}
+
+/* Question area */
+.question-area{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  padding:14px 16px 8px;background:#1a1a2e;overflow:hidden;
+}
+.q-label{color:#aaa;font-size:.8rem;letter-spacing:1px;margin-bottom:6px;}
+.q-text{
+  color:#fff;font-size:1.55rem;font-weight:700;text-align:center;
+  background:rgba(255,255,255,.08);border-radius:12px;padding:12px 16px;
+  width:100%;line-height:1.5;border:1px solid rgba(255,255,255,.12);
+  min-height:60px;display:flex;align-items:center;justify-content:center;
+}
+
+/* Answer display */
+.answer-display{
+  margin:10px 0 4px;width:100%;
+  background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.3);
+  border-radius:12px;padding:10px 16px;
+  color:#fff;font-size:1.8rem;font-weight:700;text-align:center;
+  min-height:54px;letter-spacing:2px;position:relative;
+}
+.answer-display::after{
+  content:'|';animation:cursor .7s steps(1) infinite;
+  color:#ffd700;margin-left:2px;
+}
+@keyframes cursor{0%,100%{opacity:1;}50%{opacity:0;}}
+.answer-display.has-answer::after{display:none;}
+
+/* ── Keypad ── */
+.keypad-wrap{flex-shrink:0;padding:6px 12px 10px;background:#111;}
+.keypad{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:7px;
+  max-width:380px;margin:0 auto;
+}
+.kbtn{
+  background:#2a2a3e;color:#fff;border:none;border-radius:10px;
+  font-size:1.3rem;font-weight:700;padding:14px 0;cursor:pointer;
+  box-shadow:0 4px 0 #111,0 5px 8px rgba(0,0,0,.3);
+  transition:transform .08s,box-shadow .08s;
+  user-select:none;
+}
+.kbtn:active{transform:translateY(3px);box-shadow:0 1px 0 #111;}
+.kbtn.zero{grid-column:span 2;}
+.kbtn.minus{background:#3a2a1e;color:#ff9966;}
+.kbtn.del{background:#2e1a1a;color:#ff6666;font-size:1.1rem;}
+.kbtn.ok{background:#1a6b3c;color:#fff;font-size:1.1rem;box-shadow:0 4px 0 #0f4025;}
+.kbtn.ok:active{box-shadow:0 1px 0 #0f4025;}
+
+/* ── Multiple choice (properties) ── */
+.mc-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  width:100%;max-width:380px;margin:8px 0;
+}
+.mc-btn{
+  background:#2a2a3e;color:#fff;border:2px solid transparent;border-radius:12px;
+  padding:16px 10px;font-size:1rem;font-weight:600;cursor:pointer;
+  text-align:center;line-height:1.3;
+  transition:background .15s,border-color .15s,transform .08s;
+}
+.mc-btn:active{transform:scale(.97);}
+.mc-btn.selected{background:#1a4080;border-color:#5c94fc;}
+
+/* ══════════════════════════════
+   FEEDBACK OVERLAY
+══════════════════════════════ */
+#scr-feedback{
+  background:transparent;pointer-events:none;
+  align-items:center;justify-content:center;
+  z-index:100;
+}
+.feedback-badge{
+  font-size:3.5rem;animation:feedbackPop .7s ease forwards;
+}
+@keyframes feedbackPop{
+  0%{transform:scale(.3);opacity:0;}
+  50%{transform:scale(1.3);opacity:1;}
+  80%{transform:scale(1);opacity:1;}
+  100%{transform:scale(1.1);opacity:0;}
+}
+
+/* ══════════════════════════════
+   RESULT SCREEN
+══════════════════════════════ */
+#scr-result{
+  background:linear-gradient(180deg,#1a1a2e 0%,#0a0a1a 100%);
+  align-items:center;overflow-y:auto;padding:20px 16px;gap:0;
+}
+.result-header{text-align:center;margin-bottom:16px;}
+.result-title{color:var(--yellow);font-size:1.8rem;font-weight:900;text-shadow:0 0 20px rgba(255,215,0,.5);}
+.result-name{color:#aaa;font-size:1rem;margin-top:4px;}
+.stars-row{display:flex;gap:8px;justify-content:center;margin:12px 0 8px;}
+.star{font-size:2.6rem;filter:grayscale(1);transition:filter .3s,transform .3s;}
+.star.lit{filter:grayscale(0) drop-shadow(0 0 8px gold);transform:scale(1.15);}
+
+.score-big{
+  background:rgba(255,255,255,.07);border-radius:16px;padding:12px 32px;
+  text-align:center;margin:8px 0 14px;border:1px solid rgba(255,255,255,.12);
+}
+.score-big .num{color:#fff;font-size:3rem;font-weight:900;}
+.score-big .den{color:#888;font-size:1.4rem;}
+.score-big .pct{color:var(--yellow);font-size:1rem;margin-top:2px;}
+
+.result-section{width:100%;max-width:400px;margin-bottom:12px;}
+.result-section h3{color:#ccc;font-size:.85rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.cat-row{
+  display:flex;align-items:center;gap:10px;margin-bottom:6px;
+  background:rgba(255,255,255,.05);border-radius:10px;padding:8px 12px;
+}
+.cat-label{color:#ccc;font-size:.9rem;flex:1;}
+.cat-score{color:#fff;font-weight:700;font-size:.95rem;white-space:nowrap;}
+.cat-bar-wrap{width:80px;height:8px;background:#333;border-radius:4px;overflow:hidden;}
+.cat-bar{height:100%;border-radius:4px;background:var(--green);transition:width .6s ease;}
+
+.answers-list{width:100%;max-width:400px;margin-bottom:16px;}
+.ans-item{
+  display:flex;align-items:flex-start;gap:10px;
+  background:rgba(255,255,255,.04);border-radius:10px;
+  padding:8px 10px;margin-bottom:6px;
+  border-left:4px solid transparent;
+}
+.ans-item.correct{border-left-color:#27ae60;}
+.ans-item.wrong{border-left-color:#e74c3c;}
+.ans-num{color:#888;font-size:.8rem;width:20px;flex-shrink:0;padding-top:2px;}
+.ans-q{color:#ddd;font-size:.9rem;flex:1;line-height:1.4;}
+.ans-mark{font-size:1.1rem;flex-shrink:0;}
+.ans-correct-val{color:#888;font-size:.8rem;display:block;margin-top:2px;}
+
+.btn-replay{
+  background:var(--red);color:#fff;border:none;border-radius:14px;
+  padding:16px 36px;font-size:1.1rem;font-weight:700;cursor:pointer;
+  box-shadow:0 6px 0 #a00;margin-top:8px;margin-bottom:24px;
+  letter-spacing:1px;
+}
+.btn-replay:active{transform:translateY(3px);box-shadow:0 3px 0 #a00;}
+
+/* Scroll hint */
+.scroll-hint{color:#555;font-size:.75rem;text-align:center;margin-bottom:8px;}
+
+/* ══════════════════════════════
+   Mario SVG
+══════════════════════════════ */
+</style>
+</head>
+<body>
+
+<!-- ═══ START SCREEN ═══ -->
+<div id="scr-start" class="screen active">
+  <div class="logo-box">
+    <h1>MARIO MATH</h1>
+    <p>จำนวนเต็ม — ชั้น ม.1</p>
+  </div>
+
+  <div class="mario-scene-start">
+    <!-- decorative inline Mario -->
+    <svg viewBox="0 0 48 56" width="60" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);">
+      <ellipse cx="24" cy="10" rx="16" ry="8" fill="#e52c2c"/>
+      <rect x="12" y="10" width="24" height="5" fill="#e52c2c"/>
+      <ellipse cx="24" cy="22" rx="12" ry="10" fill="#fdbcb4"/>
+      <circle cx="19" cy="20" r="2" fill="#222"/>
+      <circle cx="29" cy="20" r="2" fill="#222"/>
+      <ellipse cx="24" cy="28" rx="8" ry="3" fill="#5c3a1e"/>
+      <rect x="12" y="32" width="24" height="14" fill="#2b3cc8" rx="3"/>
+      <circle cx="19" cy="37" r="2" fill="#ffd700"/>
+      <circle cx="29" cy="37" r="2" fill="#ffd700"/>
+      <rect x="10" y="32" width="7" height="10" fill="#2b3cc8" rx="2"/>
+      <rect x="31" y="32" width="7" height="10" fill="#2b3cc8" rx="2"/>
+      <rect x="10" y="42" width="9" height="8" fill="#8b4513" rx="2"/>
+      <rect x="29" y="42" width="9" height="8" fill="#8b4513" rx="2"/>
+    </svg>
+    <div class="coins-row" style="position:absolute;top:4px;left:0;right:0;">
+      <div class="coin-deco"></div>
+      <div class="coin-deco"></div>
+      <div class="coin-deco"></div>
+    </div>
+  </div>
+
+  <div class="start-form">
+    <label for="player-name">ชื่อนักเรียน</label>
+    <input type="text" id="player-name" placeholder="พิมพ์ชื่อ-นามสกุล..." maxlength="40" autocomplete="off">
+    <button class="btn-start" onclick="startGame()">▶ เริ่มเกม!</button>
+  </div>
+  <p style="color:rgba(255,255,255,.5);font-size:.8rem;text-align:center;padding:0 20px;">
+    10 โจทย์ · ตอบให้ครบทุกข้อ · โชว์ผลให้ครูดู 🎮
+  </p>
+</div>
+
+<!-- ═══ GAME SCREEN ═══ -->
+<div id="scr-game" class="screen">
+  <div class="game-header">
+    <div class="lives-row" id="lives-row">
+      <span class="heart" id="h1">❤️</span>
+      <span class="heart" id="h2">❤️</span>
+      <span class="heart" id="h3">❤️</span>
+    </div>
+    <div class="q-counter" id="q-counter">ข้อ 1 / 10</div>
+    <div class="score-badge" id="score-badge">⭐ 0</div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+  <div class="game-scene" id="game-scene">
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="ground-strip" id="ground-strip"></div>
+    <div class="mario-wrap" id="mario-wrap">
+      <svg viewBox="0 0 48 56" width="48" height="56">
+        <ellipse cx="24" cy="10" rx="16" ry="8" fill="#e52c2c"/>
+        <rect x="12" y="10" width="24" height="5" fill="#e52c2c"/>
+        <ellipse cx="24" cy="22" rx="12" ry="10" fill="#fdbcb4"/>
+        <circle cx="19" cy="20" r="2" fill="#222"/>
+        <circle cx="29" cy="20" r="2" fill="#222"/>
+        <ellipse cx="24" cy="28" rx="8" ry="3" fill="#5c3a1e"/>
+        <rect x="12" y="32" width="24" height="14" fill="#2b3cc8" rx="3"/>
+        <circle cx="19" cy="37" r="2" fill="#ffd700"/>
+        <circle cx="29" cy="37" r="2" fill="#ffd700"/>
+        <rect x="10" y="32" width="7" height="10" fill="#2b3cc8" rx="2"/>
+        <rect x="31" y="32" width="7" height="10" fill="#2b3cc8" rx="2"/>
+        <rect x="10" y="42" width="9" height="8" fill="#8b4513" rx="2"/>
+        <rect x="29" y="42" width="9" height="8" fill="#8b4513" rx="2"/>
+      </svg>
+    </div>
+    <div class="qblock" id="qblock">?</div>
+  </div>
+
+  <div class="question-area">
+    <div class="q-label" id="q-label">บวก-ลบจำนวนเต็ม</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="answer-display" id="answer-display"></div>
+    <!-- MC choices inserted here dynamically -->
+    <div id="mc-choices"></div>
+  </div>
+
+  <div class="keypad-wrap" id="keypad-wrap">
+    <div class="keypad">
+      <button class="kbtn" onclick="kp('7')">7</button>
+      <button class="kbtn" onclick="kp('8')">8</button>
+      <button class="kbtn" onclick="kp('9')">9</button>
+      <button class="kbtn del" onclick="kpDel()">⌫</button>
+      <button class="kbtn" onclick="kp('4')">4</button>
+      <button class="kbtn" onclick="kp('5')">5</button>
+      <button class="kbtn" onclick="kp('6')">6</button>
+      <button class="kbtn minus" onclick="kpMinus()">−</button>
+      <button class="kbtn" onclick="kp('1')">1</button>
+      <button class="kbtn" onclick="kp('2')">2</button>
+      <button class="kbtn" onclick="kp('3')">3</button>
+      <button class="kbtn ok" onclick="submitAnswer()" id="btn-ok">✓ ตอบ</button>
+      <button class="kbtn zero" onclick="kp('0')">0</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FEEDBACK OVERLAY ═══ -->
+<div id="scr-feedback" class="screen">
+  <div class="feedback-badge" id="feedback-badge">✅</div>
+</div>
+
+<!-- ═══ RESULT SCREEN ═══ -->
+<div id="scr-result" class="screen">
+  <div class="result-header">
+    <div class="result-title" id="res-title">Level Clear! 🎉</div>
+    <div class="result-name" id="res-name"></div>
+  </div>
+  <div class="stars-row" id="stars-row">
+    <span class="star" id="s1">⭐</span>
+    <span class="star" id="s2">⭐</span>
+    <span class="star" id="s3">⭐</span>
+  </div>
+  <div class="score-big">
+    <span class="num" id="res-score">8</span><span class="den"> / 10</span>
+    <div class="pct" id="res-pct">80%</div>
+  </div>
+
+  <div class="result-section">
+    <h3>คะแนนแต่ละหมวด</h3>
+    <div id="cat-breakdown"></div>
+  </div>
+
+  <div class="answers-list" id="answers-list"></div>
+
+  <p class="scroll-hint">↑ เลื่อนขึ้นดูรายละเอียด</p>
+  <button class="btn-replay" onclick="replayGame()">🔁 เล่นอีกครั้ง</button>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  UTILITIES
+// ══════════════════════════════════════════════
+const ri = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+const riNZ = (a, b) => { let v; do { v = ri(a, b); } while (v === 0); return v; };
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = ri(0, i); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = arr => arr[ri(0, arr.length - 1)];
+
+// ══════════════════════════════════════════════
+//  QUESTION GENERATORS
+// ══════════════════════════════════════════════
+
+function genAddSub() {
+  const type = ri(0, 4);
+  let a, b, q, ans;
+  if (type === 0) {          // a + (-b)
+    a = ri(2,15); b = ri(2,15);
+    q = `${a} + (−${b})`; ans = a - b;
+  } else if (type === 1) {   // (-a) + b
+    a = ri(2,15); b = ri(2,15);
+    q = `(−${a}) + ${b}`; ans = b - a;
+  } else if (type === 2) {   // (-a) + (-b)
+    a = ri(1,12); b = ri(1,12);
+    q = `(−${a}) + (−${b})`; ans = -(a+b);
+  } else if (type === 3) {   // a − (−b)
+    a = ri(1,12); b = ri(2,12);
+    q = `${a} − (−${b})`; ans = a + b;
+  } else {                   // (-a) − b
+    a = ri(2,12); b = ri(2,12);
+    q = `(−${a}) − ${b}`; ans = -(a+b);
+  }
+  return { q: `${q} = ?`, ans, cat: 'add_sub', catLabel: 'บวก-ลบจำนวนเต็ม', type: 'number' };
+}
+
+function genMulDiv() {
+  const type = ri(0, 4);
+  let a, b, q, ans;
+  if (type === 0) {        // pos × neg
+    a = ri(2,9); b = ri(2,9);
+    q = `${a} × (−${b})`; ans = -a*b;
+  } else if (type === 1) { // neg × pos
+    a = ri(2,9); b = ri(2,9);
+    q = `(−${a}) × ${b}`; ans = -a*b;
+  } else if (type === 2) { // neg × neg
+    a = ri(2,9); b = ri(2,9);
+    q = `(−${a}) × (−${b})`; ans = a*b;
+  } else if (type === 3) { // neg ÷ pos
+    b = riNZ(2,9); ans = -ri(2,9);
+    q = `${b*ans} ÷ ${b}`;
+  } else {                  // neg ÷ neg → pos
+    b = riNZ(2,9); ans = ri(2,9);
+    q = `${-(b*ans)} ÷ (−${b})`;
+  }
+  return { q: `${q} = ?`, ans, cat: 'mul_div', catLabel: 'คูณ-หารจำนวนเต็ม', type: 'number' };
+}
+
+const PROP_POOL = shuffle([
+  { q: 'a + b = b + a\nนี่คือสมบัติใด?',
+    choices: ['สมบัติการสลับที่', 'สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'เอกลักษณ์การบวก'], ans: 0 },
+  { q: '(a + b) + c = a + (b + c)\nนี่คือสมบัติใด?',
+    choices: ['สมบัติการสลับที่', 'สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'ผกผันการบวก'], ans: 1 },
+  { q: 'a × (b + c) = (a×b) + (a×c)\nนี่คือสมบัติใด?',
+    choices: ['สมบัติการสลับที่', 'สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'เอกลักษณ์การคูณ'], ans: 2 },
+  { q: 'a + 0 = a\nนี่คือสมบัติใด?',
+    choices: ['สมบัติผกผันการบวก', 'เอกลักษณ์การบวก', 'สมบัติการสลับที่', 'สมบัติการแจกแจง'], ans: 1 },
+  { q: 'a + (−a) = 0\nนี่คือสมบัติใด?',
+    choices: ['เอกลักษณ์การบวก', 'สมบัติการสลับที่', 'ผกผันการบวก', 'สมบัติการแจกแจง'], ans: 2 },
+  { q: 'a × 1 = a\nนี่คือสมบัติใด?',
+    choices: ['สมบัติผกผันการคูณ', 'สมบัติการแจกแจง', 'สมบัติการสลับที่', 'เอกลักษณ์การคูณ'], ans: 3 },
+  { q: 'a × b = b × a\nนี่คือสมบัติใด?',
+    choices: ['สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'สมบัติการสลับที่การคูณ', 'เอกลักษณ์การบวก'], ans: 2 },
+  { q: 'a × 0 = 0\nนี่คือสมบัติใด?',
+    choices: ['เอกลักษณ์การคูณ', 'ผกผันการบวก', 'การคูณด้วยศูนย์', 'สมบัติการแจกแจง'], ans: 2 },
+]);
+
+function genProp(idx) {
+  const p = PROP_POOL[idx % PROP_POOL.length];
+  return { q: p.q, ans: p.ans, choices: p.choices, cat: 'prop', catLabel: 'สมบัติจำนวนเต็ม', type: 'mc' };
+}
+
+function genWord() {
+  const type = ri(0, 4);
+  let q, ans;
+  if (type === 0) {
+    const base = ri(3, 20), drop = ri(base + 1, base + 15);
+    q = `อุณหภูมิตอนเช้า ${base}°C\nตอนกลางคืนลดลง ${drop}°C\nอุณหภูมิตอนกลางคืน = ?°C`;
+    ans = base - drop;
+  } else if (type === 1) {
+    const earn = ri(3,10) * 10, spend = ri(earn + 10, earn + 80);
+    q = `มีเงิน ${earn} บาท ซื้อของราคา ${spend} บาท\nขาดเงิน (เป็นหนี้) กี่บาท?\n(ตอบเป็นจำนวนลบ)`;
+    ans = earn - spend;
+  } else if (type === 2) {
+    const floor = ri(3,8), up = ri(1,4), down = ri(floor + up + 1, floor + up + 6);
+    q = `ลิฟต์อยู่ชั้น ${floor}\nขึ้น ${up} ชั้น แล้วลง ${down} ชั้น\nตอนนี้อยู่ชั้นไหน? (B1 = −1)`;
+    ans = floor + up - down;
+  } else if (type === 3) {
+    const a = ri(5,15), lose = ri(a+1, a+10);
+    q = `เล่นเกมได้ ${a} คะแนน\nโดนหักโทษ ${lose} คะแนน\nคะแนนรวม = ?`;
+    ans = a - lose;
+  } else {
+    const temp = ri(2, 8), rise = ri(temp + 1, temp + 12);
+    q = `น้ำทะเลระดับ ${-temp} เมตร\nเรือดำน้ำดำลง ${rise} เมตร\nอยู่ระดับใด? (ตอบเป็นจำนวนลบ)`;
+    ans = -temp - rise;
+  }
+  return { q, ans, cat: 'word', catLabel: 'โจทย์ปัญหา', type: 'number' };
+}
+
+// ══════════════════════════════════════════════
+//  GAME STATE
+// ══════════════════════════════════════════════
+let questions = [];
+let qIdx = 0, lives = 3, score = 0;
+let currentAnswer = '';
+let mcSelected = -1;
+let playerName = '';
+let answers_log = [];
+
+function buildQuestions() {
+  questions = [];
+  // 3 add/sub, 3 mul/div, 2 property, 2 word
+  for (let i = 0; i < 3; i++) questions.push(genAddSub());
+  for (let i = 0; i < 3; i++) questions.push(genMulDiv());
+  questions.push(genProp(ri(0,3)));
+  questions.push(genProp(ri(4,7)));
+  for (let i = 0; i < 2; i++) questions.push(genWord());
+  shuffle(questions);
+}
+
+// ══════════════════════════════════════════════
+//  SCREEN MANAGEMENT
+// ══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ══════════════════════════════════════════════
+//  START GAME
+// ══════════════════════════════════════════════
+function startGame() {
+  const nameInput = document.getElementById('player-name');
+  playerName = nameInput.value.trim();
+  if (!playerName) { nameInput.focus(); nameInput.style.borderColor = 'red'; return; }
+  nameInput.style.borderColor = '';
+
+  buildQuestions();
+  qIdx = 0; lives = 3; score = 0;
+  answers_log = [];
+  currentAnswer = '';
+  mcSelected = -1;
+
+  updateLives();
+  showScreen('scr-game');
+  renderQuestion();
+}
+
+// ══════════════════════════════════════════════
+//  RENDER QUESTION
+// ══════════════════════════════════════════════
+function renderQuestion() {
+  const q = questions[qIdx];
+  currentAnswer = '';
+  mcSelected = -1;
+
+  document.getElementById('q-counter').textContent = `ข้อ ${qIdx+1} / 10`;
+  document.getElementById('score-badge').textContent = `⭐ ${score}`;
+  document.getElementById('progress-fill').style.width = `${qIdx * 10}%`;
+  document.getElementById('q-label').textContent = q.catLabel;
+  document.getElementById('q-text').innerHTML = q.q.replace(/\n/g,'<br>');
+  document.getElementById('answer-display').textContent = '';
+  document.getElementById('answer-display').classList.remove('has-answer');
+
+  // restart block bounce
+  const block = document.getElementById('qblock');
+  block.style.animation = 'none';
+  block.offsetHeight; // reflow
+  block.style.animation = '';
+
+  const isMC = q.type === 'mc';
+  document.getElementById('keypad-wrap').style.display = isMC ? 'none' : 'block';
+  document.getElementById('answer-display').style.display = isMC ? 'none' : 'flex';
+
+  const mcDiv = document.getElementById('mc-choices');
+  if (isMC) {
+    mcDiv.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'mc-grid';
+    q.choices.forEach((ch, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'mc-btn';
+      btn.textContent = ch;
+      btn.onclick = () => selectMC(i);
+      grid.appendChild(btn);
+    });
+    // Add submit button for MC
+    const submit = document.createElement('button');
+    submit.className = 'btn-start';
+    submit.textContent = '✓ ตอบ';
+    submit.style.cssText = 'margin-top:10px;padding:14px;font-size:1rem;border-radius:12px;';
+    submit.id = 'mc-submit';
+    submit.onclick = submitAnswer;
+    mcDiv.appendChild(grid);
+    mcDiv.appendChild(submit);
+  } else {
+    mcDiv.innerHTML = '';
+  }
+}
+
+function selectMC(i) {
+  mcSelected = i;
+  document.querySelectorAll('.mc-btn').forEach((b, idx) => {
+    b.classList.toggle('selected', idx === i);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  KEYPAD
+// ══════════════════════════════════════════════
+function kp(digit) {
+  if (currentAnswer.length >= 5) return;
+  currentAnswer += digit;
+  updateAnswerDisplay();
+}
+function kpMinus() {
+  if (currentAnswer.startsWith('−')) {
+    currentAnswer = currentAnswer.slice(1);
+  } else if (currentAnswer === '') {
+    currentAnswer = '−';
+  }
+  updateAnswerDisplay();
+}
+function kpDel() {
+  currentAnswer = currentAnswer.slice(0, -1);
+  updateAnswerDisplay();
+}
+function updateAnswerDisplay() {
+  const el = document.getElementById('answer-display');
+  el.textContent = currentAnswer;
+  el.classList.toggle('has-answer', currentAnswer.length > 0);
+}
+
+// ══════════════════════════════════════════════
+//  SUBMIT
+// ══════════════════════════════════════════════
+function submitAnswer() {
+  const q = questions[qIdx];
+  let correct = false;
+
+  if (q.type === 'number') {
+    if (!currentAnswer || currentAnswer === '−') return;
+    const userAns = parseInt(currentAnswer.replace('−', '-'));
+    correct = userAns === q.ans;
+  } else {
+    if (mcSelected === -1) return;
+    correct = mcSelected === q.ans;
+  }
+
+  answers_log.push({ q: q.q, ans: q.ans, userAns: q.type === 'mc' ? q.choices[mcSelected] : currentAnswer, correct, cat: q.cat, catLabel: q.catLabel });
+
+  if (correct) {
+    score++;
+    showFeedback('✅');
+    spawnCoin();
+  } else {
+    lives--;
+    updateLives();
+    const mario = document.getElementById('mario-wrap');
+    mario.classList.add('hurt');
+    setTimeout(() => mario.classList.remove('hurt'), 500);
+    showFeedback('❌');
+  }
+
+  qIdx++;
+  setTimeout(() => {
+    if (qIdx >= questions.length) {
+      showResult();
+    } else {
+      renderQuestion();
+      showScreen('scr-game');
+    }
+  }, 700);
+}
+
+function spawnCoin() {
+  const scene = document.getElementById('game-scene');
+  const coin = document.createElement('div');
+  coin.className = 'coin-pop';
+  coin.textContent = '🪙';
+  scene.appendChild(coin);
+  setTimeout(() => coin.remove(), 1000);
+}
+
+// ══════════════════════════════════════════════
+//  FEEDBACK
+// ══════════════════════════════════════════════
+function showFeedback(emoji) {
+  showScreen('scr-feedback');
+  const badge = document.getElementById('feedback-badge');
+  badge.textContent = emoji;
+  badge.style.animation = 'none';
+  badge.offsetHeight;
+  badge.style.animation = '';
+}
+
+// ══════════════════════════════════════════════
+//  LIVES
+// ══════════════════════════════════════════════
+function updateLives() {
+  [1,2,3].forEach(i => {
+    document.getElementById(`h${i}`).classList.toggle('lost', i > lives);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  RESULT
+// ══════════════════════════════════════════════
+function showResult() {
+  showScreen('scr-result');
+  document.getElementById('res-name').textContent = `👤 ${playerName}`;
+  document.getElementById('res-score').textContent = score;
+  document.getElementById('res-pct').textContent = `${score * 10}%`;
+
+  // Title
+  const titles = ['ยังต้องฝึกอีกนะ 💪', 'ผ่านแล้ว! 👍', 'เก่งมาก! 🌟', 'ยอดเยี่ยม! 🏆'];
+  document.getElementById('res-title').textContent = score <= 3 ? titles[0] : score <= 6 ? titles[1] : score <= 8 ? titles[2] : titles[3];
+
+  // Stars
+  const starCount = score <= 3 ? 0 : score <= 6 ? 1 : score <= 8 ? 2 : 3;
+  setTimeout(() => {
+    for (let i = 1; i <= starCount; i++) {
+      setTimeout(() => document.getElementById(`s${i}`).classList.add('lit'), i * 300);
+    }
+  }, 200);
+
+  // Category breakdown
+  const cats = {};
+  answers_log.forEach(a => {
+    if (!cats[a.cat]) cats[a.cat] = { label: a.catLabel, total: 0, correct: 0 };
+    cats[a.cat].total++;
+    if (a.correct) cats[a.cat].correct++;
+  });
+  const catDiv = document.getElementById('cat-breakdown');
+  catDiv.innerHTML = '';
+  Object.values(cats).forEach(c => {
+    const pct = Math.round(c.correct / c.total * 100);
+    catDiv.innerHTML += `
+      <div class="cat-row">
+        <span class="cat-label">${c.catLabel}</span>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:${pct}%;background:${pct>=70?'#27ae60':'#e67e22'};"></div></div>
+        <span class="cat-score">${c.correct}/${c.total}</span>
+      </div>`;
+  });
+
+  // Answer list
+  const listDiv = document.getElementById('answers-list');
+  listDiv.innerHTML = '<h3 style="color:#ccc;font-size:.85rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">รายละเอียดทุกข้อ</h3>';
+  answers_log.forEach((a, i) => {
+    const qDisplay = a.q.replace(/\n/g, ' ');
+    listDiv.innerHTML += `
+      <div class="ans-item ${a.correct ? 'correct' : 'wrong'}">
+        <span class="ans-num">${i+1}.</span>
+        <span class="ans-q">${qDisplay}
+          ${!a.correct ? `<span class="ans-correct-val">เฉลย: ${a.ans}</span>` : ''}
+        </span>
+        <span class="ans-mark">${a.correct ? '✅' : '❌'}</span>
+      </div>`;
+  });
+
+  // Scroll to top of result
+  document.getElementById('scr-result').scrollTop = 0;
+}
+
+// ══════════════════════════════════════════════
+//  REPLAY
+// ══════════════════════════════════════════════
+function replayGame() {
+  document.querySelectorAll('.star').forEach(s => s.classList.remove('lit'));
+  showScreen('scr-start');
+}
+
+// ══════════════════════════════════════════════
+//  ENTER KEY support
+// ══════════════════════════════════════════════
+document.getElementById('player-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter') startGame();
+});
+</script>
+</body>
+</html>
