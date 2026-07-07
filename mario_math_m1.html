@@ -223,7 +223,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:'Se
 <!-- GAME -->
 <div id="s-game" class="scr">
   <div id="hud">
-    <div id="lives"><span class="heart" id="h1">❤️</span><span class="heart" id="h2">❤️</span><span class="heart" id="h3">❤️</span></div>
+    <div id="lives"><span class="heart" id="h1">❤️</span><span class="heart" id="h2">❤️</span><span class="heart" id="h3">❤️</span><span class="heart" id="h4">❤️</span><span class="heart" id="h5">❤️</span></div>
     <div id="qctr">ข้อ 0 / 15</div>
     <div id="sbadge">⭐ 0</div>
   </div>
@@ -380,7 +380,7 @@ function buildQuestions(){
 // ══════════════════════════════════════════════════
 //  GAME STATE
 // ══════════════════════════════════════════════════
-let pName='', Qs=[], qIdx=0, lives=3, score=0, log=[];
+let pName='', Qs=[], qIdx=0, lives=5, score=0, log=[];
 let ans='', mcSel=-1;
 
 // Physics — marioY = pixels above ground (0 = on ground, increases when jumping)
@@ -433,7 +433,7 @@ const PIPE=`<svg viewBox="0 0 32 76" width="32" height="76" xmlns="http://www.w3
 // ══════════════════════════════════════════════════
 function showScr(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
 function updLives(){
-  ['h1','h2','h3'].forEach((id,i)=>{
+  ['h1','h2','h3','h4','h5'].forEach((id,i)=>{
     const el=document.getElementById(id);
     el.textContent=i<lives?'❤️':'🖤';
     el.style.opacity=i<lives?'1':'0.35';
@@ -473,7 +473,7 @@ function startGame(){
   inp.style.borderColor='';
 
   buildQuestions();
-  qIdx=0;lives=3;score=0;log=[];
+  qIdx=0;lives=5;score=0;log=[];
   mY=0;mVY=0;mInv=0;
   ents=[];eid=0;frame=0;waveN=0;
   resetWave();
