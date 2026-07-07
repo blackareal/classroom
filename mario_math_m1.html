@@ -342,7 +342,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:'Se
       <span class="heart" id="h2">❤️</span>
       <span class="heart" id="h3">❤️</span>
     </div>
-    <div class="q-counter" id="q-counter">ข้อ 1 / 10</div>
+    <div class="q-counter" id="q-counter">ข้อ 1 / 15</div>
     <div class="score-badge" id="score-badge">⭐ 0</div>
   </div>
   <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
@@ -415,7 +415,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:'Se
     <span class="star" id="s3">⭐</span>
   </div>
   <div class="score-big">
-    <span class="num" id="res-score">8</span><span class="den"> / 10</span>
+    <span class="num" id="res-score">8</span><span class="den"> / 15</span>
     <div class="pct" id="res-pct">80%</div>
   </div>
 
@@ -487,56 +487,77 @@ function genMulDiv() {
   return { q: `${q} = ?`, ans, cat: 'mul_div', catLabel: 'คูณ-หารจำนวนเต็ม', type: 'number' };
 }
 
-const PROP_POOL = shuffle([
-  { q: 'a + b = b + a\nนี่คือสมบัติใด?',
-    choices: ['สมบัติการสลับที่', 'สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'เอกลักษณ์การบวก'], ans: 0 },
-  { q: '(a + b) + c = a + (b + c)\nนี่คือสมบัติใด?',
-    choices: ['สมบัติการสลับที่', 'สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'ผกผันการบวก'], ans: 1 },
-  { q: 'a × (b + c) = (a×b) + (a×c)\nนี่คือสมบัติใด?',
-    choices: ['สมบัติการสลับที่', 'สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'เอกลักษณ์การคูณ'], ans: 2 },
-  { q: 'a + 0 = a\nนี่คือสมบัติใด?',
-    choices: ['สมบัติผกผันการบวก', 'เอกลักษณ์การบวก', 'สมบัติการสลับที่', 'สมบัติการแจกแจง'], ans: 1 },
-  { q: 'a + (−a) = 0\nนี่คือสมบัติใด?',
-    choices: ['เอกลักษณ์การบวก', 'สมบัติการสลับที่', 'ผกผันการบวก', 'สมบัติการแจกแจง'], ans: 2 },
-  { q: 'a × 1 = a\nนี่คือสมบัติใด?',
-    choices: ['สมบัติผกผันการคูณ', 'สมบัติการแจกแจง', 'สมบัติการสลับที่', 'เอกลักษณ์การคูณ'], ans: 3 },
-  { q: 'a × b = b × a\nนี่คือสมบัติใด?',
-    choices: ['สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'สมบัติการสลับที่การคูณ', 'เอกลักษณ์การบวก'], ans: 2 },
-  { q: 'a × 0 = 0\nนี่คือสมบัติใด?',
-    choices: ['เอกลักษณ์การคูณ', 'ผกผันการบวก', 'การคูณด้วยศูนย์', 'สมบัติการแจกแจง'], ans: 2 },
-]);
+// ── ตารางชื่อหมวด (แก้บั๊ก undefined) ──
+const CAT_LABELS = {
+  add_sub: 'บวก-ลบจำนวนเต็ม',
+  mul_div: 'คูณ-หารจำนวนเต็ม',
+  prop:    'สมบัติจำนวนเต็ม',
+  word:    'โจทย์ปัญหา'
+};
 
-function genProp(idx) {
-  const p = PROP_POOL[idx % PROP_POOL.length];
-  return { q: p.q, ans: p.ans, choices: p.choices, cat: 'prop', catLabel: 'สมบัติจำนวนเต็ม', type: 'mc' };
+// ── Property: MC pool (10 แบบ) ──
+const PROP_MC_POOL = [
+  { q:'a + b = b + a\nนี่คือสมบัติใด?', choices:['สมบัติการสลับที่', 'สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'เอกลักษณ์การบวก'], ans:0 },
+  { q:'(a + b) + c = a + (b + c)\nนี่คือสมบัติใด?', choices:['สมบัติการสลับที่', 'สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'ผกผันการบวก'], ans:1 },
+  { q:'a × (b + c) = (a × b) + (a × c)\nนี่คือสมบัติใด?', choices:['สมบัติการสลับที่', 'สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'เอกลักษณ์การคูณ'], ans:2 },
+  { q:'a + 0 = a\nนี่คือสมบัติใด?', choices:['ผกผันการบวก', 'เอกลักษณ์การบวก', 'สมบัติการสลับที่', 'สมบัติการแจกแจง'], ans:1 },
+  { q:'a + (−a) = 0\nนี่คือสมบัติใด?', choices:['เอกลักษณ์การบวก', 'สมบัติการสลับที่', 'ผกผันการบวก', 'สมบัติการแจกแจง'], ans:2 },
+  { q:'a × 1 = a\nนี่คือสมบัติใด?', choices:['ผกผันการคูณ', 'สมบัติการแจกแจง', 'สมบัติการสลับที่', 'เอกลักษณ์การคูณ'], ans:3 },
+  { q:'a × b = b × a\nนี่คือสมบัติใด?', choices:['สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'สมบัติการสลับที่การคูณ', 'เอกลักษณ์การคูณ'], ans:2 },
+  { q:'a × 0 = 0\nนี่คือสมบัติใด?', choices:['เอกลักษณ์การคูณ', 'ผกผันการบวก', 'สมบัติการคูณด้วยศูนย์', 'สมบัติการแจกแจง'], ans:2 },
+  { q:'(a × b) × c = a × (b × c)\nนี่คือสมบัติใด?', choices:['สมบัติการสลับที่การคูณ', 'สมบัติการเปลี่ยนหมู่การคูณ', 'สมบัติการแจกแจง', 'เอกลักษณ์การคูณ'], ans:1 },
+  { q:'ข้อใดแสดงสมบัติการแจกแจง?', choices:['3 × (4 + 5) = 3×4 + 3×5', '3 + 4 = 4 + 3', '(3+4)+5 = 3+(4+5)', '6 + (−6) = 0'], ans:0 },
+];
+
+// ── Property: เติมตัวเลข (7 แบบ random) ──
+function genPropFill() {
+  const t = ri(0, 6);
+  const n = ri(3, 20), a = ri(2, 8), b = ri(2, 8), c = ri(2, 8);
+  const tpls = [
+    { q:`${n} + (−${n}) = ☐\n(สมบัติใดทำให้ได้คำตอบนี้?)`, ans:0 },
+    { q:`${n} + ☐ = ${n}\n(เอกลักษณ์การบวก — ☐ คือ?)`, ans:0 },
+    { q:`☐ × ${n} = ${n}\n(เอกลักษณ์การคูณ — ☐ คือ?)`, ans:1 },
+    { q:`${a} × (${b} + ${c}) = ${a}×${b} + ${a}×☐\n(สมบัติการแจกแจง)`, ans:c },
+    { q:`${a} × ${b} + ${a} × ${c} = ${a} × (${b} + ☐)\n(สมบัติการแจกแจง)`, ans:c },
+    { q:`(${a} + ${b}) + ${c} = ${a} + (☐ + ${c})\n(สมบัติการเปลี่ยนหมู่)`, ans:b },
+    { q:`${a} + ${b} = ${b} + ☐\n(สมบัติการสลับที่)`, ans:a },
+  ];
+  return { ...tpls[t], cat:'prop', type:'number' };
 }
 
-function genWord() {
-  const type = ri(0, 4);
+// ── Property: เลือก 3 ข้อไม่ซ้ำ ──
+function pickProps() {
+  const mcIdxs = shuffle([...Array(PROP_MC_POOL.length).keys()]);
+  const mc1 = PROP_MC_POOL[mcIdxs[0]];
+  const mc2 = PROP_MC_POOL[mcIdxs[1]];
+  return [
+    genPropFill(),
+    { q:mc1.q, ans:mc1.ans, choices:mc1.choices, cat:'prop', type:'mc' },
+    { q:mc2.q, ans:mc2.ans, choices:mc2.choices, cat:'prop', type:'mc' },
+  ];
+}
+
+// ── Word Problems: 12 แบบ เลือก 4 ไม่ซ้ำ ──
+function genWordOfType(t) {
   let q, ans;
-  if (type === 0) {
-    const base = ri(3, 20), drop = ri(base + 1, base + 15);
-    q = `อุณหภูมิตอนเช้า ${base}°C\nตอนกลางคืนลดลง ${drop}°C\nอุณหภูมิตอนกลางคืน = ?°C`;
-    ans = base - drop;
-  } else if (type === 1) {
-    const earn = ri(3,10) * 10, spend = ri(earn + 10, earn + 80);
-    q = `มีเงิน ${earn} บาท ซื้อของราคา ${spend} บาท\nขาดเงิน (เป็นหนี้) กี่บาท?\n(ตอบเป็นจำนวนลบ)`;
-    ans = earn - spend;
-  } else if (type === 2) {
-    const floor = ri(3,8), up = ri(1,4), down = ri(floor + up + 1, floor + up + 6);
-    q = `ลิฟต์อยู่ชั้น ${floor}\nขึ้น ${up} ชั้น แล้วลง ${down} ชั้น\nตอนนี้อยู่ชั้นไหน? (B1 = −1)`;
-    ans = floor + up - down;
-  } else if (type === 3) {
-    const a = ri(5,15), lose = ri(a+1, a+10);
-    q = `เล่นเกมได้ ${a} คะแนน\nโดนหักโทษ ${lose} คะแนน\nคะแนนรวม = ?`;
-    ans = a - lose;
-  } else {
-    const temp = ri(2, 8), rise = ri(temp + 1, temp + 12);
-    q = `น้ำทะเลระดับ ${-temp} เมตร\nเรือดำน้ำดำลง ${rise} เมตร\nอยู่ระดับใด? (ตอบเป็นจำนวนลบ)`;
-    ans = -temp - rise;
+  switch(t) {
+    case 0: { const b=ri(3,18), d=ri(b+2,b+20); q=`อุณหภูมิตอนเช้า ${b}°C\nลดลง ${d}°C ในตอนกลางคืน\nอุณหภูมิตอนกลางคืน = ?°C`; ans=b-d; break; }
+    case 1: { const n=ri(4,16), r=ri(1,n-1); q=`อุณหภูมิ −${n}°C\nเพิ่มขึ้น ${r}°C\nอุณหภูมิใหม่ = ?°C`; ans=-n+r; break; }
+    case 2: { const f=ri(3,8), u=ri(1,4), d=ri(f+u+1,f+u+7); q=`ลิฟต์อยู่ชั้น ${f}\nขึ้น ${u} ชั้น แล้วลง ${d} ชั้น\n(B1=−1, B2=−2)\nตอนนี้อยู่ชั้นไหน?`; ans=f+u-d; break; }
+    case 3: { const dp=ri(3,12), dv=ri(5,20); q=`เรือดำน้ำอยู่ระดับ −${dp} ม.\nดำลงอีก ${dv} ม.\nอยู่ระดับใด?`; ans=-dp-dv; break; }
+    case 4: { const hv=ri(2,9)*10, nd=ri(hv+20,hv+100); q=`มีเงิน ${hv} บาท\nต้องจ่าย ${nd} บาท\nเงินขาด/เหลือ = ? บาท\n(ขาด → ตอบเป็นจำนวนลบ)`; ans=hv-nd; break; }
+    case 5: { const g=ri(5,25), l=ri(g+2,g+18); q=`ทำคะแนนได้ ${g} แต้ม\nโดนหักโทษ ${l} แต้ม\nคะแนนสุทธิ = ?`; ans=g-l; break; }
+    case 6: { const bal=ri(2,8)*100, wd=ri(bal+50,bal+500); q=`มีเงินในบัญชี ${bal} บาท\nถอนเงิน ${wd} บาท\nยอดคงเหลือ = ? บาท`; ans=bal-wd; break; }
+    case 7: { const a=ri(2,10), bv=ri(a+4,a+25); q=`เมือง ก อุณหภูมิ ${a}°C\nเมือง ข อุณหภูมิ −${bv}°C\nต่างกัน = ? องศา`; ans=a+bv; break; }
+    case 8: { const pr=ri(1,6)*100, ls=ri(pr+50,pr+700); q=`วันแรกกำไร ${pr} บาท\nวันถัดมาขาดทุน ${ls} บาท\nกำไร/ขาดทุนสุทธิ = ? บาท`; ans=pr-ls; break; }
+    case 9: { const s=ri(3,10), bk=ri(s+2,s+14); q=`ยืนอยู่ตำแหน่ง +${s}\nเดินถอยหลัง ${bk} ก้าว\nอยู่ตำแหน่งใด?`; ans=s-bk; break; }
+    case 10: { const ab=ri(2,8)*10, bl=ri(3,12)*10; q=`ฝูงนกบินสูง ${ab} ม. เหนือน้ำ\nปลาอยู่ระดับ ${bl} ม. ใต้น้ำ\nห่างกัน = ? ม.`; ans=ab+bl; break; }
+    case 11: { const rm=ri(22,35), fz=ri(rm+12,rm+40); q=`ห้องพักอุณหภูมิ ${rm}°C\nโกดังแช่แข็ง −${fz}°C\nต่างกัน = ? องศา`; ans=rm+fz; break; }
   }
-  return { q, ans, cat: 'word', catLabel: 'โจทย์ปัญหา', type: 'number' };
+  return { q, ans, cat:'word', type:'number' };
 }
+
+function genWord() { return genWordOfType(ri(0,11)); }
 
 // ══════════════════════════════════════════════
 //  GAME STATE
@@ -550,12 +571,12 @@ let answers_log = [];
 
 function buildQuestions() {
   questions = [];
-  // 3 add/sub, 3 mul/div, 2 property, 2 word
-  for (let i = 0; i < 3; i++) questions.push(genAddSub());
-  for (let i = 0; i < 3; i++) questions.push(genMulDiv());
-  questions.push(genProp(ri(0,3)));
-  questions.push(genProp(ri(4,7)));
-  for (let i = 0; i < 2; i++) questions.push(genWord());
+  // 4 add/sub + 4 mul/div + 3 prop (1 fill-in + 2 MC) + 4 word = 15 ข้อ
+  for (let i = 0; i < 4; i++) questions.push(genAddSub());
+  for (let i = 0; i < 4; i++) questions.push(genMulDiv());
+  pickProps().forEach(p => questions.push(p));
+  // 4 word problems จาก 12 แบบ ไม่ซ้ำกัน
+  shuffle([0,1,2,3,4,5,6,7,8,9,10,11]).slice(0,4).forEach(t => questions.push(genWordOfType(t)));
   shuffle(questions);
 }
 
@@ -595,10 +616,10 @@ function renderQuestion() {
   currentAnswer = '';
   mcSelected = -1;
 
-  document.getElementById('q-counter').textContent = `ข้อ ${qIdx+1} / 10`;
+  document.getElementById('q-counter').textContent = `ข้อ ${qIdx+1} / 15`;
   document.getElementById('score-badge').textContent = `⭐ ${score}`;
-  document.getElementById('progress-fill').style.width = `${qIdx * 10}%`;
-  document.getElementById('q-label').textContent = q.catLabel;
+  document.getElementById('progress-fill').style.width = `${Math.round(qIdx/15*100)}%`;
+  document.getElementById('q-label').textContent = CAT_LABELS[q.cat] || q.cat;
   document.getElementById('q-text').innerHTML = q.q.replace(/\n/g,'<br>');
   document.getElementById('answer-display').textContent = '';
   document.getElementById('answer-display').classList.remove('has-answer');
@@ -738,85 +759,77 @@ function showFeedback(emoji) {
 // ══════════════════════════════════════════════
 //  LIVES
 // ══════════════════════════════════════════════
+
 function updateLives() {
-  [1,2,3].forEach(i => {
-    document.getElementById(`h${i}`).classList.toggle('lost', i > lives);
+  const ids = ['h1', 'h2', 'h3'];
+  ids.forEach((id, i) => {
+    const el = document.getElementById(id);
+    el.textContent = i < lives ? '❤️' : '🖤';
+    el.style.opacity = i < lives ? '1' : '0.35';
   });
 }
 
 // ══════════════════════════════════════════════
-//  RESULT
+//  SHOW RESULT
 // ══════════════════════════════════════════════
 function showResult() {
   showScreen('scr-result');
-  document.getElementById('res-name').textContent = `👤 ${playerName}`;
+  document.getElementById('res-name').textContent = playerName;
   document.getElementById('res-score').textContent = score;
-  document.getElementById('res-pct').textContent = `${score * 10}%`;
+  document.getElementById('res-pct').textContent = Math.round(score / 15 * 100) + '%';
 
-  // Title
-  const titles = ['ยังต้องฝึกอีกนะ 💪', 'ผ่านแล้ว! 👍', 'เก่งมาก! 🌟', 'ยอดเยี่ยม! 🏆'];
-  document.getElementById('res-title').textContent = score <= 3 ? titles[0] : score <= 6 ? titles[1] : score <= 8 ? titles[2] : titles[3];
+  // Stars & title
+  let stars = 0, title = '';
+  if (score <= 5)       { stars = 0; title = 'ยังต้องฝึกอีกนิดนะ 💪'; }
+  else if (score <= 9)  { stars = 1; title = 'ผ่านแล้ว ทำได้ดี! 👍'; }
+  else if (score <= 12) { stars = 2; title = 'เก่งมาก! 🌟'; }
+  else                  { stars = 3; title = 'ยอดเยี่ยมมาก! 🏆'; }
 
-  // Stars
-  const starCount = score <= 3 ? 0 : score <= 6 ? 1 : score <= 8 ? 2 : 3;
-  setTimeout(() => {
-    for (let i = 1; i <= starCount; i++) {
-      setTimeout(() => document.getElementById(`s${i}`).classList.add('lit'), i * 300);
-    }
-  }, 200);
+  document.getElementById('res-title').textContent = title;
+  ['s1', 's2', 's3'].forEach(function(id, i) {
+    var el = document.getElementById(id);
+    el.style.filter = i < stars ? '' : 'grayscale(1) opacity(0.3)';
+  });
 
   // Category breakdown
-  const cats = {};
-  answers_log.forEach(a => {
-    if (!cats[a.cat]) cats[a.cat] = { label: a.catLabel, total: 0, correct: 0 };
+  var cats = {};
+  answers_log.forEach(function(a) {
+    if (!cats[a.cat]) cats[a.cat] = { label: CAT_LABELS[a.cat] || a.cat, total: 0, correct: 0 };
     cats[a.cat].total++;
     if (a.correct) cats[a.cat].correct++;
   });
-  const catDiv = document.getElementById('cat-breakdown');
+  var catDiv = document.getElementById('cat-breakdown');
   catDiv.innerHTML = '';
-  Object.values(cats).forEach(c => {
-    const pct = Math.round(c.correct / c.total * 100);
-    catDiv.innerHTML += `
-      <div class="cat-row">
-        <span class="cat-label">${c.catLabel}</span>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:${pct}%;background:${pct>=70?'#27ae60':'#e67e22'};"></div></div>
-        <span class="cat-score">${c.correct}/${c.total}</span>
-      </div>`;
+  Object.values(cats).forEach(function(c) {
+    var pct = Math.round(c.correct / c.total * 100);
+    catDiv.innerHTML += '<div class="cat-row">' +
+      '<span class="cat-label">' + c.label + '</span>' +
+      '<div class="cat-bar-wrap"><div class="cat-bar" style="width:' + pct + '%;background:' + (pct >= 70 ? '#27ae60' : '#e67e22') + ';"></div></div>' +
+      '<span class="cat-score">' + c.correct + '/' + c.total + '</span>' +
+      '</div>';
   });
 
   // Answer list
-  const listDiv = document.getElementById('answers-list');
-  listDiv.innerHTML = '<h3 style="color:#ccc;font-size:.85rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">รายละเอียดทุกข้อ</h3>';
-  answers_log.forEach((a, i) => {
-    const qDisplay = a.q.replace(/\n/g, ' ');
-    listDiv.innerHTML += `
-      <div class="ans-item ${a.correct ? 'correct' : 'wrong'}">
-        <span class="ans-num">${i+1}.</span>
-        <span class="ans-q">${qDisplay}
-          ${!a.correct ? `<span class="ans-correct-val">เฉลย: ${a.ans}</span>` : ''}
-        </span>
-        <span class="ans-mark">${a.correct ? '✅' : '❌'}</span>
-      </div>`;
+  var listDiv = document.getElementById('answers-list');
+  listDiv.innerHTML = '<h3 style="color:#ccc;font-size:.85rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">รายข้อ</h3>';
+  answers_log.forEach(function(a, i) {
+    var icon = a.correct ? '✅' : '❌';
+    var shortQ = a.q.replace(/\n/g, ' ').replace(/\s+/g, ' ').substring(0, 40);
+    var wrongInfo = a.correct ? '' : '<span class="ans-correct-val">ตอบ: ' + a.userAns + ' | เฉลย: ' + a.ans + '</span>';
+    listDiv.innerHTML += '<div class="ans-item ' + (a.correct ? 'correct' : 'wrong') + '">' +
+      '<span class="ans-mark">' + icon + '</span>' +
+      '<div style="flex:1"><span class="ans-num">ข้อ ' + (i+1) + '</span>' +
+      '<span class="ans-q"> ' + shortQ + '</span>' + wrongInfo + '</div></div>';
   });
-
-  // Scroll to top of result
-  document.getElementById('scr-result').scrollTop = 0;
 }
 
 // ══════════════════════════════════════════════
 //  REPLAY
 // ══════════════════════════════════════════════
 function replayGame() {
-  document.querySelectorAll('.star').forEach(s => s.classList.remove('lit'));
+  document.getElementById('player-name').value = playerName;
   showScreen('scr-start');
 }
-
-// ══════════════════════════════════════════════
-//  ENTER KEY support
-// ══════════════════════════════════════════════
-document.getElementById('player-name').addEventListener('keydown', e => {
-  if (e.key === 'Enter') startGame();
-});
 </script>
 </body>
 </html>
