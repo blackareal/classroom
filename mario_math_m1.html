@@ -5,830 +5,799 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mario Math — จำนวนเต็ม ม.1</title>
 <style>
-:root {
-  --sky:#5c94fc; --sky2:#3a78e8;
-  --ground:#58a827; --ground2:#4a8f1f;
-  --brick:#c8761a; --qblock:#e8a020;
-  --red:#e52c2c; --blue:#2b3cc8; --yellow:#ffd700;
-  --skin:#fdbcb4; --brown:#5c3a1e;
-  --green:#27ae60; --dark:#222; --white:#fff;
-  --shadow:rgba(0,0,0,.25);
+:root{
+  --sky:#5c94fc; --ground:#58a827; --ground2:#4a8f1f;
+  --qblock:#e8a020; --red:#e52c2c; --yellow:#ffd700;
+  --green:#27ae60; --dark:#0a0a1a; --white:#fff;
+  --shadow:rgba(0,0,0,.3);
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;}
 html,body{width:100%;height:100%;overflow:hidden;background:#111;font-family:'Segoe UI',Tahoma,sans-serif;}
 
-/* ────────── SCREENS ────────── */
-.screen{position:fixed;inset:0;display:none;flex-direction:column;overflow:hidden;}
-.screen.active{display:flex;}
+/* SCREENS */
+.scr{position:fixed;inset:0;display:none;flex-direction:column;}
+.scr.on{display:flex;}
 
-/* ══════════════════════════════
-   START SCREEN
-══════════════════════════════ */
-#scr-start{
-  background:linear-gradient(180deg,var(--sky) 68%,var(--ground) 68%,var(--ground2) 100%);
-  align-items:center; justify-content:center; gap:16px; padding:24px 20px;
+/* ─── START ─── */
+#s-start{
+  background:linear-gradient(180deg,var(--sky) 65%,var(--ground) 65%,var(--ground2) 100%);
+  align-items:center;justify-content:center;gap:14px;padding:20px 18px;overflow-y:auto;
 }
-.logo-box{
-  background:var(--red); border-radius:16px; padding:10px 28px;
-  box-shadow:0 6px 0 #a00,0 8px 16px var(--shadow);
-  text-align:center;
-}
-.logo-box h1{color:var(--yellow);font-size:2.4rem;font-weight:900;letter-spacing:2px;text-shadow:3px 3px 0 #a00;}
-.logo-box p{color:#fff;font-size:1rem;margin-top:4px;}
-
-.mario-scene-start{height:90px;position:relative;width:100%;}
-
-.start-form{width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;}
-.start-form label{color:#fff;font-size:1rem;font-weight:600;text-shadow:1px 1px 2px var(--shadow);}
-.start-form input{
-  width:100%;padding:14px 16px;font-size:1.1rem;border:none;border-radius:12px;
-  background:rgba(255,255,255,.92);color:var(--dark);outline:none;
-  box-shadow:0 4px 0 rgba(0,0,0,.2);
-}
-.btn-start{
-  background:var(--green);color:#fff;border:none;border-radius:14px;
-  padding:16px;font-size:1.2rem;font-weight:700;cursor:pointer;
-  box-shadow:0 6px 0 #1a7a40,0 8px 12px var(--shadow);
-  transition:transform .1s,box-shadow .1s;
-  letter-spacing:1px;
-}
-.btn-start:active{transform:translateY(3px);box-shadow:0 3px 0 #1a7a40;}
-
-.coins-row{display:flex;gap:10px;justify-content:center;}
-.coin-deco{
-  width:32px;height:32px;border-radius:50%;
+.logo{background:var(--red);border-radius:14px;padding:10px 26px;
+  box-shadow:0 6px 0 #a00,0 8px 16px var(--shadow);text-align:center;}
+.logo h1{color:var(--yellow);font-size:2rem;font-weight:900;letter-spacing:2px;text-shadow:3px 3px 0 #a00;}
+.logo p{color:#fff;font-size:.9rem;margin-top:3px;}
+.coins{display:flex;gap:10px;justify-content:center;}
+.cdeco{width:26px;height:26px;border-radius:50%;
   background:radial-gradient(circle at 35% 35%,#ffe566,var(--yellow),#c8920a);
-  box-shadow:0 3px 6px var(--shadow);
-  animation:coinBob .8s ease-in-out infinite alternate;
-}
-.coin-deco:nth-child(2){animation-delay:.2s;}
-.coin-deco:nth-child(3){animation-delay:.4s;}
-@keyframes coinBob{from{transform:translateY(0);}to{transform:translateY(-6px);}}
+  animation:cbob .8s ease-in-out infinite alternate;}
+.cdeco:nth-child(2){animation-delay:.2s;}.cdeco:nth-child(3){animation-delay:.4s;}
+@keyframes cbob{to{transform:translateY(-6px);}}
+.sform{width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px;}
+.sform label{color:#fff;font-size:.95rem;font-weight:600;}
+.sform input{width:100%;padding:13px 14px;font-size:1.05rem;border:none;border-radius:11px;
+  background:rgba(255,255,255,.93);color:#111;outline:none;box-shadow:0 4px 0 rgba(0,0,0,.2);}
+.gbtn{background:var(--green);color:#fff;border:none;border-radius:13px;
+  padding:15px;font-size:1.15rem;font-weight:700;cursor:pointer;letter-spacing:1px;
+  box-shadow:0 6px 0 #1a7a40;}
+.gbtn:active{transform:translateY(3px);box-shadow:0 3px 0 #1a7a40;}
 
-/* ══════════════════════════════
-   GAME SCREEN
-══════════════════════════════ */
-#scr-game{background:#000;gap:0;}
+/* ─── GAME SCREEN ─── */
+#s-game{background:#0a0a1a;}
 
-/* Header */
-.game-header{
+/* HUD */
+#hud{flex-shrink:0;height:42px;padding:5px 12px;
   background:linear-gradient(90deg,#1a1a2e,#16213e);
-  padding:10px 14px 8px;
-  display:flex;align-items:center;justify-content:space-between;
-  border-bottom:2px solid #ffd700;
-  flex-shrink:0;
-}
-.lives-row{display:flex;gap:5px;}
-.heart{font-size:1.4rem;transition:transform .2s,opacity .3s;}
-.heart.lost{opacity:.25;transform:scale(.8);}
-.q-counter{color:var(--yellow);font-size:.95rem;font-weight:700;}
-.score-badge{
-  background:var(--yellow);color:#000;border-radius:20px;
-  padding:4px 12px;font-size:.9rem;font-weight:800;
+  border-bottom:2px solid var(--yellow);
+  display:flex;align-items:center;justify-content:space-between;z-index:10;}
+#lives{display:flex;gap:4px;}
+.heart{font-size:1.15rem;transition:opacity .3s;}
+#qctr{color:var(--yellow);font-size:.85rem;font-weight:700;}
+#sbadge{background:var(--yellow);color:#000;border-radius:14px;padding:3px 10px;font-size:.8rem;font-weight:800;}
+
+/* WORLD */
+#world{flex-shrink:0;position:relative;width:100%;height:195px;overflow:hidden;}
+#skybg{position:absolute;inset:0;
+  background:linear-gradient(180deg,var(--sky) 70%,#6cc23a 70%,var(--ground2) 100%);}
+.cloud{position:absolute;background:#fff;border-radius:40px;opacity:.85;}
+.cloud::before,.cloud::after{content:'';position:absolute;background:#fff;border-radius:50%;}
+.cl1{width:56px;height:17px;top:10px;left:12%;animation:cm 20s linear infinite;}
+.cl2{width:72px;height:20px;top:20px;left:55%;animation:cm 26s linear infinite;}
+.cl1::before{width:26px;height:26px;bottom:6px;left:7px;}
+.cl1::after{width:19px;height:19px;bottom:6px;right:7px;}
+.cl2::before{width:34px;height:34px;bottom:8px;left:9px;}
+.cl2::after{width:24px;height:24px;bottom:8px;right:9px;}
+@keyframes cm{to{transform:translateX(-120vw);}}
+
+#ground{position:absolute;bottom:0;left:0;right:0;height:48px;
+  background:repeating-linear-gradient(90deg,
+    var(--ground) 0,var(--ground) 30px,var(--ground2) 30px,var(--ground2) 32px);
+  animation:sg 1s linear infinite;}
+#ground.stop{animation-play-state:paused;}
+@keyframes sg{to{background-position:-32px 0;}}
+
+/* Mario */
+#mario{position:absolute;left:52px;width:46px;height:54px;
+  animation:mr .35s steps(2) infinite;}
+#mario.stop{animation-play-state:paused;}
+#mario.hurt{animation:mh .5s ease;}
+@keyframes mr{to{transform:translateY(-2px);}}
+@keyframes mh{
+  0%{transform:translateX(-5px)rotate(-8deg);}
+  25%{transform:translateX(5px)rotate(8deg);}
+  50%{transform:translateX(-4px)rotate(-5deg);}
+  75%{transform:translateX(4px)rotate(5deg);}
+  100%{transform:translateX(0)rotate(0);}
 }
 
-/* Progress bar */
-.progress-bar{height:6px;background:#333;flex-shrink:0;}
-.progress-fill{height:100%;background:linear-gradient(90deg,#27ae60,#2ecc71);transition:width .4s ease;}
-
-/* Scene */
-.game-scene{
-  height:130px;
-  background:linear-gradient(180deg,var(--sky) 72%,#6cc23a 72%,var(--ground2) 100%);
-  position:relative;overflow:hidden;flex-shrink:0;
-  border-bottom:3px solid var(--ground2);
-}
-.ground-strip{
-  position:absolute;bottom:0;left:0;right:0;height:38px;
-  background:repeating-linear-gradient(90deg,var(--ground) 0px,var(--ground) 30px,var(--ground2) 30px,var(--ground2) 32px);
-  animation:scrollGround 1.2s linear infinite;
-}
-.ground-strip.paused{animation-play-state:paused;}
-@keyframes scrollGround{from{background-position:0 0;}to{background-position:-32px 0;}}
-
-/* Mario SVG character */
-.mario-wrap{
-  position:absolute;bottom:38px;left:40px;
-  width:48px;height:56px;
-  animation:marioRun .3s steps(2) infinite;
-}
-.mario-wrap.paused{animation-play-state:paused;}
-.mario-wrap.hurt{animation:marioHurt .5s ease;}
-@keyframes marioRun{from{transform:scaleX(1);}to{transform:scaleX(1) translateY(-1px);}}
-@keyframes marioHurt{0%{transform:translateX(-4px);}25%{transform:translateX(4px);}50%{transform:translateX(-4px);}75%{transform:translateX(4px);}100%{transform:translateX(0);}}
-
-/* Question block */
-.qblock{
-  position:absolute;bottom:75px;right:60px;
-  width:44px;height:44px;border-radius:6px;
+/* Entities */
+#ents{position:absolute;bottom:0;left:0;width:100%;height:100%;pointer-events:none;}
+.ent{position:absolute;}
+.ent-goomba{bottom:48px;animation:gw .4s steps(2) infinite;}
+@keyframes gw{to{transform:scaleX(-1);}}
+.ent-pipe{bottom:48px;}
+.ent-qblock{
+  bottom:48px;width:44px;height:44px;border-radius:6px;
   background:var(--qblock);border:3px solid #b06000;
   display:flex;align-items:center;justify-content:center;
-  font-size:1.4rem;font-weight:900;color:#7a3f00;
+  font-size:1.5rem;font-weight:900;color:#7a3f00;
   box-shadow:3px 3px 0 #7a3f00;
-  animation:blockBounce .6s ease-out;
-  transform-origin:bottom center;
+  animation:qf 1s ease-in-out infinite alternate;
 }
-@keyframes blockBounce{0%{transform:translateY(0);}40%{transform:translateY(-18px);}70%{transform:translateY(-6px);}100%{transform:translateY(0);}}
+@keyframes qf{to{transform:translateY(-10px);}}
+.coinpop{position:absolute;font-size:1.4rem;pointer-events:none;
+  animation:cr 1s ease-out forwards;}
+@keyframes cr{to{opacity:0;transform:translateY(-70px) scale(1.3);}}
 
-/* Coin pop */
-.coin-pop{
-  position:absolute;bottom:120px;right:66px;
-  font-size:1.5rem;animation:coinRise 1s ease-out forwards;pointer-events:none;
-}
-@keyframes coinRise{0%{opacity:1;transform:translateY(0) scale(1);}100%{opacity:0;transform:translateY(-70px) scale(1.3);}}
+/* Progress */
+#pbar{height:5px;background:#333;flex-shrink:0;}
+#pfill{height:100%;background:linear-gradient(90deg,#27ae60,#2ecc71);transition:width .3s;}
 
-/* Clouds */
-.cloud{position:absolute;background:#fff;border-radius:50px;opacity:.85;}
-.cloud::before,.cloud::after{content:'';position:absolute;background:#fff;border-radius:50%;}
-.cloud1{width:60px;height:20px;top:12px;left:20%;animation:cloudMove 18s linear infinite;}
-.cloud2{width:80px;height:24px;top:24px;left:60%;animation:cloudMove 25s linear infinite;}
-.cloud1::before{width:30px;height:30px;bottom:8px;left:8px;}
-.cloud1::after{width:22px;height:22px;bottom:8px;right:8px;}
-.cloud2::before{width:38px;height:38px;bottom:10px;left:10px;}
-.cloud2::after{width:28px;height:28px;bottom:10px;right:10px;}
-@keyframes cloudMove{from{transform:translateX(0);}to{transform:translateX(-110vw);}}
-
-/* Question area */
-.question-area{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
-  padding:14px 16px 8px;background:#1a1a2e;overflow:hidden;
-}
-.q-label{color:#aaa;font-size:.8rem;letter-spacing:1px;margin-bottom:6px;}
-.q-text{
-  color:#fff;font-size:1.55rem;font-weight:700;text-align:center;
-  background:rgba(255,255,255,.08);border-radius:12px;padding:12px 16px;
-  width:100%;line-height:1.5;border:1px solid rgba(255,255,255,.12);
-  min-height:60px;display:flex;align-items:center;justify-content:center;
-}
-
-/* Answer display */
-.answer-display{
-  margin:10px 0 4px;width:100%;
-  background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.3);
-  border-radius:12px;padding:10px 16px;
-  color:#fff;font-size:1.8rem;font-weight:700;text-align:center;
-  min-height:54px;letter-spacing:2px;position:relative;
-}
-.answer-display::after{
-  content:'|';animation:cursor .7s steps(1) infinite;
-  color:#ffd700;margin-left:2px;
-}
-@keyframes cursor{0%,100%{opacity:1;}50%{opacity:0;}}
-.answer-display.has-answer::after{display:none;}
-
-/* ── Keypad ── */
-.keypad-wrap{flex-shrink:0;padding:6px 12px 10px;background:#111;}
-.keypad{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:7px;
-  max-width:380px;margin:0 auto;
-}
-.kbtn{
-  background:#2a2a3e;color:#fff;border:none;border-radius:10px;
-  font-size:1.3rem;font-weight:700;padding:14px 0;cursor:pointer;
-  box-shadow:0 4px 0 #111,0 5px 8px rgba(0,0,0,.3);
+/* Controls */
+#ctrl{flex:1;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:6px;background:#0a0a1a;padding:10px;}
+#tip{color:#444;font-size:.72rem;letter-spacing:.5px;}
+#bjump{
+  width:85px;height:85px;border-radius:50%;
+  background:radial-gradient(circle at 40% 40%,#e74c3c,#c0392b);
+  color:#fff;font-size:2rem;border:none;cursor:pointer;
+  box-shadow:0 8px 0 #922b21,0 10px 20px rgba(0,0,0,.4);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
   transition:transform .08s,box-shadow .08s;
-  user-select:none;
 }
-.kbtn:active{transform:translateY(3px);box-shadow:0 1px 0 #111;}
-.kbtn.zero{grid-column:span 2;}
-.kbtn.minus{background:#3a2a1e;color:#ff9966;}
-.kbtn.del{background:#2e1a1a;color:#ff6666;font-size:1.1rem;}
-.kbtn.ok{background:#1a6b3c;color:#fff;font-size:1.1rem;box-shadow:0 4px 0 #0f4025;}
-.kbtn.ok:active{box-shadow:0 1px 0 #0f4025;}
+#bjump span.lbl{font-size:.65rem;font-weight:700;letter-spacing:1px;}
+#bjump:active,#bjump.pressed{transform:translateY(5px);box-shadow:0 3px 0 #922b21;}
 
-/* ── Multiple choice (properties) ── */
-.mc-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;
-  width:100%;max-width:380px;margin:8px 0;
+/* ─── QUESTION OVERLAY ─── */
+#qoverlay{
+  position:fixed;inset:0;z-index:50;
+  background:rgba(0,0,0,.7);
+  display:flex;flex-direction:column;justify-content:flex-end;
+  opacity:0;pointer-events:none;transition:opacity .2s;
 }
-.mc-btn{
-  background:#2a2a3e;color:#fff;border:2px solid transparent;border-radius:12px;
-  padding:16px 10px;font-size:1rem;font-weight:600;cursor:pointer;
-  text-align:center;line-height:1.3;
-  transition:background .15s,border-color .15s,transform .08s;
+#qoverlay.on{opacity:1;pointer-events:all;}
+#qcard{
+  background:#1a1a2e;border-radius:22px 22px 0 0;
+  padding:18px 16px 28px;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.16,1,.3,1);
+  max-height:75vh;overflow-y:auto;
 }
-.mc-btn:active{transform:scale(.97);}
-.mc-btn.selected{background:#1a4080;border-color:#5c94fc;}
+#qoverlay.on #qcard{transform:translateY(0);}
+.qpill{display:inline-block;background:#252a4e;color:#8ab4f8;
+  border-radius:20px;padding:4px 12px;font-size:.78rem;margin-bottom:8px;}
+#qtext{color:#fff;font-size:1.42rem;font-weight:700;text-align:center;
+  background:rgba(255,255,255,.06);border-radius:11px;
+  padding:12px 14px;line-height:1.5;margin-bottom:10px;}
+#adisp{background:rgba(255,255,255,.09);border:2px solid rgba(255,255,255,.25);
+  border-radius:11px;padding:9px 14px;color:#fff;font-size:1.7rem;font-weight:700;
+  text-align:center;min-height:50px;letter-spacing:2px;margin-bottom:8px;}
+#adisp::after{content:'|';animation:cur .7s steps(1) infinite;color:var(--yellow);margin-left:2px;}
+@keyframes cur{50%{opacity:0;}}
+#adisp.has::after{display:none;}
+.kpad{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-width:360px;margin:0 auto;}
+.kb{background:#252535;color:#fff;border:none;border-radius:9px;height:50px;
+  font-size:1.25rem;font-weight:700;cursor:pointer;box-shadow:0 4px 0 #111;}
+.kb:active{transform:translateY(2px);box-shadow:0 2px 0 #111;}
+.kb.minus{background:#352535;font-size:1rem;}
+.kb.del{background:#452525;font-size:.95rem;}
+.kb.ok{background:var(--green);grid-column:span 4;height:54px;font-size:1.05rem;
+  font-weight:800;letter-spacing:1px;box-shadow:0 4px 0 #1a7a40;border-radius:9px;}
+.mc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.mcb{background:#252535;color:#fff;border:2px solid transparent;border-radius:11px;
+  padding:12px 8px;font-size:.95rem;font-weight:600;cursor:pointer;text-align:center;}
+.mcb.sel{background:#2b4a8e;border-color:#4a90e2;}
+.mcb:active{transform:scale(.97);}
+.mc-ok{background:var(--green);color:#fff;border:none;border-radius:11px;
+  padding:13px;font-size:1rem;font-weight:800;cursor:pointer;width:100%;
+  box-shadow:0 4px 0 #1a7a40;}
 
-/* ══════════════════════════════
-   FEEDBACK OVERLAY
-══════════════════════════════ */
-#scr-feedback{
-  background:transparent;pointer-events:none;
-  align-items:center;justify-content:center;
-  z-index:100;
-}
-.feedback-badge{
-  font-size:3.5rem;animation:feedbackPop .7s ease forwards;
-}
-@keyframes feedbackPop{
-  0%{transform:scale(.3);opacity:0;}
-  50%{transform:scale(1.3);opacity:1;}
-  80%{transform:scale(1);opacity:1;}
-  100%{transform:scale(1.1);opacity:0;}
-}
+/* ─── FEEDBACK ─── */
+#fbk{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+#fbk span{font-size:5rem;opacity:0;}
+#fbk span.show{animation:fp .65s ease-out forwards;}
+@keyframes fp{0%{opacity:0;transform:scale(.3);}40%{opacity:1;transform:scale(1.3);}70%{transform:scale(.9);}100%{opacity:0;transform:scale(.9);}}
 
-/* ══════════════════════════════
-   RESULT SCREEN
-══════════════════════════════ */
-#scr-result{
-  background:linear-gradient(180deg,#1a1a2e 0%,#0a0a1a 100%);
-  align-items:center;overflow-y:auto;padding:20px 16px;gap:0;
-}
-.result-header{text-align:center;margin-bottom:16px;}
-.result-title{color:var(--yellow);font-size:1.8rem;font-weight:900;text-shadow:0 0 20px rgba(255,215,0,.5);}
-.result-name{color:#aaa;font-size:1rem;margin-top:4px;}
-.stars-row{display:flex;gap:8px;justify-content:center;margin:12px 0 8px;}
-.star{font-size:2.6rem;filter:grayscale(1);transition:filter .3s,transform .3s;}
-.star.lit{filter:grayscale(0) drop-shadow(0 0 8px gold);transform:scale(1.15);}
-
-.score-big{
-  background:rgba(255,255,255,.07);border-radius:16px;padding:12px 32px;
-  text-align:center;margin:8px 0 14px;border:1px solid rgba(255,255,255,.12);
-}
-.score-big .num{color:#fff;font-size:3rem;font-weight:900;}
-.score-big .den{color:#888;font-size:1.4rem;}
-.score-big .pct{color:var(--yellow);font-size:1rem;margin-top:2px;}
-
-.result-section{width:100%;max-width:400px;margin-bottom:12px;}
-.result-section h3{color:#ccc;font-size:.85rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
-.cat-row{
-  display:flex;align-items:center;gap:10px;margin-bottom:6px;
-  background:rgba(255,255,255,.05);border-radius:10px;padding:8px 12px;
-}
-.cat-label{color:#ccc;font-size:.9rem;flex:1;}
-.cat-score{color:#fff;font-weight:700;font-size:.95rem;white-space:nowrap;}
-.cat-bar-wrap{width:80px;height:8px;background:#333;border-radius:4px;overflow:hidden;}
-.cat-bar{height:100%;border-radius:4px;background:var(--green);transition:width .6s ease;}
-
-.answers-list{width:100%;max-width:400px;margin-bottom:16px;}
-.ans-item{
-  display:flex;align-items:flex-start;gap:10px;
-  background:rgba(255,255,255,.04);border-radius:10px;
-  padding:8px 10px;margin-bottom:6px;
-  border-left:4px solid transparent;
-}
-.ans-item.correct{border-left-color:#27ae60;}
-.ans-item.wrong{border-left-color:#e74c3c;}
-.ans-num{color:#888;font-size:.8rem;width:20px;flex-shrink:0;padding-top:2px;}
-.ans-q{color:#ddd;font-size:.9rem;flex:1;line-height:1.4;}
-.ans-mark{font-size:1.1rem;flex-shrink:0;}
-.ans-correct-val{color:#888;font-size:.8rem;display:block;margin-top:2px;}
-
-.btn-replay{
-  background:var(--red);color:#fff;border:none;border-radius:14px;
-  padding:16px 36px;font-size:1.1rem;font-weight:700;cursor:pointer;
-  box-shadow:0 6px 0 #a00;margin-top:8px;margin-bottom:24px;
-  letter-spacing:1px;
-}
-.btn-replay:active{transform:translateY(3px);box-shadow:0 3px 0 #a00;}
-
-/* Scroll hint */
-.scroll-hint{color:#555;font-size:.75rem;text-align:center;margin-bottom:8px;}
-
-/* ══════════════════════════════
-   Mario SVG
-══════════════════════════════ */
+/* ─── RESULT ─── */
+#s-result{background:linear-gradient(180deg,#0a0a2e,#111);
+  overflow-y:auto;align-items:center;padding:22px 16px 36px;gap:10px;}
+.rtitle{color:var(--yellow);font-size:1.7rem;font-weight:900;text-align:center;}
+.rname{color:#999;font-size:.95rem;text-align:center;}
+.stars{display:flex;gap:10px;justify-content:center;margin:6px 0;}
+.star{font-size:2rem;}
+.sbig{text-align:center;}.sbig .n{color:#fff;font-size:2.8rem;font-weight:900;}
+.sbig .d{color:#777;font-size:1.3rem;}.sbig .p{color:var(--yellow);font-size:.95rem;margin-top:2px;}
+.rsec{width:100%;max-width:400px;}
+.rsec h3{color:#bbb;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;}
+.crow{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.clabel{color:#ccc;font-size:.82rem;flex:1;}
+.cbar-w{width:78px;height:7px;background:#333;border-radius:3px;overflow:hidden;}
+.cbar{height:100%;border-radius:3px;transition:width .6s;}
+.cscore{color:#fff;font-weight:700;font-size:.88rem;white-space:nowrap;}
+.alist{width:100%;max-width:400px;}
+.alist h3{color:#bbb;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;}
+.ai{display:flex;align-items:flex-start;gap:8px;background:rgba(255,255,255,.04);
+  border-radius:9px;padding:7px 9px;margin-bottom:5px;border-left:4px solid transparent;}
+.ai.c{border-left-color:#27ae60;}.ai.w{border-left-color:#e74c3c;}
+.ai .mk{font-size:1rem;flex-shrink:0;}
+.ai .aq{color:#ddd;font-size:.85rem;flex:1;line-height:1.4;}
+.ai .an{color:#888;font-size:.75rem;flex-shrink:0;padding-top:2px;}
+.ai .av{color:#e67e22;font-size:.78rem;display:block;margin-top:2px;}
+.rbtn{background:var(--green);color:#fff;border:none;border-radius:13px;
+  padding:14px 36px;font-size:1.05rem;font-weight:700;cursor:pointer;
+  box-shadow:0 6px 0 #1a7a40;margin-top:6px;}
 </style>
 </head>
 <body>
 
-<!-- ═══ START SCREEN ═══ -->
-<div id="scr-start" class="screen active">
-  <div class="logo-box">
-    <h1>MARIO MATH</h1>
-    <p>จำนวนเต็ม — ชั้น ม.1</p>
+<!-- START -->
+<div id="s-start" class="scr on">
+  <div class="logo"><h1>🍄 MARIO MATH</h1><p>จำนวนเต็ม ม.1 — 15 ข้อ</p></div>
+  <div class="coins"><div class="cdeco"></div><div class="cdeco"></div><div class="cdeco"></div></div>
+  <div class="sform">
+    <label>ชื่อนักเรียน</label>
+    <input id="pname" type="text" placeholder="พิมพ์ชื่อที่นี่..." autocomplete="off" autocorrect="off" autocapitalize="off">
+    <button class="gbtn" onclick="startGame()">▶ เริ่มเล่น!</button>
   </div>
-
-  <div class="mario-scene-start">
-    <!-- decorative inline Mario -->
-    <svg viewBox="0 0 48 56" width="60" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);">
-      <ellipse cx="24" cy="10" rx="16" ry="8" fill="#e52c2c"/>
-      <rect x="12" y="10" width="24" height="5" fill="#e52c2c"/>
-      <ellipse cx="24" cy="22" rx="12" ry="10" fill="#fdbcb4"/>
-      <circle cx="19" cy="20" r="2" fill="#222"/>
-      <circle cx="29" cy="20" r="2" fill="#222"/>
-      <ellipse cx="24" cy="28" rx="8" ry="3" fill="#5c3a1e"/>
-      <rect x="12" y="32" width="24" height="14" fill="#2b3cc8" rx="3"/>
-      <circle cx="19" cy="37" r="2" fill="#ffd700"/>
-      <circle cx="29" cy="37" r="2" fill="#ffd700"/>
-      <rect x="10" y="32" width="7" height="10" fill="#2b3cc8" rx="2"/>
-      <rect x="31" y="32" width="7" height="10" fill="#2b3cc8" rx="2"/>
-      <rect x="10" y="42" width="9" height="8" fill="#8b4513" rx="2"/>
-      <rect x="29" y="42" width="9" height="8" fill="#8b4513" rx="2"/>
-    </svg>
-    <div class="coins-row" style="position:absolute;top:4px;left:0;right:0;">
-      <div class="coin-deco"></div>
-      <div class="coin-deco"></div>
-      <div class="coin-deco"></div>
-    </div>
-  </div>
-
-  <div class="start-form">
-    <label for="player-name">ชื่อนักเรียน</label>
-    <input type="text" id="player-name" placeholder="พิมพ์ชื่อ-นามสกุล..." maxlength="40" autocomplete="off">
-    <button class="btn-start" onclick="startGame()">▶ เริ่มเกม!</button>
-  </div>
-  <p style="color:rgba(255,255,255,.5);font-size:.8rem;text-align:center;padding:0 20px;">
-    10 โจทย์ · ตอบให้ครบทุกข้อ · โชว์ผลให้ครูดู 🎮
-  </p>
 </div>
 
-<!-- ═══ GAME SCREEN ═══ -->
-<div id="scr-game" class="screen">
-  <div class="game-header">
-    <div class="lives-row" id="lives-row">
-      <span class="heart" id="h1">❤️</span>
-      <span class="heart" id="h2">❤️</span>
-      <span class="heart" id="h3">❤️</span>
-    </div>
-    <div class="q-counter" id="q-counter">ข้อ 1 / 15</div>
-    <div class="score-badge" id="score-badge">⭐ 0</div>
+<!-- GAME -->
+<div id="s-game" class="scr">
+  <div id="hud">
+    <div id="lives"><span class="heart" id="h1">❤️</span><span class="heart" id="h2">❤️</span><span class="heart" id="h3">❤️</span></div>
+    <div id="qctr">ข้อ 0 / 15</div>
+    <div id="sbadge">⭐ 0</div>
   </div>
-  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-
-  <div class="game-scene" id="game-scene">
-    <div class="cloud cloud1"></div>
-    <div class="cloud cloud2"></div>
-    <div class="ground-strip" id="ground-strip"></div>
-    <div class="mario-wrap" id="mario-wrap">
-      <svg viewBox="0 0 48 56" width="48" height="56">
-        <ellipse cx="24" cy="10" rx="16" ry="8" fill="#e52c2c"/>
-        <rect x="12" y="10" width="24" height="5" fill="#e52c2c"/>
-        <ellipse cx="24" cy="22" rx="12" ry="10" fill="#fdbcb4"/>
-        <circle cx="19" cy="20" r="2" fill="#222"/>
-        <circle cx="29" cy="20" r="2" fill="#222"/>
-        <ellipse cx="24" cy="28" rx="8" ry="3" fill="#5c3a1e"/>
-        <rect x="12" y="32" width="24" height="14" fill="#2b3cc8" rx="3"/>
-        <circle cx="19" cy="37" r="2" fill="#ffd700"/>
-        <circle cx="29" cy="37" r="2" fill="#ffd700"/>
-        <rect x="10" y="32" width="7" height="10" fill="#2b3cc8" rx="2"/>
-        <rect x="31" y="32" width="7" height="10" fill="#2b3cc8" rx="2"/>
-        <rect x="10" y="42" width="9" height="8" fill="#8b4513" rx="2"/>
-        <rect x="29" y="42" width="9" height="8" fill="#8b4513" rx="2"/>
+  <div id="world">
+    <div id="skybg"></div>
+    <div class="cloud cl1"></div><div class="cloud cl2"></div>
+    <div id="ents"></div>
+    <div id="mario">
+      <svg viewBox="0 0 46 54" width="46" height="54" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="23" cy="9" rx="15" ry="7.5" fill="#e52c2c"/>
+        <rect x="11" y="9" width="22" height="5" fill="#e52c2c"/>
+        <ellipse cx="23" cy="21" rx="11.5" ry="9.5" fill="#fdbcb4"/>
+        <circle cx="18" cy="18" r="2.5" fill="#222"/>
+        <circle cx="28" cy="18" r="2.5" fill="#222"/>
+        <ellipse cx="23" cy="25" rx="4.5" ry="2.5" fill="#5c3a1e"/>
+        <rect x="11" y="28" width="22" height="13" rx="3" fill="#2b3cc8"/>
+        <circle cx="17" cy="31" r="1.8" fill="#ffd700"/>
+        <circle cx="29" cy="31" r="1.8" fill="#ffd700"/>
+        <rect x="9" y="29" width="9" height="9" rx="2" fill="#e52c2c"/>
+        <rect x="27" y="29" width="9" height="9" rx="2" fill="#e52c2c"/>
+        <rect x="9" y="42" width="11" height="7" rx="2" fill="#4a8f1f"/>
+        <rect x="25" y="42" width="11" height="7" rx="2" fill="#4a8f1f"/>
+        <rect x="7" y="47" width="13" height="7" rx="2" fill="#2c5c0e"/>
+        <rect x="25" y="47" width="13" height="7" rx="2" fill="#2c5c0e"/>
       </svg>
     </div>
-    <div class="qblock" id="qblock">?</div>
+    <div id="ground"></div>
   </div>
-
-  <div class="question-area">
-    <div class="q-label" id="q-label">บวก-ลบจำนวนเต็ม</div>
-    <div class="q-text" id="q-text"></div>
-    <div class="answer-display" id="answer-display"></div>
-    <!-- MC choices inserted here dynamically -->
-    <div id="mc-choices"></div>
-  </div>
-
-  <div class="keypad-wrap" id="keypad-wrap">
-    <div class="keypad">
-      <button class="kbtn" onclick="kp('7')">7</button>
-      <button class="kbtn" onclick="kp('8')">8</button>
-      <button class="kbtn" onclick="kp('9')">9</button>
-      <button class="kbtn del" onclick="kpDel()">⌫</button>
-      <button class="kbtn" onclick="kp('4')">4</button>
-      <button class="kbtn" onclick="kp('5')">5</button>
-      <button class="kbtn" onclick="kp('6')">6</button>
-      <button class="kbtn minus" onclick="kpMinus()">−</button>
-      <button class="kbtn" onclick="kp('1')">1</button>
-      <button class="kbtn" onclick="kp('2')">2</button>
-      <button class="kbtn" onclick="kp('3')">3</button>
-      <button class="kbtn ok" onclick="submitAnswer()" id="btn-ok">✓ ตอบ</button>
-      <button class="kbtn zero" onclick="kp('0')">0</button>
-    </div>
+  <div id="pbar"><div id="pfill" style="width:0%"></div></div>
+  <div id="ctrl">
+    <div id="tip">กด กระโดด เพื่อหลบสิ่งกีดขวาง!</div>
+    <button id="bjump"
+      ontouchstart="doJump(event)"
+      ontouchend="event.preventDefault()"
+      onclick="doJump(event)">
+      <span>⬆</span><span class="lbl">กระโดด</span>
+    </button>
   </div>
 </div>
 
-<!-- ═══ FEEDBACK OVERLAY ═══ -->
-<div id="scr-feedback" class="screen">
-  <div class="feedback-badge" id="feedback-badge">✅</div>
+<!-- QUESTION OVERLAY -->
+<div id="qoverlay">
+  <div id="qcard">
+    <div id="qpill" class="qpill">หมวด</div>
+    <div id="qtext">โจทย์</div>
+    <div id="qarea"></div>
+  </div>
 </div>
 
-<!-- ═══ RESULT SCREEN ═══ -->
-<div id="scr-result" class="screen">
-  <div class="result-header">
-    <div class="result-title" id="res-title">Level Clear! 🎉</div>
-    <div class="result-name" id="res-name"></div>
-  </div>
-  <div class="stars-row" id="stars-row">
-    <span class="star" id="s1">⭐</span>
-    <span class="star" id="s2">⭐</span>
-    <span class="star" id="s3">⭐</span>
-  </div>
-  <div class="score-big">
-    <span class="num" id="res-score">8</span><span class="den"> / 15</span>
-    <div class="pct" id="res-pct">80%</div>
-  </div>
+<!-- FEEDBACK -->
+<div id="fbk"><span id="fbkico"></span></div>
 
-  <div class="result-section">
-    <h3>คะแนนแต่ละหมวด</h3>
-    <div id="cat-breakdown"></div>
+<!-- RESULT -->
+<div id="s-result" class="scr">
+  <div class="rtitle" id="rtitle">Level Clear! 🎉</div>
+  <div class="rname" id="rname"></div>
+  <div class="stars"><span class="star" id="st1">⭐</span><span class="star" id="st2">⭐</span><span class="star" id="st3">⭐</span></div>
+  <div class="sbig">
+    <span class="n" id="rscore">0</span><span class="d"> / 15</span>
+    <div class="p" id="rpct">0%</div>
   </div>
-
-  <div class="answers-list" id="answers-list"></div>
-
-  <p class="scroll-hint">↑ เลื่อนขึ้นดูรายละเอียด</p>
-  <button class="btn-replay" onclick="replayGame()">🔁 เล่นอีกครั้ง</button>
+  <div class="rsec"><h3>คะแนนแต่ละหมวด</h3><div id="catbk"></div></div>
+  <div class="alist"><h3>รายข้อ</h3><div id="alist"></div></div>
+  <button class="rbtn" onclick="replayGame()">🔁 เล่นอีกครั้ง</button>
 </div>
 
 <script>
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 //  UTILITIES
-// ══════════════════════════════════════════════
-const ri = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
-const riNZ = (a, b) => { let v; do { v = ri(a, b); } while (v === 0); return v; };
-const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = ri(0, i); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-const pick = arr => arr[ri(0, arr.length - 1)];
+// ══════════════════════════════════════════════════
+const ri = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
+const shuffle = a => { for(let i=a.length-1;i>0;i--){const j=ri(0,i);[a[i],a[j]]=[a[j],a[i]];}return a; };
 
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 //  QUESTION GENERATORS
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════
+const CAT = { add_sub:'บวก-ลบจำนวนเต็ม', mul_div:'คูณ-หารจำนวนเต็ม', prop:'สมบัติจำนวนเต็ม', word:'โจทย์ปัญหา' };
 
-function genAddSub() {
-  const type = ri(0, 4);
-  let a, b, q, ans;
-  if (type === 0) {          // a + (-b)
-    a = ri(2,15); b = ri(2,15);
-    q = `${a} + (−${b})`; ans = a - b;
-  } else if (type === 1) {   // (-a) + b
-    a = ri(2,15); b = ri(2,15);
-    q = `(−${a}) + ${b}`; ans = b - a;
-  } else if (type === 2) {   // (-a) + (-b)
-    a = ri(1,12); b = ri(1,12);
-    q = `(−${a}) + (−${b})`; ans = -(a+b);
-  } else if (type === 3) {   // a − (−b)
-    a = ri(1,12); b = ri(2,12);
-    q = `${a} − (−${b})`; ans = a + b;
-  } else {                   // (-a) − b
-    a = ri(2,12); b = ri(2,12);
-    q = `(−${a}) − ${b}`; ans = -(a+b);
-  }
-  return { q: `${q} = ?`, ans, cat: 'add_sub', catLabel: 'บวก-ลบจำนวนเต็ม', type: 'number' };
+function genAddSub(){
+  const t=ri(0,3); let a,b,q,ans;
+  if(t===0){a=ri(2,15);b=ri(2,15);q=`(−${a}) + (−${b})`;ans=-(a+b);}
+  else if(t===1){a=ri(5,20);b=ri(2,a-1);q=`${a} + (−${b})`;ans=a-b;}
+  else if(t===2){a=ri(2,15);b=ri(a+1,20);q=`${a} − ${b}`;ans=a-b;}
+  else{a=ri(2,15);b=ri(2,15);q=`(−${a}) − (−${b})`;ans=b-a;}
+  return {q:`${q} = ?`,ans,cat:'add_sub',type:'number'};
 }
-
-function genMulDiv() {
-  const type = ri(0, 4);
-  let a, b, q, ans;
-  if (type === 0) {        // pos × neg
-    a = ri(2,9); b = ri(2,9);
-    q = `${a} × (−${b})`; ans = -a*b;
-  } else if (type === 1) { // neg × pos
-    a = ri(2,9); b = ri(2,9);
-    q = `(−${a}) × ${b}`; ans = -a*b;
-  } else if (type === 2) { // neg × neg
-    a = ri(2,9); b = ri(2,9);
-    q = `(−${a}) × (−${b})`; ans = a*b;
-  } else if (type === 3) { // neg ÷ pos
-    b = riNZ(2,9); ans = -ri(2,9);
-    q = `${b*ans} ÷ ${b}`;
-  } else {                  // neg ÷ neg → pos
-    b = riNZ(2,9); ans = ri(2,9);
-    q = `${-(b*ans)} ÷ (−${b})`;
-  }
-  return { q: `${q} = ?`, ans, cat: 'mul_div', catLabel: 'คูณ-หารจำนวนเต็ม', type: 'number' };
+function genMulDiv(){
+  const t=ri(0,3); let a,b,q,ans;
+  if(t===0){a=ri(2,9);b=ri(2,9);q=`(−${a}) × ${b}`;ans=-(a*b);}
+  else if(t===1){a=ri(2,9);b=ri(2,9);q=`(−${a}) × (−${b})`;ans=a*b;}
+  else if(t===2){a=ri(2,9);b=ri(2,9);q=`(−${a*b}) ÷ ${b}`;ans=-a;}
+  else{a=ri(2,9);b=ri(2,9);q=`(−${a*b}) ÷ (−${b})`;ans=a;}
+  return {q:`${q} = ?`,ans,cat:'mul_div',type:'number'};
 }
-
-// ── ตารางชื่อหมวด (แก้บั๊ก undefined) ──
-const CAT_LABELS = {
-  add_sub: 'บวก-ลบจำนวนเต็ม',
-  mul_div: 'คูณ-หารจำนวนเต็ม',
-  prop:    'สมบัติจำนวนเต็ม',
-  word:    'โจทย์ปัญหา'
-};
-
-// ── Property: MC pool (10 แบบ) ──
-const PROP_MC_POOL = [
-  { q:'a + b = b + a\nนี่คือสมบัติใด?', choices:['สมบัติการสลับที่', 'สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'เอกลักษณ์การบวก'], ans:0 },
-  { q:'(a + b) + c = a + (b + c)\nนี่คือสมบัติใด?', choices:['สมบัติการสลับที่', 'สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'ผกผันการบวก'], ans:1 },
-  { q:'a × (b + c) = (a × b) + (a × c)\nนี่คือสมบัติใด?', choices:['สมบัติการสลับที่', 'สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'เอกลักษณ์การคูณ'], ans:2 },
-  { q:'a + 0 = a\nนี่คือสมบัติใด?', choices:['ผกผันการบวก', 'เอกลักษณ์การบวก', 'สมบัติการสลับที่', 'สมบัติการแจกแจง'], ans:1 },
-  { q:'a + (−a) = 0\nนี่คือสมบัติใด?', choices:['เอกลักษณ์การบวก', 'สมบัติการสลับที่', 'ผกผันการบวก', 'สมบัติการแจกแจง'], ans:2 },
-  { q:'a × 1 = a\nนี่คือสมบัติใด?', choices:['ผกผันการคูณ', 'สมบัติการแจกแจง', 'สมบัติการสลับที่', 'เอกลักษณ์การคูณ'], ans:3 },
-  { q:'a × b = b × a\nนี่คือสมบัติใด?', choices:['สมบัติการเปลี่ยนหมู่', 'สมบัติการแจกแจง', 'สมบัติการสลับที่การคูณ', 'เอกลักษณ์การคูณ'], ans:2 },
-  { q:'a × 0 = 0\nนี่คือสมบัติใด?', choices:['เอกลักษณ์การคูณ', 'ผกผันการบวก', 'สมบัติการคูณด้วยศูนย์', 'สมบัติการแจกแจง'], ans:2 },
-  { q:'(a × b) × c = a × (b × c)\nนี่คือสมบัติใด?', choices:['สมบัติการสลับที่การคูณ', 'สมบัติการเปลี่ยนหมู่การคูณ', 'สมบัติการแจกแจง', 'เอกลักษณ์การคูณ'], ans:1 },
-  { q:'ข้อใดแสดงสมบัติการแจกแจง?', choices:['3 × (4 + 5) = 3×4 + 3×5', '3 + 4 = 4 + 3', '(3+4)+5 = 3+(4+5)', '6 + (−6) = 0'], ans:0 },
+const MC_POOL=[
+  {q:'(−8) + 8 = 0 เป็นสมบัติใด?',ans:2,ch:['เอกลักษณ์การบวก','เอกลักษณ์การคูณ','ตรงข้ามการบวก','การแจกแจง']},
+  {q:'a + 0 = a เป็นสมบัติใด?',ans:0,ch:['เอกลักษณ์การบวก','เอกลักษณ์การคูณ','ตรงข้ามการบวก','การสลับที่']},
+  {q:'a × 1 = a เป็นสมบัติใด?',ans:1,ch:['เอกลักษณ์การบวก','เอกลักษณ์การคูณ','ตรงข้ามการบวก','การเปลี่ยนหมู่']},
+  {q:'3 + 5 = 5 + 3 เป็นสมบัติใด?',ans:0,ch:['การสลับที่บวก','การเปลี่ยนหมู่บวก','การแจกแจง','เอกลักษณ์การบวก']},
+  {q:'2 × (3 × 4) = (2 × 3) × 4 เป็นสมบัติใด?',ans:1,ch:['การสลับที่คูณ','การเปลี่ยนหมู่คูณ','การแจกแจง','เอกลักษณ์การคูณ']},
+  {q:'3 × (4 + 5) = 3×4 + 3×5 เป็นสมบัติใด?',ans:2,ch:['การสลับที่','การเปลี่ยนหมู่','การแจกแจง','เอกลักษณ์การคูณ']},
+  {q:'(−6) × 1 = −6 เป็นสมบัติใด?',ans:1,ch:['เอกลักษณ์การบวก','เอกลักษณ์การคูณ','ตรงข้ามการบวก','การสลับที่']},
+  {q:'5 + (3 + 2) = (5 + 3) + 2 เป็นสมบัติใด?',ans:1,ch:['การสลับที่บวก','การเปลี่ยนหมู่บวก','การแจกแจง','เอกลักษณ์การบวก']},
+  {q:'(−4) × 7 = 7 × (−4) เป็นสมบัติใด?',ans:0,ch:['การสลับที่คูณ','การเปลี่ยนหมู่คูณ','การแจกแจง','เอกลักษณ์การคูณ']},
+  {q:'6 × (−3 + 2) = 6×(−3) + 6×2 เป็นสมบัติใด?',ans:2,ch:['การสลับที่','การเปลี่ยนหมู่','การแจกแจง','เอกลักษณ์']},
 ];
-
-// ── Property: เติมตัวเลข (7 แบบ random) ──
-function genPropFill() {
-  const t = ri(0, 6);
-  const n = ri(3, 20), a = ri(2, 8), b = ri(2, 8), c = ri(2, 8);
-  const tpls = [
-    { q:`${n} + (−${n}) = ☐\n(สมบัติใดทำให้ได้คำตอบนี้?)`, ans:0 },
-    { q:`${n} + ☐ = ${n}\n(เอกลักษณ์การบวก — ☐ คือ?)`, ans:0 },
-    { q:`☐ × ${n} = ${n}\n(เอกลักษณ์การคูณ — ☐ คือ?)`, ans:1 },
-    { q:`${a} × (${b} + ${c}) = ${a}×${b} + ${a}×☐\n(สมบัติการแจกแจง)`, ans:c },
-    { q:`${a} × ${b} + ${a} × ${c} = ${a} × (${b} + ☐)\n(สมบัติการแจกแจง)`, ans:c },
-    { q:`(${a} + ${b}) + ${c} = ${a} + (☐ + ${c})\n(สมบัติการเปลี่ยนหมู่)`, ans:b },
-    { q:`${a} + ${b} = ${b} + ☐\n(สมบัติการสลับที่)`, ans:a },
+function genPropFill(){
+  const t=ri(0,6),n=ri(3,20),a=ri(2,8),b=ri(2,8),c=ri(2,8);
+  const T=[
+    {q:`${n} + (−${n}) = ☐\n(ผลรวมตรงข้ามการบวก)`,ans:0},
+    {q:`${n} + ☐ = ${n}\n(เอกลักษณ์การบวก)`,ans:0},
+    {q:`☐ × ${n} = ${n}\n(เอกลักษณ์การคูณ)`,ans:1},
+    {q:`${a} × (${b} + ${c}) = ${a}×${b} + ${a}×☐\n(การแจกแจง)`,ans:c},
+    {q:`${a} × ${b} + ${a} × ${c} = ${a} × (${b} + ☐)\n(การแจกแจง)`,ans:c},
+    {q:`(${a} + ${b}) + ${c} = ${a} + (☐ + ${c})\n(การเปลี่ยนหมู่)`,ans:b},
+    {q:`${a} + ${b} = ${b} + ☐\n(การสลับที่)`,ans:a},
   ];
-  return { ...tpls[t], cat:'prop', type:'number' };
+  return {...T[t],cat:'prop',type:'number'};
 }
-
-// ── Property: เลือก 3 ข้อไม่ซ้ำ ──
-function pickProps() {
-  const mcIdxs = shuffle([...Array(PROP_MC_POOL.length).keys()]);
-  const mc1 = PROP_MC_POOL[mcIdxs[0]];
-  const mc2 = PROP_MC_POOL[mcIdxs[1]];
+function pickProps(){
+  const idx=shuffle([...Array(MC_POOL.length).keys()]);
   return [
     genPropFill(),
-    { q:mc1.q, ans:mc1.ans, choices:mc1.choices, cat:'prop', type:'mc' },
-    { q:mc2.q, ans:mc2.ans, choices:mc2.choices, cat:'prop', type:'mc' },
+    {...MC_POOL[idx[0]],cat:'prop',type:'mc',choices:MC_POOL[idx[0]].ch},
+    {...MC_POOL[idx[1]],cat:'prop',type:'mc',choices:MC_POOL[idx[1]].ch},
   ];
 }
-
-// ── Word Problems: 12 แบบ เลือก 4 ไม่ซ้ำ ──
-function genWordOfType(t) {
-  let q, ans;
-  switch(t) {
-    case 0: { const b=ri(3,18), d=ri(b+2,b+20); q=`อุณหภูมิตอนเช้า ${b}°C\nลดลง ${d}°C ในตอนกลางคืน\nอุณหภูมิตอนกลางคืน = ?°C`; ans=b-d; break; }
-    case 1: { const n=ri(4,16), r=ri(1,n-1); q=`อุณหภูมิ −${n}°C\nเพิ่มขึ้น ${r}°C\nอุณหภูมิใหม่ = ?°C`; ans=-n+r; break; }
-    case 2: { const f=ri(3,8), u=ri(1,4), d=ri(f+u+1,f+u+7); q=`ลิฟต์อยู่ชั้น ${f}\nขึ้น ${u} ชั้น แล้วลง ${d} ชั้น\n(B1=−1, B2=−2)\nตอนนี้อยู่ชั้นไหน?`; ans=f+u-d; break; }
-    case 3: { const dp=ri(3,12), dv=ri(5,20); q=`เรือดำน้ำอยู่ระดับ −${dp} ม.\nดำลงอีก ${dv} ม.\nอยู่ระดับใด?`; ans=-dp-dv; break; }
-    case 4: { const hv=ri(2,9)*10, nd=ri(hv+20,hv+100); q=`มีเงิน ${hv} บาท\nต้องจ่าย ${nd} บาท\nเงินขาด/เหลือ = ? บาท\n(ขาด → ตอบเป็นจำนวนลบ)`; ans=hv-nd; break; }
-    case 5: { const g=ri(5,25), l=ri(g+2,g+18); q=`ทำคะแนนได้ ${g} แต้ม\nโดนหักโทษ ${l} แต้ม\nคะแนนสุทธิ = ?`; ans=g-l; break; }
-    case 6: { const bal=ri(2,8)*100, wd=ri(bal+50,bal+500); q=`มีเงินในบัญชี ${bal} บาท\nถอนเงิน ${wd} บาท\nยอดคงเหลือ = ? บาท`; ans=bal-wd; break; }
-    case 7: { const a=ri(2,10), bv=ri(a+4,a+25); q=`เมือง ก อุณหภูมิ ${a}°C\nเมือง ข อุณหภูมิ −${bv}°C\nต่างกัน = ? องศา`; ans=a+bv; break; }
-    case 8: { const pr=ri(1,6)*100, ls=ri(pr+50,pr+700); q=`วันแรกกำไร ${pr} บาท\nวันถัดมาขาดทุน ${ls} บาท\nกำไร/ขาดทุนสุทธิ = ? บาท`; ans=pr-ls; break; }
-    case 9: { const s=ri(3,10), bk=ri(s+2,s+14); q=`ยืนอยู่ตำแหน่ง +${s}\nเดินถอยหลัง ${bk} ก้าว\nอยู่ตำแหน่งใด?`; ans=s-bk; break; }
-    case 10: { const ab=ri(2,8)*10, bl=ri(3,12)*10; q=`ฝูงนกบินสูง ${ab} ม. เหนือน้ำ\nปลาอยู่ระดับ ${bl} ม. ใต้น้ำ\nห่างกัน = ? ม.`; ans=ab+bl; break; }
-    case 11: { const rm=ri(22,35), fz=ri(rm+12,rm+40); q=`ห้องพักอุณหภูมิ ${rm}°C\nโกดังแช่แข็ง −${fz}°C\nต่างกัน = ? องศา`; ans=rm+fz; break; }
+function genWord(t){
+  switch(t){
+    case 0:{const d=ri(3,15),f=ri(1,d-1);return{q:`อุณหภูมิ −${d}°C ลดลง ${f}°C\nอุณหภูมิเป็นเท่าไหร่?`,ans:-(d+f),cat:'word',type:'number'};}
+    case 1:{const s=ri(3,12),r=ri(s+1,s+10);return{q:`อุณหภูมิ −${s}°C เพิ่มขึ้น ${r}°C\nอุณหภูมิเป็นเท่าไหร่?`,ans:r-s,cat:'word',type:'number'};}
+    case 2:{const f=ri(2,8),b=ri(f+1,f+6);return{q:`ลิฟต์อยู่ชั้น −${f}\nขึ้นไป ${b} ชั้น\nตอนนี้อยู่ชั้นไหน?`,ans:b-f,cat:'word',type:'number'};}
+    case 3:{const d=ri(20,80),u=ri(5,d-5);return{q:`เรือดำน้ำอยู่ ${d} ม. ใต้น้ำ\nลอยขึ้น ${u} ม. อยู่ระดับใด?`,ans:u-d,cat:'word',type:'number'};}
+    case 4:{const h=ri(3,15),s=ri(h+1,h+10);return{q:`มีเงิน ${h} บาท ต้องจ่าย ${s} บาท\nเงินขาดเท่าไหร่?`,ans:h-s,cat:'word',type:'number'};}
+    case 5:{const w=ri(3,10),l=ri(2,w);return{q:`ชนะ +${w} คะแนน แพ้ −${l} คะแนน\nคะแนนรวมเท่าไหร่?`,ans:w-l,cat:'word',type:'number'};}
+    case 6:{const dp=ri(50,200),wt=ri(dp+10,dp+80);return{q:`บัญชีมี ${dp} บาท ถอน ${wt} บาท\nยอดคงเหลือเท่าไหร่?`,ans:dp-wt,cat:'word',type:'number'};}
+    case 7:{const a=ri(5,18),b=ri(a+1,a+12);return{q:`เมือง A: −${a}°C  เมือง B: ${b}°C\nต่างกันกี่องศา?`,ans:a+b,cat:'word',type:'number'};}
+    case 8:{const p=ri(100,400),l=ri(p+50,p+150);return{q:`กำไร ${p} บาท ขาดทุน ${l} บาท\nผลสุทธิเท่าไหร่?`,ans:p-l,cat:'word',type:'number'};}
+    case 9:{const s=ri(3,10),b=ri(s+1,s+8);return{q:`อยู่ตำแหน่ง −${s} เดินขวา ${b} ก้าว\nอยู่ตำแหน่งใด?`,ans:b-s,cat:'word',type:'number'};}
+    case 10:{const bd=ri(20,80),fs=ri(5,20);return{q:`นกบินสูง ${bd} ม. ปลาอยู่ ${fs} ม. ใต้น้ำ\nห่างกันกี่เมตร?`,ans:bd+fs,cat:'word',type:'number'};}
+    case 11:{const tp=ri(5,18),dp2=ri(2,tp-1);return{q:`ห้องแช่แข็ง −${tp}°C อุณหภูมิสูงขึ้น ${dp2}°C\nอุณหภูมิใหม่คือ?`,ans:dp2-tp,cat:'word',type:'number'};}
+    default:return genWord(0);
   }
-  return { q, ans, cat:'word', type:'number' };
+}
+function buildQuestions(){
+  Qs=[];
+  for(let i=0;i<4;i++)Qs.push(genAddSub());
+  for(let i=0;i<4;i++)Qs.push(genMulDiv());
+  pickProps().forEach(p=>Qs.push(p));
+  shuffle([0,1,2,3,4,5,6,7,8,9,10,11]).slice(0,4).forEach(t=>Qs.push(genWord(t)));
+  shuffle(Qs);
 }
 
-function genWord() { return genWordOfType(ri(0,11)); }
-
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════
 //  GAME STATE
-// ══════════════════════════════════════════════
-let questions = [];
-let qIdx = 0, lives = 3, score = 0;
-let currentAnswer = '';
-let mcSelected = -1;
-let playerName = '';
-let answers_log = [];
+// ══════════════════════════════════════════════════
+let pName='', Qs=[], qIdx=0, lives=3, score=0, log=[];
+let ans='', mcSel=-1;
 
-function buildQuestions() {
-  questions = [];
-  // 4 add/sub + 4 mul/div + 3 prop (1 fill-in + 2 MC) + 4 word = 15 ข้อ
-  for (let i = 0; i < 4; i++) questions.push(genAddSub());
-  for (let i = 0; i < 4; i++) questions.push(genMulDiv());
-  pickProps().forEach(p => questions.push(p));
-  // 4 word problems จาก 12 แบบ ไม่ซ้ำกัน
-  shuffle([0,1,2,3,4,5,6,7,8,9,10,11]).slice(0,4).forEach(t => questions.push(genWordOfType(t)));
-  shuffle(questions);
+// Physics — marioY = pixels above ground (0 = on ground, increases when jumping)
+const GH = 48;   // ground height px
+const MX = 52;   // mario left-edge x in world
+const MW = 34;   // mario collision width
+const MH = 44;   // mario collision height
+const JVY = 18;  // jump velocity (up)
+const GRAV = 1.15; // gravity per frame
+let mY=0, mVY=0, mInv=0; // mario height, velocity, invincibility frames
+
+// World
+let raf=null, frame=0, gs='idle'; // gs: idle|run|question|over
+
+// Entities: {id,type,x,el}
+let ents=[], eid=0;
+
+// Wave
+let waveN=0;      // current wave 0-14 (= question index)
+let wObsMax=0;    // obstacles to spawn this wave
+let wObsDone=0;   // obstacles spawned
+let qbSpawned=false;
+let nextSpawn=0;  // frame to spawn next entity
+
+const SPEED=5; // scroll speed px/frame
+
+const GOOMBA=`<svg viewBox="0 0 40 44" width="40" height="44" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="20" cy="19" rx="18" ry="16" fill="#c8761a"/>
+  <ellipse cx="12" cy="14" rx="5" ry="4" fill="#fff"/>
+  <ellipse cx="28" cy="14" rx="5" ry="4" fill="#fff"/>
+  <circle cx="13" cy="15" r="3" fill="#222"/>
+  <circle cx="29" cy="15" r="3" fill="#222"/>
+  <line x1="7" y1="9" x2="16" y2="12" stroke="#222" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="24" y1="12" x2="33" y2="9" stroke="#222" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="4" y="28" width="32" height="12" rx="5" fill="#c8761a"/>
+  <ellipse cx="10" cy="42" rx="9" ry="5" fill="#333"/>
+  <ellipse cx="30" cy="42" rx="9" ry="5" fill="#333"/>
+</svg>`;
+
+const PIPE=`<svg viewBox="0 0 32 76" width="32" height="76" xmlns="http://www.w3.org/2000/svg">
+  <rect x="3" y="22" width="26" height="54" rx="2" fill="#1a8a1a"/>
+  <rect x="3" y="22" width="7" height="54" fill="#2aaa2a"/>
+  <rect x="0" y="10" width="32" height="18" rx="3" fill="#1a8a1a"/>
+  <rect x="1" y="10" width="9" height="18" rx="2" fill="#2aaa2a"/>
+  <rect x="0" y="10" width="32" height="5" rx="2" fill="#2fc72f"/>
+</svg>`;
+
+// ══════════════════════════════════════════════════
+//  SCREEN / UI
+// ══════════════════════════════════════════════════
+function showScr(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
+function updLives(){
+  ['h1','h2','h3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.textContent=i<lives?'❤️':'🖤';
+    el.style.opacity=i<lives?'1':'0.35';
+  });
+}
+function showFb(ico,cb){
+  const el=document.getElementById('fbkico');
+  el.textContent=ico; el.classList.remove('show');
+  el.offsetHeight;
+  el.classList.add('show');
+  setTimeout(()=>{el.classList.remove('show');if(cb)cb();},700);
 }
 
-// ══════════════════════════════════════════════
-//  SCREEN MANAGEMENT
-// ══════════════════════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+// ══════════════════════════════════════════════════
+//  JUMP
+// ══════════════════════════════════════════════════
+function doJump(e){
+  if(e)e.preventDefault();
+  if(gs!=='run')return;
+  if(mY<=0){
+    mVY=JVY; mY=0.5;
+    const b=document.getElementById('bjump');
+    b.classList.add('pressed');
+    setTimeout(()=>b.classList.remove('pressed'),150);
+  }
 }
+// Space/arrow key support for desktop testing
+document.addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();doJump(null);}});
 
-// ══════════════════════════════════════════════
-//  START GAME
-// ══════════════════════════════════════════════
-function startGame() {
-  const nameInput = document.getElementById('player-name');
-  playerName = nameInput.value.trim();
-  if (!playerName) { nameInput.focus(); nameInput.style.borderColor = 'red'; return; }
-  nameInput.style.borderColor = '';
+// ══════════════════════════════════════════════════
+//  START
+// ══════════════════════════════════════════════════
+function startGame(){
+  const inp=document.getElementById('pname');
+  pName=inp.value.trim();
+  if(!pName){inp.focus();inp.style.borderColor='red';return;}
+  inp.style.borderColor='';
 
   buildQuestions();
-  qIdx = 0; lives = 3; score = 0;
-  answers_log = [];
-  currentAnswer = '';
-  mcSelected = -1;
+  qIdx=0;lives=3;score=0;log=[];
+  mY=0;mVY=0;mInv=0;
+  ents=[];eid=0;frame=0;waveN=0;
+  resetWave();
+  nextSpawn=80;
 
-  updateLives();
-  showScreen('scr-game');
-  renderQuestion();
+  updLives();
+  document.getElementById('qctr').textContent='ข้อ 0 / 15';
+  document.getElementById('sbadge').textContent='⭐ 0';
+  document.getElementById('pfill').style.width='0%';
+  document.getElementById('ents').innerHTML='';
+  document.getElementById('mario').style.bottom=`${GH}px`;
+  document.getElementById('mario').className='';
+  document.getElementById('ground').className='';
+  document.getElementById('qoverlay').classList.remove('on');
+
+  showScr('s-game');
+  gs='run';
+  if(raf)cancelAnimationFrame(raf);
+  raf=requestAnimationFrame(loop);
 }
 
-// ══════════════════════════════════════════════
-//  RENDER QUESTION
-// ══════════════════════════════════════════════
-function renderQuestion() {
-  const q = questions[qIdx];
-  currentAnswer = '';
-  mcSelected = -1;
-
-  document.getElementById('q-counter').textContent = `ข้อ ${qIdx+1} / 15`;
-  document.getElementById('score-badge').textContent = `⭐ ${score}`;
-  document.getElementById('progress-fill').style.width = `${Math.round(qIdx/15*100)}%`;
-  document.getElementById('q-label').textContent = CAT_LABELS[q.cat] || q.cat;
-  document.getElementById('q-text').innerHTML = q.q.replace(/\n/g,'<br>');
-  document.getElementById('answer-display').textContent = '';
-  document.getElementById('answer-display').classList.remove('has-answer');
-
-  // restart block bounce
-  const block = document.getElementById('qblock');
-  block.style.animation = 'none';
-  block.offsetHeight; // reflow
-  block.style.animation = '';
-
-  const isMC = q.type === 'mc';
-  document.getElementById('keypad-wrap').style.display = isMC ? 'none' : 'block';
-  document.getElementById('answer-display').style.display = isMC ? 'none' : 'flex';
-
-  const mcDiv = document.getElementById('mc-choices');
-  if (isMC) {
-    mcDiv.innerHTML = '';
-    const grid = document.createElement('div');
-    grid.className = 'mc-grid';
-    q.choices.forEach((ch, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'mc-btn';
-      btn.textContent = ch;
-      btn.onclick = () => selectMC(i);
-      grid.appendChild(btn);
-    });
-    // Add submit button for MC
-    const submit = document.createElement('button');
-    submit.className = 'btn-start';
-    submit.textContent = '✓ ตอบ';
-    submit.style.cssText = 'margin-top:10px;padding:14px;font-size:1rem;border-radius:12px;';
-    submit.id = 'mc-submit';
-    submit.onclick = submitAnswer;
-    mcDiv.appendChild(grid);
-    mcDiv.appendChild(submit);
-  } else {
-    mcDiv.innerHTML = '';
-  }
+function resetWave(){
+  wObsDone=0; qbSpawned=false;
+  wObsMax = waveN<5 ? 1 : waveN<10 ? ri(1,2) : 2;
 }
 
-function selectMC(i) {
-  mcSelected = i;
-  document.querySelectorAll('.mc-btn').forEach((b, idx) => {
-    b.classList.toggle('selected', idx === i);
-  });
-}
+// ══════════════════════════════════════════════════
+//  GAME LOOP
+// ══════════════════════════════════════════════════
+function loop(){
+  raf=requestAnimationFrame(loop);
+  if(gs!=='run')return;
+  frame++;
 
-// ══════════════════════════════════════════════
-//  KEYPAD
-// ══════════════════════════════════════════════
-function kp(digit) {
-  if (currentAnswer.length >= 5) return;
-  currentAnswer += digit;
-  updateAnswerDisplay();
-}
-function kpMinus() {
-  if (currentAnswer.startsWith('−')) {
-    currentAnswer = currentAnswer.slice(1);
-  } else if (currentAnswer === '') {
-    currentAnswer = '−';
-  }
-  updateAnswerDisplay();
-}
-function kpDel() {
-  currentAnswer = currentAnswer.slice(0, -1);
-  updateAnswerDisplay();
-}
-function updateAnswerDisplay() {
-  const el = document.getElementById('answer-display');
-  el.textContent = currentAnswer;
-  el.classList.toggle('has-answer', currentAnswer.length > 0);
-}
+  // ── Physics ──
+  mVY-=GRAV;           // gravity pulls down (VY positive = moving up)
+  mY+=mVY;
+  if(mY<=0){mY=0;mVY=0;}
+  const mEl=document.getElementById('mario');
+  mEl.style.bottom=`${GH+mY}px`;
 
-// ══════════════════════════════════════════════
-//  SUBMIT
-// ══════════════════════════════════════════════
-function submitAnswer() {
-  const q = questions[qIdx];
-  let correct = false;
-
-  if (q.type === 'number') {
-    if (!currentAnswer || currentAnswer === '−') return;
-    const userAns = parseInt(currentAnswer.replace('−', '-'));
-    correct = userAns === q.ans;
-  } else {
-    if (mcSelected === -1) return;
-    correct = mcSelected === q.ans;
+  // Invincibility flicker
+  if(mInv>0){
+    mInv--;
+    mEl.style.opacity=(mInv%8<4)?'0.35':'1';
+    if(mInv===0)mEl.style.opacity='1';
   }
 
-  answers_log.push({ q: q.q, ans: q.ans, userAns: q.type === 'mc' ? q.choices[mcSelected] : currentAnswer, correct, cat: q.cat, catLabel: q.catLabel });
+  // ── Move entities ──
+  const wW=document.getElementById('world').offsetWidth||390;
+  for(let i=ents.length-1;i>=0;i--){
+    const e=ents[i];
+    e.x-=SPEED;
+    e.el.style.left=e.x+'px';
 
-  if (correct) {
-    score++;
-    showFeedback('✅');
-    spawnCoin();
-  } else {
-    lives--;
-    updateLives();
-    const mario = document.getElementById('mario-wrap');
-    mario.classList.add('hurt');
-    setTimeout(() => mario.classList.remove('hurt'), 500);
-    showFeedback('❌');
-  }
-
-  qIdx++;
-  setTimeout(() => {
-    if (qIdx >= questions.length) {
-      showResult();
-    } else {
-      renderQuestion();
-      showScreen('scr-game');
+    // Off screen left
+    if(e.x < -130){
+      e.el.remove(); ents.splice(i,1);
+      continue;
     }
-  }, 700);
+
+    // ── Collision ──
+    const eW=e.type==='goomba'?36:e.type==='pipe'?28:42;
+    const eH=e.type==='goomba'?38:e.type==='pipe'?72:44;
+    const eL=e.x+4, eR=e.x+eW-4; // inset for grace
+    const mL=MX+4, mR=MX+MW-4;
+    const mBot=mY, mTop=mY+MH;
+
+    if(eR>mL && eL<mR){ // x overlap
+      if(e.type==='qblock'){
+        // x-overlap triggers question
+        e.el.remove(); ents.splice(i,1);
+        triggerQ();
+        return;
+      } else {
+        // Obstacle: hit if mario bottom < entity top (mario not jumped over it)
+        if(mInv===0 && mBot < eH-8){
+          hitObstacle(i);
+          return;
+        }
+      }
+    }
+  }
+
+  // ── Spawn ──
+  if(!qbSpawned && frame>=nextSpawn){
+    if(wObsDone<wObsMax){
+      spawnObs();
+      nextSpawn=frame+ri(75,120);
+    } else {
+      spawnQB();
+      nextSpawn=frame+200;
+    }
+  }
 }
 
-function spawnCoin() {
-  const scene = document.getElementById('game-scene');
-  const coin = document.createElement('div');
-  coin.className = 'coin-pop';
-  coin.textContent = '🪙';
-  scene.appendChild(coin);
-  setTimeout(() => coin.remove(), 1000);
+// ══════════════════════════════════════════════════
+//  SPAWN
+// ══════════════════════════════════════════════════
+function spawnObs(){
+  const type=Math.random()<0.55?'goomba':'pipe';
+  const el=document.createElement('div');
+  el.className=`ent ent-${type}`;
+  el.innerHTML=type==='goomba'?GOOMBA:PIPE;
+  el.style.position='absolute';
+  el.style.bottom=`${GH}px`;
+  const wW=document.getElementById('world').offsetWidth||390;
+  const sx=wW+40;
+  el.style.left=sx+'px';
+  document.getElementById('ents').appendChild(el);
+  ents.push({id:eid++,type,x:sx,el});
+  wObsDone++;
 }
 
-// ══════════════════════════════════════════════
-//  FEEDBACK
-// ══════════════════════════════════════════════
-function showFeedback(emoji) {
-  showScreen('scr-feedback');
-  const badge = document.getElementById('feedback-badge');
-  badge.textContent = emoji;
-  badge.style.animation = 'none';
-  badge.offsetHeight;
-  badge.style.animation = '';
+function spawnQB(){
+  const el=document.createElement('div');
+  el.className='ent ent-qblock';
+  el.textContent='?';
+  el.style.position='absolute';
+  el.style.bottom=`${GH}px`;
+  const wW=document.getElementById('world').offsetWidth||390;
+  const sx=wW+40;
+  el.style.left=sx+'px';
+  document.getElementById('ents').appendChild(el);
+  ents.push({id:eid++,type:'qblock',x:sx,el});
+  qbSpawned=true;
 }
 
-// ══════════════════════════════════════════════
-//  LIVES
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════
+//  HIT OBSTACLE
+// ══════════════════════════════════════════════════
+function hitObstacle(idx){
+  lives--;
+  updLives();
+  mInv=90;
+  document.getElementById('mario').classList.add('hurt');
+  setTimeout(()=>document.getElementById('mario').classList.remove('hurt'),500);
+  ents[idx].el.remove();
+  ents.splice(idx,1);
+  showFb('💥');
+  if(lives<=0){ gs='over'; setTimeout(()=>showResult(),1500); showFb('💀'); }
+}
 
-function updateLives() {
-  const ids = ['h1', 'h2', 'h3'];
-  ids.forEach((id, i) => {
-    const el = document.getElementById(id);
-    el.textContent = i < lives ? '❤️' : '🖤';
-    el.style.opacity = i < lives ? '1' : '0.35';
+// ══════════════════════════════════════════════════
+//  QUESTION
+// ══════════════════════════════════════════════════
+function triggerQ(){
+  gs='question';
+  document.getElementById('ground').classList.add('stop');
+  document.getElementById('mario').classList.add('stop');
+  spawnCoinAnim();
+
+  const q=Qs[qIdx];
+  document.getElementById('qpill').textContent=CAT[q.cat]||q.cat;
+  document.getElementById('qtext').innerHTML=q.q.replace(/\n/g,'<br>');
+  document.getElementById('qctr').textContent=`ข้อ ${waveN+1} / 15`;
+  document.getElementById('pfill').style.width=`${Math.round(waveN/15*100)}%`;
+  ans=''; mcSel=-1;
+  buildQArea(q);
+  document.getElementById('qoverlay').classList.add('on');
+}
+
+function buildQArea(q){
+  const area=document.getElementById('qarea');
+  area.innerHTML='';
+  if(q.type==='mc'){
+    const g=document.createElement('div'); g.className='mc-grid';
+    q.choices.forEach((ch,i)=>{
+      const b=document.createElement('button'); b.className='mcb'; b.textContent=ch;
+      b.ontouchstart=(e)=>{e.preventDefault();selMC(i,g);};
+      b.onclick=()=>selMC(i,g);
+      g.appendChild(b);
+    });
+    const ok=document.createElement('button'); ok.className='mc-ok gbtn'; ok.textContent='✓ ยืนยัน';
+    ok.ontouchstart=(e)=>{e.preventDefault();submitQ(q);};
+    ok.onclick=()=>submitQ(q);
+    area.appendChild(g); area.appendChild(ok);
+  } else {
+    const disp=document.createElement('div'); disp.id='adisp'; disp.className=''; disp.textContent='';
+    area.appendChild(disp);
+    const pad=document.createElement('div'); pad.className='kpad';
+    [7,8,9,4,5,6,1,2,3].forEach(d=>{
+      const b=document.createElement('button'); b.className='kb'; b.textContent=d;
+      b.ontouchstart=(e)=>{e.preventDefault();kp(String(d));};
+      b.onclick=()=>kp(String(d));
+      pad.appendChild(b);
+    });
+    const bm=document.createElement('button'); bm.className='kb minus'; bm.textContent='±';
+    bm.ontouchstart=(e)=>{e.preventDefault();kpPm();};bm.onclick=kpPm;
+    const b0=document.createElement('button'); b0.className='kb'; b0.textContent='0';
+    b0.ontouchstart=(e)=>{e.preventDefault();kp('0');};b0.onclick=()=>kp('0');
+    const bd=document.createElement('button'); bd.className='kb del'; bd.textContent='⌫';
+    bd.ontouchstart=(e)=>{e.preventDefault();kpDel();};bd.onclick=kpDel;
+    const bok=document.createElement('button'); bok.className='kb ok'; bok.textContent='✓ ยืนยัน';
+    bok.ontouchstart=(e)=>{e.preventDefault();submitQ(q);};bok.onclick=()=>submitQ(q);
+    pad.appendChild(bm);pad.appendChild(b0);pad.appendChild(bd);pad.appendChild(bok);
+    area.appendChild(pad);
+  }
+}
+
+function selMC(i,grid){
+  mcSel=i;
+  grid.querySelectorAll('.mcb').forEach((b,j)=>b.classList.toggle('sel',j===i));
+}
+function kp(d){
+  if(ans.length>=5)return;
+  ans+=d; updDisp();
+}
+function kpPm(){
+  ans=ans.startsWith('−')?ans.slice(1):(ans===''?'−':ans);
+  updDisp();
+}
+function kpDel(){ ans=ans.slice(0,-1); updDisp(); }
+function updDisp(){
+  const el=document.getElementById('adisp');
+  if(!el)return;
+  el.textContent=ans;
+  el.classList.toggle('has',ans.length>0);
+}
+
+function submitQ(q){
+  let correct=false;
+  if(q.type==='mc'){
+    if(mcSel===-1)return;
+    correct=mcSel===q.ans;
+  } else {
+    if(!ans||ans==='−')return;
+    correct=parseInt(ans.replace('−','-'))===q.ans;
+  }
+
+  const ua=q.type==='mc'?(q.choices[mcSel]||'—'):ans;
+  log.push({q:q.q,correct,cat:q.cat,ua,ans:q.ans});
+
+  if(correct){score++;document.getElementById('sbadge').textContent=`⭐ ${score}`;}
+  else{lives--;updLives();}
+
+  document.getElementById('qoverlay').classList.remove('on');
+  qIdx++;waveN++;
+
+  showFb(correct?'✅':'❌',()=>{
+    if(lives<=0||waveN>=15){
+      gs='over';
+      setTimeout(()=>showResult(),400);
+    } else {
+      // Resume game
+      gs='run';
+      document.getElementById('ground').classList.remove('stop');
+      document.getElementById('mario').classList.remove('stop');
+      resetWave();
+      nextSpawn=frame+ri(60,100);
+    }
   });
 }
 
-// ══════════════════════════════════════════════
-//  SHOW RESULT
-// ══════════════════════════════════════════════
-function showResult() {
-  showScreen('scr-result');
-  document.getElementById('res-name').textContent = playerName;
-  document.getElementById('res-score').textContent = score;
-  document.getElementById('res-pct').textContent = Math.round(score / 15 * 100) + '%';
+// ══════════════════════════════════════════════════
+//  COIN POP ANIM
+// ══════════════════════════════════════════════════
+function spawnCoinAnim(){
+  const w=document.getElementById('world');
+  const c=document.createElement('div');
+  c.className='coinpop'; c.textContent='🪙';
+  c.style.left=`${MX+20}px`;
+  c.style.bottom=`${GH+mY+50}px`;
+  w.appendChild(c);
+  setTimeout(()=>c.remove(),1100);
+}
 
-  // Stars & title
-  let stars = 0, title = '';
-  if (score <= 5)       { stars = 0; title = 'ยังต้องฝึกอีกนิดนะ 💪'; }
-  else if (score <= 9)  { stars = 1; title = 'ผ่านแล้ว ทำได้ดี! 👍'; }
-  else if (score <= 12) { stars = 2; title = 'เก่งมาก! 🌟'; }
-  else                  { stars = 3; title = 'ยอดเยี่ยมมาก! 🏆'; }
+// ══════════════════════════════════════════════════
+//  RESULT
+// ══════════════════════════════════════════════════
+function showResult(){
+  cancelAnimationFrame(raf);
+  gs='over';
+  document.getElementById('ground').classList.add('stop');
 
-  document.getElementById('res-title').textContent = title;
-  ['s1', 's2', 's3'].forEach(function(id, i) {
-    var el = document.getElementById(id);
-    el.style.filter = i < stars ? '' : 'grayscale(1) opacity(0.3)';
+  document.getElementById('rname').textContent=pName;
+  document.getElementById('rscore').textContent=score;
+  document.getElementById('rpct').textContent=Math.round(score/15*100)+'%';
+
+  let stars=0,title='';
+  if(score<=5){stars=0;title='ยังต้องฝึกอีกนิดนะ 💪';}
+  else if(score<=9){stars=1;title='ผ่านแล้ว ทำได้ดี! 👍';}
+  else if(score<=12){stars=2;title='เก่งมาก! 🌟';}
+  else{stars=3;title='ยอดเยี่ยมมาก! 🏆';}
+  document.getElementById('rtitle').textContent=title;
+  ['st1','st2','st3'].forEach((id,i)=>{
+    document.getElementById(id).style.filter=i<stars?'':'grayscale(1) opacity(0.3)';
   });
 
-  // Category breakdown
-  var cats = {};
-  answers_log.forEach(function(a) {
-    if (!cats[a.cat]) cats[a.cat] = { label: CAT_LABELS[a.cat] || a.cat, total: 0, correct: 0 };
-    cats[a.cat].total++;
-    if (a.correct) cats[a.cat].correct++;
+  // Cat breakdown
+  const cats={};
+  log.forEach(a=>{
+    if(!cats[a.cat])cats[a.cat]={label:CAT[a.cat]||a.cat,t:0,c:0};
+    cats[a.cat].t++;
+    if(a.correct)cats[a.cat].c++;
   });
-  var catDiv = document.getElementById('cat-breakdown');
-  catDiv.innerHTML = '';
-  Object.values(cats).forEach(function(c) {
-    var pct = Math.round(c.correct / c.total * 100);
-    catDiv.innerHTML += '<div class="cat-row">' +
-      '<span class="cat-label">' + c.label + '</span>' +
-      '<div class="cat-bar-wrap"><div class="cat-bar" style="width:' + pct + '%;background:' + (pct >= 70 ? '#27ae60' : '#e67e22') + ';"></div></div>' +
-      '<span class="cat-score">' + c.correct + '/' + c.total + '</span>' +
-      '</div>';
+  const catDiv=document.getElementById('catbk');
+  catDiv.innerHTML='';
+  Object.values(cats).forEach(c=>{
+    const pct=Math.round(c.c/c.t*100);
+    catDiv.innerHTML+=`<div class="crow">
+      <span class="clabel">${c.label}</span>
+      <div class="cbar-w"><div class="cbar" style="width:${pct}%;background:${pct>=70?'#27ae60':'#e67e22'}"></div></div>
+      <span class="cscore">${c.c}/${c.t}</span></div>`;
   });
 
   // Answer list
-  var listDiv = document.getElementById('answers-list');
-  listDiv.innerHTML = '<h3 style="color:#ccc;font-size:.85rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">รายข้อ</h3>';
-  answers_log.forEach(function(a, i) {
-    var icon = a.correct ? '✅' : '❌';
-    var shortQ = a.q.replace(/\n/g, ' ').replace(/\s+/g, ' ').substring(0, 40);
-    var wrongInfo = a.correct ? '' : '<span class="ans-correct-val">ตอบ: ' + a.userAns + ' | เฉลย: ' + a.ans + '</span>';
-    listDiv.innerHTML += '<div class="ans-item ' + (a.correct ? 'correct' : 'wrong') + '">' +
-      '<span class="ans-mark">' + icon + '</span>' +
-      '<div style="flex:1"><span class="ans-num">ข้อ ' + (i+1) + '</span>' +
-      '<span class="ans-q"> ' + shortQ + '</span>' + wrongInfo + '</div></div>';
+  const aDiv=document.getElementById('alist');
+  aDiv.innerHTML='';
+  log.forEach((a,i)=>{
+    const sq=a.q.replace(/\n/g,' ').substring(0,42);
+    const wrong=a.correct?'':`<span class="av">ตอบ: ${a.ua} | เฉลย: ${a.ans}</span>`;
+    aDiv.innerHTML+=`<div class="ai ${a.correct?'c':'w'}">
+      <span class="mk">${a.correct?'✅':'❌'}</span>
+      <div style="flex:1"><span class="an">ข้อ ${i+1}</span>
+      <span class="aq"> ${sq}</span>${wrong}</div></div>`;
   });
+
+  showScr('s-result');
 }
 
-// ══════════════════════════════════════════════
-//  REPLAY
-// ══════════════════════════════════════════════
-function replayGame() {
-  document.getElementById('player-name').value = playerName;
-  showScreen('scr-start');
+function replayGame(){
+  document.getElementById('pname').value=pName;
+  showScr('s-start');
 }
 </script>
 </body>
