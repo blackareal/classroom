@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ขอบเขตข้อสอบกลางภาค 1/2569</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Sarabun', 'THSarabunNew', Tahoma, sans-serif;
+      font-size: 16px;
+      background: #f0f2f5;
+      color: #333;
+    }
+
+    header {
+      background: #263238;
+      color: white;
+      padding: 18px 24px;
+    }
+    header h1 { font-size: 20px; font-weight: 700; }
+    header p { font-size: 14px; margin-top: 4px; opacity: 0.75; }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      background: #37474f;
+      padding: 0 12px;
+      gap: 2px;
+    }
+    .tab-btn {
+      padding: 11px 16px;
+      cursor: pointer;
+      color: rgba(255,255,255,0.65);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Sarabun', 'THSarabunNew', Tahoma, sans-serif;
+      border: none;
+      background: transparent;
+      border-bottom: 3px solid transparent;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: rgba(255,255,255,0.9); }
+    .tab-btn.active {
+      color: white;
+      border-bottom-color: var(--col);
+    }
+
+    .tab-content { display: none; padding: 20px 16px; max-width: 800px; margin: 0 auto; }
+    .tab-content.active { display: block; }
+
+    .course-header {
+      background: var(--col);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px 8px 0 0;
+    }
+    .course-header h2 { font-size: 17px; font-weight: 700; }
+    .course-header .meta { font-size: 13px; margin-top: 5px; opacity: 0.82; line-height: 1.6; }
+
+    .status-bar {
+      padding: 9px 18px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .status-ok  { background: #e8f5e9; color: #1b5e20; border-left: 4px solid #43a047; }
+    .status-warn{ background: #fff8e1; color: #e65100; border-left: 4px solid #ffa726; }
+
+    .card {
+      background: white;
+      border-radius: 0 0 8px 8px;
+      padding: 20px 22px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      margin-bottom: 4px;
+    }
+
+    .sec-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--col);
+      margin: 18px 0 7px;
+      padding-bottom: 4px;
+      border-bottom: 2px solid var(--col);
+    }
+    .sec-title:first-child { margin-top: 0; }
+
+    ul.topics { list-style: none; padding: 0; }
+    ul.topics li {
+      padding: 4px 0 4px 22px;
+      position: relative;
+      font-size: 15px;
+      line-height: 1.55;
+      color: #444;
+    }
+    ul.topics li::before {
+      content: '·';
+      position: absolute;
+      left: 7px;
+      color: #aaa;
+      font-weight: 700;
+    }
+    ul.topics li.done::before { content: '✓'; color: #43a047; font-size: 13px; top: 5px; }
+    ul.topics li.soon {
+      color: #bf360c;
+    }
+    ul.topics li.soon::before { content: '→'; color: #fb8c00; }
+
+    .exclude-box {
+      background: #fce4ec;
+      border-left: 4px solid #e91e63;
+      padding: 10px 14px;
+      border-radius: 0 4px 4px 0;
+      margin-top: 18px;
+      font-size: 14px;
+      color: #880e4f;
+      line-height: 1.6;
+    }
+    .exclude-box strong { display: block; margin-bottom: 2px; font-size: 13.5px; }
+
+    .plan-bar {
+      background: #e3f2fd;
+      border-left: 4px solid #1565c0;
+      padding: 10px 14px;
+      border-radius: 0 4px 4px 0;
+      margin-top: 16px;
+      font-size: 14px;
+      color: #0d47a1;
+      line-height: 1.7;
+    }
+    .plan-bar strong { display: block; margin-bottom: 2px; font-size: 13.5px; }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: #555;
+    }
+    .legend span { display: flex; align-items: center; gap: 5px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>ขอบเขตข้อสอบกลางภาค — ภาคเรียนที่ 1 ปีการศึกษา 2569</h1>
+  <p>โรงเรียนวังกระแสวิทยาคม &nbsp;·&nbsp; ครูอนุพงศ์ ไชยบุตร &nbsp;·&nbsp; อัปเดต 13 ก.ค. 2569</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" style="--col:#006064" onclick="show('m1',this)">ม.1/1 &nbsp;ค21101</button>
+  <button class="tab-btn"        style="--col:#0d47a1" onclick="show('m2',this)">ม.2/1 &nbsp;ค22101</button>
+  <button class="tab-btn"        style="--col:#4a148c" onclick="show('m4',this)">ม.4 &nbsp;ค31101</button>
+  <button class="tab-btn"        style="--col:#1a6b3c" onclick="show('m5',this)">ม.5 &nbsp;ค32201</button>
+  <button class="tab-btn"        style="--col:#7b3f00" onclick="show('m6a',this)">ม.6 &nbsp;ค33101</button>
+  <button class="tab-btn"        style="--col:#7b3f00" onclick="show('m6b',this)">ม.6 &nbsp;ค33201</button>
+</div>
+
+<!-- ===== ม.1/1 ===== -->
+<div id="m1" class="tab-content active" style="--col:#006064">
+  <div class="course-header" style="background:#006064">
+    <h2>ค21101 คณิตศาสตร์พื้นฐาน 1 — ชั้น ม.1/1</h2>
+    <div class="meta">
+      สอบกลางภาค: <strong>20–24 กรกฎาคม 2569</strong>
+      &nbsp;|&nbsp; คาบที่เหลือสัปดาห์นี้: อ.14 (1 คาบ) + พ.15 (1 คาบ)
+    </div>
+  </div>
+  <div class="status-bar status-warn">⚠ ปรับขอบเขต — ตัดเลขยกกำลังออก (ยังไม่ได้สอน)</div>
+  <div class="card">
+    <div class="legend">
+      <span>✓ สอนแล้ว</span>
+      <span style="color:#bf360c">→ จะสอนสัปดาห์นี้</span>
+    </div>
+
+    <div class="sec-title">หน่วยที่ 1: จำนวนเต็ม</div>
+    <ul class="topics">
+      <li class="done">จำนวนเต็มบวก จำนวนเต็มลบ ศูนย์ และเส้นจำนวน</li>
+      <li class="done">การบวกและการลบจำนวนเต็ม</li>
+      <li class="done">การคูณและการหารจำนวนเต็ม</li>
+      <li class="done">สมบัติของจำนวนเต็ม (สลับที่ เปลี่ยนหมู่ แจกแจง)</li>
+      <li class="done">โจทย์ปัญหาจำนวนเต็มในชีวิตจริง</li>
+    </ul>
+
+    <div class="sec-title">หน่วยที่ 2: การสร้างเรขาคณิตเบื้องต้น</div>
+    <ul class="topics">
+      <li class="done">เครื่องมือ: วงเวียน ไม้ฉาก ไม้โปรแทรกเตอร์</li>
+      <li class="done">ส่วนของเส้นตรงและการแบ่งครึ่งส่วนของเส้นตรง</li>
+      <li class="done">มุมชนิดต่างๆ (แหลม ฉาก ป้าน กลับ ตรง)</li>
+      <li class="done">การสร้างมุม 60° และ 90°</li>
+      <li class="soon">การแบ่งครึ่งมุม (อ.14)</li>
+      <li class="soon">เส้นขนานและเส้นตั้งฉาก (ถ้าเวลาเอื้ออำนวย)</li>
+    </ul>
+
+    <div class="exclude-box">
+      <strong>❌ ไม่รวมในการสอบกลางภาค</strong>
+      เลขยกกำลัง — ยังไม่ได้สอน จะเรียนในภาคเรียนหลังกลางภาค
+    </div>
+
+    <div class="plan-bar">
+      <strong>📅 แผนคาบที่เหลือ</strong>
+      อ.14 ก.ค. — การแบ่งครึ่งมุม (ต่อเรขาคณิต)<br>
+      พ.15 ก.ค. — ทบทวนรวม + แจ้งขอบเขตข้อสอบให้นักเรียนทราบ
+    </div>
+  </div>
+</div>
+
+<!-- ===== ม.2/1 ===== -->
+<div id="m2" class="tab-content" style="--col:#0d47a1">
+  <div class="course-header" style="background:#0d47a1">
+    <h2>ค22101 คณิตศาสตร์พื้นฐาน 3 — ชั้น ม.2/1</h2>
+    <div class="meta">
+      สอบกลางภาค: <strong>20–24 กรกฎาคม 2569</strong>
+      &nbsp;|&nbsp; คาบที่เหลือ: อ.14 (1 คาบ) + พฤ.16 (1 คาบ)
+    </div>
+  </div>
+  <div class="status-bar status-warn">⚠ ปรับขอบเขต — ตัดระบบสมการออก (ยังไม่ได้สอน)</div>
+  <div class="card">
+    <div class="legend">
+      <span>✓ สอนแล้ว</span>
+      <span style="color:#bf360c">→ จะสอนสัปดาห์นี้</span>
+    </div>
+
+    <div class="sec-title">หน่วยที่ 1: พีชคณิต</div>
+    <ul class="topics">
+      <li class="done">นิพจน์พีชคณิต ตัวแปร สัมประสิทธิ์</li>
+      <li class="done">พจน์คล้าย การรวมพจน์</li>
+      <li class="done">การบวก ลบ คูณ หาร พหุนาม</li>
+      <li class="done">แฟกเตอร์ (หน้าร่วมมาก)</li>
+      <li class="done">โจทย์ปัญหาพีชคณิต</li>
+    </ul>
+
+    <div class="sec-title">หน่วยที่ 2: อัตราส่วนและสัดส่วน</div>
+    <ul class="topics">
+      <li class="done">อัตราส่วน a:b อัตราส่วนที่เท่ากัน การลดรูป</li>
+      <li class="done">สัดส่วน: ความหมาย สมบัติขั้วคูณ</li>
+      <li class="done">สัดส่วนโดยตรงและสัดส่วนผกผัน</li>
+    </ul>
+
+    <div class="sec-title">หน่วยที่ 3: ร้อยละ</div>
+    <ul class="topics">
+      <li class="done">ความหมายร้อยละ การแปลง ร้อยละ ↔ ทศนิยม ↔ เศษส่วน</li>
+      <li class="soon">การคำนวณร้อยละ โจทย์กำไร-ขาดทุน ดอกเบี้ย (อ.14)</li>
+      <li class="soon">ทบทวนรวม (พฤ.16)</li>
+    </ul>
+
+    <div class="exclude-box">
+      <strong>❌ ไม่รวมในการสอบกลางภาค</strong>
+      ระบบสมการเชิงเส้นสองตัวแปร — ยังไม่ได้สอน จะเรียนหลังกลางภาค
+    </div>
+
+    <div class="plan-bar">
+      <strong>📅 แผนคาบที่เหลือ</strong>
+      อ.14 ก.ค. — ร้อยละ (ต่อ): การคำนวณ โจทย์กำไร-ขาดทุน<br>
+      พฤ.16 ก.ค. — ทบทวนรวม + แจ้งขอบเขตข้อสอบให้นักเรียนทราบ
+    </div>
+  </div>
+</div>
+
+<!-- ===== ม.4 ===== -->
+<div id="m4" class="tab-content" style="--col:#4a148c">
+  <div class="course-header" style="background:#4a148c">
+    <h2>ค31101 คณิตศาสตร์พื้นฐาน 1 — ชั้น ม.4</h2>
+    <div class="meta">
+      สอบกลางภาค: <strong>21–25 กรกฎาคม 2569</strong>
+      &nbsp;|&nbsp; พ.15 ก.ค. = ทดสอบย่อย
+    </div>
+  </div>
+  <div class="status-bar status-ok">✅ เนื้อหาครบสมบูรณ์ — พร้อมสอบ</div>
+  <div class="card">
+    <div class="sec-title">หน่วย: เซต</div>
+    <ul class="topics">
+      <li class="done">ความหมายของเซต สัญลักษณ์ (∈, ∉, ⊂, ⊆, ⊄)</li>
+      <li class="done">เซตจำกัด เซตอนันต์ เซตว่าง (∅)</li>
+      <li class="done">เซตเท่ากัน เซตย่อย เซตที่เท่ากัน</li>
+      <li class="done">การดำเนินการ: ยูเนียน (∪), อินเตอร์เซกชัน (∩), ผลต่าง (−), คอมพลีเมนต์ (A′)</li>
+      <li class="done">จำนวนสมาชิก n(A∪B) = n(A) + n(B) − n(A∩B)</li>
+      <li class="done">เพาเวอร์เซต P(A): จำนวนสมาชิก = 2ⁿ เซต</li>
+      <li class="done">ไดอะแกรมเวนน์-ออยเลอร์</li>
+    </ul>
+
+    <div class="plan-bar">
+      <strong>📅 แผนคาบที่เหลือ</strong>
+      พ.15 ก.ค. — ทดสอบย่อยครอบคลุมทุกหัวข้อเซต ก่อนสอบกลางภาคจริง
+    </div>
+  </div>
+</div>
+
+<!-- ===== ม.5 ===== -->
+<div id="m5" class="tab-content" style="--col:#1a6b3c">
+  <div class="course-header" style="background:#1a6b3c">
+    <h2>ค32201 คณิตศาสตร์เพิ่มเติม 3 — ชั้น ม.5</h2>
+    <div class="meta">
+      สอบกลางภาค: <strong>20–21 กรกฎาคม 2569</strong>
+      &nbsp;|&nbsp; พฤ.16 = กฎไซน์, ศ.17 = ทบทวนรวม
+    </div>
+  </div>
+  <div class="status-bar status-ok">✅ จบทันพอดี — เหลือ 2 คาบ 2 หัวข้อ</div>
+  <div class="card">
+    <div class="legend">
+      <span>✓ สอนแล้ว</span>
+      <span style="color:#bf360c">→ จะสอนสัปดาห์นี้</span>
+    </div>
+
+    <div class="sec-title">หน่วย: ตรีโกณมิติ</div>
+    <ul class="topics">
+      <li class="done">เอกลักษณ์ฟังก์ชันตรีโกณมิติ (sin²θ + cos²θ = 1, tan, cot, sec, csc)</li>
+      <li class="done">สมการตรีโกณมิติ: sin x = k, cos x = k, tan x = k ใน [0, 2π]</li>
+      <li class="done">กฎโคไซน์: a² = b² + c² − 2bc·cos A (หาด้านและหามุม)</li>
+      <li class="soon">กฎไซน์: a/sin A = b/sin B = c/sin C (พฤ.16)</li>
+      <li class="soon">ทบทวนรวมตรีโกณมิติทั้งหมด (ศ.17)</li>
+    </ul>
+
+    <div class="plan-bar">
+      <strong>📅 แผนคาบที่เหลือ</strong>
+      พฤ.16 ก.ค. — กฎไซน์: หาด้าน หามุม โจทย์ประยุกต์<br>
+      ศ.17 ก.ค. — ทบทวนรวมทุกหัวข้อ + ซักถาม เตรียมสอบ
+    </div>
+  </div>
+</div>
+
+<!-- ===== ม.6 ค33101 ===== -->
+<div id="m6a" class="tab-content" style="--col:#7b3f00">
+  <div class="course-header" style="background:#7b3f00">
+    <h2>ค33101 คณิตศาสตร์พื้นฐาน 5 — ชั้น ม.6</h2>
+    <div class="meta">
+      สอบกลางภาค: <strong>20–24 กรกฎาคม 2569</strong>
+      &nbsp;|&nbsp; ศ.17 ก.ค. = ทดสอบย่อย
+    </div>
+  </div>
+  <div class="status-bar status-ok">✅ เนื้อหาครบสมบูรณ์ — พร้อมสอบ</div>
+  <div class="card">
+    <div class="sec-title">หน่วย: สถิติ</div>
+    <ul class="topics">
+      <li class="done">ค่ากลางของข้อมูล: ค่าเฉลี่ยเลขคณิต (μ = Σxᵢ / N)</li>
+      <li class="done">มัธยฐาน (Median) — ค่ากลางเมื่อเรียงข้อมูล</li>
+      <li class="done">ฐานนิยม (Mode) — ข้อมูลที่ปรากฏบ่อยสุด</li>
+      <li class="done">ส่วนเบี่ยงเบนมาตรฐาน σ = √(Σ(xᵢ − μ)² / N)</li>
+      <li class="done">การแปลความหมาย S.D. (S.D. น้อย = ข้อมูลกระจุกตัว)</li>
+      <li class="done">สถิติเชิงอนุมาน: ประชากร ตัวอย่าง การสุ่มตัวอย่าง</li>
+    </ul>
+
+    <div class="plan-bar">
+      <strong>📅 แผนคาบที่เหลือ</strong>
+      ศ.17 ก.ค. — ทดสอบย่อยครอบคลุมทุกหัวข้อสถิติ ก่อนสอบกลางภาคจริง
+    </div>
+  </div>
+</div>
+
+<!-- ===== ม.6 ค33201 ===== -->
+<div id="m6b" class="tab-content" style="--col:#7b3f00">
+  <div class="course-header" style="background:#7b3f00">
+    <h2>ค33201 คณิตศาสตร์เพิ่มเติม 5 — ชั้น ม.6</h2>
+    <div class="meta">
+      สอบกลางภาค: <strong>20–24 กรกฎาคม 2569</strong>
+      &nbsp;|&nbsp; พ.15 + พฤ.16 = ทบทวน (ก้าวหน้า timeline 1 สัปดาห์)
+    </div>
+  </div>
+  <div class="status-bar status-ok">✅ เนื้อหาครบ — มีเวลาทบทวนเพิ่ม</div>
+  <div class="card">
+    <div class="sec-title">หน่วยที่ 1: ลำดับ</div>
+    <ul class="topics">
+      <li class="done">ลำดับเลขคณิต: aₙ = a₁ + (n−1)d</li>
+      <li class="done">ลำดับเรขาคณิต: aₙ = a₁ · rⁿ⁻¹</li>
+      <li class="done">ลำดับแบบอื่น (กำหนดด้วยนิยาม aₙ)</li>
+    </ul>
+
+    <div class="sec-title">หน่วยที่ 2: อนุกรม</div>
+    <ul class="topics">
+      <li class="done">อนุกรมเลขคณิต: Sₙ = n/2 · (a₁ + aₙ)</li>
+      <li class="done">อนุกรมเรขาคณิต: Sₙ = a₁(1 − rⁿ) / (1 − r)</li>
+      <li class="done">อนุกรมอนันต์: S∞ = a₁ / (1 − r) เมื่อ |r| &lt; 1</li>
+    </ul>
+
+    <div class="sec-title">หน่วยที่ 3: ลิมิตเบื้องต้น</div>
+    <ul class="topics">
+      <li class="done">ความหมายของลิมิต: lim f(x) สัญชาตญาณ</li>
+      <li class="done">ลิมิตพื้นฐาน (lim c, lim x, lim xⁿ)</li>
+      <li class="done">กฎการหาลิมิต 7 กฎ (บวก ลบ คูณ หาร ยกกำลัง ค่าคงที่ รากที่ n)</li>
+    </ul>
+
+    <div class="plan-bar">
+      <strong>📅 แผนคาบที่เหลือ</strong>
+      พ.15 ก.ค. — ลิมิตที่ไม่มีอยู่จริง / one-sided limits (บทเสริม)<br>
+      พฤ.16 ก.ค. — ทบทวนรวม ลำดับ อนุกรม ลิมิต เตรียมสอบกลางภาค
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
