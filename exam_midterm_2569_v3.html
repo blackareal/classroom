@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ข้อสอบกลางภาค 1/2569 — 20 ข้อ</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun','THSarabunNew',Tahoma,sans-serif;font-size:15px;background:#f0f2f5;color:#222}
+.topbar{background:#263238;color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.topbar h1{font-size:17px;font-weight:700}.topbar small{opacity:.7;font-size:12px}
+.pbtn{background:#455a64;color:#fff;border:none;padding:6px 13px;border-radius:4px;cursor:pointer;font-family:inherit;font-size:13px}
+.pbtn:hover{background:#546e7a}
+.tabs{display:flex;flex-wrap:wrap;background:#37474f;padding:0 10px;gap:2px}
+.tbtn{padding:9px 14px;cursor:pointer;color:rgba(255,255,255,.6);font-size:13px;font-weight:600;font-family:inherit;border:none;background:transparent;border-bottom:3px solid transparent;transition:all .15s;white-space:nowrap}
+.tbtn:hover{color:rgba(255,255,255,.9)}.tbtn.on{color:#fff;border-bottom-color:var(--c)}
+.tab{display:none;padding:16px;max-width:860px;margin:0 auto}.tab.on{display:block}
+.sheet{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.1);overflow:hidden}
+.hdr{padding:14px 20px;color:#fff}
+.hdr h2{font-size:16px;font-weight:700}.hdr .sub{font-size:12.5px;margin-top:4px;opacity:.85}
+.stbar{display:flex;gap:16px;padding:9px 20px;border-bottom:1px solid #e0e0e0;flex-wrap:wrap;font-size:13.5px}
+.stbar label{display:flex;align-items:center;gap:4px}
+.stbar .line{display:inline-block;border-bottom:1px solid #555;min-width:110px}
+.scinfo{background:#fff9c4;border-left:4px solid #f9a825;padding:7px 16px;font-size:13px;color:#5d4037}
+.sec{padding:12px 20px}.sec+.sec{border-top:2px solid #f0f0f0}
+.shead{font-size:14px;font-weight:700;color:var(--c);margin-bottom:10px;padding-bottom:4px;border-bottom:2px solid var(--c);display:flex;justify-content:space-between}
+.shead span{font-size:12px;font-weight:400;color:#888}
+.qi{margin-bottom:11px}
+.qi .qt{font-size:14.5px;line-height:1.55;margin-bottom:5px}
+.qi .qn{font-weight:700;margin-right:4px}
+.chs{display:grid;grid-template-columns:1fr 1fr;gap:1px 14px;padding-left:6px}
+.chs label{font-size:14px;line-height:1.45;display:flex;align-items:flex-start;gap:4px}
+.sai{margin-bottom:14px}
+.sai .sq{font-size:14.5px;line-height:1.65;margin-bottom:6px}
+.pts{font-size:11.5px;font-weight:700;background:var(--c);color:#fff;padding:1px 7px;border-radius:10px;margin-left:5px;vertical-align:middle}
+.ws{border:1px solid #ddd;border-radius:4px;min-height:90px;margin-top:5px;padding:6px;background:#fafafa;color:#bbb;font-size:12.5px}
+.ktog{display:block;width:100%;background:#eceff1;border:none;padding:9px 20px;text-align:left;font-size:13px;font-weight:600;color:#546e7a;cursor:pointer;font-family:inherit}
+.ktog:hover{background:#cfd8dc}
+.kbody{display:none;background:#fffde7;padding:12px 20px;border-top:1px solid #fff9c4;font-size:13.5px;line-height:1.9}
+.kbody.open{display:block}
+.ka{color:#1565c0;font-weight:700}
+.kstep{margin-left:10px;color:#444}
+@media print{
+  body{background:#fff}
+  .topbar,.tabs,.pbtn,.ktog,.kbody{display:none!important}
+  .tab{display:block!important;padding:0;max-width:100%}
+  .tab:not(.on){display:none!important}
+  .sheet{box-shadow:none;border-radius:0}
+  .ws{min-height:110px;background:#fff}
+}
+</style></head><body>
+<div class="topbar">
+  <div><h1>ข้อสอบกลางภาค ภาคเรียนที่ 1/2569</h1>
+  <small>โรงเรียนวังกระแสวิทยาคม &nbsp;·&nbsp; ครูอนุพงศ์ ไชยบุตร</small></div>
+  <button class="pbtn" onclick="window.print()">🖨 พิมพ์แท็บนี้</button>
+</div>
+<div class="tabs">
+  <button class="tbtn on" style="--c:#006064" onclick="show('m1',this)">ม.1/1 ค21101</button>
+  <button class="tbtn" style="--c:#0d47a1" onclick="show('m2',this)">ม.2/1 ค22101</button>
+  <button class="tbtn" style="--c:#4a148c" onclick="show('m4',this)">ม.4 ค31101</button>
+  <button class="tbtn" style="--c:#1a6b3c" onclick="show('m5',this)">ม.5 ค32201</button>
+  <button class="tbtn" style="--c:#7b3f00" onclick="show('m6a',this)">ม.6 ค33101</button>
+  <button class="tbtn" style="--c:#7b3f00" onclick="show('m6b',this)">ม.6 ค33201</button>
+</div>
+<div id="m1" class="tab on" style="--c:#006064">
+<div class="sheet">
+<div class="hdr" style="background:#006064"><h2>ค21101 คณิตศาสตร์พื้นฐาน 1</h2>
+<div class="sub">ม.1/1 &nbsp;|&nbsp; ปรนัย 10 + อัตนัย 10 = <b>20 คะแนน</b> &nbsp;|&nbsp; เวลา 50 นาที</div></div>
+<div class="stbar">
+<label>ชื่อ–สกุล <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+<label>เลขที่ <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+<label>คะแนนที่ได้ <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> /20</label></div>
+<div class="scinfo">ปรนัย 20 ข้อ &nbsp;|&nbsp; ถูก = +0.5 คะแนน &nbsp;|&nbsp; ผิด = −0.2 คะแนน &nbsp;|&nbsp; ไม่ตอบ = 0</div>
+<div class="sec" style="--c:#006064">
+<div class="shead">ส่วนที่ 1 — ปรนัย <span>(20 ข้อ × 0.5 คะแนน = 10 คะแนน &nbsp; ผิดหัก 0.2)</span></div>
+<div class="qi"><div class="qt"><span class="qn">1.</span> (−8) + (−5) − (−3) มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;−16</label>
+<label>ข.&nbsp;−10</label>
+<label>ค.&nbsp;−6</label>
+<label>ง.&nbsp;10</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">2.</span> กำหนด a = −4, b = 3 แล้ว a × b + a มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;−16</label>
+<label>ข.&nbsp;−8</label>
+<label>ค.&nbsp;8</label>
+<label>ง.&nbsp;16</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">3.</span> (−3)² มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;−9</label>
+<label>ข.&nbsp;−6</label>
+<label>ค.&nbsp;6</label>
+<label>ง.&nbsp;9</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">4.</span> (−25) ÷ 5 + (−1) มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;−6</label>
+<label>ข.&nbsp;−4</label>
+<label>ค.&nbsp;4</label>
+<label>ง.&nbsp;6</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">5.</span> 6 × (−3) − (−4) × 2 มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;−26</label>
+<label>ข.&nbsp;−10</label>
+<label>ค.&nbsp;10</label>
+<label>ง.&nbsp;26</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">6.</span> |−9| มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;−9</label>
+<label>ข.&nbsp;0</label>
+<label>ค.&nbsp;9</label>
+<label>ง.&nbsp;1/9</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">7.</span> (−4) + 9 + (−2) มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;−15</label>
+<label>ข.&nbsp;−7</label>
+<label>ค.&nbsp;3</label>
+<label>ง.&nbsp;15</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">8.</span> (−3) × (−4) × (−2) มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;−24</label>
+<label>ข.&nbsp;−12</label>
+<label>ค.&nbsp;12</label>
+<label>ง.&nbsp;24</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">9.</span> กำหนด a = −2 แล้ว 3a − 2 มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;−8</label>
+<label>ข.&nbsp;−6</label>
+<label>ค.&nbsp;−4</label>
+<label>ง.&nbsp;8</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">10.</span> (−2) + (−3) + (−4) + (−1) มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;−10</label>
+<label>ข.&nbsp;−4</label>
+<label>ค.&nbsp;4</label>
+<label>ง.&nbsp;10</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">11.</span> สิ่งที่ไม่มีความกว้างแต่มีความยาวแน่นอนคือ</div>
+<div class="chs">
+<label>ก.&nbsp;จุด</label>
+<label>ข.&nbsp;รังสี</label>
+<label>ค.&nbsp;ส่วนของเส้นตรง</label>
+<label>ง.&nbsp;เส้นตรง</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">12.</span> มุมที่มีขนาด 90° เรียกว่า</div>
+<div class="chs">
+<label>ก.&nbsp;มุมแหลม</label>
+<label>ข.&nbsp;มุมฉาก</label>
+<label>ค.&nbsp;มุมป้าน</label>
+<label>ง.&nbsp;มุมตรง</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">13.</span> มุมใดต่อไปนี้เป็นมุมป้าน</div>
+<div class="chs">
+<label>ก.&nbsp;45°</label>
+<label>ข.&nbsp;90°</label>
+<label>ค.&nbsp;150°</label>
+<label>ง.&nbsp;180°</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">14.</span> ถ้ามุม A = 35° มุม A เป็นมุมชนิดใด</div>
+<div class="chs">
+<label>ก.&nbsp;มุมแหลม</label>
+<label>ข.&nbsp;มุมฉาก</label>
+<label>ค.&nbsp;มุมป้าน</label>
+<label>ง.&nbsp;มุมตรง</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">15.</span> มุมสองมุมที่รวมกันได้ 90° เรียกว่า</div>
+<div class="chs">
+<label>ก.&nbsp;มุมเสริม</label>
+<label>ข.&nbsp;มุมเติมเต็ม</label>
+<label>ค.&nbsp;มุมประชิด</label>
+<label>ง.&nbsp;มุมตรงข้าม</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">16.</span> ถ้ามุม P และมุม Q เป็นมุมเสริมกัน และมุม P = 65° มุม Q มีขนาดเท่าใด</div>
+<div class="chs">
+<label>ก.&nbsp;25°</label>
+<label>ข.&nbsp;115°</label>
+<label>ค.&nbsp;125°</label>
+<label>ง.&nbsp;295°</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">17.</span> ถ้าต้องการแบ่งครึ่งมุม 120° จะได้มุมขนาดใด</div>
+<div class="chs">
+<label>ก.&nbsp;30°</label>
+<label>ข.&nbsp;60°</label>
+<label>ค.&nbsp;90°</label>
+<label>ง.&nbsp;240°</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">18.</span> ส่วนของเส้นตรง AB ยาว 10 cm จุด M คือจุดกึ่งกลาง AM ยาวเท่าใด</div>
+<div class="chs">
+<label>ก.&nbsp;4 cm</label>
+<label>ข.&nbsp;5 cm</label>
+<label>ค.&nbsp;6 cm</label>
+<label>ง.&nbsp;10 cm</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">19.</span> การสร้างมุม 60° สามารถใช้เครื่องมือใดได้บ้าง</div>
+<div class="chs">
+<label>ก.&nbsp;ไม้บรรทัดอย่างเดียว</label>
+<label>ข.&nbsp;วงเวียนอย่างเดียว</label>
+<label>ค.&nbsp;วงเวียนและไม้บรรทัด</label>
+<label>ง.&nbsp;ไม้ฉากอย่างเดียว</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">20.</span> มุมเสริมของมุม 130° มีขนาดเท่าใด</div>
+<div class="chs">
+<label>ก.&nbsp;40°</label>
+<label>ข.&nbsp;50°</label>
+<label>ค.&nbsp;60°</label>
+<label>ง.&nbsp;70°</label>
+</div></div>
+</div>
+<div class="sec" style="--c:#006064">
+<div class="shead">ส่วนที่ 2 — อัตนัย <span>(แสดงวิธีทำ รวม 10 คะแนน)</span></div>
+<div class="sai"><div class="sq"><b>ข้อ 21 (4 คะแนน)</b><br>จงหาค่าของนิพจน์ต่อไปนี้<br>(1)&nbsp; (−8) + 15 − (−3)&nbsp;&nbsp;&nbsp;<em>(2 คะแนน)</em><br>(2)&nbsp; (−6) × (−4) ÷ (−8) + (−3) × 2&nbsp;&nbsp;&nbsp;<em>(2 คะแนน)</em></div>
+<div class="ws" style="min-height:110px">วิธีทำ / คำตอบ</div></div>
+<div class="sai"><div class="sq"><b>ข้อ 22 (3 คะแนน)</b><br>อุณหภูมิตอนเช้า −8°C กลางวันเพิ่มขึ้น 15°C ตอนเย็นลดลง 9°C ตอนกลางคืนลดลงอีก 5°C อุณหภูมิตอนกลางคืนเท่ากับกี่องศาเซลเซียส</div>
+<div class="ws" style="min-height:85px">วิธีทำ / คำตอบ</div></div>
+<div class="sai"><div class="sq"><b>ข้อ 23 (3 คะแนน)</b><br>กำหนดมุม PQR มีขนาด 130°<br>(1)&nbsp; มุม PQR เป็นมุมชนิดใด <em>(1 คะแนน)</em><br>(2)&nbsp; ถ้าแบ่งครึ่งมุม PQR แต่ละมุมมีขนาดเท่าใด <em>(1 คะแนน)</em><br>(3)&nbsp; มุมเสริมของมุม PQR มีขนาดเท่าใด <em>(1 คะแนน)</em></div>
+<div class="ws" style="min-height:90px">วิธีทำ / คำตอบ</div></div>
+</div>
+<button class="ktog" onclick="togkey(this)">▶ ดูเฉลย (สำหรับครู)</button>
+<div class="kbody">
+1.<span class="ka">ข</span> &nbsp; 2.<span class="ka">ก</span> &nbsp; 3.<span class="ka">ง</span> &nbsp; 4.<span class="ka">ก</span> &nbsp; 5.<span class="ka">ข</span> &nbsp; 6.<span class="ka">ค</span> &nbsp; 7.<span class="ka">ค</span> &nbsp; 8.<span class="ka">ก</span> &nbsp; 9.<span class="ka">ก</span> &nbsp; 10.<span class="ka">ก</span><br>
+11.<span class="ka">ค</span> &nbsp; 12.<span class="ka">ข</span> &nbsp; 13.<span class="ka">ค</span> &nbsp; 14.<span class="ka">ก</span> &nbsp; 15.<span class="ka">ข</span> &nbsp; 16.<span class="ka">ข</span> &nbsp; 17.<span class="ka">ข</span> &nbsp; 18.<span class="ka">ข</span> &nbsp; 19.<span class="ka">ค</span> &nbsp; 20.<span class="ka">ข</span><br><br>
+<b>เฉลยอัตนัย:</b><br>
+<b>ข้อ 21 (4 คะแนน):</b><br>
+<div class="kstep">(1) −8+15+3 = <b>10</b></div>
+<div class="kstep">(2) 24÷(−8)+(−6) = −3−6 = <b>−9</b></div>
+<b>ข้อ 22 (3 คะแนน):</b><br>
+<div class="kstep">−8+15−9−5 = <b>−7°C</b></div>
+<b>ข้อ 23 (3 คะแนน):</b><br>
+<div class="kstep">(1) มุมป้าน (90° &lt; 130° &lt; 180°)</div>
+<div class="kstep">(2) 130°÷2 = 65°</div>
+<div class="kstep">(3) 180°−130° = 50°</div>
+</div>
+</div></div>
+<div id="m2" class="tab " style="--c:#0d47a1">
+<div class="sheet">
+<div class="hdr" style="background:#0d47a1"><h2>ค22101 คณิตศาสตร์พื้นฐาน 3</h2>
+<div class="sub">ม.2/1 &nbsp;|&nbsp; ปรนัย 10 + อัตนัย 10 = <b>20 คะแนน</b> &nbsp;|&nbsp; เวลา 50 นาที</div></div>
+<div class="stbar">
+<label>ชื่อ–สกุล <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+<label>เลขที่ <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+<label>คะแนนที่ได้ <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> /20</label></div>
+<div class="scinfo">ปรนัย 20 ข้อ &nbsp;|&nbsp; ถูก = +0.5 คะแนน &nbsp;|&nbsp; ผิด = −0.2 คะแนน &nbsp;|&nbsp; ไม่ตอบ = 0</div>
+<div class="sec" style="--c:#0d47a1">
+<div class="shead">ส่วนที่ 1 — ปรนัย <span>(20 ข้อ × 0.5 คะแนน = 10 คะแนน &nbsp; ผิดหัก 0.2)</span></div>
+<div class="qi"><div class="qt"><span class="qn">1.</span> (3x + 2) − (x − 5) มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;2x−3</label>
+<label>ข.&nbsp;2x+7</label>
+<label>ค.&nbsp;4x+7</label>
+<label>ง.&nbsp;4x−3</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">2.</span> 4(2x − 3) มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;8x−12</label>
+<label>ข.&nbsp;8x−3</label>
+<label>ค.&nbsp;8x+12</label>
+<label>ง.&nbsp;6x−7</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">3.</span> (3x + 1)(x − 2) มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;3x²+7x−2</label>
+<label>ข.&nbsp;3x²−5x−2</label>
+<label>ค.&nbsp;3x²+5x−2</label>
+<label>ง.&nbsp;3x²−7x−2</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">4.</span> แยกตัวประกอบ: 4x² + 8x ได้ผลลัพธ์ใด</div>
+<div class="chs">
+<label>ก.&nbsp;4(x²+2)</label>
+<label>ข.&nbsp;4x(x+2)</label>
+<label>ค.&nbsp;2x(2x+4)</label>
+<label>ง.&nbsp;x(4x+8)</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">5.</span> (x + 3)² มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;x²+9</label>
+<label>ข.&nbsp;x²+6x+9</label>
+<label>ค.&nbsp;x²+3x+9</label>
+<label>ง.&nbsp;x²+6x+6</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">6.</span> ถ้า x = 2 แล้ว 3x² − 2x + 1 มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;5</label>
+<label>ข.&nbsp;7</label>
+<label>ค.&nbsp;9</label>
+<label>ง.&nbsp;11</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">7.</span> ค่าของ 5a − 3b เมื่อ a = 2, b = −1 คือ</div>
+<div class="chs">
+<label>ก.&nbsp;7</label>
+<label>ข.&nbsp;13</label>
+<label>ค.&nbsp;−7</label>
+<label>ง.&nbsp;−13</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">8.</span> (x − 4)(x + 4) มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;x²−16</label>
+<label>ข.&nbsp;x²+16</label>
+<label>ค.&nbsp;x²−8x+16</label>
+<label>ง.&nbsp;x²+8x−16</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">9.</span> พจน์ใดเป็นพจน์คล้ายกับ 3x²y</div>
+<div class="chs">
+<label>ก.&nbsp;3xy²</label>
+<label>ข.&nbsp;2x²y</label>
+<label>ค.&nbsp;3xy</label>
+<label>ง.&nbsp;6x²</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">10.</span> (2x² − 3x) ÷ x มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;2x−3</label>
+<label>ข.&nbsp;2x²−3</label>
+<label>ค.&nbsp;2x+3</label>
+<label>ง.&nbsp;2x²+3</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">11.</span> อัตราส่วนใดต่อไปนี้เท่ากับ 4 : 6</div>
+<div class="chs">
+<label>ก.&nbsp;2:3</label>
+<label>ข.&nbsp;3:4</label>
+<label>ค.&nbsp;6:8</label>
+<label>ง.&nbsp;8:10</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">12.</span> ถ้า a:b = 3:4 และ a = 15 แล้ว b มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;12</label>
+<label>ข.&nbsp;16</label>
+<label>ค.&nbsp;20</label>
+<label>ง.&nbsp;24</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">13.</span> อัตราส่วนของ 500 g ต่อ 2 kg คือ</div>
+<div class="chs">
+<label>ก.&nbsp;1:2</label>
+<label>ข.&nbsp;1:4</label>
+<label>ค.&nbsp;2:5</label>
+<label>ง.&nbsp;5:2</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">14.</span> ถ้า x:5 = 12:20 แล้ว x มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;2</label>
+<label>ข.&nbsp;3</label>
+<label>ค.&nbsp;4</label>
+<label>ง.&nbsp;6</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">15.</span> ถ้า y แปรผันตรงกับ x และ y = 6 เมื่อ x = 2 แล้ว y = ? เมื่อ x = 5</div>
+<div class="chs">
+<label>ก.&nbsp;10</label>
+<label>ข.&nbsp;15</label>
+<label>ค.&nbsp;18</label>
+<label>ง.&nbsp;20</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">16.</span> 0.35 คิดเป็นร้อยละเท่าใด</div>
+<div class="chs">
+<label>ก.&nbsp;3.5%</label>
+<label>ข.&nbsp;35%</label>
+<label>ค.&nbsp;350%</label>
+<label>ง.&nbsp;0.35%</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">17.</span> 3/8 คิดเป็นร้อยละเท่าใด</div>
+<div class="chs">
+<label>ก.&nbsp;30%</label>
+<label>ข.&nbsp;35%</label>
+<label>ค.&nbsp;37.5%</label>
+<label>ง.&nbsp;38%</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">18.</span> นักเรียน 40 คน คิดเป็น 80% ของทั้งหมด จำนวนทั้งหมดคือ</div>
+<div class="chs">
+<label>ก.&nbsp;32 คน</label>
+<label>ข.&nbsp;48 คน</label>
+<label>ค.&nbsp;50 คน</label>
+<label>ง.&nbsp;56 คน</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">19.</span> ซื้อสินค้าราคาทุน 200 บาท ขายได้ 250 บาท กำไรคิดเป็นกี่เปอร์เซ็นต์</div>
+<div class="chs">
+<label>ก.&nbsp;20%</label>
+<label>ข.&nbsp;25%</label>
+<label>ค.&nbsp;50%</label>
+<label>ง.&nbsp;80%</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">20.</span> ราคาขาย 560 บาท บวกกำไร 40% ราคาทุนคือ</div>
+<div class="chs">
+<label>ก.&nbsp;224 บาท</label>
+<label>ข.&nbsp;336 บาท</label>
+<label>ค.&nbsp;400 บาท</label>
+<label>ง.&nbsp;784 บาท</label>
+</div></div>
+</div>
+<div class="sec" style="--c:#0d47a1">
+<div class="shead">ส่วนที่ 2 — อัตนัย <span>(แสดงวิธีทำ รวม 10 คะแนน)</span></div>
+<div class="sai"><div class="sq"><b>ข้อ 21 (2 คะแนน)</b><br>จงหาผลคูณและทำให้อยู่ในรูปอย่างง่าย: (3x − 2)(2x + 5)</div>
+<div class="ws" style="min-height:85px">วิธีทำ / คำตอบ</div></div>
+<div class="sai"><div class="sq"><b>ข้อ 22 (3 คะแนน)</b><br>ถ้า a : b = 4 : 7 และ a + b = 110 จงหาค่า a และ b</div>
+<div class="ws" style="min-height:90px">วิธีทำ / คำตอบ</div></div>
+<div class="sai"><div class="sq"><b>ข้อ 23 (2 คะแนน)</b><br>ร้านขายเสื้อลดราคา 25% เหลือราคา 450 บาท จงหาราคาเดิม</div>
+<div class="ws" style="min-height:80px">วิธีทำ / คำตอบ</div></div>
+<div class="sai"><div class="sq"><b>ข้อ 24 (3 คะแนน)</b><br>ฝากเงิน 20,000 บาท อัตราดอกเบี้ย 3.5% ต่อปี นาน 3 ปี<br>(1)&nbsp; จงหาดอกเบี้ยรวม <em>(1.5 คะแนน)</em><br>(2)&nbsp; จงหาเงินสุทธิเมื่อครบกำหนด <em>(1.5 คะแนน)</em></div>
+<div class="ws" style="min-height:100px">วิธีทำ / คำตอบ</div></div>
+</div>
+<button class="ktog" onclick="togkey(this)">▶ ดูเฉลย (สำหรับครู)</button>
+<div class="kbody">
+1.<span class="ka">ข</span> &nbsp; 2.<span class="ka">ก</span> &nbsp; 3.<span class="ka">ข</span> &nbsp; 4.<span class="ka">ข</span> &nbsp; 5.<span class="ka">ข</span> &nbsp; 6.<span class="ka">ค</span> &nbsp; 7.<span class="ka">ข</span> &nbsp; 8.<span class="ka">ก</span> &nbsp; 9.<span class="ka">ข</span> &nbsp; 10.<span class="ka">ก</span><br>
+11.<span class="ka">ก</span> &nbsp; 12.<span class="ka">ค</span> &nbsp; 13.<span class="ka">ข</span> &nbsp; 14.<span class="ka">ข</span> &nbsp; 15.<span class="ka">ข</span> &nbsp; 16.<span class="ka">ข</span> &nbsp; 17.<span class="ka">ก</span> &nbsp; 18.<span class="ka">ข</span> &nbsp; 19.<span class="ka">ข</span> &nbsp; 20.<span class="ka">ค</span><br><br>
+<b>เฉลยอัตนัย:</b><br>
+<b>ข้อ 21 (2 คะแนน):</b><br>
+<div class="kstep">(3x−2)(2x+5) = 6x²+15x−4x−10 = <b>6x²+11x−10</b></div>
+<b>ข้อ 22 (3 คะแนน):</b><br>
+<div class="kstep">a = 4k, b = 7k → 11k = 110 → k = 10</div>
+<div class="kstep"><b>a = 40, b = 70</b></div>
+<b>ข้อ 23 (2 คะแนน):</b><br>
+<div class="kstep">ราคาเดิม × 0.75 = 450 → ราคาเดิม = <b>600 บาท</b></div>
+<b>ข้อ 24 (3 คะแนน):</b><br>
+<div class="kstep">(1) ดอกเบี้ย = 20000×0.035×3 = <b>2,100 บาท</b></div>
+<div class="kstep">(2) เงินสุทธิ = 20000+2100 = <b>22,100 บาท</b></div>
+</div>
+</div></div>
+<div id="m4" class="tab " style="--c:#4a148c">
+<div class="sheet">
+<div class="hdr" style="background:#4a148c"><h2>ค31101 คณิตศาสตร์พื้นฐาน 1</h2>
+<div class="sub">ม.4 &nbsp;|&nbsp; ปรนัย 10 + อัตนัย 10 = <b>20 คะแนน</b> &nbsp;|&nbsp; เวลา 50 นาที</div></div>
+<div class="stbar">
+<label>ชื่อ–สกุล <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+<label>เลขที่ <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+<label>คะแนนที่ได้ <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> /20</label></div>
+<div class="scinfo">ปรนัย 20 ข้อ &nbsp;|&nbsp; ถูก = +0.5 คะแนน &nbsp;|&nbsp; ผิด = −0.2 คะแนน &nbsp;|&nbsp; ไม่ตอบ = 0</div>
+<div class="sec" style="--c:#4a148c">
+<div class="shead">ส่วนที่ 1 — ปรนัย <span>(20 ข้อ × 0.5 คะแนน = 10 คะแนน &nbsp; ผิดหัก 0.2)</span></div>
+<div class="qi"><div class="qt"><span class="qn">1.</span> เซตในทางคณิตศาสตร์หมายถึงสิ่งใด</div>
+<div class="chs">
+<label>ก.&nbsp;กลุ่มของจำนวน</label>
+<label>ข.&nbsp;กลุ่มของสิ่งต่างๆ ที่กำหนดชัดเจน</label>
+<label>ค.&nbsp;รายชื่อของสมาชิก</label>
+<label>ง.&nbsp;กลุ่มจำนวนนับ</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">2.</span> เซต {2, 4, 6} มีจำนวนสมาชิกกี่ตัว</div>
+<div class="chs">
+<label>ก.&nbsp;2</label>
+<label>ข.&nbsp;3</label>
+<label>ค.&nbsp;4</label>
+<label>ง.&nbsp;6</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">3.</span> 5 ∈ {1, 3, 5, 7} หมายความว่าอย่างไร</div>
+<div class="chs">
+<label>ก.&nbsp;5 เป็นเซตย่อย</label>
+<label>ข.&nbsp;5 เป็นสมาชิก</label>
+<label>ค.&nbsp;5 ไม่เป็นสมาชิก</label>
+<label>ง.&nbsp;5 เป็นเซตว่าง</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">4.</span> เซตว่างแทนด้วยสัญลักษณ์ใดต่อไปนี้</div>
+<div class="chs">
+<label>ก.&nbsp;{ }</label>
+<label>ข.&nbsp;∅</label>
+<label>ค.&nbsp;ทั้ง ก และ ข</label>
+<label>ง.&nbsp;0</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">5.</span> เซต A = {x | x เป็นจำนวนคู่, 0 &lt; x &lt; 10} คือเซตใด</div>
+<div class="chs">
+<label>ก.&nbsp;{0,2,4,6,8}</label>
+<label>ข.&nbsp;{2,4,6,8}</label>
+<label>ค.&nbsp;{1,3,5,7,9}</label>
+<label>ง.&nbsp;{2,4,6,8,10}</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">6.</span> เซตใดต่อไปนี้เป็นเซตอนันต์</div>
+<div class="chs">
+<label>ก.&nbsp;{1,2,...,100}</label>
+<label>ข.&nbsp;เซตของเดือนในปี</label>
+<label>ค.&nbsp;เซตของจำนวนเต็มบวก</label>
+<label>ง.&nbsp;เซตของจังหวัดในไทย</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">7.</span> เซตใดต่อไปนี้เป็นเซตว่าง</div>
+<div class="chs">
+<label>ก.&nbsp;เซตของจำนวนนับที่น้อยกว่า 1</label>
+<label>ข.&nbsp;เซตของจำนวนคู่ที่น้อยกว่า 4</label>
+<label>ค.&nbsp;เซตของวันในสัปดาห์</label>
+<label>ง.&nbsp;เซตของตัวอักษรภาษาไทย</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">8.</span> ถ้า A = B แล้วข้อใดถูกต้อง</div>
+<div class="chs">
+<label>ก.&nbsp;n(A)=n(B) และสมาชิกเหมือนกันทุกตัว</label>
+<label>ข.&nbsp;n(A)=n(B) เท่านั้น</label>
+<label>ค.&nbsp;A⊂B เท่านั้น</label>
+<label>ง.&nbsp;B⊂A เท่านั้น</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">9.</span> {1,2} ⊂ {1,2,3,4} หมายความว่าอย่างไร</div>
+<div class="chs">
+<label>ก.&nbsp;สมาชิกของ{1,2}ทุกตัวอยู่ใน{1,2,3,4}</label>
+<label>ข.&nbsp;{1,2} มีสมาชิกน้อยกว่า</label>
+<label>ค.&nbsp;{1,2,3,4}⊂{1,2}</label>
+<label>ง.&nbsp;{1,2}={1,2,3,4}</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">10.</span> ∅ ⊂ A สำหรับทุกเซต A ข้อนี้เป็นอย่างไร</div>
+<div class="chs">
+<label>ก.&nbsp;จริงเสมอ</label>
+<label>ข.&nbsp;เท็จเสมอ</label>
+<label>ค.&nbsp;จริงเมื่อ A≠∅</label>
+<label>ง.&nbsp;ขึ้นอยู่กับสมาชิกของ A</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">11.</span> ถ้า A = {a, b} แล้ว P(A) มีจำนวนสมาชิกกี่ตัว</div>
+<div class="chs">
+<label>ก.&nbsp;2</label>
+<label>ข.&nbsp;4</label>
+<label>ค.&nbsp;8</label>
+<label>ง.&nbsp;16</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">12.</span> ถ้า n(A) = 4 แล้ว n(P(A)) มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;4</label>
+<label>ข.&nbsp;8</label>
+<label>ค.&nbsp;16</label>
+<label>ง.&nbsp;32</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">13.</span> P({a}) มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;{{a}}</label>
+<label>ข.&nbsp;{∅,{a}}</label>
+<label>ค.&nbsp;{∅}</label>
+<label>ง.&nbsp;{{a},∅}</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">14.</span> ข้อใดต่อไปนี้ไม่ใช่สมาชิกของ P({1,2,3})</div>
+<div class="chs">
+<label>ก.&nbsp;∅</label>
+<label>ข.&nbsp;{1,2}</label>
+<label>ค.&nbsp;{4}</label>
+<label>ง.&nbsp;{1,2,3}</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">15.</span> ถ้า n(A) = 5 แล้ว n(P(A)) มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;10</label>
+<label>ข.&nbsp;25</label>
+<label>ค.&nbsp;32</label>
+<label>ง.&nbsp;64</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">16.</span> เซตย่อยของ {x,y} มีทั้งหมดกี่เซต</div>
+<div class="chs">
+<label>ก.&nbsp;2</label>
+<label>ข.&nbsp;3</label>
+<label>ค.&nbsp;4</label>
+<label>ง.&nbsp;8</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">17.</span> กำหนด A={1,2,3} B={2,3,4} แล้ว A∪B คือ</div>
+<div class="chs">
+<label>ก.&nbsp;{2,3}</label>
+<label>ข.&nbsp;{1,4}</label>
+<label>ค.&nbsp;{1,2,3,4}</label>
+<label>ง.&nbsp;{2,3,4}</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">18.</span> กำหนด A={1,2,3} B={2,3,4} แล้ว A∩B คือ</div>
+<div class="chs">
+<label>ก.&nbsp;{2,3}</label>
+<label>ข.&nbsp;{1,4}</label>
+<label>ค.&nbsp;{1,2,3,4}</label>
+<label>ง.&nbsp;{1,3}</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">19.</span> กำหนด A={1,2,3,4} B={3,4,5} แล้ว A−B คือ</div>
+<div class="chs">
+<label>ก.&nbsp;{1,2}</label>
+<label>ข.&nbsp;{3,4}</label>
+<label>ค.&nbsp;{5}</label>
+<label>ง.&nbsp;{1,2,5}</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">20.</span> กำหนด U={1,2,3,4,5,6} A={1,2,3} แล้ว A' คือ</div>
+<div class="chs">
+<label>ก.&nbsp;{4,5,6}</label>
+<label>ข.&nbsp;{1,2,3}</label>
+<label>ค.&nbsp;U</label>
+<label>ง.&nbsp;∅</label>
+</div></div>
+</div>
+<div class="sec" style="--c:#4a148c">
+<div class="shead">ส่วนที่ 2 — อัตนัย <span>(แสดงวิธีทำ รวม 10 คะแนน)</span></div>
+<div class="sai"><div class="sq"><b>ข้อ 21 (4 คะแนน)</b><br>กำหนด U={1,2,...,10}, A={2,4,6,8,10}, B={1,3,5,7,9}, C={2,3,5,7}<br>จงหา (1) A∩B &nbsp; (2) A∪C &nbsp; (3) A−C &nbsp; (4) (A∩C)'</div>
+<div class="ws" style="min-height:110px">วิธีทำ / คำตอบ</div></div>
+<div class="sai"><div class="sq"><b>ข้อ 22 (3 คะแนน)</b><br>กำหนด A={x,y,z}<br>(1)&nbsp; จงเขียน P(A) ทุกสมาชิก <em>(2 คะแนน)</em><br>(2)&nbsp; n(P(A)) มีค่าเท่ากับเท่าใด <em>(1 คะแนน)</em></div>
+<div class="ws" style="min-height:90px">วิธีทำ / คำตอบ</div></div>
+<div class="sai"><div class="sq"><b>ข้อ 23 (3 คะแนน)</b><br>ในชั้นเรียน 40 คน เรียนภาษาจีน 22 คน เรียนภาษาญี่ปุ่น 18 คน เรียนทั้งสอง 7 คน<br>จงหา (1) จำนวนที่เรียนอย่างน้อยหนึ่งภาษา &nbsp; (2) จำนวนที่ไม่เรียนทั้งสอง &nbsp; (3) จำนวนที่เรียนจีนอย่างเดียว</div>
+<div class="ws" style="min-height:100px">วิธีทำ / คำตอบ</div></div>
+</div>
+<button class="ktog" onclick="togkey(this)">▶ ดูเฉลย (สำหรับครู)</button>
+<div class="kbody">
+1.<span class="ka">ข</span> &nbsp; 2.<span class="ka">ข</span> &nbsp; 3.<span class="ka">ข</span> &nbsp; 4.<span class="ka">ค</span> &nbsp; 5.<span class="ka">ข</span> &nbsp; 6.<span class="ka">ค</span> &nbsp; 7.<span class="ka">ก</span> &nbsp; 8.<span class="ka">ก</span> &nbsp; 9.<span class="ka">ก</span> &nbsp; 10.<span class="ka">ก</span><br>
+11.<span class="ka">ข</span> &nbsp; 12.<span class="ka">ค</span> &nbsp; 13.<span class="ka">ข</span> &nbsp; 14.<span class="ka">ค</span> &nbsp; 15.<span class="ka">ค</span> &nbsp; 16.<span class="ka">ค</span> &nbsp; 17.<span class="ka">ค</span> &nbsp; 18.<span class="ka">ก</span> &nbsp; 19.<span class="ka">ก</span> &nbsp; 20.<span class="ka">ก</span><br><br>
+<b>เฉลยอัตนัย:</b><br>
+<b>ข้อ 21 (4 คะแนน):</b><br>
+<div class="kstep">(1) A∩B = ∅</div>
+<div class="kstep">(2) A∪C = {2,3,4,5,6,7,8,10}</div>
+<div class="kstep">(3) A−C = {4,6,8,10}</div>
+<div class="kstep">(4) A∩C = {2} → (A∩C)' = {1,3,4,5,6,7,8,9,10}</div>
+<b>ข้อ 22 (3 คะแนน):</b><br>
+<div class="kstep">(1) P(A) = {∅,{x},{y},{z},{x,y},{x,z},{y,z},{x,y,z}}</div>
+<div class="kstep">(2) n(P(A)) = 2³ = <b>8</b></div>
+<b>ข้อ 23 (3 คะแนน):</b><br>
+<div class="kstep">(1) n(C∪J) = 22+18−7 = <b>33 คน</b></div>
+<div class="kstep">(2) ไม่เรียน = 40−33 = <b>7 คน</b></div>
+<div class="kstep">(3) จีนอย่างเดียว = 22−7 = <b>15 คน</b></div>
+</div>
+</div></div>
+<div id="m5" class="tab " style="--c:#1a6b3c">
+<div class="sheet">
+<div class="hdr" style="background:#1a6b3c"><h2>ค32201 คณิตศาสตร์เพิ่มเติม 3</h2>
+<div class="sub">ม.5 &nbsp;|&nbsp; ปรนัย 10 + อัตนัย 10 = <b>20 คะแนน</b> &nbsp;|&nbsp; เวลา 50 นาที</div></div>
+<div class="stbar">
+<label>ชื่อ–สกุล <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+<label>เลขที่ <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+<label>คะแนนที่ได้ <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> /20</label></div>
+<div class="scinfo">ปรนัย 20 ข้อ &nbsp;|&nbsp; ถูก = +0.5 คะแนน &nbsp;|&nbsp; ผิด = −0.2 คะแนน &nbsp;|&nbsp; ไม่ตอบ = 0</div>
+<div class="sec" style="--c:#1a6b3c">
+<div class="shead">ส่วนที่ 1 — ปรนัย <span>(20 ข้อ × 0.5 คะแนน = 10 คะแนน &nbsp; ผิดหัก 0.2)</span></div>
+<div class="qi"><div class="qt"><span class="qn">1.</span> sin²θ + cos²θ มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;0</label>
+<label>ข.&nbsp;1</label>
+<label>ค.&nbsp;2</label>
+<label>ง.&nbsp;ขึ้นอยู่กับ θ</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">2.</span> tan θ มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;sin θ / cos θ</label>
+<label>ข.&nbsp;cos θ / sin θ</label>
+<label>ค.&nbsp;1 / sin θ</label>
+<label>ง.&nbsp;1 / cos θ</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">3.</span> sec θ มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;sin θ</label>
+<label>ข.&nbsp;1/sin θ</label>
+<label>ค.&nbsp;1/cos θ</label>
+<label>ง.&nbsp;cos θ</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">4.</span> ถ้า sin θ = 5/13 แล้ว cos²θ มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;25/169</label>
+<label>ข.&nbsp;119/169</label>
+<label>ค.&nbsp;144/169</label>
+<label>ง.&nbsp;168/169</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">5.</span> ถ้า cos θ = −3/5 และ θ อยู่ในจตุภาคที่ 3 แล้ว sin θ มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;4/5</label>
+<label>ข.&nbsp;−4/5</label>
+<label>ค.&nbsp;3/4</label>
+<label>ง.&nbsp;−3/4</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">6.</span> 1 + tan²θ มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;sec²θ</label>
+<label>ข.&nbsp;csc²θ</label>
+<label>ค.&nbsp;2sin²θ</label>
+<label>ง.&nbsp;2cos²θ</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">7.</span> cot²θ + 1 มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;sec²θ</label>
+<label>ข.&nbsp;csc²θ</label>
+<label>ค.&nbsp;tan²θ</label>
+<label>ง.&nbsp;sin²θ</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">8.</span> ถ้า tan θ = 2 แล้ว sec²θ มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;4</label>
+<label>ข.&nbsp;5</label>
+<label>ค.&nbsp;3</label>
+<label>ง.&nbsp;2</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">9.</span> สมการ sin x = 0 ในช่วง [0, 2π] มีคำตอบกี่ค่า</div>
+<div class="chs">
+<label>ก.&nbsp;1</label>
+<label>ข.&nbsp;2</label>
+<label>ค.&nbsp;3</label>
+<label>ง.&nbsp;4</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">10.</span> สมการ cos x = 1 ในช่วง [0, 2π] มีคำตอบคือ</div>
+<div class="chs">
+<label>ก.&nbsp;x = 0</label>
+<label>ข.&nbsp;x = π/2</label>
+<label>ค.&nbsp;x = π</label>
+<label>ง.&nbsp;x = 3π/2</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">11.</span> สมการ sin x = √3/2 ในช่วง [0, 2π] มีคำตอบคือ</div>
+<div class="chs">
+<label>ก.&nbsp;π/3 เท่านั้น</label>
+<label>ข.&nbsp;π/3 และ 2π/3</label>
+<label>ค.&nbsp;2π/3 และ 4π/3</label>
+<label>ง.&nbsp;π/6 และ 5π/6</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">12.</span> สมการ tan x = −1 ในช่วง [0, 2π] มีคำตอบคือ</div>
+<div class="chs">
+<label>ก.&nbsp;3π/4 เท่านั้น</label>
+<label>ข.&nbsp;7π/4 เท่านั้น</label>
+<label>ค.&nbsp;3π/4 และ 7π/4</label>
+<label>ง.&nbsp;π/4 และ 5π/4</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">13.</span> สมการ 2sin x = 1 ในช่วง [0, 2π] มีคำตอบคือ</div>
+<div class="chs">
+<label>ก.&nbsp;π/6 และ 5π/6</label>
+<label>ข.&nbsp;π/3 และ 2π/3</label>
+<label>ค.&nbsp;π/6 เท่านั้น</label>
+<label>ง.&nbsp;π/4 และ 3π/4</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">14.</span> สมการ cos x = −1/2 ในช่วง [0, 2π] มีคำตอบคือ</div>
+<div class="chs">
+<label>ก.&nbsp;π/3 และ 5π/3</label>
+<label>ข.&nbsp;2π/3 และ 4π/3</label>
+<label>ค.&nbsp;π/6 และ 5π/6</label>
+<label>ง.&nbsp;2π/3 เท่านั้น</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">15.</span> สมการ sin²x = 1 ในช่วง [0, 2π] มีคำตอบคือ</div>
+<div class="chs">
+<label>ก.&nbsp;π/2 เท่านั้น</label>
+<label>ข.&nbsp;π/2 และ 3π/2</label>
+<label>ค.&nbsp;0 และ π</label>
+<label>ง.&nbsp;ไม่มีคำตอบ</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">16.</span> สมการ 2cos²x − cos x = 0 ในช่วง [0, 2π] มีคำตอบกี่ค่า</div>
+<div class="chs">
+<label>ก.&nbsp;2</label>
+<label>ข.&nbsp;3</label>
+<label>ค.&nbsp;4</label>
+<label>ง.&nbsp;5</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">17.</span> กฎโคไซน์: a² = ?</div>
+<div class="chs">
+<label>ก.&nbsp;b²+c²+2bc·cosA</label>
+<label>ข.&nbsp;b²+c²−2bc·cosA</label>
+<label>ค.&nbsp;b²−c²+2bc·cosA</label>
+<label>ง.&nbsp;c²−b²+2bc·cosA</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">18.</span> สามเหลี่ยม ABC มี b=5, c=5, A=60° แล้ว a มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;5</label>
+<label>ข.&nbsp;5√2</label>
+<label>ค.&nbsp;5√3</label>
+<label>ง.&nbsp;10</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">19.</span> สามเหลี่ยมมี a=3, b=4, c=5 แล้ว cosC มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;0</label>
+<label>ข.&nbsp;1/2</label>
+<label>ค.&nbsp;−1/2</label>
+<label>ง.&nbsp;1</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">20.</span> ถ้า cosA < 0 แสดงว่ามุม A เป็นมุมชนิดใด</div>
+<div class="chs">
+<label>ก.&nbsp;มุมแหลม</label>
+<label>ข.&nbsp;มุมฉาก</label>
+<label>ค.&nbsp;มุมป้าน</label>
+<label>ง.&nbsp;มุมตรง</label>
+</div></div>
+</div>
+<div class="sec" style="--c:#1a6b3c">
+<div class="shead">ส่วนที่ 2 — อัตนัย <span>(แสดงวิธีทำ รวม 10 คะแนน)</span></div>
+<div class="sai"><div class="sq"><b>ข้อ 21 (3 คะแนน)</b><br>จงหาคำตอบทั้งหมดของสมการ sin²x + sin x − 2 = 0 เมื่อ x ∈ [0, 2π]</div>
+<div class="ws" style="min-height:90px">วิธีทำ / คำตอบ</div></div>
+<div class="sai"><div class="sq"><b>ข้อ 22 (3 คะแนน)</b><br>สามเหลี่ยม ABC มี b = 6 cm, c = 8 cm, A = 60°  จงหาความยาวด้าน a โดยใช้กฎโคไซน์</div>
+<div class="ws" style="min-height:90px">วิธีทำ / คำตอบ</div></div>
+<div class="sai"><div class="sq"><b>ข้อ 23 (4 คะแนน)</b><br>สามเหลี่ยม ABC มี A = 30°, B = 90°, a = 5 cm<br>(1)&nbsp; จงหา C <em>(1 คะแนน)</em><br>(2)&nbsp; จงหา b โดยใช้กฎไซน์ <em>(2 คะแนน)</em><br>(3)&nbsp; จงหาพื้นที่รูปสามเหลี่ยม <em>(1 คะแนน)</em></div>
+<div class="ws" style="min-height:110px">วิธีทำ / คำตอบ</div></div>
+</div>
+<button class="ktog" onclick="togkey(this)">▶ ดูเฉลย (สำหรับครู)</button>
+<div class="kbody">
+1.<span class="ka">ข</span> &nbsp; 2.<span class="ka">ก</span> &nbsp; 3.<span class="ka">ค</span> &nbsp; 4.<span class="ka">ค</span> &nbsp; 5.<span class="ka">ข</span> &nbsp; 6.<span class="ka">ก</span> &nbsp; 7.<span class="ka">ข</span> &nbsp; 8.<span class="ka">ข</span> &nbsp; 9.<span class="ka">ค</span> &nbsp; 10.<span class="ka">ก</span><br>
+11.<span class="ka">ข</span> &nbsp; 12.<span class="ka">ค</span> &nbsp; 13.<span class="ka">ก</span> &nbsp; 14.<span class="ka">ข</span> &nbsp; 15.<span class="ka">ข</span> &nbsp; 16.<span class="ka">ค</span> &nbsp; 17.<span class="ka">ข</span> &nbsp; 18.<span class="ka">ก</span> &nbsp; 19.<span class="ka">ก</span> &nbsp; 20.<span class="ka">ค</span><br><br>
+<b>เฉลยอัตนัย:</b><br>
+<b>ข้อ 21 (3 คะแนน):</b><br>
+<div class="kstep">แทน u = sinx: u²+u−2=0 → (u+2)(u−1)=0</div>
+<div class="kstep">u = −2 (ตัดทิ้ง เพราะ |sinx|≤1) หรือ u = 1</div>
+<div class="kstep">sinx = 1 → <b>x = π/2</b></div>
+<b>ข้อ 22 (3 คะแนน):</b><br>
+<div class="kstep">a² = 6²+8²−2(6)(8)cos60°</div>
+<div class="kstep">a² = 36+64−96(0.5) = 100−48 = 52</div>
+<div class="kstep"><b>a = 2√13 ≈ 7.21 cm</b></div>
+<b>ข้อ 23 (4 คะแนน):</b><br>
+<div class="kstep">(1) C = 180°−30°−90° = <b>60°</b></div>
+<div class="kstep">(2) b/sin90° = 5/sin30° → b = 5/(0.5) = <b>10 cm</b></div>
+<div class="kstep">(3) c = √(b²−a²) = √75 = 5√3; พื้นที่ = ½×5×5√3 = <b>25√3/2 ≈ 21.65 cm²</b></div>
+</div>
+</div></div>
+<div id="m6a" class="tab " style="--c:#7b3f00">
+<div class="sheet">
+<div class="hdr" style="background:#7b3f00"><h2>ค33101 คณิตศาสตร์พื้นฐาน 5</h2>
+<div class="sub">ม.6 &nbsp;|&nbsp; ปรนัย 10 + อัตนัย 10 = <b>20 คะแนน</b> &nbsp;|&nbsp; เวลา 50 นาที</div></div>
+<div class="stbar">
+<label>ชื่อ–สกุล <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+<label>เลขที่ <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+<label>คะแนนที่ได้ <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> /20</label></div>
+<div class="scinfo">ปรนัย 20 ข้อ &nbsp;|&nbsp; ถูก = +0.5 คะแนน &nbsp;|&nbsp; ผิด = −0.2 คะแนน &nbsp;|&nbsp; ไม่ตอบ = 0</div>
+<div class="sec" style="--c:#7b3f00">
+<div class="shead">ส่วนที่ 1 — ปรนัย <span>(20 ข้อ × 0.5 คะแนน = 10 คะแนน &nbsp; ผิดหัก 0.2)</span></div>
+<div class="qi"><div class="qt"><span class="qn">1.</span> ค่าเฉลี่ยเลขคณิตของ 2, 4, 6, 8, 10 คือ</div>
+<div class="chs">
+<label>ก.&nbsp;4</label>
+<label>ข.&nbsp;5</label>
+<label>ค.&nbsp;6</label>
+<label>ง.&nbsp;8</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">2.</span> ค่าเฉลี่ยของ x, x+2, x+4 คือ</div>
+<div class="chs">
+<label>ก.&nbsp;x</label>
+<label>ข.&nbsp;x+1</label>
+<label>ค.&nbsp;x+2</label>
+<label>ง.&nbsp;x+4</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">3.</span> ข้อมูล 5 ตัว มีค่าเฉลี่ย 12 ผลรวมทั้งหมดคือ</div>
+<div class="chs">
+<label>ก.&nbsp;12</label>
+<label>ข.&nbsp;17</label>
+<label>ค.&nbsp;60</label>
+<label>ง.&nbsp;120</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">4.</span> มัธยฐานของ 3, 7, 2, 9, 5 คือ</div>
+<div class="chs">
+<label>ก.&nbsp;3</label>
+<label>ข.&nbsp;5</label>
+<label>ค.&nbsp;7</label>
+<label>ง.&nbsp;9</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">5.</span> มัธยฐานของ 2, 4, 6, 8 คือ</div>
+<div class="chs">
+<label>ก.&nbsp;4</label>
+<label>ข.&nbsp;5</label>
+<label>ค.&nbsp;6</label>
+<label>ง.&nbsp;8</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">6.</span> ข้อมูล 4, 5, 5, 7, 8, 5, 3 ฐานนิยมคือ</div>
+<div class="chs">
+<label>ก.&nbsp;4</label>
+<label>ข.&nbsp;5</label>
+<label>ค.&nbsp;6</label>
+<label>ง.&nbsp;7</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">7.</span> ถ้าข้อมูลมีฐานนิยมสองค่า เรียกว่า</div>
+<div class="chs">
+<label>ก.&nbsp;เอกฐาน</label>
+<label>ข.&nbsp;ทวิฐาน</label>
+<label>ค.&nbsp;พหุฐาน</label>
+<label>ง.&nbsp;ไม่มีฐานนิยม</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">8.</span> ค่ากลางแบบใดที่เหมาะกับข้อมูลที่มีค่าสุดโต่ง (Outlier) มากที่สุด</div>
+<div class="chs">
+<label>ก.&nbsp;ค่าเฉลี่ย</label>
+<label>ข.&nbsp;มัธยฐาน</label>
+<label>ค.&nbsp;ฐานนิยม</label>
+<label>ง.&nbsp;ไม่มีค่ากลางที่เหมาะ</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">9.</span> นักเรียน 4 คน ได้คะแนน 70, 80, 90 และ x ถ้าค่าเฉลี่ย = 85 แล้ว x คือ</div>
+<div class="chs">
+<label>ก.&nbsp;85</label>
+<label>ข.&nbsp;90</label>
+<label>ค.&nbsp;95</label>
+<label>ง.&nbsp;100</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">10.</span> ข้อมูล 3, 5, 7 ถ้าเพิ่มทุกค่าด้วย 2 ค่าเฉลี่ยใหม่คือ</div>
+<div class="chs">
+<label>ก.&nbsp;5</label>
+<label>ข.&nbsp;7</label>
+<label>ค.&nbsp;9</label>
+<label>ง.&nbsp;15</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">11.</span> ส่วนเบี่ยงเบนมาตรฐาน (S.D.) วัดสิ่งใด</div>
+<div class="chs">
+<label>ก.&nbsp;ค่ากลาง</label>
+<label>ข.&nbsp;การกระจายของข้อมูล</label>
+<label>ค.&nbsp;ค่าสูงสุด-ต่ำสุด</label>
+<label>ง.&nbsp;ความถี่</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">12.</span> ถ้า S.D. = 0 แสดงว่า</div>
+<div class="chs">
+<label>ก.&nbsp;ไม่มีข้อมูล</label>
+<label>ข.&nbsp;ข้อมูลทุกตัวเท่ากัน</label>
+<label>ค.&nbsp;ข้อมูลกระจายมาก</label>
+<label>ง.&nbsp;ค่าเฉลี่ยเป็น 0</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">13.</span> ข้อมูล 4, 4, 4, 4 S.D. มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;0</label>
+<label>ข.&nbsp;4</label>
+<label>ค.&nbsp;1</label>
+<label>ง.&nbsp;16</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">14.</span> ข้อมูล 1, 2, 3, 4, 5 มีค่าเฉลี่ย = 3 ค่า Σ(xi−μ)² คือ</div>
+<div class="chs">
+<label>ก.&nbsp;5</label>
+<label>ข.&nbsp;10</label>
+<label>ค.&nbsp;15</label>
+<label>ง.&nbsp;25</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">15.</span> จากข้อ 14 ค่า S.D. มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;√2</label>
+<label>ข.&nbsp;2</label>
+<label>ค.&nbsp;√5</label>
+<label>ง.&nbsp;5</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">16.</span> ถ้าข้อมูลทุกตัวเพิ่มขึ้น 5 หน่วย S.D. จะ</div>
+<div class="chs">
+<label>ก.&nbsp;เพิ่มขึ้น 5</label>
+<label>ข.&nbsp;ลดลง 5</label>
+<label>ค.&nbsp;คงเดิม</label>
+<label>ง.&nbsp;เป็น 0</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">17.</span> ถ้าข้อมูลทุกตัวคูณด้วย 2 S.D. ใหม่ = S.D. เดิม ×</div>
+<div class="chs">
+<label>ก.&nbsp;1</label>
+<label>ข.&nbsp;2</label>
+<label>ค.&nbsp;4</label>
+<label>ง.&nbsp;1/2</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">18.</span> ประชากรในทางสถิติหมายถึง</div>
+<div class="chs">
+<label>ก.&nbsp;จำนวนประชาชนในประเทศ</label>
+<label>ข.&nbsp;ข้อมูลทั้งหมดที่ต้องการศึกษา</label>
+<label>ค.&nbsp;ตัวอย่างที่นำมาวิเคราะห์</label>
+<label>ง.&nbsp;ผลการสำรวจ</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">19.</span> การเก็บข้อมูลจากกลุ่มตัวอย่างแทนประชากรทั้งหมดเรียกว่า</div>
+<div class="chs">
+<label>ก.&nbsp;การสำรวจทั้งหมด</label>
+<label>ข.&nbsp;การสุ่มตัวอย่าง</label>
+<label>ค.&nbsp;การสังเกต</label>
+<label>ง.&nbsp;การทดลอง</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">20.</span> การสุ่มแบบง่ายคือ</div>
+<div class="chs">
+<label>ก.&nbsp;ให้ทุกหน่วยมีโอกาสถูกเลือกเท่ากัน</label>
+<label>ข.&nbsp;แบ่งกลุ่มแล้วสุ่ม</label>
+<label>ค.&nbsp;สุ่มตามความสะดวก</label>
+<label>ง.&nbsp;เลือกตามดุลยพินิจ</label>
+</div></div>
+</div>
+<div class="sec" style="--c:#7b3f00">
+<div class="shead">ส่วนที่ 2 — อัตนัย <span>(แสดงวิธีทำ รวม 10 คะแนน)</span></div>
+<div class="sai"><div class="sq"><b>ข้อ 21 (4 คะแนน)</b><br>คะแนนสอบของนักเรียน 8 คน: 65, 75, 80, 70, 85, 90, 75, 80<br>จงหา (1) ค่าเฉลี่ย <em>(1.5 คะแนน)</em>  (2) มัธยฐาน <em>(1.5 คะแนน)</em>  (3) ฐานนิยม <em>(1 คะแนน)</em></div>
+<div class="ws" style="min-height:110px">วิธีทำ / คำตอบ</div></div>
+<div class="sai"><div class="sq"><b>ข้อ 22 (4 คะแนน)</b><br>ข้อมูลชุดหนึ่ง: 4, 6, 8, 10, 12<br>จงหา (1) ค่าเฉลี่ย μ <em>(1 คะแนน)</em><br>(2) ส่วนเบี่ยงเบนมาตรฐาน σ แสดงขั้นตอนให้ครบ <em>(3 คะแนน)</em></div>
+<div class="ws" style="min-height:110px">วิธีทำ / คำตอบ</div></div>
+<div class="sai"><div class="sq"><b>ข้อ 23 (2 คะแนน)</b><br>โรงเรียนมีนักเรียน 800 คน สุ่มตัวอย่าง 80 คน พบ 20 คนใส่แว่นตา จงประมาณจำนวนนักเรียนที่ใส่แว่นตาทั้งโรงเรียน</div>
+<div class="ws" style="min-height:80px">วิธีทำ / คำตอบ</div></div>
+</div>
+<button class="ktog" onclick="togkey(this)">▶ ดูเฉลย (สำหรับครู)</button>
+<div class="kbody">
+1.<span class="ka">ค</span> &nbsp; 2.<span class="ka">ค</span> &nbsp; 3.<span class="ka">ค</span> &nbsp; 4.<span class="ka">ข</span> &nbsp; 5.<span class="ka">ข</span> &nbsp; 6.<span class="ka">ข</span> &nbsp; 7.<span class="ka">ข</span> &nbsp; 8.<span class="ka">ข</span> &nbsp; 9.<span class="ka">ง</span> &nbsp; 10.<span class="ka">ข</span><br>
+11.<span class="ka">ข</span> &nbsp; 12.<span class="ka">ข</span> &nbsp; 13.<span class="ka">ก</span> &nbsp; 14.<span class="ka">ข</span> &nbsp; 15.<span class="ka">ก</span> &nbsp; 16.<span class="ka">ค</span> &nbsp; 17.<span class="ka">ข</span> &nbsp; 18.<span class="ka">ข</span> &nbsp; 19.<span class="ka">ข</span> &nbsp; 20.<span class="ka">ก</span><br><br>
+<b>เฉลยอัตนัย:</b><br>
+<b>ข้อ 21 (4 คะแนน):</b><br>
+<div class="kstep">(1) ค่าเฉลี่ย = (65+70+75+75+80+80+85+90)/8 = 620/8 = <b>77.5</b></div>
+<div class="kstep">(2) เรียง: 65,70,75,75,80,80,85,90 → มัธยฐาน = (75+80)/2 = <b>77.5</b></div>
+<div class="kstep">(3) ฐานนิยม = <b>75 และ 80</b> (ทวิฐาน)</div>
+<b>ข้อ 22 (4 คะแนน):</b><br>
+<div class="kstep">(1) μ = (4+6+8+10+12)/5 = 40/5 = <b>8</b></div>
+<div class="kstep">(2) Σ(xi−μ)² = (−4)²+(−2)²+0²+2²+4² = 16+4+0+4+16 = 40</div>
+<div class="kstep">Var = 40/5 = 8 &nbsp;→&nbsp; <b>σ = √8 = 2√2 ≈ 2.83</b></div>
+<b>ข้อ 23 (2 คะแนน):</b><br>
+<div class="kstep">อัตราส่วน = 20/80 = 1/4</div>
+<div class="kstep">ประมาณ = 800 × (1/4) = <b>200 คน</b></div>
+</div>
+</div></div>
+<div id="m6b" class="tab " style="--c:#7b3f00">
+<div class="sheet">
+<div class="hdr" style="background:#7b3f00"><h2>ค33201 คณิตศาสตร์เพิ่มเติม 5</h2>
+<div class="sub">ม.6 &nbsp;|&nbsp; ปรนัย 10 + อัตนัย 10 = <b>20 คะแนน</b> &nbsp;|&nbsp; เวลา 50 นาที</div></div>
+<div class="stbar">
+<label>ชื่อ–สกุล <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+<label>เลขที่ <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+<label>คะแนนที่ได้ <span class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> /20</label></div>
+<div class="scinfo">ปรนัย 20 ข้อ &nbsp;|&nbsp; ถูก = +0.5 คะแนน &nbsp;|&nbsp; ผิด = −0.2 คะแนน &nbsp;|&nbsp; ไม่ตอบ = 0</div>
+<div class="sec" style="--c:#7b3f00">
+<div class="shead">ส่วนที่ 1 — ปรนัย <span>(20 ข้อ × 0.5 คะแนน = 10 คะแนน &nbsp; ผิดหัก 0.2)</span></div>
+<div class="qi"><div class="qt"><span class="qn">1.</span> ลำดับเลขคณิต a₁=2, d=3 พจน์ที่ 5 คือ</div>
+<div class="chs">
+<label>ก.&nbsp;14</label>
+<label>ข.&nbsp;15</label>
+<label>ค.&nbsp;17</label>
+<label>ง.&nbsp;20</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">2.</span> ลำดับ 5, 8, 11, 14, ... ผลต่างร่วม d คือ</div>
+<div class="chs">
+<label>ก.&nbsp;2</label>
+<label>ข.&nbsp;3</label>
+<label>ค.&nbsp;4</label>
+<label>ง.&nbsp;5</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">3.</span> ลำดับเลขคณิต a₁=10, d=−3 พจน์ที่ 6 คือ</div>
+<div class="chs">
+<label>ก.&nbsp;−5</label>
+<label>ข.&nbsp;0</label>
+<label>ค.&nbsp;−15</label>
+<label>ง.&nbsp;25</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">4.</span> ลำดับ 3, 9, 27, 81, ... เป็นลำดับชนิดใด</div>
+<div class="chs">
+<label>ก.&nbsp;เลขคณิต r=3</label>
+<label>ข.&nbsp;เรขาคณิต r=3</label>
+<label>ค.&nbsp;เลขคณิต d=3</label>
+<label>ง.&nbsp;ไม่ใช่ลำดับมาตรฐาน</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">5.</span> ลำดับเรขาคณิต a₁=2, r=3 พจน์ที่ 4 คือ</div>
+<div class="chs">
+<label>ก.&nbsp;18</label>
+<label>ข.&nbsp;54</label>
+<label>ค.&nbsp;162</label>
+<label>ง.&nbsp;486</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">6.</span> ลำดับ 64, 32, 16, 8, ... อัตราส่วนร่วม r คือ</div>
+<div class="chs">
+<label>ก.&nbsp;−1/2</label>
+<label>ข.&nbsp;1/2</label>
+<label>ค.&nbsp;2</label>
+<label>ง.&nbsp;32</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">7.</span> ลำดับเลขคณิตมี a₃=7 และ a₇=19 แล้ว d คือ</div>
+<div class="chs">
+<label>ก.&nbsp;2</label>
+<label>ข.&nbsp;3</label>
+<label>ค.&nbsp;4</label>
+<label>ง.&nbsp;6</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">8.</span> ลำดับเลขคณิตมี a₁=5, a₁₀=32 แล้ว d คือ</div>
+<div class="chs">
+<label>ก.&nbsp;3</label>
+<label>ข.&nbsp;4</label>
+<label>ค.&nbsp;5</label>
+<label>ง.&nbsp;6</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">9.</span> ลำดับเรขาคณิตมี a₁=3, a₄=24 แล้ว r คือ</div>
+<div class="chs">
+<label>ก.&nbsp;2</label>
+<label>ข.&nbsp;3</label>
+<label>ค.&nbsp;4</label>
+<label>ง.&nbsp;8</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">10.</span> พจน์ทั่วไปของลำดับ 2, 4, 6, 8, ... คือ</div>
+<div class="chs">
+<label>ก.&nbsp;n+1</label>
+<label>ข.&nbsp;2n</label>
+<label>ค.&nbsp;n²</label>
+<label>ง.&nbsp;2n+1</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">11.</span> สัญลักษณ์ Σ (ซิกมา) หมายถึง</div>
+<div class="chs">
+<label>ก.&nbsp;ผลต่าง</label>
+<label>ข.&nbsp;ผลรวม</label>
+<label>ค.&nbsp;ผลคูณ</label>
+<label>ง.&nbsp;ผลหาร</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">12.</span> อนุกรมเลขคณิต a₁=1, d=2 ผลรวม 5 พจน์แรก S₅ คือ</div>
+<div class="chs">
+<label>ก.&nbsp;5</label>
+<label>ข.&nbsp;10</label>
+<label>ค.&nbsp;25</label>
+<label>ง.&nbsp;30</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">13.</span> Sₙ = n/2 × (a₁ + aₙ) ใช้กับอนุกรมชนิดใด</div>
+<div class="chs">
+<label>ก.&nbsp;เรขาคณิต</label>
+<label>ข.&nbsp;เลขคณิต</label>
+<label>ค.&nbsp;อนันต์</label>
+<label>ง.&nbsp;ทุกชนิด</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">14.</span> 1+2+3+...+100 มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;5,000</label>
+<label>ข.&nbsp;5,050</label>
+<label>ค.&nbsp;10,000</label>
+<label>ง.&nbsp;10,100</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">15.</span> อนุกรมเรขาคณิต a₁=3, r=2 ผลรวม 4 พจน์แรก คือ</div>
+<div class="chs">
+<label>ก.&nbsp;15</label>
+<label>ข.&nbsp;24</label>
+<label>ค.&nbsp;45</label>
+<label>ง.&nbsp;48</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">16.</span> อนุกรมอนันต์ลู่เข้าได้เมื่อ</div>
+<div class="chs">
+<label>ก.&nbsp;|r|<1</label>
+<label>ข.&nbsp;|r|>1</label>
+<label>ค.&nbsp;r=1</label>
+<label>ง.&nbsp;r>0</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">17.</span> อนุกรม 1 + 1/3 + 1/9 + ... ผลรวมอนันต์คือ</div>
+<div class="chs">
+<label>ก.&nbsp;2/3</label>
+<label>ข.&nbsp;3/2</label>
+<label>ค.&nbsp;1</label>
+<label>ง.&nbsp;ไม่มีขีดจำกัด</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">18.</span> อนุกรม 0.5 + 0.25 + 0.125 + ... ผลรวมอนันต์คือ</div>
+<div class="chs">
+<label>ก.&nbsp;0.5</label>
+<label>ข.&nbsp;1</label>
+<label>ค.&nbsp;1.5</label>
+<label>ง.&nbsp;2</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">19.</span> lim(x→3) 5 มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;0</label>
+<label>ข.&nbsp;3</label>
+<label>ค.&nbsp;5</label>
+<label>ง.&nbsp;∞</label>
+</div></div>
+<div class="qi"><div class="qt"><span class="qn">20.</span> lim(x→2) x³ มีค่าเท่ากับ</div>
+<div class="chs">
+<label>ก.&nbsp;2</label>
+<label>ข.&nbsp;4</label>
+<label>ค.&nbsp;6</label>
+<label>ง.&nbsp;8</label>
+</div></div>
+</div>
+<div class="sec" style="--c:#7b3f00">
+<div class="shead">ส่วนที่ 2 — อัตนัย <span>(แสดงวิธีทำ รวม 10 คะแนน)</span></div>
+<div class="sai"><div class="sq"><b>ข้อ 21 (4 คะแนน)</b><br>ลำดับเรขาคณิตมีพจน์ที่ 1 เป็น 2 และพจน์ที่ 4 เป็น 54<br>(1)&nbsp; จงหาอัตราส่วนร่วม r <em>(2 คะแนน)</em><br>(2)&nbsp; จงหาพจน์ที่ 6 <em>(1 คะแนน)</em><br>(3)&nbsp; aₙ = 1458 เมื่อ n เท่ากับเท่าใด <em>(1 คะแนน)</em></div>
+<div class="ws" style="min-height:110px">วิธีทำ / คำตอบ</div></div>
+<div class="sai"><div class="sq"><b>ข้อ 22 (3 คะแนน)</b><br>อนุกรมเลขคณิตมีพจน์แรก a₁ = 3 และผลต่างร่วม d = 2<br>(1)&nbsp; จงหาผลรวม 10 พจน์แรก S₁₀ <em>(2 คะแนน)</em><br>(2)&nbsp; ถ้า Sₙ = 35 จงหา n <em>(1 คะแนน)</em></div>
+<div class="ws" style="min-height:95px">วิธีทำ / คำตอบ</div></div>
+<div class="sai"><div class="sq"><b>ข้อ 23 (3 คะแนน)</b><br>จงหาค่าลิมิตต่อไปนี้<br>(1)&nbsp; lim(x→2) (x²+3x−10)/(x−2)&nbsp;&nbsp;<em>(2 คะแนน)</em><br>(2)&nbsp; lim(x→∞) (2x²+x)/(x²+3)&nbsp;&nbsp;<em>(1 คะแนน)</em></div>
+<div class="ws" style="min-height:95px">วิธีทำ / คำตอบ</div></div>
+</div>
+<button class="ktog" onclick="togkey(this)">▶ ดูเฉลย (สำหรับครู)</button>
+<div class="kbody">
+1.<span class="ka">ก</span> &nbsp; 2.<span class="ka">ข</span> &nbsp; 3.<span class="ka">ก</span> &nbsp; 4.<span class="ka">ข</span> &nbsp; 5.<span class="ka">ข</span> &nbsp; 6.<span class="ka">ข</span> &nbsp; 7.<span class="ka">ข</span> &nbsp; 8.<span class="ka">ก</span> &nbsp; 9.<span class="ka">ก</span> &nbsp; 10.<span class="ka">ข</span><br>
+11.<span class="ka">ข</span> &nbsp; 12.<span class="ka">ค</span> &nbsp; 13.<span class="ka">ข</span> &nbsp; 14.<span class="ka">ข</span> &nbsp; 15.<span class="ka">ค</span> &nbsp; 16.<span class="ka">ก</span> &nbsp; 17.<span class="ka">ข</span> &nbsp; 18.<span class="ka">ข</span> &nbsp; 19.<span class="ka">ค</span> &nbsp; 20.<span class="ka">ง</span><br><br>
+<b>เฉลยอัตนัย:</b><br>
+<b>ข้อ 21 (4 คะแนน):</b><br>
+<div class="kstep">(1) 2r³ = 54 → r³ = 27 → <b>r = 3</b></div>
+<div class="kstep">(2) a₆ = 2×3⁵ = 2×243 = <b>486</b></div>
+<div class="kstep">(3) 2×3^(n−1) = 1458 → 3^(n−1) = 729 = 3⁶ → <b>n = 7</b></div>
+<b>ข้อ 22 (3 คะแนน):</b><br>
+<div class="kstep">(1) S₁₀ = 10/2×(2×3+(10−1)×2) = 5×(6+18) = 5×24 = <b>120</b></div>
+<div class="kstep">(2) n/2×(2×3+(n−1)×2) = 35 → n(n+2) = 35 → n²+2n−35=0</div>
+<div class="kstep">(n+7)(n−5)=0 → <b>n = 5</b></div>
+<b>ข้อ 23 (3 คะแนน):</b><br>
+<div class="kstep">(1) (x²+3x−10)/(x−2) = (x+5)(x−2)/(x−2) = x+5</div>
+<div class="kstep">lim = 2+5 = <b>7</b></div>
+<div class="kstep">(2) หารทั้งบนล่างด้วย x²: (2+1/x)/(1+3/x²) → <b>2</b></div>
+</div>
+</div></div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+function togkey(btn){
+  var kb=btn.nextElementSibling;
+  kb.classList.toggle('open');
+  btn.textContent=kb.classList.contains('open')?'▼ ซ่อนเฉลย':'▶ ดูเฉลย (สำหรับครู)';
+}
+</script>
+</body></html>
