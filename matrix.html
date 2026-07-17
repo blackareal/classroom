@@ -198,10 +198,12 @@ makeQ() {
   const Q = [];
 
   // Q1: ขนาดเมทริกซ์
-  const m1=ri(2,3), n1=ri(2,3);
+  const m1=ri(2,4), n1=rne(2,4,m1); // บังคับ m≠n เพื่อกัน n×m ซ้ำกับ m×n
   const A1 = Array.from({length:m1},()=>Array.from({length:n1},()=>ri(-5,9)));
-  const w1 = sh([[`${n1}×${m1}`,false],[`${m1}×${n1+1}`,false],[`${m1-1}×${n1}`,false]]);
-  const c1 = sh([[`${m1}×${n1}`,true],...w1]);
+  const correct1=`${m1}×${n1}`;
+  const pool1=[`${n1}×${m1}`,`${m1}×${n1+1}`,`${m1-1}×${n1}`,`${m1+1}×${n1}`,`${m1}×${n1-1}`].filter(s=>s!==correct1);
+  const w1=sh(pool1).slice(0,3).map(s=>[s,false]);
+  const c1 = sh([[correct1,true],...w1]);
   Q.push({type:'mc',stem:`เมทริกซ์ A นี้มีขนาดเท่าไหร่?<br><br>${matH(A1)}`,
     choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),
     explain:`เมทริกซ์มี ${m1} แถว ${n1} คอลัมน์ → ขนาด ${m1}×${n1}`});
