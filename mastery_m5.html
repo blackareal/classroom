@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 Mastery Path — ม.5/1 เมทริกซ์</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&display=swap');
+
+:root {
+  --bg: #080e1a;
+  --surface: #0f1923;
+  --surface2: #172030;
+  --border: #1e2d3d;
+  --text: #dce8f5;
+  --muted: #6b8aaa;
+  --accent: #4fa3e3;
+  --gold: #f0c000;
+  --green: #3fb950;
+  --red: #f85149;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Starfield ─────────────────────────────────── */
+#stars {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  overflow: hidden;
+}
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  animation: twinkle var(--d,3s) ease-in-out infinite;
+}
+@keyframes twinkle {
+  0%,100% { opacity: 0.1; }
+  50% { opacity: var(--peak, 0.8); }
+}
+
+/* ── Header ─────────────────────────────────────── */
+#header {
+  position: sticky; top: 0; z-index: 100;
+  background: linear-gradient(135deg, #0a1628 0%, #080e1a 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+}
+.h-title { font-size: 18px; font-weight: 800; letter-spacing: .5px; }
+.h-title span { color: var(--gold); }
+.h-sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
+.h-controls { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+
+/* ── Buttons ────────────────────────────────────── */
+.btn {
+  padding: 7px 14px; border: none; border-radius: 8px;
+  font-family: inherit; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.btn-ghost {
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { background: rgba(255,255,255,.12); }
+
+/* ── Horizon control ─────────────────────────────── */
+.horizon-wrap {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 5px 12px;
+}
+.horizon-wrap label { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.horizon-wrap input[type=range] { width: 80px; accent-color: var(--gold); cursor: pointer; }
+.horizon-wrap strong { color: var(--gold); min-width: 16px; text-align: center; }
+
+/* ── Status bar ─────────────────────────────────── */
+#statusBar {
+  background: rgba(255,255,255,.02);
+  border-bottom: 1px solid var(--border);
+  padding: 5px 20px;
+  font-size: 11px; color: var(--muted);
+  display: flex; align-items: center; gap: 12px;
+}
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--green); flex-shrink: 0;
+}
+.status-dot.loading { background: var(--gold); animation: pulse-dot 1s infinite; }
+.status-dot.error   { background: var(--red); }
+.status-dot.nosheet { background: var(--muted); }
+@keyframes pulse-dot {
+  0%,100% { opacity:.4; } 50% { opacity:1; }
+}
+
+/* ── Identity Bar ───────────────────────────────── */
+#identityBar {
+  background: rgba(79,163,227,.08);
+  border-bottom: 1px solid rgba(79,163,227,.2);
+  padding: 7px 20px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; flex-wrap: wrap;
+  position: sticky; top: 57px; z-index: 89;
+}
+#identityBar select {
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); padding: 4px 10px; border-radius: 6px;
+  font-family: inherit; font-size: 13px; cursor: pointer;
+}
+#myStatus { font-weight: 700; color: var(--gold); font-size: 13px; }
+
+/* ── Stats Bar ──────────────────────────────────── */
+#statsBar {
+  display: flex; gap: 8px; padding: 8px 20px;
+  background: rgba(255,255,255,.02);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; flex-wrap: nowrap;
+  scrollbar-width: none;
+}
+#statsBar::-webkit-scrollbar { display: none; }
+.stat-chip {
+  display: flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 20px;
+  background: rgba(255,255,255,.05);
+  font-size: 11px; white-space: nowrap;
+  border: 1px solid rgba(255,255,255,.08);
+  flex-shrink: 0;
+}
+.stat-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+/* ── Main Layout ────────────────────────────────── */
+#main {
+  display: flex;
+  height: calc(100vh - 110px);
+  position: relative; z-index: 1;
+}
+
+/* ── Board Panel ────────────────────────────────── */
+#board {
+  flex: 1; overflow-y: auto; overflow-x: auto;
+  padding: 32px 24px 80px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+
+/* ── Step Row ───────────────────────────────────── */
+.step-row { display: flex; align-items: flex-start; }
+
+/* ── Step Block ─────────────────────────────────── */
+.step-block {
+  width: 320px; flex-shrink: 0;
+  border-radius: 12px; border: 2px solid transparent;
+  padding: 12px 14px; cursor: pointer;
+  transition: transform .15s, box-shadow .15s, border-color .15s;
+  position: relative;
+}
+.step-block:hover:not(.locked):not(.start-block) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+}
+.step-block.selected { border-color: var(--accent) !important; }
+.step-block.locked {
+  opacity: .4; cursor: default; pointer-events: none;
+}
+
+.step-top { display: flex; align-items: center; gap: 10px; }
+.step-emoji { font-size: 24px; line-height: 1; }
+.step-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; opacity: .7; margin-bottom: 2px; }
+.step-title { font-size: 14px; font-weight: 700; }
+
+/* Avatars strip */
+.step-avatars {
+  display: flex; flex-wrap: wrap; gap: 3px; margin-top: 9px;
+}
+.avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8.5px; font-weight: 700; color: #fff;
+  border: 2px solid rgba(255,255,255,.15);
+  position: relative; flex-shrink: 0;
+  transition: transform .1s; cursor: default;
+}
+.avatar:hover { transform: scale(1.3); z-index: 10; }
+.avatar.me {
+  border-color: var(--gold);
+  box-shadow: 0 0 10px var(--gold);
+}
+.avatar-tip {
+  position: absolute; bottom: 115%; left: 50%;
+  transform: translateX(-50%);
+  background: #222; color: #fff;
+  padding: 3px 8px; border-radius: 5px;
+  font-size: 11px; white-space: nowrap;
+  pointer-events: none; display: none; z-index: 20;
+}
+.avatar:hover .avatar-tip { display: block; }
+
+.more-badge {
+  width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700; color: var(--muted);
+  background: rgba(255,255,255,.08); border: 2px solid var(--border);
+  flex-shrink: 0;
+}
+
+/* Start block */
+.start-block {
+  background: rgba(79,163,227,.08) !important;
+  border: 2px dashed rgba(79,163,227,.4) !important;
+  cursor: default;
+}
+
+/* ── Detail Panel ───────────────────────────────── */
+#detail {
+  width: 300px; flex-shrink: 0;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  overflow-y: auto; display: flex; flex-direction: column;
+}
+#detailEmpty {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  color: var(--muted); font-size: 13px; text-align: center; padding: 20px;
+  flex-direction: column; gap: 8px;
+}
+#detailContent { padding: 20px; display: none; }
+
+.d-emoji { font-size: 44px; margin-bottom: 6px; }
+.d-title { font-size: 17px; font-weight: 800; }
+.d-sub { font-size: 12px; color: var(--muted); margin: 4px 0 16px; }
+.d-section {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  color: var(--muted); text-transform: uppercase;
+  margin: 16px 0 8px;
+}
+.d-topic {
+  display: flex; gap: 8px; align-items: flex-start;
+  background: rgba(255,255,255,.04); border-radius: 7px;
+  padding: 8px 10px; margin-bottom: 4px; font-size: 13px;
+}
+.d-topic::before { content: '▸'; color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+.quiz-box {
+  background: rgba(63,185,80,.1); border: 1px solid rgba(63,185,80,.4);
+  border-radius: 8px; padding: 10px 12px; font-size: 13px; line-height: 1.5;
+}
+.d-student {
+  display: flex; align-items: center; gap: 9px;
+  background: rgba(255,255,255,.04); border-radius: 7px;
+  padding: 7px 10px; margin-bottom: 3px; font-size: 13px;
+}
+.d-student-name { flex: 1; }
+.next-step-preview {
+  background: rgba(255,255,255,.04); border-radius: 8px;
+  padding: 10px 12px; font-size: 13px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* ── Setup notice ───────────────────────────────── */
+#setupNotice {
+  display: none;
+  position: fixed; inset: 0; background: rgba(0,0,0,.85);
+  align-items: center; justify-content: center; z-index: 200;
+}
+#setupNotice.on { display: flex; }
+.setup-box {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px; width: 440px; max-width: 95vw;
+}
+.setup-box h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; color: var(--gold); }
+.setup-box p  { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
+.setup-box ol { font-size: 13px; color: var(--text); line-height: 2; padding-left: 20px; }
+.setup-box code {
+  background: rgba(255,255,255,.08); border-radius: 4px;
+  padding: 1px 6px; font-size: 12px; font-family: monospace;
+  color: var(--accent);
+}
+
+/* ── Animations ─────────────────────────────────── */
+@keyframes confettiFall {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(80vh) rotate(540deg); opacity: 0; }
+}
+.confetti {
+  position: fixed; pointer-events: none; z-index: 998;
+  animation: confettiFall linear forwards;
+}
+
+/* ── Responsive ─────────────────────────────────── */
+@media (max-width: 700px) {
+  #detail { display: none; }
+  .step-block { width: 260px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Starfield -->
+<div id="stars"></div>
+
+<!-- Header -->
+<div id="header">
+  <div>
+    <div class="h-title">🎮 Mastery Path — <span>เมทริกซ์</span></div>
+    <div class="h-sub">ม.5/1 · ค32201 คณิตศาสตร์เพิ่มเติม 3 · ภาคเรียน 1/2569</div>
+  </div>
+  <div class="h-controls">
+    <div class="horizon-wrap">
+      <label>🌫️ แสดงถึงขั้น</label>
+      <input type="range" id="horizonSlider" min="1" max="7" value="7"
+             oninput="setHorizon(this.value)">
+      <strong id="horizonNum">7</strong>
+      <span style="font-size:11px;color:var(--muted)">/ 7</span>
+    </div>
+    <button class="btn btn-ghost" onclick="manualRefresh()">🔄 รีเฟรช</button>
+  </div>
+</div>
+
+<!-- Status Bar -->
+<div id="statusBar">
+  <div class="status-dot nosheet" id="statusDot"></div>
+  <span id="statusText">กำลังโหลด...</span>
+</div>
+
+<!-- Identity Bar -->
+<div id="identityBar">
+  <span>👤 ฉันคือ:</span>
+  <select id="identitySel" onchange="setMe(this.value)">
+    <option value="">— เลือกชื่อของคุณ —</option>
+  </select>
+  <span id="myStatus"></span>
+</div>
+
+<!-- Stats Bar -->
+<div id="statsBar"></div>
+
+<!-- Main -->
+<div id="main">
+  <div id="board"></div>
+  <div id="detail">
+    <div id="detailEmpty">
+      <div style="font-size:32px">👆</div>
+      <div>คลิกที่ขั้นเพื่อดูรายละเอียด<br>และรายชื่อนักเรียน</div>
+    </div>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<!-- Setup Notice (shown when SHEET_ID not configured) -->
+<div id="setupNotice">
+  <div class="setup-box">
+    <h3>⚙️ ตั้งค่า Google Sheet</h3>
+    <p>เปิดไฟล์ <code>mastery_m5.html</code> แล้วแก้ค่า <code>SHEET_ID</code> ด้านบนของ script:</p>
+    <ol>
+      <li>สร้าง Google Sheet → คอลัมน์ A: <code>no</code> คอลัมน์ B: <code>step</code></li>
+      <li>กรอกข้อมูลนักเรียน 31 คน (no 1–31, step เริ่มที่ 0)</li>
+      <li>แชร์ Sheet → "Anyone with link can view"</li>
+      <li>คัดลอก ID จาก URL เช่น <code>docs.google.com/spreadsheets/d/<strong>ID_อยู่ตรงนี้</strong>/edit</code></li>
+      <li>วาง ID ในตัวแปร <code>SHEET_ID</code> ในไฟล์ HTML</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════
+const CSV_URL     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRvHA5w5IVu6bBe1JEQ_HLtBAkBc_FW7Ivtvxwxkg5izgiJ2rrLY29tE52ZHeEux2cUj_J6GD_IHeDt/pub?output=csv';
+const REFRESH_SEC = 60;      // auto-refresh ทุกกี่วินาที
+
+// ═══════════════════════════════════════════════════
+// STEPS
+// ═══════════════════════════════════════════════════
+const STEPS = [
+  { id:1, emoji:'🌱', title:'นิยามและประเภทเมทริกซ์', color:'#2e7d32',
+    topics:[
+      'เมทริกซ์ขนาด m×n และสมาชิก aᵢⱼ',
+      'ประเภท: จตุรัส, เอกลักษณ์, ศูนย์, แถว, คอลัมน์',
+      'เมทริกซ์ทรานสโพส Aᵀ',
+    ],
+    quiz: 'บอกขนาด ระบุสมาชิก และแยกประเภทเมทริกซ์ได้ถูกต้อง' },
+  { id:2, emoji:'➕', title:'การบวก-ลบเมทริกซ์', color:'#1565c0',
+    topics:[
+      'เงื่อนไข: ขนาดต้องเท่ากัน (m×n + m×n)',
+      'วิธีคำนวณ: บวก-ลบสมาชิกตำแหน่งเดียวกัน',
+      'สมบัติสลับที่: A + B = B + A',
+    ],
+    quiz: 'คำนวณการบวก-ลบเมทริกซ์ได้ถูกต้อง 3 ข้อ' },
+  { id:3, emoji:'✖️', title:'การคูณด้วยสเกลาร์', color:'#6a1b9a',
+    topics:[
+      'kA = คูณสมาชิกทุกตัวด้วย k',
+      'สมบัติ: k(A+B) = kA + kB',
+      'สมบัติ: (k+m)A = kA + mA',
+    ],
+    quiz: 'คำนวณ kA ได้ถูกต้อง และบอกสมบัติได้' },
+  { id:4, emoji:'⚡', title:'การคูณเมทริกซ์', color:'#bf360c',
+    topics:[
+      'เงื่อนไข: คอลัมน์ของ A = แถวของ B',
+      'วิธีคำนวณ: แถวคูณคอลัมน์ (dot product)',
+      'สมบัติ: AB ≠ BA โดยทั่วไป',
+    ],
+    quiz: 'คำนวณผลคูณ AB ได้ถูกต้อง และบอกเงื่อนไขได้' },
+  { id:5, emoji:'🔍', title:'ดีเทอร์มิแนนต์', color:'#b71c1c',
+    topics:[
+      'det(A) ของ 2×2: ad − bc',
+      'det(A) ของ 3×3 โดยกฎ Sarrus',
+      'det(A) = 0 หมายความว่า: A ไม่มีผกผัน',
+    ],
+    quiz: 'หา det(A) ของ 2×2 และ 3×3 ได้ถูกต้อง' },
+  { id:6, emoji:'🔄', title:'เมทริกซ์ผกผัน A⁻¹', color:'#880e4f',
+    topics:[
+      'เงื่อนไข: det(A) ≠ 0',
+      'สูตร A⁻¹ ของ 2×2: A⁻¹ = (1/det) × adj(A)',
+      'ตรวจสอบ: AA⁻¹ = A⁻¹A = I',
+    ],
+    quiz: 'หา A⁻¹ ของเมทริกซ์ 2×2 และตรวจสอบได้' },
+  { id:7, emoji:'🏆', title:'แก้ระบบสมการด้วยเมทริกซ์', color:'#4527a0',
+    topics:[
+      'เขียนระบบสมการในรูป AX = B',
+      'แก้ระบบโดย X = A⁻¹B',
+      'ประยุกต์กับโจทย์ 2 ตัวแปร 2 สมการ',
+    ],
+    quiz: 'แก้ระบบสมการ 2 ตัวแปร 2 สมการด้วยวิธีเมทริกซ์ได้สำเร็จ' },
+];
+
+// ═══════════════════════════════════════════════════
+// ROSTER (ชื่อ + nickname ถาวร — ไม่เปลี่ยน)
+// ═══════════════════════════════════════════════════
+const ROSTER = [
+  {no:1,  name:'นายกฤตยชญ์ อินแสงแวง',       nick:'พิณ',      gender:'ชาย'},
+  {no:2,  name:'นายกิตติพงษ์ หาวงศ์',         nick:'ปาตี้',    gender:'ชาย'},
+  {no:3,  name:'นายขจรศักดิ์ นูนวน',          nick:'ภูมิ',     gender:'ชาย'},
+  {no:4,  name:'นายจักรกฤษณ์ นาบุญ',          nick:'บีเอ็ม',   gender:'ชาย'},
+  {no:5,  name:'นายธนวันต์ ผิวทอง',            nick:'มิกซ์',    gender:'ชาย'},
+  {no:6,  name:'นายธัชพล บุญชิต',              nick:'คิว',      gender:'ชาย'},
+  {no:7,  name:'นายธีรพงศ์ วงสุดาวรรณ',       nick:'อิคคิว',   gender:'ชาย'},
+  {no:8,  name:'นายปัณณธร โสมี',               nick:'อาชิ',     gender:'ชาย'},
+  {no:9,  name:'นายพัทธนันท์ สิงมอญ',         nick:'แอล',      gender:'ชาย'},
+  {no:10, name:'นายภูมิรพี อินรักษา',          nick:'จูเนียร์', gender:'ชาย'},
+  {no:11, name:'นายวรโชติ อินทร์พิมพ์',       nick:'กัน',      gender:'ชาย'},
+  {no:12, name:'นายวัชรวัฒน์ เกิดคำ',         nick:'พาสต้า',   gender:'ชาย'},
+  {no:13, name:'นายอภิชาติ แสงบุญ',            nick:'อ่ำ',      gender:'ชาย'},
+  {no:14, name:'นางสาวกมลรัตน์ จันดา',         nick:'เกรซ',     gender:'หญิง'},
+  {no:15, name:'นางสาวเกศินี ชาหาจัก',         nick:'ตาล',      gender:'หญิง'},
+  {no:16, name:'นางสาวเขมนิจ พุ่มกลับ',        nick:'จ๊ะจ๋า',   gender:'หญิง'},
+  {no:17, name:'นางสาวจิตรรัตร์ดา หอมยา',     nick:'อิม',      gender:'หญิง'},
+  {no:18, name:'นางสาวธันย์ชนก นูนวน',         nick:'เอย',      gender:'หญิง'},
+  {no:19, name:'นางสาวนิชานันท์ ไชยรี',        nick:'มิ้น',     gender:'หญิง'},
+  {no:20, name:'นางสาวปาณิศา นันสี',           nick:'ปาณิศา',   gender:'หญิง'},
+  {no:21, name:'นางสาวพัชรี ญาปัน',            nick:'หนึ่ง',    gender:'หญิง'},
+  {no:22, name:'นางสาวพิชญธิดา ปาวัน',         nick:'ไอด้า',    gender:'หญิง'},
+  {no:23, name:'นางสาวพิทยาภรณ์ อินแสงแวง',   nick:'กิ่งแก้ว', gender:'หญิง'},
+  {no:24, name:'นางสาวพิมผกา เหล็กวงค์',       nick:'พิมพ์',    gender:'หญิง'},
+  {no:25, name:'นางสาวพิไลวรรณ วิชัยสา',       nick:'เบส',      gender:'หญิง'},
+  {no:26, name:'นางสาวภัทรวรินทร์ อินแสงแวง',  nick:'จุ๋ย',     gender:'หญิง'},
+  {no:27, name:'นางสาวรัตนาวดี ศรีสด',         nick:'มิ้ว',     gender:'หญิง'},
+  {no:28, name:'นางสาวศุภาวรรณ เฮ้าสา',        nick:'กะเพา',    gender:'หญิง'},
+  {no:29, name:'นางสาวสาธิตา วีระกูลชวาล',     nick:'เดียร์',   gender:'หญิง'},
+  {no:30, name:'นายธีรเดช นาบุญ',              nick:'อุ้ม',     gender:'ชาย'},
+  {no:31, name:'นางสาวฐิตาภา ปาวัน',           nick:'อิ๊บ',     gender:'หญิง'},
+];
+
+// ═══════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════
+function hue(index) {
+  const h = (index * 137.508) % 360;
+  return `hsl(${h},65%,55%)`;
+}
+
+function parseCSV(text) {
+  return text.trim().split('\n').map(line => {
+    const result = [];
+    let cur = '', inQ = false;
+    for (const ch of line) {
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+    result.push(cur.trim());
+    return result;
+  });
+}
+
+function fmtTime(d) {
+  if (!d) return '';
+  return d.toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+}
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+let S = {
+  horizon:      parseInt(localStorage.getItem('m5_horizon') || '7'),
+  myNo:         parseInt(localStorage.getItem('m5_myNo'))  || null,
+  selectedStep: null,
+  lastUpdated:  null,
+  loading:      false,
+  error:        null,
+  students: ROSTER.map((r, i) => {
+    const nick = r.nick || r.name.replace(/^(นาย|นางสาว|นาง)\s*/, '').split(/\s+/)[0];
+    return {
+      no:     r.no,
+      name:   r.name,
+      nick,
+      short:  nick.slice(0, 5),
+      gender: r.gender,
+      color:  hue(i),
+      step:   0,
+    };
+  }),
+};
+
+// ═══════════════════════════════════════════════════
+// GOOGLE SHEETS FETCH
+// ═══════════════════════════════════════════════════
+async function fetchSteps() {
+  S.loading = true;
+  setStatus('loading', 'กำลังโหลดข้อมูล...');
+
+  try {
+    const res  = await fetch(CSV_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const text = await res.text();
+    const rows   = parseCSV(text);
+    const header = rows[0].map(h => h.toLowerCase().trim());
+    const iNo   = header.indexOf('no');
+    const iStep = header.indexOf('step');
+    const iNick = header.indexOf('nick');
+    if (iNo < 0 || iStep < 0) throw new Error('ไม่พบคอลัมน์ "no" หรือ "step" ใน Sheet');
+
+    let updated = 0;
+    rows.slice(1).forEach(row => {
+      const no   = parseInt(row[iNo]);
+      const step = parseInt(row[iStep]);
+      if (isNaN(no) || isNaN(step)) return;
+      const s = S.students.find(x => x.no === no);
+      if (!s) return;
+      s.step = Math.min(7, Math.max(0, step));
+      if (iNick >= 0 && row[iNick]) {
+        s.nick  = row[iNick];
+        s.short = row[iNick].slice(0, 5);
+      }
+      updated++;
+    });
+
+    S.lastUpdated = new Date();
+    S.error       = null;
+    setStatus('ok', `อัปเดตล่าสุด ${fmtTime(S.lastUpdated)} · ${updated} นักเรียน`);
+  } catch(e) {
+    S.error = e.message;
+    setStatus('error', `โหลดไม่สำเร็จ: ${e.message} · ข้อมูลล่าสุด ${fmtTime(S.lastUpdated) || '—'}`);
+  }
+
+  S.loading = false;
+  render();
+}
+
+function setStatus(type, text) {
+  const dot  = document.getElementById('statusDot');
+  const span = document.getElementById('statusText');
+  dot.className  = `status-dot ${type}`;
+  span.textContent = text;
+}
+
+async function manualRefresh() {
+  await fetchSteps();
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════
+function render() {
+  renderBoard();
+  renderStats();
+  renderIdentityBar();
+  if (S.selectedStep !== null) renderDetail(S.selectedStep);
+  document.getElementById('horizonSlider').value    = S.horizon;
+  document.getElementById('horizonNum').textContent = S.horizon;
+}
+
+function renderBoard() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+
+  for (let id = 7; id >= 0; id--) {
+    const row   = document.createElement('div');
+    row.className = 'step-row';
+    const block = document.createElement('div');
+    const INDENT = 40;
+
+    if (id === 0) {
+      block.className = 'step-block start-block';
+      block.style.marginLeft = '0px';
+      block.innerHTML = `
+        <div class="step-top">
+          <span class="step-emoji">🚀</span>
+          <div>
+            <div class="step-label" style="color:var(--accent)">จุดเริ่มต้น</div>
+            <div class="step-title">เริ่มการเดินทาง</div>
+          </div>
+        </div>
+        <div class="step-avatars" id="av-0"></div>`;
+      block.onclick = () => selectStep(0);
+
+    } else {
+      const step   = STEPS[id - 1];
+      const locked = id > S.horizon;
+      block.className = 'step-block' + (locked ? ' locked' : '') +
+                        (S.selectedStep === id ? ' selected' : '');
+      block.style.marginLeft = `${(id - 1) * INDENT}px`;
+
+      if (locked) {
+        block.innerHTML = `
+          <div class="step-top">
+            <span class="step-emoji">🔒</span>
+            <div>
+              <div class="step-label" style="color:#555">ขั้นที่ ${id}</div>
+              <div class="step-title" style="color:#444">ล็อคอยู่</div>
+            </div>
+          </div>`;
+      } else {
+        block.style.background  = `${step.color}18`;
+        block.style.borderColor = `${step.color}50`;
+        block.innerHTML = `
+          <div class="step-top">
+            <span class="step-emoji">${step.emoji}</span>
+            <div>
+              <div class="step-label" style="color:${step.color}">ขั้นที่ ${id}</div>
+              <div class="step-title">${step.title}</div>
+            </div>
+          </div>
+          <div class="step-avatars" id="av-${id}"></div>`;
+        block.onclick = () => selectStep(id);
+      }
+    }
+
+    row.appendChild(block);
+    board.appendChild(row);
+  }
+
+  // Place avatars
+  S.students.forEach(s => {
+    const container = document.getElementById(`av-${s.step}`);
+    if (!container) return;
+    const existing = container.querySelectorAll('.avatar').length;
+    if (existing >= 8) {
+      let badge = container.querySelector('.more-badge');
+      if (!badge) {
+        badge = document.createElement('div');
+        badge.className = 'more-badge';
+        container.appendChild(badge);
+      }
+      const extra = S.students.filter(x => x.step === s.step).length - 8;
+      badge.textContent = `+${extra}`;
+      return;
+    }
+    const av = document.createElement('div');
+    av.className = 'avatar' + (s.no === S.myNo ? ' me' : '');
+    av.style.background = s.color;
+    av.innerHTML = `${s.short}<div class="avatar-tip">${s.no}. ${s.nick}</div>`;
+    container.appendChild(av);
+  });
+}
+
+function renderStats() {
+  const bar = document.getElementById('statsBar');
+  bar.innerHTML = '';
+  const counts = {};
+  S.students.forEach(s => { counts[s.step] = (counts[s.step] || 0) + 1; });
+
+  if (counts[0]) bar.innerHTML +=
+    `<div class="stat-chip"><div class="stat-dot" style="background:var(--accent)"></div>เริ่มต้น: ${counts[0]} คน</div>`;
+  for (let i = 1; i <= 7; i++) {
+    if (!counts[i]) continue;
+    const step = STEPS[i - 1];
+    bar.innerHTML +=
+      `<div class="stat-chip"><div class="stat-dot" style="background:${step.color}"></div>ขั้น ${i}: ${counts[i]} คน</div>`;
+  }
+  if (counts[7]) bar.innerHTML +=
+    `<div class="stat-chip" style="background:rgba(240,192,0,.12);border-color:var(--gold)">🏆 สำเร็จครบ: ${counts[7]} คน</div>`;
+}
+
+function renderIdentityBar() {
+  const sel = document.getElementById('identitySel');
+  if (sel.options.length === 1) {
+    S.students.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.no;
+      opt.textContent = `${s.no}. ${s.nick} — ${s.name.replace(/^(นาย|นางสาว|นาง)\s*/,'')}`;
+      sel.appendChild(opt);
+    });
+  }
+  sel.value = S.myNo || '';
+  const statusEl = document.getElementById('myStatus');
+  if (S.myNo) {
+    const me = S.students.find(s => s.no === S.myNo);
+    if (me) {
+      const stepLabel = me.step === 0 ? '🚀 เริ่มต้น'
+        : me.step === 7 ? '🏆 สำเร็จแล้ว!'
+        : `${STEPS[me.step-1].emoji} ขั้น ${me.step} — ${STEPS[me.step-1].title}`;
+      statusEl.textContent = `✨ ฉันอยู่: ${stepLabel}`;
+    }
+  } else {
+    statusEl.textContent = '';
+  }
+}
+
+function renderDetail(id) {
+  document.getElementById('detailEmpty').style.display   = 'none';
+  document.getElementById('detailContent').style.display = 'block';
+  const el   = document.getElementById('detailContent');
+  const here = S.students.filter(s => s.step === id);
+
+  const studentListHTML = here.length === 0
+    ? '<div style="color:var(--muted);font-size:13px;padding:6px">ไม่มีนักเรียนในขั้นนี้</div>'
+    : here.map(s => `
+        <div class="d-student">
+          <div class="avatar" style="background:${s.color};width:28px;height:28px;font-size:8px;flex-shrink:0;border:none">
+            ${s.short}
+          </div>
+          <div class="d-student-name">${s.no}. ${s.nick}</div>
+        </div>`).join('');
+
+  if (id === 0) {
+    el.innerHTML = `
+      <div class="d-emoji">🚀</div>
+      <div class="d-title">จุดเริ่มต้น</div>
+      <div class="d-sub">นักเรียนที่ยังไม่เริ่มขั้นแรก</div>
+      <div class="d-section">นักเรียนที่นี่ (${here.length} คน)</div>
+      ${studentListHTML}`;
+    return;
+  }
+
+  const step = STEPS[id - 1];
+  el.innerHTML = `
+    <div class="d-emoji">${step.emoji}</div>
+    <div class="d-title">${step.title}</div>
+    <div class="d-sub" style="color:${step.color}">ขั้นที่ ${id} จาก 7</div>
+
+    <div class="d-section">📚 สิ่งที่ต้องเรียนรู้</div>
+    ${step.topics.map(t => `<div class="d-topic">${t}</div>`).join('')}
+
+    <div class="d-section">✅ เกณฑ์ผ่านขั้น</div>
+    <div class="quiz-box">${step.quiz}</div>
+
+    <div class="d-section">👥 นักเรียนในขั้นนี้ (${here.length} คน)</div>
+    ${studentListHTML}
+
+    ${id < 7 ? `
+    <div class="d-section">⬆️ ขั้นถัดไป</div>
+    <div class="next-step-preview">
+      <span style="font-size:22px">${STEPS[id].emoji}</span>
+      <strong>${STEPS[id].title}</strong>
+    </div>` : `
+    <div style="text-align:center;padding:20px;font-size:28px">🎉🏆🎉<br>
+    <span style="font-size:14px;color:var(--gold)">ขั้นสูงสุด!</span></div>`}
+  `;
+}
+
+// ═══════════════════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════════════════
+function selectStep(id) {
+  S.selectedStep = id;
+  render();
+  renderDetail(id);
+}
+
+function setMe(val) {
+  S.myNo = val ? parseInt(val) : null;
+  localStorage.setItem('m5_myNo', S.myNo || '');
+  render();
+}
+
+function setHorizon(val) {
+  S.horizon = parseInt(val);
+  localStorage.setItem('m5_horizon', S.horizon);
+  render();
+}
+
+// ═══════════════════════════════════════════════════
+// STARFIELD
+// ═══════════════════════════════════════════════════
+function makeStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `
+      left:${Math.random()*100}%; top:${Math.random()*100}%;
+      width:${size}px; height:${size}px;
+      --d:${2+Math.random()*4}s; --peak:${0.3+Math.random()*0.7};
+      animation-delay:${Math.random()*4}s;
+    `;
+    container.appendChild(s);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+makeStars();
+render(); // แสดงก่อน (step = 0 ทุกคน) ระหว่างรอโหลด
+fetchSteps();
+setInterval(fetchSteps, REFRESH_SEC * 1000);
+</script>
+</body>
+</html>
