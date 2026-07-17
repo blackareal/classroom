@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 ใบเรียน เมทริกซ์ — ม.5/1</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&display=swap');
+:root {
+  --bg:#080e1a; --sf:#0f1923; --sf2:#172030; --bd:#1e2d3d;
+  --tx:#dce8f5; --mu:#6b8aaa; --ac:#4fa3e3; --go:#f0c000;
+  --gr:#3fb950; --rd:#f85149;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;}
+
+/* Header */
+#hdr{background:linear-gradient(135deg,#0a1628,#080e1a);border-bottom:1px solid var(--bd);padding:10px 20px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;}
+#hdr h1{font-size:16px;font-weight:800;} #hdr h1 span{color:var(--go);}
+#hdr a{color:var(--mu);font-size:13px;text-decoration:none;margin-right:auto;}
+#hdr a:hover{color:var(--tx);}
+
+/* Layout */
+#wrap{display:flex;flex:1;overflow:hidden;height:calc(100vh - 48px);}
+
+/* Sidebar */
+#side{width:200px;flex-shrink:0;background:var(--sf);border-right:1px solid var(--bd);overflow-y:auto;padding:12px 8px;}
+.s-btn{display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;border:none;border-radius:8px;background:transparent;color:var(--mu);font-family:inherit;font-size:13px;cursor:pointer;text-align:left;transition:all .15s;margin-bottom:3px;}
+.s-btn:hover{background:rgba(255,255,255,.06);color:var(--tx);}
+.s-btn.active{background:rgba(79,163,227,.15);color:var(--tx);font-weight:700;}
+.s-emoji{font-size:16px;flex-shrink:0;}
+
+/* Main */
+#main{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+
+/* Tabs */
+#tabs{display:flex;gap:0;border-bottom:1px solid var(--bd);background:var(--sf);flex-shrink:0;}
+.tab{padding:11px 24px;border:none;background:transparent;color:var(--mu);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+.tab.active{color:var(--tx);border-bottom-color:var(--ac);}
+.tab:hover{color:var(--tx);}
+
+/* Content */
+#content{padding:28px;max-width:800px;width:100%;}
+
+/* Theory styles */
+.th-section{margin-bottom:24px;}
+.th-label{font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--mu);text-transform:uppercase;margin-bottom:10px;}
+.th-card{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:16px 18px;margin-bottom:10px;font-size:14px;line-height:1.8;}
+.th-card h4{font-size:13px;font-weight:800;color:var(--ac);margin-bottom:8px;}
+.th-card table{border-collapse:collapse;width:100%;margin-top:8px;}
+.th-card td,.th-card th{padding:5px 10px;border:1px solid var(--bd);font-size:13px;}
+.th-card th{background:rgba(255,255,255,.05);font-weight:700;}
+.example-box{background:rgba(79,163,227,.06);border:1px solid rgba(79,163,227,.25);border-radius:8px;padding:14px 16px;margin:8px 0;font-size:14px;}
+.example-box strong{color:var(--ac);}
+.formula{background:rgba(255,255,255,.04);border-left:3px solid var(--go);padding:10px 14px;border-radius:0 8px 8px 0;font-size:15px;margin:8px 0;line-height:2;}
+
+/* Matrix display */
+.mat-wrap{display:inline-flex;align-items:stretch;vertical-align:middle;margin:2px 4px;}
+.mat-bracket{display:flex;flex-direction:column;justify-content:stretch;}
+.mat-bracket.left{border-left:2.5px solid var(--tx);border-top:1.5px solid var(--tx);border-bottom:1.5px solid var(--tx);padding:2px 0 2px 6px;border-radius:3px 0 0 3px;}
+.mat-bracket.right{border-right:2.5px solid var(--tx);border-top:1.5px solid var(--tx);border-bottom:1.5px solid var(--tx);padding:2px 6px 2px 0;border-radius:0 3px 3px 0;}
+.mat-inner{display:flex;flex-direction:column;gap:4px;padding:2px 6px;}
+.mat-row{display:flex;gap:12px;}
+.mat-cell{min-width:22px;text-align:right;font-size:14px;font-family:'Courier New',monospace;}
+.mat-cell.hi{color:var(--go);font-weight:700;}
+
+/* Quiz styles */
+.q-item{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+.q-num{font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--mu);text-transform:uppercase;margin-bottom:8px;}
+.q-stem{font-size:14px;line-height:1.7;margin-bottom:12px;}
+.choices{display:flex;flex-direction:column;gap:7px;}
+.choice{display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:7px;border:1px solid var(--bd);cursor:pointer;font-size:13px;transition:all .15s;background:transparent;}
+.choice:hover:not(.disabled){background:rgba(255,255,255,.05);border-color:var(--ac);}
+.choice.selected:not(.disabled){background:rgba(79,163,227,.12);border-color:var(--ac);}
+.choice.correct{background:rgba(63,185,80,.15);border-color:var(--gr);}
+.choice.wrong{background:rgba(248,81,73,.1);border-color:var(--rd);}
+.choice-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--bd);flex-shrink:0;transition:all .15s;}
+.choice.selected .choice-dot{background:var(--ac);border-color:var(--ac);}
+.choice.correct .choice-dot{background:var(--gr);border-color:var(--gr);}
+.choice.wrong .choice-dot{background:var(--rd);border-color:var(--rd);}
+.choice.disabled{cursor:default;}
+.num-input{width:120px;background:var(--sf2);border:1px solid var(--bd);border-radius:7px;color:var(--tx);padding:8px 12px;font-family:inherit;font-size:15px;outline:none;margin-right:8px;}
+.num-input:focus{border-color:var(--ac);}
+.num-input.correct{border-color:var(--gr);background:rgba(63,185,80,.08);}
+.num-input.wrong{border-color:var(--rd);background:rgba(248,81,73,.06);}
+.q-explain{font-size:12px;color:var(--mu);margin-top:10px;padding:8px 12px;background:rgba(255,255,255,.03);border-radius:6px;display:none;line-height:1.6;}
+.q-explain.show{display:block;}
+.q-feedback{font-size:12px;font-weight:700;margin-top:6px;}
+.q-feedback.ok{color:var(--gr);}
+.q-feedback.ng{color:var(--rd);}
+
+/* Result panel */
+#result{display:none;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:24px;text-align:center;margin-bottom:20px;}
+#result .score{font-size:48px;font-weight:800;color:var(--go);}
+#result .verdict{font-size:16px;margin:8px 0 16px;font-weight:700;}
+.result-pass{color:var(--gr);}
+.result-fail{color:var(--rd);}
+.ready-box{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.4);border-radius:8px;padding:12px 16px;font-size:14px;margin-top:12px;}
+
+/* Buttons */
+.btn{padding:10px 20px;border:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;}
+.btn-ac{background:var(--ac);color:#001a30;}
+.btn-ac:hover{opacity:.85;}
+.btn-go{background:var(--go);color:#1a1000;}
+.btn-go:hover{background:#ffd740;}
+.btn-gr{background:var(--gr);color:#001a00;}
+.btn-gh{background:rgba(255,255,255,.08);color:var(--tx);border:1px solid var(--bd);}
+.btn-gh:hover{background:rgba(255,255,255,.14);}
+
+@media(max-width:700px){#side{display:none;}#content{padding:16px;}}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <a href="mastery_m5.html">← Mastery Path</a>
+  <h1>📚 ใบเรียน <span>เมทริกซ์</span> · ม.5/1</h1>
+</div>
+
+<div id="wrap">
+  <div id="side" id="sidebar"></div>
+  <div id="main">
+    <div id="tabs">
+      <button class="tab active" onclick="showTab('learn')">📖 ใบความรู้</button>
+      <button class="tab" onclick="showTab('quiz')">✏️ แบบทดสอบ</button>
+    </div>
+    <div id="content"></div>
+  </div>
+</div>
+
+<script>
+// ── Helpers ──────────────────────────────────────────
+const ri  = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
+const rne = (a,b,n) => { let v; do{v=ri(a,b)}while(v===n); return v; };
+const sh  = a => [...a].sort(()=>Math.random()-.5);
+const rnd = (v,d=2) => Math.round(v*10**d)/10**d;
+
+function matH(rows, hiR=-1, hiC=-1) {
+  const inner = rows.map((r,ri2)=>`<div class="mat-row">${r.map((c,ci)=>`<span class="mat-cell${(ri2===hiR&&ci===hiC)?' hi':''}">${c}</span>`).join('')}</div>`).join('');
+  return `<span class="mat-wrap"><span class="mat-bracket left"></span><span class="mat-inner">${inner}</span><span class="mat-bracket right"></span></span>`;
+}
+
+// ── Step metadata ─────────────────────────────────────
+const SM = [
+  {id:1,emoji:'🌱',title:'นิยามและประเภท',color:'#2e7d32'},
+  {id:2,emoji:'➕',title:'การบวก-ลบเมทริกซ์',color:'#1565c0'},
+  {id:3,emoji:'✖️',title:'คูณด้วยสเกลาร์',color:'#6a1b9a'},
+  {id:4,emoji:'⚡',title:'การคูณเมทริกซ์',color:'#bf360c'},
+  {id:5,emoji:'🔍',title:'ดีเทอร์มิแนนต์',color:'#b71c1c'},
+  {id:6,emoji:'🔄',title:'เมทริกซ์ผกผัน',color:'#880e4f'},
+  {id:7,emoji:'🏆',title:'แก้ระบบสมการ',color:'#4527a0'},
+];
+
+// ── Content (theory + quiz generators) ───────────────
+const C = {};
+
+// ── Step 1 ────────────────────────────────────────────
+C[1] = {
+theory: `
+<div class="th-section">
+  <div class="th-label">นิยาม</div>
+  <div class="th-card">
+    <h4>เมทริกซ์ขนาด m×n</h4>
+    ตารางตัวเลขที่มี <b>m แถว</b> (row) และ <b>n คอลัมน์</b> (column)<br>
+    สมาชิกตำแหน่งแถวที่ i คอลัมน์ที่ j เขียนแทนด้วย <b>aᵢⱼ</b>
+    <div class="example-box">
+      <strong>ตัวอย่าง:</strong> A ขนาด 2×3<br><br>
+      ${matH([[1,2,3],[4,5,6]])} &nbsp; a₁₂ = 2 &nbsp;,&nbsp; a₂₃ = 6
+    </div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">ประเภทเมทริกซ์</div>
+  <div class="th-card">
+    <table>
+      <tr><th>ประเภท</th><th>เงื่อนไข</th><th>ตัวอย่าง</th></tr>
+      <tr><td>จตุรัส (Square)</td><td>m = n</td><td>${matH([[1,2],[3,4]])}</td></tr>
+      <tr><td>เอกลักษณ์ (I)</td><td>แนวทแยง=1, อื่น=0</td><td>${matH([[1,0],[0,1]])}</td></tr>
+      <tr><td>ศูนย์ (Zero)</td><td>ทุกสมาชิก = 0</td><td>${matH([[0,0],[0,0]])}</td></tr>
+      <tr><td>แถว (Row)</td><td>m = 1</td><td>${matH([[2,5,3]])}</td></tr>
+      <tr><td>คอลัมน์ (Column)</td><td>n = 1</td><td>${matH([[2],[5]])}</td></tr>
+    </table>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">เมทริกซ์ทรานสโพส</div>
+  <div class="th-card">
+    <h4>Aᵀ — สลับแถวกับคอลัมน์</h4>
+    ถ้า A ขนาด m×n แล้ว Aᵀ ขนาด <b>n×m</b>
+    <div class="example-box">
+      <strong>ตัวอย่าง:</strong><br><br>
+      A = ${matH([[1,2,3],[4,5,6]])} &nbsp; Aᵀ = ${matH([[1,4],[2,5],[3,6]])}
+    </div>
+  </div>
+</div>`,
+
+makeQ() {
+  const Q = [];
+
+  // Q1: ขนาดเมทริกซ์
+  const m1=ri(2,3), n1=ri(2,3);
+  const A1 = Array.from({length:m1},()=>Array.from({length:n1},()=>ri(-5,9)));
+  const w1 = sh([[`${n1}×${m1}`,false],[`${m1}×${n1+1}`,false],[`${m1-1}×${n1}`,false]]);
+  const c1 = sh([[`${m1}×${n1}`,true],...w1]);
+  Q.push({type:'mc',stem:`เมทริกซ์ A นี้มีขนาดเท่าไหร่?<br><br>${matH(A1)}`,
+    choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),
+    explain:`เมทริกซ์มี ${m1} แถว ${n1} คอลัมน์ → ขนาด ${m1}×${n1}`});
+
+  // Q2: หา aᵢⱼ
+  const A2 = Array.from({length:3},()=>Array.from({length:3},()=>ri(-5,9)));
+  const i2=ri(0,2), j2=ri(0,2);
+  const ans2=A2[i2][j2];
+  const w2=new Set([ans2]);
+  const wrong2=[];
+  while(wrong2.length<3){const v=ri(-5,9);if(!w2.has(v)){w2.add(v);wrong2.push(v);}}
+  const c2=sh([[ans2,true],...wrong2.map(v=>[v,false])]);
+  Q.push({type:'mc',stem:`จากเมทริกซ์ A ต่อไปนี้ a₍${i2+1}${j2+1}₎ มีค่าเท่าไหร่?<br><br>${matH(A2,i2,j2)}`,
+    choices:c2.map(x=>`${x[0]}`),answer:c2.findIndex(x=>x[1]),
+    explain:`aᵢⱼ = สมาชิกแถวที่ ${i2+1} คอลัมน์ที่ ${j2+1} = ${ans2}`});
+
+  // Q3: ประเภท
+  const types=[
+    {mat:[[ri(1,4),ri(1,4)],[ri(1,4),ri(1,4)]],ans:'เมทริกซ์จตุรัส (2×2)',w:['เมทริกซ์เอกลักษณ์','เมทริกซ์แถว','เมทริกซ์ศูนย์']},
+    {mat:[[1,0,0],[0,1,0],[0,0,1]],ans:'เมทริกซ์เอกลักษณ์ I₃',w:['เมทริกซ์จตุรัสทั่วไป','เมทริกซ์ศูนย์','เมทริกซ์แถว']},
+    {mat:[[ri(1,5),ri(1,5),ri(1,5)]],ans:'เมทริกซ์แถว (1×3)',w:['เมทริกซ์จตุรัส','เมทริกซ์คอลัมน์','เมทริกซ์เอกลักษณ์']},
+  ];
+  const t3=types[ri(0,types.length-1)];
+  const c3=sh([[t3.ans,true],...t3.w.map(v=>[v,false])]);
+  Q.push({type:'mc',stem:`เมทริกซ์ต่อไปนี้เป็นประเภทใด?<br><br>${matH(t3.mat)}`,
+    choices:c3.map(x=>x[0]),answer:c3.findIndex(x=>x[1]),
+    explain:t3.ans});
+
+  // Q4: ทรานสโพสขนาด
+  const m4=ri(2,3), n4=rne(2,3,m4);
+  const c4=sh([[`${n4}×${m4}`,true],[`${m4}×${n4}`,false],[`${m4}×${m4}`,false],[`${n4}×${n4}`,false]]);
+  Q.push({type:'mc',stem:`ถ้า A มีขนาด ${m4}×${n4} แล้ว Aᵀ มีขนาดเท่าไหร่?`,
+    choices:c4.map(x=>x[0]),answer:c4.findIndex(x=>x[1]),
+    explain:`ทรานสโพสสลับแถว↔คอลัมน์ → ${m4}×${n4} กลายเป็น ${n4}×${m4}`});
+
+  // Q5: เมทริกซ์เอกลักษณ์
+  const mats5=[[[1,0],[0,1]],[[1,1],[0,1]],[[2,0],[0,2]],[[0,1],[1,0]]];
+  const shuf5=sh(mats5);
+  const ans5=shuf5.findIndex(m=>m[0][0]===1&&m[0][1]===0&&m[1][0]===0&&m[1][1]===1);
+  Q.push({type:'mc',stem:`ข้อใดคือเมทริกซ์เอกลักษณ์ขนาด 2×2 (I₂)?`,
+    choices:shuf5.map(m=>matH(m)),answer:ans5,
+    explain:'I₂ มีสมาชิกแนวทแยงหลักเท่ากับ 1 ทั้งหมด และสมาชิกอื่น = 0'});
+
+  return Q;
+}};
+
+// ── Step 2 ────────────────────────────────────────────
+C[2] = {
+theory: `
+<div class="th-section">
+  <div class="th-label">เงื่อนไขและนิยาม</div>
+  <div class="th-card">
+    <h4>การบวก-ลบเมทริกซ์</h4>
+    A ± B กระทำได้ก็ต่อเมื่อ <b>A และ B มีขนาดเท่ากัน</b> (m×n ทั้งคู่)<br>
+    วิธีคำนวณ: บวก/ลบสมาชิก<b>ตำแหน่งเดียวกัน</b>
+    <div class="formula">(A+B)ᵢⱼ = aᵢⱼ + bᵢⱼ</div>
+    <div class="example-box">
+      <strong>ตัวอย่าง:</strong><br><br>
+      ${matH([[1,2],[3,4]])} + ${matH([[5,6],[7,8]])} = ${matH([[6,8],[10,12]])}
+    </div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">สมบัติ</div>
+  <div class="th-card">
+    <table>
+      <tr><th>สมบัติ</th><th>สูตร</th></tr>
+      <tr><td>สลับที่</td><td>A + B = B + A</td></tr>
+      <tr><td>การเปลี่ยนหมู่</td><td>(A + B) + C = A + (B + C)</td></tr>
+      <tr><td>เมทริกซ์ศูนย์</td><td>A + O = A</td></tr>
+      <tr><td>เมทริกซ์ตรงข้าม</td><td>A + (−A) = O</td></tr>
+    </table>
+    <div style="margin-top:10px;color:var(--rd);font-size:13px;">⚠ A − B ≠ B − A (ลบ<b>ไม่</b>สลับที่)</div>
+  </div>
+</div>`,
+
+makeQ() {
+  const Q = [];
+  // Q1 MC: เงื่อนไข
+  const c1=sh([['A และ B มีขนาดเท่ากัน (m×n ทั้งคู่)',true],['A และ B เป็นเมทริกซ์จตุรัส',false],['จำนวนแถวของ A = จำนวนคอลัมน์ของ B',false],['A และ B มีขนาดอะไรก็ได้',false]]);
+  Q.push({type:'mc',stem:'A + B มีนิยามเมื่อใด?',choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:'ต้องมีขนาดเท่ากันทุกมิติ: m แถวเท่ากัน และ n คอลัมน์เท่ากัน'});
+
+  // Q2 MC: สมบัติ
+  const c2=sh([['A + B = B + A',true],['A − B = B − A',false],'(A+B)ᵀ = Aᵀ − Bᵀ'.split()].flat().map((s,i)=>typeof s==='string'?[s,false]:[s,false]).filter((_,i)=>i<4));
+  const props=[['A + B = B + A (สมบัติสลับที่)',true],['A − B = B − A',false],['A + B ไม่มีสมบัติสลับที่',false],['(A+B)+C ≠ A+(B+C)',false]];
+  const c2b=sh(props);
+  Q.push({type:'mc',stem:'ข้อใดถูกต้องเกี่ยวกับการบวกเมทริกซ์?',choices:c2b.map(x=>x[0]),answer:c2b.findIndex(x=>x[1]),explain:'การบวกเมทริกซ์มีสมบัติสลับที่: A+B = B+A เสมอ แต่การลบไม่มี'});
+
+  // Q3-Q5 Num: คำนวณ element ของ A±B
+  for(let q=0;q<3;q++){
+    const A=Array.from({length:2},()=>[ri(-6,6),ri(-6,6)]);
+    const B=Array.from({length:2},()=>[ri(-6,6),ri(-6,6)]);
+    const op=ri(0,1)===0?'+':'-';
+    const R=A.map((r,i)=>r.map((v,j)=>op==='+'?v+B[i][j]:v-B[i][j]));
+    const ir=ri(0,1),ic=ri(0,1);
+    const ans=R[ir][ic];
+    Q.push({type:'num',stem:`กำหนด A = ${matH(A)} และ B = ${matH(B)}<br>A ${op} B มีค่าที่ตำแหน่ง (${ir+1},${ic+1}) เท่าไหร่?`,
+      answer:ans,tol:0,explain:`(A${op}B)₍${ir+1}${ic+1}₎ = ${A[ir][ic]} ${op} ${op==='+'?B[ir][ic]:B[ir][ic]} = ${ans}`});
+  }
+  return Q;
+}};
+
+// ── Step 3 ────────────────────────────────────────────
+C[3] = {
+theory: `
+<div class="th-section">
+  <div class="th-label">นิยาม</div>
+  <div class="th-card">
+    <h4>การคูณเมทริกซ์ด้วยสเกลาร์ k</h4>
+    คูณ<b>ทุกสมาชิก</b>ด้วย k
+    <div class="formula">(kA)ᵢⱼ = k · aᵢⱼ</div>
+    <div class="example-box">
+      <strong>ตัวอย่าง:</strong> k = 3<br><br>
+      3 × ${matH([[1,-2],[0,4]])} = ${matH([[3,-6],[0,12]])}
+    </div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">สมบัติ</div>
+  <div class="th-card">
+    <table>
+      <tr><th>สมบัติ</th><th>สูตร</th></tr>
+      <tr><td>แจกแจงบนเมทริกซ์</td><td>k(A + B) = kA + kB</td></tr>
+      <tr><td>แจกแจงบนสเกลาร์</td><td>(k + m)A = kA + mA</td></tr>
+      <tr><td>การเปลี่ยนหมู่</td><td>(km)A = k(mA)</td></tr>
+      <tr><td>สเกลาร์ 1</td><td>1·A = A</td></tr>
+    </table>
+  </div>
+</div>`,
+
+makeQ() {
+  const Q = [];
+  // Q1 MC: นิยาม
+  const k1=ri(2,5);
+  const c1=sh([[`คูณสมาชิกทุกตัวด้วย ${k1}`,true],[`คูณเฉพาะแนวทแยงด้วย ${k1}`,false],[`บวก ${k1} เข้าทุกสมาชิก`,false],[`คูณแถวแรกด้วย ${k1}`,false]]);
+  Q.push({type:'mc',stem:`${k1}A หมายความว่าอย่างไร?`,choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:`kA = คูณ<b>ทุกสมาชิก</b>ด้วย k`});
+
+  // Q2 MC: สมบัติ
+  const props=[['k(A+B) = kA + kB',true],['k(A+B) = kA + B',false],['k(A+B) = A + kB',false],['k(A+B) = k²A + k²B',false]];
+  const c2=sh(props);
+  Q.push({type:'mc',stem:'ข้อใดเป็นสมบัติที่ถูกต้อง?',choices:c2.map(x=>x[0]),answer:c2.findIndex(x=>x[1]),explain:'สมบัติแจกแจง: k(A+B) = kA + kB'});
+
+  // Q3-Q5 Num
+  for(let q=0;q<3;q++){
+    const k=ri(2,6);
+    const A=Array.from({length:2},()=>[ri(-5,5),ri(-5,5)]);
+    const ir=ri(0,1),ic=ri(0,1);
+    const ans=k*A[ir][ic];
+    Q.push({type:'num',stem:`กำหนด k = ${k} และ A = ${matH(A)}<br>${k}A มีค่าที่ตำแหน่ง (${ir+1},${ic+1}) เท่าไหร่?`,
+      answer:ans,tol:0,explain:`(${k}A)₍${ir+1}${ic+1}₎ = ${k} × ${A[ir][ic]} = ${ans}`});
+  }
+  return Q;
+}};
+
+// ── Step 4 ────────────────────────────────────────────
+C[4] = {
+theory: `
+<div class="th-section">
+  <div class="th-label">เงื่อนไขและขนาดผลลัพธ์</div>
+  <div class="th-card">
+    <h4>AB มีนิยามเมื่อ: คอลัมน์ของ A = แถวของ B</h4>
+    A ขนาด <b>m×n</b> &nbsp;×&nbsp; B ขนาด <b>n×p</b> &nbsp;=&nbsp; AB ขนาด <b>m×p</b>
+    <div class="example-box">A ขนาด 2×3 × B ขนาด 3×4 → AB ขนาด <b>2×4</b></div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">วิธีคำนวณ</div>
+  <div class="th-card">
+    <h4>(AB)ᵢⱼ = dot product ของแถวที่ i ของ A กับคอลัมน์ที่ j ของ B</h4>
+    <div class="formula">(AB)ᵢⱼ = aᵢ₁b₁ⱼ + aᵢ₂b₂ⱼ + … + aᵢₙbₙⱼ</div>
+    <div class="example-box">
+      <strong>ตัวอย่าง:</strong><br><br>
+      ${matH([[1,2],[3,4]])} × ${matH([[5,6],[7,8]])} = ${matH([[1*5+2*7,1*6+2*8],[3*5+4*7,3*6+4*8]])}
+    </div>
+    <div style="margin-top:10px;color:var(--rd);font-size:13px;">⚠ AB ≠ BA โดยทั่วไป (การคูณ<b>ไม่สลับที่</b>)</div>
+  </div>
+</div>`,
+
+makeQ() {
+  const Q = [];
+  // Q1 MC: เงื่อนไข
+  const c1=sh([['คอลัมน์ของ A = แถวของ B',true],['แถวของ A = แถวของ B',false],['A และ B มีขนาดเท่ากัน',false],['คอลัมน์ของ A = คอลัมน์ของ B',false]]);
+  Q.push({type:'mc',stem:'AB มีนิยามเมื่อใด?',choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:'จำนวนคอลัมน์ของ A ต้องเท่ากับจำนวนแถวของ B'});
+
+  // Q2 MC: ขนาดผลลัพธ์
+  const m=ri(2,4),n=ri(2,4),p=ri(2,4);
+  const c2=sh([[`${m}×${p}`,true],[`${n}×${n}`,false],[`${m}×${n}`,false],[`${p}×${m}`,false]]);
+  Q.push({type:'mc',stem:`A ขนาด ${m}×${n} คูณกับ B ขนาด ${n}×${p} ผลลัพธ์ AB มีขนาดเท่าไหร่?`,choices:c2.map(x=>x[0]),answer:c2.findIndex(x=>x[1]),explain:`A(m×n) × B(n×p) → AB ขนาด m×p = ${m}×${p}`});
+
+  // Q3-Q5 Num: element ของ AB
+  for(let q=0;q<3;q++){
+    const A=Array.from({length:2},()=>[ri(-4,4),ri(-4,4)]);
+    const B=Array.from({length:2},()=>[ri(-4,4),ri(-4,4)]);
+    const ir=ri(0,1),ic=ri(0,1);
+    const ans=A[ir][0]*B[0][ic]+A[ir][1]*B[1][ic];
+    Q.push({type:'num',stem:`กำหนด A = ${matH(A)} และ B = ${matH(B)}<br>AB มีค่าที่ตำแหน่ง (${ir+1},${ic+1}) เท่าไหร่?`,
+      answer:ans,tol:0,explain:`(AB)₍${ir+1}${ic+1}₎ = ${A[ir][0]}×${B[0][ic]} + ${A[ir][1]}×${B[1][ic]} = ${A[ir][0]*B[0][ic]} + ${A[ir][1]*B[1][ic]} = ${ans}`});
+  }
+  return Q;
+}};
+
+// ── Step 5 ────────────────────────────────────────────
+C[5] = {
+theory: `
+<div class="th-section">
+  <div class="th-label">ดีเทอร์มิแนนต์ 2×2</div>
+  <div class="th-card">
+    <div class="formula">det ${matH([['a','b'],['c','d']])} = ad − bc</div>
+    <div class="example-box">
+      <strong>ตัวอย่าง:</strong><br><br>
+      det ${matH([[3,2],[1,4]])} = (3)(4) − (2)(1) = 12 − 2 = <b>10</b>
+    </div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">ดีเทอร์มิแนนต์ 3×3 (กฎ Sarrus)</div>
+  <div class="th-card">
+    <div class="formula">คัดลอกคอลัมน์ที่ 1,2 ต่อท้าย → บวกแนวลง 3 เส้น − ลบแนวขึ้น 3 เส้น</div>
+    <div class="example-box">
+      <strong>สูตร:</strong><br>
+      det ${matH([['a','b','c'],['d','e','f'],['g','h','i']])} = aei + bfg + cdh − ceg − afh − bdi
+    </div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">ความหมายของ det</div>
+  <div class="th-card">
+    <table>
+      <tr><th>det(A)</th><th>ความหมาย</th></tr>
+      <tr><td>≠ 0</td><td>A มีเมทริกซ์ผกผัน A⁻¹</td></tr>
+      <tr><td>= 0</td><td>A <b>ไม่มี</b>เมทริกซ์ผกผัน (Singular Matrix)</td></tr>
+    </table>
+  </div>
+</div>`,
+
+makeQ() {
+  const Q = [];
+  // Q1 MC: ความหมาย det=0
+  const c1=sh([['A ไม่มีเมทริกซ์ผกผัน',true],['A เป็นเมทริกซ์ศูนย์',false],['A เป็นเมทริกซ์เอกลักษณ์',false],['ระบบสมการมีคำตอบเดียว',false]]);
+  Q.push({type:'mc',stem:'ถ้า det(A) = 0 แสดงว่าอะไร?',choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:'det(A)=0 → A เป็น Singular Matrix → ไม่มี A⁻¹'});
+
+  // Q2-Q3: det 2×2
+  for(let q=0;q<2;q++){
+    let a,b,c,d,det;
+    do{a=ri(-5,5);b=ri(-5,5);c=ri(-5,5);d=ri(-5,5);det=a*d-b*c;}while(det===0);
+    Q.push({type:'num',stem:`หา det(A) โดยที่ A = ${matH([[a,b],[c,d]])}`,
+      answer:det,tol:0,explain:`det = (${a})(${d}) − (${b})(${c}) = ${a*d} − ${b*c} = ${det}`});
+  }
+
+  // Q4-Q5: det 3×3
+  for(let q=0;q<2;q++){
+    let M,det;
+    do{
+      M=Array.from({length:3},()=>Array.from({length:3},()=>ri(-3,3)));
+      const [a,b,c]=[M[0][0],M[0][1],M[0][2]];
+      const [d,e,f]=[M[1][0],M[1][1],M[1][2]];
+      const [g,h,i]=[M[2][0],M[2][1],M[2][2]];
+      det=a*e*i+b*f*g+c*d*h-c*e*g-a*f*h-b*d*i;
+    }while(det===0);
+    const [a,b,c]=[M[0][0],M[0][1],M[0][2]];
+    const [d,e,f]=[M[1][0],M[1][1],M[1][2]];
+    const [g,h,i]=[M[2][0],M[2][1],M[2][2]];
+    Q.push({type:'num',stem:`หา det(A) โดยที่ A = ${matH(M)} (ใช้กฎ Sarrus)`,
+      answer:det,tol:0,explain:`det = ${a}·${e}·${i} + ${b}·${f}·${g} + ${c}·${d}·${h} − ${c}·${e}·${g} − ${a}·${f}·${h} − ${b}·${d}·${i} = ${det}`});
+  }
+  return Q;
+}};
+
+// ── Step 6 ────────────────────────────────────────────
+C[6] = {
+theory: `
+<div class="th-section">
+  <div class="th-label">เงื่อนไขและสูตร</div>
+  <div class="th-card">
+    <h4>เมทริกซ์ผกผัน A⁻¹ ของเมทริกซ์ 2×2</h4>
+    <b>เงื่อนไข:</b> det(A) ≠ 0
+    <div class="formula">ถ้า A = ${matH([['a','b'],['c','d']])} &nbsp; แล้ว &nbsp; A⁻¹ = <sup>1</sup>⁄<sub>det(A)</sub> × ${matH([['d','−b'],['−c','a']])}</div>
+    <div class="example-box">
+      <strong>ตัวอย่าง:</strong> A = ${matH([[2,1],[5,3]])}<br>
+      det(A) = 2·3 − 1·5 = 1<br><br>
+      A⁻¹ = ¹⁄₁ × ${matH([[3,-1],[-5,2]])} = ${matH([[3,-1],[-5,2]])}
+    </div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">การตรวจสอบ</div>
+  <div class="th-card">
+    A · A⁻¹ = A⁻¹ · A = I (เมทริกซ์เอกลักษณ์)
+  </div>
+</div>`,
+
+makeQ() {
+  const Q = [];
+  // Q1 MC: เงื่อนไข
+  const c1=sh([['det(A) ≠ 0',true],['det(A) = 0',false],['A เป็นเมทริกซ์จตุรัส เท่านั้น',false],['A มีแถวมากกว่า 2',false]]);
+  Q.push({type:'mc',stem:'A⁻¹ มีอยู่เมื่อใด?',choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:'A⁻¹ มีอยู่ก็ต่อเมื่อ det(A) ≠ 0 (A เป็น non-singular matrix)'});
+
+  // Q2 MC: สูตร adj
+  const c2=sh([['(1/det) × [d −b; −c a]',true],['(1/det) × [a b; c d]',false],['det × [d −b; −c a]',false],['[d −b; −c a] / (a+d)',false]]);
+  Q.push({type:'mc',stem:`ถ้า A = ${matH([['a','b'],['c','d']])} แล้ว A⁻¹ = ?`,choices:c2.map(x=>x[0]),answer:c2.findIndex(x=>x[1]),explain:'สูตร: A⁻¹ = (1/det)·adj(A) โดย adj(A) = [d −b; −c a]'});
+
+  // Q3-Q5 Num: element ของ A⁻¹
+  for(let q=0;q<3;q++){
+    let a,b,c,d,det;
+    do{a=ri(-4,4);b=ri(-4,4);c=ri(-4,4);d=ri(-4,4);det=a*d-b*c;}while(det===0||Math.abs(det)>6);
+    // adj = [d, -b; -c, a] / det
+    const inv=[[d/det,-b/det],[-c/det,a/det]];
+    const ir=ri(0,1),ic=ri(0,1);
+    const ans=rnd(inv[ir][ic],4);
+    Q.push({type:'num',stem:`A = ${matH([[a,b],[c,d]])} &nbsp; det(A) = ${det}<br>A⁻¹ มีค่าที่ตำแหน่ง (${ir+1},${ic+1}) เท่าไหร่? (ทศนิยม 4 ตำแหน่ง)`,
+      answer:ans,tol:0.001,explain:`adj(A) = ${matH([[d,-b],[-c,a]])} &nbsp; A⁻¹₍${ir+1}${ic+1}₎ = ${[d,-b,-c,a][[ir*2+ic]]}/det = ${[d,-b,-c,a][[ir*2+ic]]}/${det} ≈ ${ans}`});
+  }
+  return Q;
+}};
+
+// ── Step 7 ────────────────────────────────────────────
+C[7] = {
+theory: `
+<div class="th-section">
+  <div class="th-label">รูปแบบเมทริกซ์</div>
+  <div class="th-card">
+    <h4>เขียนระบบสมการในรูป AX = B</h4>
+    ระบบ:&nbsp; ax + by = p &nbsp;,&nbsp; cx + dy = q<br><br>
+    <div class="formula">
+      ${matH([['a','b'],['c','d']])} &nbsp;
+      ${matH([['x'],['y']])} &nbsp;=&nbsp;
+      ${matH([['p'],['q']])}
+      <br><br>A × X = B
+    </div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">วิธีแก้</div>
+  <div class="th-card">
+    <div class="formula">X = A⁻¹ · B</div>
+    <div class="example-box">
+      <strong>ตัวอย่าง:</strong> 2x + y = 5 &nbsp;,&nbsp; 5x + 3y = 13<br><br>
+      A = ${matH([[2,1],[5,3]])} &nbsp; B = ${matH([[5],[13]])}<br><br>
+      det(A) = 6−5 = 1 &nbsp;→&nbsp; A⁻¹ = ${matH([[3,-1],[-5,2]])}<br><br>
+      X = A⁻¹B = ${matH([[3,-1],[-5,2]])} ${matH([[5],[13]])} = ${matH([[3*5+(-1)*13],[-5*5+2*13]])}
+      <br><br>∴ x = 2, y = 1
+    </div>
+  </div>
+</div>`,
+
+makeQ() {
+  const Q = [];
+  // Q1 MC: รูปแบบ AX=B
+  const c1=sh([['AX = B โดย X = A⁻¹B',true],['AX = B โดย X = BA⁻¹',false],['XA = B โดย X = BA⁻¹',false],['AX = B โดย X = AB⁻¹',false]]);
+  Q.push({type:'mc',stem:'ถ้าเขียนระบบสมการในรูป AX = B แล้ว X มีค่าเท่าไหร่?',choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:'X = A⁻¹B (คูณทางซ้ายด้วย A⁻¹ ทั้งสองข้าง: A⁻¹AX = A⁻¹B → IX = A⁻¹B)'});
+
+  // Q2 MC: ระบุเมทริกซ์ A
+  let a2,b2,c2,d2,det2;
+  do{a2=ri(1,4);b2=ri(1,3);c2=ri(1,4);d2=ri(1,3);det2=a2*d2-b2*c2;}while(det2===0);
+  const mats=[[[a2,b2],[c2,d2]],[[a2,c2],[b2,d2]],[[d2,b2],[c2,a2]],[[b2,a2],[d2,c2]]];
+  const smats=sh(mats);
+  const ai=smats.findIndex(m=>m[0][0]===a2&&m[0][1]===b2&&m[1][0]===c2&&m[1][1]===d2);
+  Q.push({type:'mc',stem:`ระบบ ${a2}x + ${b2}y = p &nbsp; , &nbsp; ${c2}x + ${d2}y = q<br>เมทริกซ์ A ในรูป AX = B คืออะไร?`,choices:smats.map(m=>matH(m)),answer:ai,explain:`A = เมทริกซ์ค่าสัมประสิทธิ์ = ${matH([[a2,b2],[c2,d2]])}`});
+
+  // Q3-Q5 Num: หา x หรือ y
+  for(let q=0;q<3;q++){
+    let a,b,c,d,det,x0,y0;
+    do{x0=ri(-5,5);y0=ri(-5,5);a=ri(1,4);b=ri(1,3);c=ri(1,4);d=ri(1,3);det=a*d-b*c;}while(det===0||x0===0||y0===0);
+    const p=a*x0+b*y0, qq=c*x0+d*y0;
+    const askX=ri(0,1)===0;
+    const ans=askX?x0:y0;
+    Q.push({type:'num',stem:`แก้ระบบสมการ: ${a}x + ${b}y = ${p} &nbsp; , &nbsp; ${c}x + ${d}y = ${qq}<br>หาค่า ${askX?'x':'y'}`,
+      answer:ans,tol:0.01,explain:`A = ${matH([[a,b],[c,d]])} &nbsp; det = ${det}<br>X = A⁻¹B → x = ${x0}, y = ${y0}`});
+  }
+  return Q;
+}};
+
+// ── State ─────────────────────────────────────────────
+let curStep=1, curTab='learn', quiz=null, userAns={}, submitted=false;
+
+// ── Sidebar ───────────────────────────────────────────
+function buildSidebar(){
+  const el=document.getElementById('side');
+  el.innerHTML=SM.map(s=>`
+    <button class="s-btn${s.id===curStep?' active':''}" onclick="showStep(${s.id})">
+      <span class="s-emoji">${s.emoji}</span>
+      <span>ขั้น ${s.id}<br><small style="font-weight:400;font-size:11px">${s.title}</small></span>
+    </button>`).join('');
+}
+
+// ── Show Step ─────────────────────────────────────────
+function showStep(id){
+  curStep=id; curTab='learn'; quiz=null; userAns={}; submitted=false;
+  buildSidebar();
+  document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',i===0);});
+  renderContent();
+}
+
+function showTab(tab){
+  curTab=tab;
+  if(tab==='quiz'&&!quiz){ quiz=C[curStep].makeQ(); userAns={}; submitted=false; }
+  document.querySelectorAll('.tab').forEach(t=>{t.classList.toggle('active',t.textContent.includes(tab==='learn'?'ใบความรู้':'แบบทดสอบ'));});
+  renderContent();
+}
+
+// ── Render ────────────────────────────────────────────
+function renderContent(){
+  const el=document.getElementById('content');
+  const sm=SM.find(s=>s.id===curStep);
+  if(curTab==='learn'){
+    el.innerHTML=`<h2 style="font-size:20px;font-weight:800;margin-bottom:4px">${sm.emoji} ขั้นที่ ${curStep}: ${sm.title}</h2>
+      <p style="color:var(--mu);font-size:13px;margin-bottom:24px">ค32201 · ภาคเรียน 1/2569</p>
+      ${C[curStep].theory}`;
+  } else {
+    renderQuiz(el, sm);
+  }
+}
+
+function renderQuiz(el, sm){
+  const total=quiz.length;
+  el.innerHTML=`<h2 style="font-size:20px;font-weight:800;margin-bottom:4px">✏️ แบบทดสอบ ขั้น ${curStep}</h2>
+    <p style="color:var(--mu);font-size:13px;margin-bottom:20px">${total} ข้อ · ผ่านเกณฑ์ ${Math.ceil(total*0.8)} ข้อ (80%)</p>
+    <div id="result"></div>
+    ${quiz.map((q,i)=>renderQ(q,i)).join('')}
+    <div style="margin-top:20px;display:flex;gap:10px;align-items:center" id="quizBtns">
+      ${submitted
+        ?`<button class="btn btn-gh" onclick="resetQuiz()">🔄 ทำใหม่</button>`
+        :`<button class="btn btn-ac" onclick="submitQuiz()">ส่งคำตอบ</button>`}
+    </div>`;
+}
+
+function renderQ(q,i){
+  if(q.type==='mc'){
+    const dis=submitted?' disabled':'';
+    return `<div class="q-item" id="qi-${i}">
+      <div class="q-num">ข้อที่ ${i+1}</div>
+      <div class="q-stem">${q.stem}</div>
+      <div class="choices">
+        ${q.choices.map((c,j)=>`<div class="choice${userAns[i]===j?' selected':''}" id="ch-${i}-${j}" onclick="pickMC(${i},${j})">
+          <div class="choice-dot"></div><span>${c}</span>
+        </div>`).join('')}
+      </div>
+      <div class="q-feedback" id="fb-${i}"></div>
+      <div class="q-explain" id="ex-${i}">${q.explain}</div>
+    </div>`;
+  } else {
+    return `<div class="q-item" id="qi-${i}">
+      <div class="q-num">ข้อที่ ${i+1}</div>
+      <div class="q-stem">${q.stem}</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <input class="num-input" id="ni-${i}" type="number" step="any"
+          placeholder="คำตอบ" value="${userAns[i]!==undefined?userAns[i]:''}"
+          oninput="userAns[${i}]=parseFloat(this.value)"
+          ${submitted?'disabled':''}>
+        ${q.unit?`<span style="font-size:14px">${q.unit}</span>`:''}
+      </div>
+      <div class="q-feedback" id="fb-${i}"></div>
+      <div class="q-explain" id="ex-${i}">${q.explain}</div>
+    </div>`;
+  }
+}
+
+function pickMC(qi,ci){
+  if(submitted) return;
+  userAns[qi]=ci;
+  document.querySelectorAll(`[id^="ch-${qi}-"]`).forEach((el,j)=>{
+    el.classList.toggle('selected',j===ci);
+  });
+}
+
+function submitQuiz(){
+  submitted=true;
+  let score=0;
+  quiz.forEach((q,i)=>{
+    const fb=document.getElementById(`fb-${i}`);
+    const ex=document.getElementById(`ex-${i}`);
+    let ok=false;
+    if(q.type==='mc'){
+      const ans=userAns[i];
+      ok=(ans===q.answer);
+      q.choices.forEach((_,j)=>{
+        const el=document.getElementById(`ch-${i}-${j}`);
+        el.classList.add('disabled');
+        if(j===q.answer) el.classList.add('correct');
+        else if(j===ans&&!ok) el.classList.add('wrong');
+      });
+    } else {
+      const v=userAns[i];
+      ok=(v!==undefined&&!isNaN(v)&&Math.abs(v-q.answer)<=q.tol);
+      const ni=document.getElementById(`ni-${i}`);
+      ni.classList.add(ok?'correct':'wrong');
+      if(!ok) ni.placeholder=`เฉลย: ${q.answer}`;
+    }
+    if(ok) score++;
+    fb.innerHTML=ok?'<span class="q-feedback ok">✅ ถูกต้อง</span>':'<span class="q-feedback ng">❌ ผิด</span>';
+    ex.classList.add('show');
+  });
+  showResult(score, quiz.length);
+  document.getElementById('quizBtns').innerHTML=`<button class="btn btn-gh" onclick="resetQuiz()">🔄 ทำใหม่</button>`;
+}
+
+function showResult(s, t){
+  const pct=s/t;
+  const pass=pct>=0.8;
+  const el=document.getElementById('result');
+  el.style.display='block';
+  el.innerHTML=`<div class="score">${s}/${t}</div>
+    <div class="verdict ${pass?'result-pass':'result-fail'}">${pass?'🎉 ผ่านเกณฑ์!':'😅 ยังไม่ผ่าน — ลองใหม่ได้เลย'}</div>
+    ${pass?`<div class="ready-box">✅ พร้อมแล้ว! ไปหาครูเพื่อขอ <b>Quiz จริง</b> แล้ว unlock ขั้น ${curStep} ได้เลยครับ 🚀</div>`
+          :`<div style="color:var(--mu);font-size:13px">กลับไปอ่าน <b>ใบความรู้</b> แล้วลองทำแบบทดสอบใหม่</div>`}`;
+  el.scrollIntoView({behavior:'smooth'});
+}
+
+function resetQuiz(){
+  quiz=C[curStep].makeQ(); userAns={}; submitted=false;
+  renderContent();
+}
+
+// ── Init ──────────────────────────────────────────────
+buildSidebar();
+renderContent();
+</script>
+</body>
+</html>
