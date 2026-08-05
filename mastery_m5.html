@@ -572,9 +572,12 @@ async function fetchSteps() {
   setStatus('loading', 'กำลังโหลดข้อมูล...');
 
   try {
-    const res  = await fetch(CSV_URL);
+    const ctrl = new AbortController();
+    const tid  = setTimeout(() => ctrl.abort(), 10000);
+    const res  = await fetch(CSV_URL, { signal: ctrl.signal });
+    clearTimeout(tid);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const text = await res.text();
+    const text = (await res.text()).replace(/^﻿/, '');
     const rows   = parseCSV(text);
     const header = rows[0].map(h => h.toLowerCase().trim());
     const iNo   = header.indexOf('no');
