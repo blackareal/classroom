@@ -829,9 +829,12 @@ let horizon = 9;
 
 async function fetchHorizon() {
   try {
-    const res = await fetch(CSV_URL);
+    const ctrl = new AbortController();
+    const tid  = setTimeout(() => ctrl.abort(), 10000);
+    const res  = await fetch(CSV_URL, { signal: ctrl.signal });
+    clearTimeout(tid);
     if (!res.ok) return;
-    const text = await res.text();
+    const text = (await res.text()).replace(/^﻿/, '');
     const rows = text.trim().split('\n').map(r => r.split(',').map(c => c.trim().replace(/^"|"$/g,'')));
     const hdr  = rows[0].map(h => h.toLowerCase());
     const iNo  = hdr.indexOf('no');
