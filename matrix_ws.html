@@ -123,18 +123,6 @@ body { font-family:'Sarabun',sans-serif; background:#0d1117; color:#c9d1d9; }
   font-size:10px; color:#999;
 }
 
-/* ── Knowledge Reference Box ─── */
-.sh-ref {
-  background:#fffdf0; border:1.5px solid #e8c800;
-  border-radius:4px; padding:7px 10px 6px;
-  margin-bottom:7px; font-size:12px; line-height:1.65;
-}
-.ref-hd {
-  font-weight:800; font-size:12px; color:#5c4000;
-  border-bottom:1px dashed #d4a800;
-  padding-bottom:3px; margin-bottom:5px;
-}
-
 /* ── Print ─── */
 @media print {
   body { background:#fff; }
@@ -481,10 +469,10 @@ function g8(r) {
     จงคำนวณ A⁻¹ = adj(A) ÷ det(A) &nbsp;(หารทุกสมาชิกด้วย det)`;
 
   return [
-    {html:h1, ws:'ws-lg'},     // Sarrus
-    {html:h2, ws:'ws-lg'},     // cofactors แถว 1 (3 ตัว)
-    {html:h3, ws:'ws-xl'},     // cofactors แถว 2-3 + adj(A)
-    {html:h4, ws:'ws-md'},     // A⁻¹ = adj/det
+    {html:h1, ws:'ws-lg'},     // Sarrus 4 เส้น
+    {html:h2, ws:'ws-2xl'},    // 3 cofactors × 2×2 det ต่อตัว
+    {html:h3, ws:'ws-2xl'},    // 6 cofactors + sketch adj(A)
+    {html:h4, ws:'ws-xl'},     // เขียน A⁻¹ 3×3
   ];
 }
 
@@ -525,80 +513,12 @@ function g9(r) {
 
   return [
     {html:h1, ws:'ws-xl'},
-    {html:h2, ws:'ws-xl'},
+    {html:h2, ws:'ws-2xl'},
     {html:h3, ws:'ws-lg'},
-    {html:h4, ws:'ws-xl'},
+    {html:h4, ws:'ws-2xl'},
   ];
 }
 
-// ── ใบความรู้ (เหมือนกันทุกใบในขั้นเดียวกัน) ───────────
-function makeRef(step) {
-  const R = {};
-
-  R[1] = `
-<b>เมทริกซ์ขนาด m×n</b> มี m แถว n หลัก &nbsp;|&nbsp; a<sub>ij</sub> = สมาชิกแถว i หลัก j<br>
-ตัวอย่าง A = ${mt([[1,2,3],[4,5,6]])} (ขนาด <b>2×3</b>)
-&nbsp;→&nbsp; a<sub>12</sub> = <b>2</b> (แถว 1 หลัก 2) &nbsp;&nbsp; a<sub>23</sub> = <b>6</b> (แถว 2 หลัก 3)<br>
-<b>ทรานสโพส A<sup>T</sup></b>: สลับทุกตำแหน่ง a<sub>ij</sub> → a<sub>ji</sub>
-&nbsp;→&nbsp; A<sup>T</sup> = ${mt([[1,4],[2,5],[3,6]])} (ขนาด <b>3×2</b>)`;
-
-  R[2] = `
-<b>A + B หรือ A − B</b>: บวก/ลบสมาชิก<u>ตำแหน่งเดียวกัน</u> — ขนาดต้องเท่ากันทุกมิติ<br>
-ตัวอย่าง: ${mt([[2,3],[-1,5]])} + ${mt([[1,4],[2,0]])} &nbsp;→&nbsp; คำนวณทีละตำแหน่ง:<br>
-&nbsp;&nbsp;แถว1 หลัก1: 2 + 1 = <b>3</b> &nbsp;&nbsp;&nbsp; แถว1 หลัก2: 3 + 4 = <b>7</b><br>
-&nbsp;&nbsp;แถว2 หลัก1: −1 + 2 = <b>1</b> &nbsp; แถว2 หลัก2: 5 + 0 = <b>5</b><br>
-ผลลัพธ์ = ${mt([[3,7],[1,5]])}`;
-
-  R[3] = `
-<b>kA</b>: คูณสมาชิก<u>ทุกตัว</u>ด้วย k<br>
-ตัวอย่าง: 3 × ${mt([[2,-1],[0,4]])} &nbsp;→&nbsp; คำนวณทีละตัว:<br>
-&nbsp;&nbsp;แถว1 หลัก1: 3 × 2 = <b>6</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; แถว1 หลัก2: 3 × (−1) = <b>−3</b><br>
-&nbsp;&nbsp;แถว2 หลัก1: 3 × 0 = <b>0</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; แถว2 หลัก2: 3 × 4 = <b>12</b><br>
-ผลลัพธ์ = ${mt([[6,-3],[0,12]])}`;
-
-  R[4] = `
-<b>AB</b>: สมาชิก (i,j) ของ AB = แถว i ของ A <b>·</b> หลัก j ของ B &nbsp;|&nbsp; เงื่อนไข: จำนวนหลัก A = จำนวนแถว B<br>
-ตัวอย่าง: ${mt([[1,2],[3,4]])} × ${mt([[5,6],[7,8]])} &nbsp;→&nbsp; คำนวณทีละตำแหน่ง:<br>
-&nbsp;&nbsp;(1,1): แถว1·หลัก1 = 1×5 + 2×7 = 5+14 = <b>19</b> &nbsp;&nbsp; (1,2): แถว1·หลัก2 = 1×6 + 2×8 = 6+16 = <b>22</b><br>
-&nbsp;&nbsp;(2,1): แถว2·หลัก1 = 3×5 + 4×7 = 15+28 = <b>43</b> &nbsp; (2,2): แถว2·หลัก2 = 3×6 + 4×8 = 18+32 = <b>50</b><br>
-ผลลัพธ์ = ${mt([[19,22],[43,50]])}`;
-
-  R[5] = `
-<b>det 2×2</b>: ${mt([['a','b'],['c','d']])} = ad − bc &nbsp;&nbsp; ตัวอย่าง: ${mt([[3,2],[1,4]])} = 3×4 − 2×1 = 12 − 2 = <b>10</b><br>
-<b>det 3×3 (กฎ Sarrus)</b>: ${mt([[1,2,1],[3,0,2],[1,4,1]])}<br>
-&nbsp;&nbsp;บวก (แนวทแยงหลัก): (1×0×1) + (2×2×1) + (1×3×4) = 0 + 4 + 12 = 16<br>
-&nbsp;&nbsp;ลบ &nbsp;(แนวทแยงรอง):&nbsp; (1×0×1) + (1×2×4) + (2×3×1) = 0 + 8 + 6 = 14<br>
-&nbsp;&nbsp;det = 16 − 14 = <b>2</b>`;
-
-  R[6] = `
-สมบัติดีเทอร์มิแนนต์ (A, B ขนาด n×n, k = สเกลาร์):<br>
-&nbsp;&nbsp;• <b>det(AB)</b> = det(A) · det(B) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; เช่น det(A)=3, det(B)=4 → det(AB) = 3 × 4 = <b>12</b><br>
-&nbsp;&nbsp;• <b>det(kA)</b> = k<sup>n</sup> · det(A) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; เช่น k=2, n=2, det(A)=5 → det(2A) = 2² × 5 = <b>20</b><br>
-&nbsp;&nbsp;• <b>det(A<sup>T</sup>)</b> = det(A) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; เช่น det(A)=7 → det(A<sup>T</sup>) = <b>7</b><br>
-&nbsp;&nbsp;• <b>det(A<sup>−1</sup>)</b> = 1 / det(A) &nbsp;&nbsp;&nbsp;&nbsp; เช่น det(A)=4 → det(A<sup>−1</sup>) = <b>1/4</b>`;
-
-  R[7] = `
-<b>สูตร A⁻¹ (2×2)</b>: เงื่อนไข det(A) ≠ 0 &nbsp;→&nbsp; A⁻¹ = <sup>1</sup>⁄<sub>det(A)</sub> × ${mt([['d','−b'],['−c','a']])} (สลับ a↔d, เปลี่ยนเครื่องหมาย b และ c)<br>
-ตัวอย่าง A = ${mt([[3,1],[2,1]])} &nbsp;→&nbsp; ขั้น 1: det(A) = 3×1 − 1×2 = 3 − 2 = <b>1</b><br>
-&nbsp;&nbsp;ขั้น 2: สลับ a↔d: (3↔1) &nbsp;|&nbsp; เปลี่ยนเครื่องหมาย: b = 1 → −1, &nbsp; c = 2 → −2<br>
-&nbsp;&nbsp;ขั้น 3: A⁻¹ = <sup>1</sup>⁄<sub>1</sub> × ${mt([[1,-1],[-2,3]])} = ${mt([[1,-1],[-2,3]])} &nbsp; ตรวจสอบ: AA⁻¹ = I`;
-
-  R[8] = `
-<b>C<sub>ij</sub></b> = (−1)^(i+j) × det(submatrix หลังตัดแถว i และหลัก j ออก) &nbsp;|&nbsp; pattern เครื่องหมาย: +−+ / −+− / +−+<br>
-ตัวอย่าง A = ${mt([[1,2,1],[3,0,2],[1,4,1]])}<br>
-&nbsp;&nbsp;C<sub>11</sub>: ตัดแถว1 หลัก1 → ${mt([[0,2],[4,1]])} &nbsp; det = 0×1 − 2×4 = −8 &nbsp; (−1)^2 × (−8) = (+1)(−8) = <b>−8</b><br>
-&nbsp;&nbsp;C<sub>12</sub>: ตัดแถว1 หลัก2 → ${mt([[3,2],[1,1]])} &nbsp; det = 3×1 − 2×1 = 1 &nbsp;&nbsp; (−1)^3 × 1 = (−1)(1) = <b>−1</b><br>
-<b>adj(A)</b> = transpose ของ cofactor matrix &nbsp;→&nbsp; <b>A⁻¹</b> = adj(A) ÷ det(A)`;
-
-  R[9] = `
-<b>AX = B</b>: {ax+by=p, cx+dy=q} → ${mt([['a','b'],['c','d']])}${mt([['x'],['y']])} = ${mt([['p'],['q']])}<br>
-ตัวอย่าง: 2x+y=5, x+3y=7 → A=${mt([[2,1],[1,3]])} B=${mt([[5],[7]])} &nbsp; det(A) = 2×3 − 1×1 = <b>5</b><br>
-<b>วิธี A⁻¹B</b>: A⁻¹ = <sup>1</sup>⁄<sub>5</sub> × ${mt([[3,-1],[-1,2]])} &nbsp;→&nbsp; X = <sup>1</sup>⁄<sub>5</sub>${mt([[3,-1],[-1,2]])}${mt([[5],[7]])} = <sup>1</sup>⁄<sub>5</sub>${mt([[8],[9]])}
-&nbsp; (คำนวณ: [3×5+(−1)×7 ; (−1)×5+2×7] = [15−7 ; −5+14]) &nbsp;→&nbsp; x = <b>8/5</b>, y = <b>9/5</b><br>
-<b>Cramer</b>: D<sub>x</sub> = det${mt([[5,1],[7,3]])} = 15−7 = 8 → x = 8÷5 = <b>8/5</b> &nbsp;|&nbsp; D<sub>y</sub> = det${mt([[2,5],[1,7]])} = 14−5 = 9 → y = 9÷5 = <b>9/5</b>`;
-
-  return `<div class="sh-ref"><div class="ref-hd">📚 ใบความรู้ · ขั้นที่ ${step}: ${SNAMES[step]}</div>${R[step]}</div>`;
-}
 
 const GENS = [null, g1, g2, g3, g4, g5, g6, g7, g8, g9];
 
@@ -625,7 +545,6 @@ function buildSheet(step, n) {
       <div class="fi" style="max-width:70px"><span>เลขที่</span><div class="fi-line"></div></div>
       <div class="fi" style="max-width:140px"><span>วันที่</span><div class="fi-line"></div></div>
     </div>
-    ${makeRef(step)}
     <div class="probs">${probsHTML}</div>
     <div class="sh-ftr">
       <span>ผ่านเกณฑ์: ถูกต้องทุกข้อ &nbsp; ⬜ ยังไม่ผ่าน</span>
