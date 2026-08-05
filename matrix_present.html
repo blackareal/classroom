@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>เมทริกซ์ — Presentation</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#0d1117;font-family:'Sarabun','Segoe UI',sans-serif}
+
+/* ── NAV BAR ── */
+#nav{position:fixed;top:0;left:0;right:0;height:52px;background:#161b22;border-bottom:1px solid #30363d;
+  display:flex;align-items:center;padding:0 16px;gap:10px;z-index:100}
+#stepPicker{display:flex;gap:6px;flex:1;overflow-x:auto}
+.sp-btn{padding:4px 10px;border-radius:16px;border:1px solid #30363d;background:#0d1117;color:#8b949e;
+  font-size:13px;cursor:pointer;white-space:nowrap;transition:.15s}
+.sp-btn.active{color:#fff;font-weight:700}
+#navInfo{color:#8b949e;font-size:13px;white-space:nowrap}
+#prevBtn,#nextBtn{padding:6px 14px;border-radius:8px;border:none;background:#21262d;color:#ccc;
+  font-size:18px;cursor:pointer;transition:.15s}
+#prevBtn:hover,#nextBtn:hover{background:#30363d;color:#fff}
+#fsBtn{padding:6px 12px;border-radius:8px;border:none;background:#21262d;color:#ccc;
+  font-size:16px;cursor:pointer;transition:.15s;white-space:nowrap}
+#fsBtn:hover{background:#30363d;color:#fff}
+
+/* ── SLIDES ── */
+.slide{display:none;position:absolute;top:52px;left:0;right:0;bottom:0;
+  flex-direction:column;overflow:hidden}
+.slide.active{display:flex}
+
+.slide-header{padding:24px 52px 16px;position:relative}
+.slide-step-badge{font-size:13px;font-weight:700;letter-spacing:.5px;opacity:.85;margin-bottom:6px}
+.slide-title{font-size:42px;font-weight:800;line-height:1.15;color:#fff}
+.slide-subtitle{font-size:18px;color:#8b949e;margin-top:6px}
+.slide-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
+
+.slide-body{flex:1;padding:20px 52px 16px;overflow-y:auto;display:flex;flex-direction:column;gap:18px}
+
+/* cards */
+.card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:20px 24px}
+.card-title{font-size:15px;font-weight:700;color:#8b949e;margin-bottom:10px;letter-spacing:.3px}
+.card-body{font-size:22px;color:#e6edf3;line-height:1.55}
+.card-body .hl{font-weight:800;color:#f0c040}
+.card-body .note{font-size:16px;color:#8b949e;margin-top:6px}
+.card-body .ok{color:#56d364}
+.card-body .err{color:#f85149}
+
+/* two columns */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* matrix */
+.mat-wrap{display:inline-flex;align-items:center;gap:4px;vertical-align:middle}
+.mat-inner{display:flex;flex-direction:column;gap:6px}
+.mat-row{display:flex;gap:22px;justify-content:center}
+.mat-row span{min-width:28px;text-align:center;font-size:22px}
+.mat-lb,.mat-rb{font-size:3.2em;line-height:1;font-weight:100;color:#8b949e;user-select:none}
+
+.formula{background:#0d1117;border:1px solid #30363d;border-radius:8px;
+  padding:12px 20px;font-size:24px;color:#f0c040;font-weight:700;text-align:center;line-height:1.5}
+
+/* progress dots */
+.dots{display:flex;gap:6px;justify-content:center;padding:10px 0 14px}
+.dot{width:8px;height:8px;border-radius:50%;background:#30363d;transition:.2s}
+.dot.on{background:#8b949e}
+.dot.cur{width:22px;border-radius:4px}
+
+/* intro special */
+.step-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.step-card{border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.step-card .sc-emoji{font-size:24px}
+.step-card .sc-text{font-size:14px;color:#fff;font-weight:600;line-height:1.3}
+.step-card .sc-sub{font-size:12px;opacity:.7;margin-top:2px}
+
+/* highlight row arrow */
+.arr{font-size:28px;color:#8b949e;text-align:center;padding:2px 0}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div id="nav">
+  <button id="prevBtn" onclick="move(-1)">‹</button>
+  <div id="stepPicker"></div>
+  <div id="navInfo">—</div>
+  <button id="nextBtn" onclick="move(1)">›</button>
+  <button id="fsBtn" onclick="toggleFS()" title="เต็มจอ">⛶</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 0 — INTRO
+═══════════════════════════════════════════════ -->
+<div class="slide" data-step="-1" style="--c:#37474f">
+  <div class="slide-header" style="background:linear-gradient(135deg,#1a237e,#0d47a1)">
+    <div class="slide-step-badge" style="color:#90caf9">ค32201 คณิตศาสตร์เพิ่มเติม 3 · ม.5/1</div>
+    <div class="slide-title">เมทริกซ์ (Matrix)</div>
+    <div class="slide-subtitle">ระบบ Mastery Learning — เรียนทีละขั้น ผ่านได้เลื่อนทันที</div>
+    <div class="slide-header__bar" style="background:#0d47a1"></div>
+  </div>
+  <div class="slide-body">
+    <div class="card" style="border-color:#1a237e55">
+      <div class="card-title">📖 วิธีเรียน</div>
+      <div class="card-body" style="font-size:21px;line-height:1.9">
+        <b>1.</b> ฟังครูอธิบายเนื้อหาของขั้นนั้น<br>
+        <b>2.</b> เปิด <span class="hl">matrix.html</span> → เลือกขั้นที่กำลังเรียน → อ่านใบความรู้<br>
+        <b>3.</b> ทำ<span class="hl">ใบงาน</span>ที่ได้รับ — โจทย์สุ่มแต่ละใบ ไม่เหมือนกัน<br>
+        <b>4.</b> ส่งครู → ครูตรวจ → <span class="ok">ผ่าน</span> → เลื่อนขั้นถัดไปได้เลย
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card" style="border-color:#56d36433">
+        <div class="card-title">✅ ข้อดีของระบบนี้</div>
+        <div class="card-body" style="font-size:18px;line-height:1.8">
+          เรียนได้ตามจังหวะตัวเอง<br>
+          ทุกคนอาจอยู่ขั้นต่างกัน<br>
+          ไม่ต้องรอเพื่อน — ผ่านแล้วเดินหน้าเลย
+        </div>
+      </div>
+      <div class="card" style="border-color:#f0c04033">
+        <div class="card-title">⚠ กติกา</div>
+        <div class="card-body" style="font-size:18px;line-height:1.8">
+          ต้องผ่านขั้นก่อน ถึงจะทำขั้นถัดไปได้<br>
+          ข้ามขั้นไม่ได้<br>
+          มี <span class="hl">9 ขั้น</span> ตั้งแต่นิยามจนแก้สมการ
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     STEP 1 — นิยามและประเภทเมทริกซ์
+═══════════════════════════════════════════════ -->
+<div class="slide" data-step="1">
+  <div class="slide-header" style="background:#2e7d3222;border-bottom:3px solid #2e7d32">
+    <div class="slide-step-badge" style="color:#56d364">🌱 ขั้นที่ 1 · หน้า 1/2</div>
+    <div class="slide-title">เมทริกซ์คืออะไร?</div>
+  </div>
+  <div class="slide-body">
+    <div class="card">
+      <div class="card-title">นิยาม</div>
+      <div class="card-body">
+        เมทริกซ์คือ <span class="hl">ตารางสี่เหลี่ยมของตัวเลข</span> จัดเป็นแถวและหลัก<br>
+        เมทริกซ์ขนาด <span class="hl">m × n</span> มี m แถว (row) และ n หลัก (column)
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">ตัวอย่าง A ขนาด 2×2</div>
+        <div class="card-body" style="text-align:center;padding:8px 0">
+          <div class="mat-wrap">
+            <div class="mat-lb">[</div>
+            <div class="mat-inner">
+              <div class="mat-row"><span>1</span><span>2</span></div>
+              <div class="mat-row"><span>3</span><span>4</span></div>
+            </div>
+            <div class="mat-rb">]</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">การอ่านสมาชิก a<sub style="font-size:.7em">ij</sub></div>
+        <div class="card-body" style="font-size:19px;line-height:1.7">
+          a<sub style="font-size:.7em">ij</sub> = สมาชิกแถวที่ i หลักที่ j<br>
+          <span class="hl">a₁₂ = 2</span> (แถว 1, หลัก 2)<br>
+          <span class="hl">a₂₁ = 3</span> (แถว 2, หลัก 1)
+        </div>
+      </div>
+    </div>
+    <div class="formula">A = [a<sub style="font-size:.65em">ij</sub>]<sub style="font-size:.65em">m×n</sub></div>
+  </div>
+</div>
+
+<div class="slide" data-step="1">
+  <div class="slide-header" style="background:#2e7d3222;border-bottom:3px solid #2e7d32">
+    <div class="slide-step-badge" style="color:#56d364">🌱 ขั้นที่ 1 · หน้า 2/2</div>
+    <div class="slide-title">ประเภทเมทริกซ์</div>
+  </div>
+  <div class="slide-body">
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">เมทริกซ์จตุรัส (Square)</div>
+        <div class="card-body" style="font-size:19px">m = n<br>
+          <div class="mat-wrap" style="margin-top:8px">
+            <div class="mat-lb">[</div>
+            <div class="mat-inner">
+              <div class="mat-row"><span>2</span><span>5</span></div>
+              <div class="mat-row"><span>1</span><span>3</span></div>
+            </div>
+            <div class="mat-rb">]</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">เมทริกซ์เอกลักษณ์ I</div>
+        <div class="card-body" style="font-size:19px">เส้นทแยงมุม = 1 ที่เหลือ = 0<br>
+          <div class="mat-wrap" style="margin-top:8px">
+            <div class="mat-lb">[</div>
+            <div class="mat-inner">
+              <div class="mat-row"><span class="hl">1</span><span>0</span></div>
+              <div class="mat-row"><span>0</span><span class="hl">1</span></div>
+            </div>
+            <div class="mat-rb">]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">เมทริกซ์สังยุค (Transpose) — Aᵀ</div>
+      <div class="card-body" style="font-size:20px">
+        <b>สลับแถวกับหลัก</b> — แถวที่ 1 ของ A กลายเป็นหลักที่ 1 ของ Aᵀ
+        <div style="display:flex;align-items:center;gap:20px;margin-top:12px;justify-content:center">
+          <div>A = <div class="mat-wrap">
+            <div class="mat-lb">[</div>
+            <div class="mat-inner">
+              <div class="mat-row"><span>1</span><span>2</span><span>3</span></div>
+              <div class="mat-row"><span>4</span><span>5</span><span>6</span></div>
+            </div>
+            <div class="mat-rb">]</div>
+          </div></div>
+          <div class="arr">→</div>
+          <div>Aᵀ = <div class="mat-wrap">
+            <div class="mat-lb">[</div>
+            <div class="mat-inner">
+              <div class="mat-row"><span>1</span><span>4</span></div>
+              <div class="mat-row"><span>2</span><span>5</span></div>
+              <div class="mat-row"><span>3</span><span>6</span></div>
+            </div>
+            <div class="mat-rb">]</div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     STEP 2 — บวก-ลบ
+═══════════════════════════════════════════════ -->
+<div class="slide" data-step="2">
+  <div class="slide-header" style="background:#1565c022;border-bottom:3px solid #1565c0">
+    <div class="slide-step-badge" style="color:#79b8ff">➕ ขั้นที่ 2 · หน้า 1/2</div>
+    <div class="slide-title">การบวก-ลบเมทริกซ์</div>
+  </div>
+  <div class="slide-body">
+    <div class="card">
+      <div class="card-title">เงื่อนไข</div>
+      <div class="card-body"><span class="hl">ขนาดต้องเท่ากัน</span> — A และ B ต้องเป็น m×n เหมือนกัน<br>
+        <span class="note">ถ้าขนาดต่างกัน — บวกกันไม่ได้</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">วิธีคำนวณ — บวกสมาชิกตำแหน่งเดียวกัน</div>
+      <div class="card-body" style="font-size:19px">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>1</span><span>5</span></div>
+            <div class="mat-row"><span>3</span><span>7</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>+</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>5</span><span>6</span></div>
+            <div class="mat-row"><span>7</span><span>8</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>=</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span style="color:#f0c040">1+5</span><span style="color:#f0c040">5+6</span></div>
+            <div class="mat-row"><span style="color:#f0c040">3+7</span><span style="color:#f0c040">7+8</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>=</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span class="ok">6</span><span class="ok">11</span></div>
+            <div class="mat-row"><span class="ok">10</span><span class="ok">15</span></div>
+          </div><div class="mat-rb">]</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="formula">A + B = B + A &nbsp;(สมบัติสลับที่ใช้ได้)</div>
+  </div>
+</div>
+
+<div class="slide" data-step="2">
+  <div class="slide-header" style="background:#1565c022;border-bottom:3px solid #1565c0">
+    <div class="slide-step-badge" style="color:#79b8ff">➕ ขั้นที่ 2 · หน้า 2/2</div>
+    <div class="slide-title">การลบเมทริกซ์</div>
+  </div>
+  <div class="slide-body">
+    <div class="card">
+      <div class="card-title">ลบสมาชิกตำแหน่งเดียวกัน</div>
+      <div class="card-body" style="font-size:19px">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>8</span><span>5</span></div>
+            <div class="mat-row"><span>9</span><span>4</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>−</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>3</span><span>2</span></div>
+            <div class="mat-row"><span>6</span><span>1</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>=</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span style="color:#f0c040">8−3</span><span style="color:#f0c040">5−2</span></div>
+            <div class="mat-row"><span style="color:#f0c040">9−6</span><span style="color:#f0c040">4−1</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>=</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span class="ok">5</span><span class="ok">3</span></div>
+            <div class="mat-row"><span class="ok">3</span><span class="ok">3</span></div>
+          </div><div class="mat-rb">]</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-color:#f0c04033">
+      <div class="card-title">⚠ ข้อควรระวัง</div>
+      <div class="card-body" style="font-size:19px;line-height:1.7">
+        A − B <span class="err">≠</span> B − A &nbsp;&nbsp;(การลบ <b>ไม่มี</b>สมบัติสลับที่)<br>
+        <span class="note">ขนาดต้องเท่ากันเสมอ — ถ้าต่างกันบวก-ลบกันไม่ได้</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     STEP 3 — คูณสเกลาร์
+═══════════════════════════════════════════════ -->
+<div class="slide" data-step="3">
+  <div class="slide-header" style="background:#6a1b9a22;border-bottom:3px solid #6a1b9a">
+    <div class="slide-step-badge" style="color:#c792ea">✖️ ขั้นที่ 3 · หน้า 1/2</div>
+    <div class="slide-title">การคูณด้วยสเกลาร์</div>
+  </div>
+  <div class="slide-body">
+    <div class="card">
+      <div class="card-title">นิยาม — คูณสมาชิกทุกตัวด้วย k</div>
+      <div class="card-body" style="font-size:19px">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:8px">
+          <span>3 ×</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>1</span><span>−2</span></div>
+            <div class="mat-row"><span>0</span><span>4</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>=</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span style="color:#f0c040">3×1</span><span style="color:#f0c040">3×(−2)</span></div>
+            <div class="mat-row"><span style="color:#f0c040">3×0</span><span style="color:#f0c040">3×4</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>=</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span class="ok">3</span><span class="ok">−6</span></div>
+            <div class="mat-row"><span class="ok">0</span><span class="ok">12</span></div>
+          </div><div class="mat-rb">]</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="formula">kA = [k·aᵢⱼ]</div>
+  </div>
+</div>
+
+<div class="slide" data-step="3">
+  <div class="slide-header" style="background:#6a1b9a22;border-bottom:3px solid #6a1b9a">
+    <div class="slide-step-badge" style="color:#c792ea">✖️ ขั้นที่ 3 · หน้า 2/2</div>
+    <div class="slide-title">สมบัติการคูณสเกลาร์</div>
+  </div>
+  <div class="slide-body">
+    <div class="card"><div class="card-title">สมบัติกระจาย</div>
+      <div class="card-body" style="font-size:21px;line-height:1.8">
+        <span class="hl">k(A + B)</span> = kA + kB<br>
+        <span class="hl">(k + m)A</span> = kA + mA
+      </div>
+    </div>
+    <div class="card"><div class="card-title">สมบัติเชิงสเกลาร์</div>
+      <div class="card-body" style="font-size:21px;line-height:1.8">
+        <span class="hl">k(mA)</span> = (km)A<br>
+        <span class="hl">1·A</span> = A &nbsp;&nbsp;| &nbsp;&nbsp;<span class="hl">0·A</span> = O (เมทริกซ์ศูนย์)
+      </div>
+    </div>
+    <div class="card" style="border-color:#f0c04033"><div class="card-title">ตัวอย่าง</div>
+      <div class="card-body" style="font-size:19px">
+        2(A + B) = 2A + 2B &nbsp;&nbsp;✓<br>
+        (3 + 5)A = 3A + 5A = 8A &nbsp;&nbsp;✓
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     STEP 4 — คูณเมทริกซ์
+═══════════════════════════════════════════════ -->
+<div class="slide" data-step="4">
+  <div class="slide-header" style="background:#bf360c22;border-bottom:3px solid #bf360c">
+    <div class="slide-step-badge" style="color:#ffab70">⚡ ขั้นที่ 4 · หน้า 1/3</div>
+    <div class="slide-title">การคูณเมทริกซ์</div>
+  </div>
+  <div class="slide-body">
+    <div class="card">
+      <div class="card-title">เงื่อนไข</div>
+      <div class="card-body">A ขนาด <span class="hl">m×n</span> คูณ B ขนาด <span class="hl">n×p</span><br>
+        จำนวน<span class="hl">หลัก</span>ของ A ต้องเท่ากับจำนวน<span class="hl">แถว</span>ของ B<br>
+        <span class="note">ผลลัพธ์ AB มีขนาด m×p</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">วิธีคำนวณ — แถว × หลัก (dot product)</div>
+      <div class="card-body" style="font-size:18px;line-height:1.7">
+        (AB)ᵢⱼ = ผลรวมของ <span class="hl">แถวที่ i ของ A</span> คูณกับ <span class="hl">หลักที่ j ของ B</span><br>
+        <span class="note">ทำทีละช่อง ทีละขั้นตอน</span>
+      </div>
+    </div>
+    <div class="formula">c₁₁ = a₁₁·b₁₁ + a₁₂·b₂₁</div>
+  </div>
+</div>
+
+<div class="slide" data-step="4">
+  <div class="slide-header" style="background:#bf360c22;border-bottom:3px solid #bf360c">
+    <div class="slide-step-badge" style="color:#ffab70">⚡ ขั้นที่ 4 · หน้า 2/3</div>
+    <div class="slide-title">ตัวอย่าง A × B</div>
+  </div>
+  <div class="slide-body">
+    <div class="card">
+      <div class="card-body" style="font-size:17px;line-height:1.8">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>1</span><span>2</span></div>
+            <div class="mat-row"><span>3</span><span>4</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>×</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>5</span><span>6</span></div>
+            <div class="mat-row"><span>7</span><span>8</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>=</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span style="color:#f0c040">(1×5)+(2×7)</span><span style="color:#f0c040">(1×6)+(2×8)</span></div>
+            <div class="mat-row"><span style="color:#f0c040">(3×5)+(4×7)</span><span style="color:#f0c040">(3×6)+(4×8)</span></div>
+          </div><div class="mat-rb">]</div></div>
+        </div>
+        <div class="arr">↓</div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span style="color:#f0c040">5+14</span><span style="color:#f0c040">6+16</span></div>
+            <div class="mat-row"><span style="color:#f0c040">15+28</span><span style="color:#f0c040">18+32</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>=</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span class="ok">19</span><span class="ok">22</span></div>
+            <div class="mat-row"><span class="ok">43</span><span class="ok">50</span></div>
+          </div><div class="mat-rb">]</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-step="4">
+  <div class="slide-header" style="background:#bf360c22;border-bottom:3px solid #bf360c">
+    <div class="slide-step-badge" style="color:#ffab70">⚡ ขั้นที่ 4 · หน้า 3/3</div>
+    <div class="slide-title">ข้อควรระวัง</div>
+  </div>
+  <div class="slide-body">
+    <div class="card" style="border-color:#f8514933">
+      <div class="card-title">❌ AB ≠ BA โดยทั่วไป</div>
+      <div class="card-body" style="font-size:20px;line-height:1.7">
+        การคูณเมทริกซ์ <span class="err">ไม่มีสมบัติสลับที่</span><br>
+        AB และ BA อาจได้คำตอบต่างกัน<br>
+        หรืออาจคูณได้ทางเดียว (ขนาดไม่ตรง)<br>
+        <span class="note">ลำดับการคูณสำคัญมาก — ต้องระวัง</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">✅ สมบัติที่ใช้ได้</div>
+      <div class="card-body" style="font-size:20px;line-height:1.8">
+        (AB)C = A(BC) &nbsp; (เชื่อมโยง ✓)<br>
+        A(B+C) = AB + AC &nbsp; (กระจาย ✓)<br>
+        AI = IA = A &nbsp; (เอกลักษณ์ ✓)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     STEP 5 — ดีเทอร์มิแนนต์
+═══════════════════════════════════════════════ -->
+<div class="slide" data-step="5">
+  <div class="slide-header" style="background:#b71c1c22;border-bottom:3px solid #b71c1c">
+    <div class="slide-step-badge" style="color:#f85149">🔍 ขั้นที่ 5 · หน้า 1/3</div>
+    <div class="slide-title">ดีเทอร์มิแนนต์ 2×2</div>
+  </div>
+  <div class="slide-body">
+    <div class="card">
+      <div class="card-title">สูตร</div>
+      <div class="card-body" style="text-align:center">
+        <div style="display:inline-flex;align-items:center;gap:10px">
+          det<div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>a</span><span>b</span></div>
+            <div class="mat-row"><span>c</span><span>d</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>= <span class="hl">ad − bc</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">ตัวอย่าง</div>
+      <div class="card-body" style="font-size:19px">
+        <div style="display:inline-flex;align-items:center;gap:10px">
+          det<div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>3</span><span>2</span></div>
+            <div class="mat-row"><span>1</span><span>5</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>= <span style="color:#f0c040">(3×5) − (2×1)</span> = 15 − 2 = <span class="ok">13</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="formula">|A| = ad − bc</div>
+  </div>
+</div>
+
+<div class="slide" data-step="5">
+  <div class="slide-header" style="background:#b71c1c22;border-bottom:3px solid #b71c1c">
+    <div class="slide-step-badge" style="color:#f85149">🔍 ขั้นที่ 5 · หน้า 2/3</div>
+    <div class="slide-title">ดีเทอร์มิแนนต์ 3×3 (Sarrus)</div>
+  </div>
+  <div class="slide-body">
+    <div class="card">
+      <div class="card-title">กฎ Sarrus — แนวลง (+) ลบ แนวขึ้น (−)</div>
+      <div class="card-body" style="font-size:18px;line-height:1.7">
+        <span style="color:#56d364">+ (a₁₁·a₂₂·a₃₃) + (a₁₂·a₂₃·a₃₁) + (a₁₃·a₂₁·a₃₂)</span><br>
+        <span style="color:#f85149">− (a₁₃·a₂₂·a₃₁) − (a₁₁·a₂₃·a₃₂) − (a₁₂·a₂₁·a₃₃)</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">ตัวอย่าง</div>
+      <div class="card-body" style="font-size:17px;line-height:1.8">
+        <div style="display:inline-flex;align-items:center;gap:10px">
+          det<div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>1</span><span>2</span><span>3</span></div>
+            <div class="mat-row"><span>4</span><span>5</span><span>6</span></div>
+            <div class="mat-row"><span>7</span><span>8</span><span>9</span></div>
+          </div><div class="mat-rb">]</div></div>
+        </div><br>
+        แนวลง: <span class="ok">(1·5·9)+(2·6·7)+(3·4·8) = 45+84+96 = 225</span><br>
+        แนวขึ้น: <span class="err">(3·5·7)+(1·6·8)+(2·4·9) = 105+48+72 = 225</span><br>
+        det = 225 − 225 = <span class="hl">0</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-step="5">
+  <div class="slide-header" style="background:#b71c1c22;border-bottom:3px solid #b71c1c">
+    <div class="slide-step-badge" style="color:#f85149">🔍 ขั้นที่ 5 · หน้า 3/3</div>
+    <div class="slide-title">ความหมายของดีเทอร์มิแนนต์</div>
+  </div>
+  <div class="slide-body">
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">det(A) ≠ 0</div>
+        <div class="card-body" style="font-size:19px;line-height:1.7">
+          A มีเมทริกซ์ผกผัน A⁻¹ <span class="ok">✓</span><br>
+          ระบบสมการ AX=B มีคำตอบเดียว<br>
+          เรียกว่า <span class="hl">Non-singular</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">det(A) = 0</div>
+        <div class="card-body" style="font-size:19px;line-height:1.7">
+          A <span class="err">ไม่มี</span>เมทริกซ์ผกผัน<br>
+          ระบบสมการอาจไม่มีคำตอบ<br>
+          เรียกว่า <span class="err">Singular</span>
+        </div>
+      </div>
+    </div>
+    <div class="formula">det(A) = 0 ⟺ A ไม่มีผกผัน</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     STEP 6 — สมบัติ det
+═══════════════════════════════════════════════ -->
+<div class="slide" data-step="6">
+  <div class="slide-header" style="background:#e6510022;border-bottom:3px solid #e65100">
+    <div class="slide-step-badge" style="color:#ffab40">📐 ขั้นที่ 6 · หน้า 1/2</div>
+    <div class="slide-title">สมบัติดีเทอร์มิแนนต์</div>
+  </div>
+  <div class="slide-body">
+    <div class="card"><div class="card-title">สมบัติการคูณ</div>
+      <div class="card-body" style="font-size:22px;line-height:1.8">
+        <span class="hl">det(AB)</span> = det(A) · det(B)
+      </div>
+    </div>
+    <div class="card"><div class="card-title">สมบัติสเกลาร์</div>
+      <div class="card-body" style="font-size:22px;line-height:1.8">
+        <span class="hl">det(kA)</span> = kⁿ · det(A) &nbsp;&nbsp;<span class="note">(A ขนาด n×n)</span>
+      </div>
+    </div>
+    <div class="card"><div class="card-title">ตัวอย่าง: det(2A) เมื่อ A ขนาด 2×2, det(A)=5</div>
+      <div class="card-body" style="font-size:20px">
+        det(2A) = 2² · det(A) = 4 × 5 = <span class="ok">20</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-step="6">
+  <div class="slide-header" style="background:#e6510022;border-bottom:3px solid #e65100">
+    <div class="slide-step-badge" style="color:#ffab40">📐 ขั้นที่ 6 · หน้า 2/2</div>
+    <div class="slide-title">สมบัติ Transpose และผกผัน</div>
+  </div>
+  <div class="slide-body">
+    <div class="card"><div class="card-title">Transpose</div>
+      <div class="card-body" style="font-size:22px;line-height:1.8">
+        <span class="hl">det(Aᵀ)</span> = det(A)
+      </div>
+    </div>
+    <div class="card"><div class="card-title">ผกผัน</div>
+      <div class="card-body" style="font-size:22px;line-height:1.8">
+        <span class="hl">det(A⁻¹)</span> = 1 / det(A)
+      </div>
+    </div>
+    <div class="card" style="border-color:#f0c04033"><div class="card-title">ตัวอย่างรวม</div>
+      <div class="card-body" style="font-size:18px;line-height:1.8">
+        ถ้า det(A) = 4 และ A ขนาด 2×2<br>
+        → det(Aᵀ) = <span class="ok">4</span><br>
+        → det(A⁻¹) = <span class="ok">1/4</span><br>
+        → det(3A) = 3² × 4 = <span class="ok">36</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     STEP 7 — A⁻¹ 2×2
+═══════════════════════════════════════════════ -->
+<div class="slide" data-step="7">
+  <div class="slide-header" style="background:#880e4f22;border-bottom:3px solid #880e4f">
+    <div class="slide-step-badge" style="color:#f48fb1">🔄 ขั้นที่ 7 · หน้า 1/2</div>
+    <div class="slide-title">เมทริกซ์ผกผัน A⁻¹ (2×2)</div>
+  </div>
+  <div class="slide-body">
+    <div class="card"><div class="card-title">เงื่อนไข</div>
+      <div class="card-body" style="font-size:20px">
+        A⁻¹ มีอยู่ก็ต่อเมื่อ <span class="hl">det(A) ≠ 0</span>
+      </div>
+    </div>
+    <div class="card"><div class="card-title">สูตร A⁻¹ สำหรับ 2×2</div>
+      <div class="card-body" style="font-size:18px;line-height:1.8">
+        ถ้า A = <div class="mat-wrap" style="display:inline-flex"><div class="mat-lb">[</div><div class="mat-inner">
+          <div class="mat-row"><span>a</span><span>b</span></div>
+          <div class="mat-row"><span>c</span><span>d</span></div>
+        </div><div class="mat-rb">]</div></div><br><br>
+        adj(A) = <div class="mat-wrap" style="display:inline-flex"><div class="mat-lb">[</div><div class="mat-inner">
+          <div class="mat-row"><span class="ok">d</span><span class="err">−b</span></div>
+          <div class="mat-row"><span class="err">−c</span><span class="ok">a</span></div>
+        </div><div class="mat-rb">]</div></div>
+        &nbsp; <span class="note">(สลับ a,d และเปลี่ยนเครื่องหมาย b,c)</span>
+      </div>
+    </div>
+    <div class="formula">A⁻¹ = (1/det(A)) × adj(A)</div>
+  </div>
+</div>
+
+<div class="slide" data-step="7">
+  <div class="slide-header" style="background:#880e4f22;border-bottom:3px solid #880e4f">
+    <div class="slide-step-badge" style="color:#f48fb1">🔄 ขั้นที่ 7 · หน้า 2/2</div>
+    <div class="slide-title">ตัวอย่าง</div>
+  </div>
+  <div class="slide-body">
+    <div class="card">
+      <div class="card-body" style="font-size:18px;line-height:1.9">
+        A = <div class="mat-wrap" style="display:inline-flex"><div class="mat-lb">[</div><div class="mat-inner">
+          <div class="mat-row"><span>2</span><span>3</span></div>
+          <div class="mat-row"><span>1</span><span>5</span></div>
+        </div><div class="mat-rb">]</div></div><br>
+        det(A) = <span style="color:#f0c040">(2×5) − (3×1) = 10 − 3 = 7</span><br><br>
+        adj(A) = <div class="mat-wrap" style="display:inline-flex"><div class="mat-lb">[</div><div class="mat-inner">
+          <div class="mat-row"><span class="ok">5</span><span class="err">−3</span></div>
+          <div class="mat-row"><span class="err">−1</span><span class="ok">2</span></div>
+        </div><div class="mat-rb">]</div></div><br><br>
+        A⁻¹ = (1/7) × <div class="mat-wrap" style="display:inline-flex"><div class="mat-lb">[</div><div class="mat-inner">
+          <div class="mat-row"><span>5</span><span>−3</span></div>
+          <div class="mat-row"><span>−1</span><span>2</span></div>
+        </div><div class="mat-rb">]</div></div>
+        = <div class="mat-wrap" style="display:inline-flex"><div class="mat-lb">[</div><div class="mat-inner">
+          <div class="mat-row"><span class="ok">5/7</span><span class="ok">−3/7</span></div>
+          <div class="mat-row"><span class="ok">−1/7</span><span class="ok">2/7</span></div>
+        </div><div class="mat-rb">]</div></div>
+      </div>
+    </div>
+    <div class="formula">ตรวจสอบ: AA⁻¹ = I ✓</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     STEP 8 — A⁻¹ 3×3 (Cofactor)
+═══════════════════════════════════════════════ -->
+<div class="slide" data-step="8">
+  <div class="slide-header" style="background:#4a148c22;border-bottom:3px solid #4a148c">
+    <div class="slide-step-badge" style="color:#b39ddb">🧮 ขั้นที่ 8 · หน้า 1/2</div>
+    <div class="slide-title">Minor และ Cofactor</div>
+  </div>
+  <div class="slide-body">
+    <div class="card"><div class="card-title">Minor Mᵢⱼ</div>
+      <div class="card-body" style="font-size:19px;line-height:1.7">
+        ดีเทอร์มิแนนต์ของเมทริกซ์ที่ได้จากการ<span class="hl">ตัดแถว i และหลัก j</span> ออก
+      </div>
+    </div>
+    <div class="card"><div class="card-title">Cofactor Cᵢⱼ</div>
+      <div class="card-body" style="font-size:22px;line-height:1.8">
+        <span class="hl">Cᵢⱼ = (−1)^(i+j) · Mᵢⱼ</span><br>
+        <span class="note" style="font-size:16px">เครื่องหมาย: + − + / − + − / + − + (สลับตามตาราง)</span>
+      </div>
+    </div>
+    <div class="card"><div class="card-title">adj(A)</div>
+      <div class="card-body" style="font-size:19px">
+        สร้างเมทริกซ์จาก Cofactor ทั้ง 9 ตัว แล้ว<span class="hl">หา Transpose</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-step="8">
+  <div class="slide-header" style="background:#4a148c22;border-bottom:3px solid #4a148c">
+    <div class="slide-step-badge" style="color:#b39ddb">🧮 ขั้นที่ 8 · หน้า 2/2</div>
+    <div class="slide-title">สรุปขั้นตอน A⁻¹ (3×3)</div>
+  </div>
+  <div class="slide-body">
+    <div class="card"><div class="card-title">5 ขั้นตอน</div>
+      <div class="card-body" style="font-size:18px;line-height:1.9">
+        <b>1.</b> คำนวณ <span class="hl">det(A)</span> ด้วย Sarrus (ต้อง ≠ 0)<br>
+        <b>2.</b> หา <span class="hl">Minor Mᵢⱼ</span> ทั้ง 9 ตัว<br>
+        <b>3.</b> หา <span class="hl">Cofactor Cᵢⱼ = (−1)^(i+j)·Mᵢⱼ</span><br>
+        <b>4.</b> สร้าง <span class="hl">adj(A) = (Cofactor matrix)ᵀ</span><br>
+        <b>5.</b> คำนวณ <span class="hl">A⁻¹ = adj(A) / det(A)</span>
+      </div>
+    </div>
+    <div class="formula">A⁻¹ = adj(A) / det(A)</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     STEP 9 — ระบบสมการ
+═══════════════════════════════════════════════ -->
+<div class="slide" data-step="9">
+  <div class="slide-header" style="background:#004d4022;border-bottom:3px solid #004d40">
+    <div class="slide-step-badge" style="color:#4db6ac">🏆 ขั้นที่ 9 · หน้า 1/3</div>
+    <div class="slide-title">แก้ระบบสมการด้วย AX = B</div>
+  </div>
+  <div class="slide-body">
+    <div class="card"><div class="card-title">แปลงระบบสมการเป็นรูปเมทริกซ์</div>
+      <div class="card-body" style="font-size:18px;line-height:1.8">
+        { 2x + y = 5<br>&nbsp; x + 3y = 7 }<br><br>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>2</span><span>1</span></div>
+            <div class="mat-row"><span>1</span><span>3</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>x</span></div>
+            <div class="mat-row"><span>y</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>=</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>5</span></div>
+            <div class="mat-row"><span>7</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span style="font-size:20px">⟹ AX = B</span>
+        </div>
+      </div>
+    </div>
+    <div class="formula">X = A⁻¹B</div>
+  </div>
+</div>
+
+<div class="slide" data-step="9">
+  <div class="slide-header" style="background:#004d4022;border-bottom:3px solid #004d40">
+    <div class="slide-step-badge" style="color:#4db6ac">🏆 ขั้นที่ 9 · หน้า 2/3</div>
+    <div class="slide-title">กฎของโครเมอร์ (Cramer's Rule)</div>
+  </div>
+  <div class="slide-body">
+    <div class="card"><div class="card-title">วิธีหาคำตอบโดยตรงจาก det</div>
+      <div class="card-body" style="font-size:22px;line-height:1.8">
+        D = det(A)<br>
+        <span class="hl">x = Dₓ / D</span> &nbsp;&nbsp; (Dₓ = แทนหลัก x ด้วยเมทริกซ์ B)<br>
+        <span class="hl">y = Dᵧ / D</span> &nbsp;&nbsp; (Dᵧ = แทนหลัก y ด้วยเมทริกซ์ B)
+      </div>
+    </div>
+    <div class="card"><div class="card-title">ตัวอย่าง (จากหน้าที่แล้ว)</div>
+      <div class="card-body" style="font-size:19px">
+        D = det<div class="mat-wrap" style="display:inline-flex"><div class="mat-lb">[</div><div class="mat-inner">
+          <div class="mat-row"><span>2</span><span>1</span></div>
+          <div class="mat-row"><span>1</span><span>3</span></div>
+        </div><div class="mat-rb">]</div></div> = (2×3)−(1×1) = <span class="hl">5</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" data-step="9">
+  <div class="slide-header" style="background:#004d4022;border-bottom:3px solid #004d40">
+    <div class="slide-step-badge" style="color:#4db6ac">🏆 ขั้นที่ 9 · หน้า 3/3</div>
+    <div class="slide-title">Cramer's Rule — คำนวณ</div>
+  </div>
+  <div class="slide-body">
+    <div class="card">
+      <div class="card-body" style="font-size:18px;line-height:2">
+        Dₓ = det<div class="mat-wrap" style="display:inline-flex"><div class="mat-lb">[</div><div class="mat-inner">
+          <div class="mat-row"><span class="hl">5</span><span>1</span></div>
+          <div class="mat-row"><span class="hl">7</span><span>3</span></div>
+        </div><div class="mat-rb">]</div></div> = (5×3)−(1×7) = 15−7 = <span class="ok">8</span><br>
+        Dᵧ = det<div class="mat-wrap" style="display:inline-flex"><div class="mat-lb">[</div><div class="mat-inner">
+          <div class="mat-row"><span>2</span><span class="hl">5</span></div>
+          <div class="mat-row"><span>1</span><span class="hl">7</span></div>
+        </div><div class="mat-rb">]</div></div> = (2×7)−(5×1) = 14−5 = <span class="ok">9</span><br><br>
+        x = Dₓ/D = 8/5 = <span class="hl">1.6</span><br>
+        y = Dᵧ/D = 9/5 = <span class="hl">1.8</span>
+      </div>
+    </div>
+    <div class="formula">ตรวจสอบ: 2(1.6) + 1.8 = 5 ✓ &nbsp; 1.6 + 3(1.8) = 7 ✓</div>
+  </div>
+</div>
+
+<script>
+const STEP_META = [
+  {id:-1, emoji:'📌', label:'แนะนำ', color:'#1a237e'},
+  {id:1,  emoji:'🌱', label:'ขั้น 1', color:'#2e7d32'},
+  {id:2,  emoji:'➕', label:'ขั้น 2', color:'#1565c0'},
+  {id:3,  emoji:'✖️', label:'ขั้น 3', color:'#6a1b9a'},
+  {id:4,  emoji:'⚡', label:'ขั้น 4', color:'#bf360c'},
+  {id:5,  emoji:'🔍', label:'ขั้น 5', color:'#b71c1c'},
+  {id:6,  emoji:'📐', label:'ขั้น 6', color:'#e65100'},
+  {id:7,  emoji:'🔄', label:'ขั้น 7', color:'#880e4f'},
+  {id:8,  emoji:'🧮', label:'ขั้น 8', color:'#4a148c'},
+  {id:9,  emoji:'🏆', label:'ขั้น 9', color:'#004d40'},
+];
+
+const slides = Array.from(document.querySelectorAll('.slide'));
+let cur = 0;
+
+// build step picker
+const picker = document.getElementById('stepPicker');
+STEP_META.forEach(m => {
+  const btn = document.createElement('button');
+  btn.className = 'sp-btn';
+  btn.id = `sp-${m.id}`;
+  btn.textContent = `${m.emoji} ${m.label}`;
+  btn.style.borderColor = m.color + '88';
+  btn.onclick = () => jumpToStep(m.id);
+  picker.appendChild(btn);
+});
+
+function jumpToStep(stepId) {
+  const idx = slides.findIndex(s => parseInt(s.dataset.step) === stepId);
+  if (idx >= 0) show(idx);
+}
+
+function show(idx) {
+  if (idx < 0 || idx >= slides.length) return;
+  slides[cur].classList.remove('active');
+  cur = idx;
+  slides[cur].classList.add('active');
+  updateUI();
+}
+
+function move(d) { show(cur + d); }
+
+function updateUI() {
+  const sl = slides[cur];
+  const stepId = parseInt(sl.dataset.step);
+  const meta = STEP_META.find(m => m.id === stepId);
+
+  // count slides for this step
+  const stepSlides = slides.filter(s => parseInt(s.dataset.step) === stepId);
+  const posInStep  = stepSlides.indexOf(sl) + 1;
+  const total = slides.length;
+  document.getElementById('navInfo').textContent = `${cur+1} / ${total}`;
+
+  // active picker
+  document.querySelectorAll('.sp-btn').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = '#0d1117';
+    b.style.color = '#8b949e';
+  });
+  const active = document.getElementById(`sp-${stepId}`);
+  if (active && meta) {
+    active.classList.add('active');
+    active.style.background = meta.color + '33';
+    active.style.color = '#fff';
+    active.style.borderColor = meta.color;
+  }
+
+  // prev/next visibility
+  document.getElementById('prevBtn').style.opacity = cur === 0 ? '0.3' : '1';
+  document.getElementById('nextBtn').style.opacity = cur === slides.length-1 ? '0.3' : '1';
+}
+
+function toggleFS() {
+  const el = document.documentElement;
+  const isFS = document.fullscreenElement || document.webkitFullscreenElement;
+  if (isFS) {
+    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  } else {
+    (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+  }
+}
+document.addEventListener('fullscreenchange', updateFSBtn);
+document.addEventListener('webkitfullscreenchange', updateFSBtn);
+function updateFSBtn() {
+  const isFS = document.fullscreenElement || document.webkitFullscreenElement;
+  document.getElementById('fsBtn').textContent = isFS ? '✕ ออกเต็มจอ' : '⛶';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); move(1); }
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); move(-1); }
+  if (e.key === 'ArrowUp')    { e.preventDefault(); move(-1); }
+  if (e.key === 'ArrowDown')  { e.preventDefault(); move(1); }
+  const n = parseInt(e.key);
+  if (n >= 1 && n <= 9) jumpToStep(n);
+  if (e.key === '0') jumpToStep(-1);
+});
+
+show(0);
+</script>
+</body>
+</html>
