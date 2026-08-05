@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🖨️ ใบงานเมทริกซ์ — ม.5/1</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&display=swap');
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Sarabun',sans-serif; background:#0d1117; color:#c9d1d9; }
+
+/* ── Control Panel ─── */
+.ctrl {
+  padding:14px 20px; background:#161b22;
+  border-bottom:1px solid #30363d;
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+  position:sticky; top:0; z-index:100;
+}
+.ctrl-title { font-size:16px; font-weight:800; color:#f0c000; }
+.ctrl-sub   { font-size:11px; color:#6e7681; margin-top:1px; }
+.step-btns  { display:flex; gap:4px; flex-wrap:wrap; }
+.sbtn {
+  padding:5px 10px; border:1px solid #30363d; border-radius:7px;
+  background:#21262d; color:#6e7681; font-family:inherit; font-size:12px;
+  cursor:pointer; font-weight:600; transition:all .15s;
+}
+.sbtn:hover { background:#30363d; color:#c9d1d9; }
+.sbtn.on { background:#f0c000; color:#1a1000; border-color:#f0c000; }
+.act-btns { display:flex; gap:8px; margin-left:auto; }
+.abtn {
+  padding:9px 18px; border:none; border-radius:8px;
+  font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;
+}
+.abtn-gen { background:#238636; color:#fff; }
+.abtn-gen:hover { background:#2ea043; }
+.abtn-prt { background:#1f6feb; color:#fff; }
+.abtn-prt:hover { opacity:.85; }
+
+#status {
+  padding:7px 20px; font-size:12px; color:#6e7681;
+  background:#0d1117; border-bottom:1px solid #21262d;
+}
+
+/* ── Preview container ─── */
+#output { padding:20px; display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+
+/* ── Sheet ─── */
+.sheet {
+  background:#fff; color:#111;
+  width:620px;
+  padding:20px 26px 14px;
+  border-radius:6px;
+  font-family:'Sarabun',sans-serif;
+  font-size:14px; line-height:1.6;
+  box-shadow:0 4px 24px rgba(0,0,0,.5);
+  display:flex; flex-direction:column;
+}
+
+/* Header */
+.sh-hdr {
+  border-bottom:2px solid #111;
+  padding-bottom:6px; margin-bottom:6px;
+  text-align:center;
+}
+.sh-school  { font-size:13px; font-weight:700; }
+.sh-subject { font-size:11px; color:#555; }
+.sh-title   { font-size:16px; font-weight:800; margin:3px 0 1px; }
+
+/* Student info */
+.sh-info {
+  display:flex; gap:0; font-size:12px;
+  border-bottom:1px solid #ddd;
+  padding-bottom:5px; margin-bottom:8px;
+}
+.fi { flex:1; }
+.fi span { display:block; font-weight:600; font-size:11px; color:#666; }
+.fi-line { border-bottom:1px solid #999; margin:2px 8px 0 0; height:18px; }
+
+/* Problems */
+.probs { flex:1; display:flex; flex-direction:column; }
+.prob  { margin-bottom:4px; }
+.prob-hd {
+  font-size:12px; font-weight:800; letter-spacing:.5px;
+  background:#f0f4f8; border-left:3px solid #1565c0;
+  padding:3px 8px; margin-bottom:3px; color:#1a1a2e;
+}
+.prob-bd { padding:2px 6px 2px; font-size:13px; line-height:1.75; }
+
+/* Working space — ruled lines */
+.ws {
+  border:1px solid #bbb; border-radius:2px;
+  margin:3px 0 7px;
+  background:repeating-linear-gradient(transparent,transparent 22px,#dce8f5 22px,#dce8f5 23px);
+  background-position:0 7px;
+}
+.ws-sm  { height: 52px;  }
+.ws-md  { height: 75px;  }
+.ws-lg  { height: 98px;  }
+.ws-xl  { height: 121px; }
+.ws-2xl { height: 144px; }
+.ws-3xl { height: 167px; }
+
+/* Divider */
+.div { border:none; border-top:1px dashed #ccc; margin:3px 0 5px; }
+
+/* Inline matrix bracket */
+.m  { display:inline-flex; align-items:stretch; vertical-align:middle; margin:0 3px; }
+.ml { border-left:2.5px solid #111; border-top:1.5px solid #111; border-bottom:1.5px solid #111; width:6px; flex-shrink:0; }
+.mr { border-right:2.5px solid #111; border-top:1.5px solid #111; border-bottom:1.5px solid #111; width:6px; flex-shrink:0; }
+.mb { display:grid; padding:3px 6px; gap:1px 14px; align-items:center; }
+.mc { text-align:right; font-size:13px; line-height:1.45; min-width:16px; }
+
+/* Inline answer blanks */
+.ab    { display:inline-block; border-bottom:1.5px solid #666; min-width:60px; vertical-align:middle; margin:0 4px; padding:0 4px; height:18px; }
+.ab-lg { min-width:130px; }
+
+/* Footer */
+.sh-ftr {
+  margin-top:auto; padding-top:5px;
+  border-top:1px solid #eee;
+  display:flex; justify-content:space-between;
+  font-size:10px; color:#999;
+}
+
+/* ── Knowledge Reference Box ─── */
+.sh-ref {
+  background:#fffdf0; border:1.5px solid #e8c800;
+  border-radius:4px; padding:7px 10px 6px;
+  margin-bottom:7px; font-size:12px; line-height:1.65;
+}
+.ref-hd {
+  font-weight:800; font-size:12px; color:#5c4000;
+  border-bottom:1px dashed #d4a800;
+  padding-bottom:3px; margin-bottom:5px;
+}
+
+/* ── Print ─── */
+@media print {
+  body { background:#fff; }
+  .no-print, #status { display:none !important; }
+  #output { padding:0; gap:0; display:block; }
+  .sheet {
+    width:100% !important; max-width:none !important;
+    box-shadow:none !important; border-radius:0 !important;
+    padding:13mm 17mm 10mm !important;
+    page-break-after:always !important;
+    break-after:page !important;
+  }
+  .sheet:last-child { page-break-after:avoid !important; }
+  @page { size:A4; margin:0; }
+}
+</style>
+</head>
+<body>
+
+<div class="ctrl no-print">
+  <div>
+    <div class="ctrl-title">🖨️ ใบงานเมทริกซ์ · ม.5/1</div>
+    <div class="ctrl-sub">30 ใบต่อขั้น · โจทย์สุ่มไม่ซ้ำ ไม่ลอกกันได้</div>
+  </div>
+  <div class="step-btns">
+    <button class="sbtn on" id="sb1" onclick="sel(1)">🌱 ขั้น 1 นิยาม</button>
+    <button class="sbtn"    id="sb2" onclick="sel(2)">➕ ขั้น 2 บวก-ลบ</button>
+    <button class="sbtn"    id="sb3" onclick="sel(3)">✖️ ขั้น 3 สเกลาร์</button>
+    <button class="sbtn"    id="sb4" onclick="sel(4)">⚡ ขั้น 4 คูณ</button>
+    <button class="sbtn"    id="sb5" onclick="sel(5)">🔍 ขั้น 5 det</button>
+    <button class="sbtn"    id="sb6" onclick="sel(6)">📐 ขั้น 6 สมบัติ det</button>
+    <button class="sbtn"    id="sb7" onclick="sel(7)">🔄 ขั้น 7 A⁻¹ 2×2</button>
+    <button class="sbtn"    id="sb8" onclick="sel(8)">🧮 ขั้น 8 A⁻¹ 3×3</button>
+    <button class="sbtn"    id="sb9" onclick="sel(9)">🏆 ขั้น 9 ระบบสมการ</button>
+  </div>
+  <div class="act-btns">
+    <button class="abtn abtn-gen" onclick="generate()">⚡ สร้าง 30 ใบงาน</button>
+    <button class="abtn abtn-prt" onclick="window.print()">🖨️ พิมพ์</button>
+  </div>
+</div>
+<div id="status" class="no-print">เลือกขั้นแล้วกด "สร้าง 30 ใบงาน"</div>
+<div id="output"></div>
+
+<script>
+const SCHOOL  = 'โรงเรียนวังกระแสวิทยาคม';
+const SUBJECT = 'ค32201 คณิตศาสตร์เพิ่มเติม 3  ม.5/1  ภาคเรียน 1/2569';
+const TEACHER = 'ครูอนุพงศ์ ไชยบุตร';
+const N = 30;
+
+const SNAMES = ['',
+  'นิยามและประเภทเมทริกซ์',
+  'การบวก-ลบเมทริกซ์',
+  'การคูณด้วยสเกลาร์',
+  'การคูณเมทริกซ์',
+  'ดีเทอร์มิแนนต์',
+  'สมบัติดีเทอร์มิแนนต์',
+  'เมทริกซ์ผกผัน A⁻¹ (2×2)',
+  'เมทริกซ์ผกผัน A⁻¹ (3×3)',
+  'แก้ระบบสมการด้วยเมทริกซ์',
+];
+
+let curStep = 1;
+
+// ── Seeded RNG (Xorshift32) ──────────────────────
+function mkR(seed) {
+  let s = ((seed * 1234567 + 98765) ^ 0xDEADBEEF) >>> 0 || 1;
+  const nx = () => { s ^= s<<13; s ^= s>>17; s ^= s<<5; return s = s>>>0; };
+  return {
+    i: (a,b)       => a + nx() % (b-a+1),
+    ne: (a,b,...x) => { let v; do { v = a + nx()%(b-a+1); } while(x.includes(v)); return v; },
+    p:  (arr)      => arr[nx() % arr.length],
+  };
+}
+
+// ── Matrix helpers ───────────────────────────────
+function mt(rows) {
+  const nc = rows[0].length;
+  const cols = Array(nc).fill('auto').join(' ');
+  return `<span class="m"><span class="ml"></span><span class="mb" style="grid-template-columns:${cols}">${
+    rows.flat().map(v=>`<span class="mc">${v}</span>`).join('')
+  }</span><span class="mr"></span></span>`;
+}
+const d2  = A => A[0][0]*A[1][1] - A[0][1]*A[1][0];
+const d3  = M => {
+  const [a,b,c]=[M[0][0],M[0][1],M[0][2]],[d,e,f]=[M[1][0],M[1][1],M[1][2]],[g,h,k]=[M[2][0],M[2][1],M[2][2]];
+  return a*e*k + b*f*g + c*d*h - c*e*g - a*f*h - b*d*k;
+};
+const mkM = (m,n,r,a,b) => Array.from({length:m}, ()=>Array.from({length:n}, ()=>r.i(a,b)));
+
+const ws  = cls => `<div class="ws ${cls}"></div>`;
+const ab  = cls  => `<span class="ab${cls?' '+cls:''}">&nbsp;</span>`;
+const div = ()   => `<hr class="div">`;
+
+// Cofactor helper
+const cof = (M,i,j) => {
+  const sub = M.filter((_,r)=>r!==i).map(row=>row.filter((_,c)=>c!==j));
+  return Math.pow(-1,i+j) * (sub[0][0]*sub[1][1]-sub[0][1]*sub[1][0]);
+};
+
+// ── Step generators — returns [{html, ws}, …] ────
+// ws: null → ไม่มีกล่องพื้นที่ทำงาน (fill-in-blank อย่างเดียว)
+
+function g1(r) {
+  const m = r.p([2,3,3]);
+  const n = r.ne(2,4,m);
+  const A = mkM(m,n,r,-6,9);
+  const i1=r.i(0,m-1), j1=r.i(0,n-1);
+  let i2,j2; do{i2=r.i(0,m-1);j2=r.i(0,n-1);}while(i2===i1&&j2===j1);
+
+  const h1 = `กำหนด A = ${mt(A)}<br>
+    ก) เมทริกซ์ A มีขนาดเท่าไหร่? ${ab('ab-lg')}<br>
+    ข) a<sub>${i1+1}${j1+1}</sub> = ${ab()} &nbsp;&nbsp; a<sub>${i2+1}${j2+1}</sub> = ${ab()}`;
+
+  const h2 = `จากเมทริกซ์ A ในข้อ 1 จงเขียน A<sup>T</sup><br>
+    <span style="font-size:11px;color:#555">สลับแถว↔หลัก เช่น a<sub>12</sub> ย้ายไปตำแหน่ง a<sub>21</sub></span>`;
+
+  const types = [
+    {M:[[1,0],[0,1]],           label:'เมทริกซ์เอกลักษณ์ (Identity Matrix)'},
+    {M:[[0,0,0],[0,0,0]],       label:'เมทริกซ์ศูนย์ (Zero Matrix)'},
+    {M:[[r.i(1,6),r.i(1,6),r.i(1,6)]],label:'เมทริกซ์แถว (Row Matrix)'},
+    {M:[[r.i(1,6)],[r.i(1,6)],[r.i(1,6)]],label:'เมทริกซ์หลัก (Column Matrix)'},
+    {M:mkM(3,3,r,-4,5),         label:'เมทริกซ์จตุรัส (Square Matrix)'},
+  ];
+  const t = r.p(types);
+  const h3 = `เมทริกซ์ B = ${mt(t.M)}&nbsp; เมทริกซ์ B เป็นประเภทใด? ${ab('ab-lg')}`;
+
+  const h4 = `จงเขียนเมทริกซ์เอกลักษณ์ขนาด 3×3 (I₃) ในช่องด้านล่าง`;
+
+  return [
+    {html:h1, ws:null},
+    {html:h2, ws:'ws-xl'},     // เขียน Aᵀ สูงสุด 4 แถว
+    {html:h3, ws:null},
+    {html:h4, ws:'ws-lg'},     // เขียน 3×3
+  ];
+}
+
+function g2(r) {
+  const A1=mkM(2,2,r,-4,4), B1=mkM(2,2,r,-4,4);
+  const h1 = `คำนวณ A + B เมื่อ A = ${mt(A1)} และ B = ${mt(B1)}`;
+
+  const C2=mkM(2,2,r,-5,5), D2=mkM(2,2,r,-5,5);
+  const h2 = `คำนวณ C − D เมื่อ C = ${mt(C2)} และ D = ${mt(D2)}`;
+
+  const A3=mkM(2,3,r,-3,5), B3=mkM(2,3,r,-3,5);
+  const h3 = `คำนวณ A + B เมื่อ A = ${mt(A3)} และ B = ${mt(B3)}`;
+
+  const A4=mkM(2,2,r,-3,3), B4=mkM(2,2,r,-3,3);
+  const h4 = `ถ้า A + X = B โดยที่ A = ${mt(A4)} และ B = ${mt(B4)}&nbsp; จงหาเมทริกซ์ X`;
+
+  return [
+    {html:h1, ws:'ws-md'},
+    {html:h2, ws:'ws-md'},
+    {html:h3, ws:'ws-md'},
+    {html:h4, ws:'ws-lg'},
+  ];
+}
+
+function g3(r) {
+  const k1 = r.p([-4,-3,-2,2,3,4]);
+  const A1  = mkM(2,2,r,-4,4);
+  const h1  = `คำนวณ ${k1}A เมื่อ A = ${mt(A1)}`;
+
+  const k2 = r.p([-3,-2,2,3,4]);
+  const B2  = mkM(2,3,r,-3,3);
+  const h2  = `คำนวณ ${k2}B เมื่อ B = ${mt(B2)}`;
+
+  const k3a = r.p([2,3,4]);
+  const k3b = r.p([2,3,4]);
+  const op3 = r.p(['+','−']);
+  const A3  = mkM(2,2,r,-3,3), B3 = mkM(2,2,r,-3,3);
+  const h3  = `คำนวณ ${k3a}A ${op3} ${k3b}B เมื่อ A = ${mt(A3)} และ B = ${mt(B3)}`;
+
+  const k4 = r.p([-3,-2,2,3,4]);
+  const Ab  = mkM(2,2,r,-2,3);
+  if(Ab.flat().every(v=>v===0)) Ab[0][0] = 1;
+  const B4  = Ab.map(row=>row.map(v=>v*k4));
+  const h4  = `ถ้า kA = B โดยที่ A = ${mt(Ab)} และ B = ${mt(B4)}&nbsp; จงหาค่า k = ${ab()}`;
+
+  return [
+    {html:h1, ws:'ws-md'},
+    {html:h2, ws:'ws-md'},
+    {html:h3, ws:'ws-xl'},
+    {html:h4, ws:'ws-sm'},
+  ];
+}
+
+function g4(r) {
+  const m=r.p([2,3]), n=r.ne(2,4,m), p=r.ne(2,4,n,m);
+
+  const h1 = `พิจารณาว่า AB มีนิยามหรือไม่ ถ้ามีให้ระบุขนาด:<br>
+    ก) A ขนาด ${m}×${n},&nbsp;B ขนาด ${n}×${p} : ${ab('ab-lg')}<br>
+    ข) A ขนาด ${n}×${p},&nbsp;B ขนาด ${p}×${m} : ${ab('ab-lg')}<br>
+    ค) A ขนาด ${m}×${p},&nbsp;B ขนาด ${n}×${p} : ${ab('ab-lg')}`;
+
+  const A2=mkM(2,2,r,-3,3), B2=mkM(2,2,r,-3,3);
+  const h2 = `คำนวณ AB เมื่อ A = ${mt(A2)} และ B = ${mt(B2)}`;
+
+  const A3=mkM(2,3,r,-2,3), B3=mkM(3,2,r,-2,3);
+  const h3 = `คำนวณ AB เมื่อ A = ${mt(A3)} และ B = ${mt(B3)}`;
+
+  const A4=mkM(2,2,r,-2,3), B4=mkM(2,2,r,-2,3);
+  const h4 = `กำหนด A = ${mt(A4)} และ B = ${mt(B4)}&nbsp; จงหา AB และ BA แล้วตอบว่า AB = BA หรือไม่? ${ab()}`;
+
+  return [
+    {html:h1, ws:null},
+    {html:h2, ws:'ws-xl'},
+    {html:h3, ws:'ws-2xl'},
+    {html:h4, ws:'ws-3xl'},
+  ];
+}
+
+function g5(r) {
+  let a,b,c,d; do{a=r.i(-5,5);b=r.i(-5,5);c=r.i(-5,5);d=r.i(-5,5);}while(a*d-b*c===0);
+  const h1 = `หา det(A) เมื่อ A = ${mt([[a,b],[c,d]])}`;
+
+  let a2,b2,c2,d2;
+  do{a2=r.i(-5,5);b2=r.i(-5,5);c2=r.i(-5,5);d2=r.i(-5,5);}
+  while(a2*d2-b2*c2===0||(a2===a&&b2===b));
+  const h2 = `หา det(B) เมื่อ B = ${mt([[a2,b2],[c2,d2]])}`;
+
+  let M3,dv; do{M3=mkM(3,3,r,-2,3);dv=d3(M3);}while(dv===0);
+  const h3 = `หา det(C) โดยใช้กฎ Sarrus เมื่อ C = ${mt(M3)}<br>
+    <span style="font-size:11px;color:#555">บวก 3 แนวทแยงหลัก − ลบ 3 แนวทแยงรอง</span>`;
+
+  let Ma; do{Ma=mkM(2,2,r,-3,3);}while(d2(Ma)!==0);
+  let Mb; do{Mb=mkM(2,2,r,-3,3);}while(d2(Mb)===0);
+  let Mc; do{Mc=mkM(2,2,r,-3,3);}while(d2(Mc)===0);
+  const h4 = `จงหา det ของแต่ละเมทริกซ์ แล้วระบุว่าใดมีเมทริกซ์ผกผัน<br>
+    A = ${mt(Ma)}&nbsp; det = ${ab()}&nbsp;&nbsp;
+    B = ${mt(Mb)}&nbsp; det = ${ab()}&nbsp;&nbsp;
+    C = ${mt(Mc)}&nbsp; det = ${ab()}<br>
+    เมทริกซ์ที่มี A⁻¹ ได้แก่: ${ab('ab-lg')}`;
+
+  return [
+    {html:h1, ws:'ws-sm'},
+    {html:h2, ws:'ws-sm'},
+    {html:h3, ws:'ws-xl'},
+    {html:h4, ws:'ws-lg'},
+  ];
+}
+
+function g6(r) {
+  // สมบัติดีเทอร์มิแนนต์ — fill-in-blank ส่วนใหญ่
+  const da = r.i(2,6), db = r.i(2,5);
+
+  // P1: det(AB), det(BA), det(A²)
+  const h1 = `ถ้า det(A) = ${da} และ det(B) = ${db} จงหา:<br>
+    ก) det(AB) = ${ab()} &nbsp;&nbsp; ข) det(BA) = ${ab()} &nbsp;&nbsp; ค) det(A²) = ${ab()}`;
+
+  // P2: det(kA) สำหรับ 2×2, det(Aᵀ)
+  const k2 = r.i(2,4), d2v = r.i(2,6);
+  const h2 = `ถ้า A ขนาด 2×2 และ det(A) = ${d2v} , k = ${k2} จงหา:<br>
+    ก) det(${k2}A) = ${ab()} &nbsp;&nbsp; ข) det(Aᵀ) = ${ab()}`;
+
+  // P3: det(A⁻¹), det(A³)
+  const d3v = r.i(2,8);
+  const h3 = `ถ้า det(A) = ${d3v} จงหา:<br>
+    ก) det(A⁻¹) = ${ab('ab-lg')}<br>
+    ข) det(A³) = ${ab()}`;
+
+  // P4: หา det(B) จาก det(AB)
+  const dav = r.p([2,3,4,5]);
+  const dbv = r.i(2,5);
+  const dabv = dav * dbv;
+  const h4 = `ถ้า det(AB) = ${dabv} และ det(A) = ${dav} จงหา det(B)<br>
+    <span style="font-size:11px;color:#555">det(AB) = det(A)·det(B) &nbsp;→&nbsp; det(B) = det(AB) ÷ det(A)</span><br>
+    det(B) = ${ab()}`;
+
+  return [
+    {html:h1, ws:null},
+    {html:h2, ws:null},
+    {html:h3, ws:null},
+    {html:h4, ws:'ws-sm'},
+  ];
+}
+
+function g7(r) {
+  // A⁻¹ ของ 2×2
+  function nice() {
+    let A,dv; do{A=mkM(2,2,r,-4,4);dv=d2(A);}while(dv===0||Math.abs(dv)>6);
+    return {A,dv};
+  }
+  const {A:A1}=nice();
+  const {A:A2}=nice();
+
+  // P1 – det + ตรวจสอบ
+  const h1 = `กำหนด A = ${mt(A1)}<br>
+    ก) det(A) = ${ab()} &nbsp;&nbsp;
+    ข) A มีเมทริกซ์ผกผันหรือไม่? ${ab('ab-lg')}`;
+
+  // P2 – หา A⁻¹
+  const h2 = `จากข้อ 1 จงหา A⁻¹<br>
+    <span style="font-size:11px;color:#444">สูตร: ถ้า A = ${mt([['a','b'],['c','d']])}&nbsp;→&nbsp;
+    A⁻¹ = <sup>1</sup>⁄<sub>det(A)</sub> ${mt([['d','−b'],['−c','a']])}</span>`;
+
+  // P3 – หา B⁻¹
+  const h3 = `กำหนด B = ${mt(A2)}&nbsp; จงหา B⁻¹`;
+
+  // P4 – verify AA⁻¹ = I
+  const h4 = `ตรวจสอบว่า AA⁻¹ = I โดยใช้ A = ${mt(A1)} และ A⁻¹ จากข้อ 2<br>
+    คำนวณ AA⁻¹ แล้วเปรียบเทียบกับ ${mt([[1,0],[0,1]])}`;
+
+  return [
+    {html:h1, ws:'ws-sm'},
+    {html:h2, ws:'ws-2xl'},
+    {html:h3, ws:'ws-xl'},
+    {html:h4, ws:'ws-2xl'},
+  ];
+}
+
+function g8(r) {
+  // A⁻¹ ของ 3×3 ด้วย Adjugate
+  let A, dv;
+  do {
+    A = mkM(3,3,r,-2,3);
+    dv = d3(A);
+  } while(dv===0 || Math.abs(dv)>8);
+
+  const [a,b,c]=[A[0][0],A[0][1],A[0][2]];
+  const [d,e,f]=[A[1][0],A[1][1],A[1][2]];
+  const [g,h,k]=[A[2][0],A[2][1],A[2][2]];
+
+  // Cofactors (all 9)
+  const C11=e*k-f*h, C12=-(d*k-f*g), C13=d*h-e*g;
+  const C21=-(b*k-c*h), C22=a*k-c*g, C23=-(a*h-b*g);
+  const C31=b*f-c*e, C32=-(a*f-c*d), C33=a*e-b*d;
+
+  // P1: หา det(A)
+  const h1 = `กำหนด A = ${mt(A)}&nbsp; หา det(A) โดยใช้กฎ Sarrus`;
+
+  // P2: cofactors แถวที่ 1
+  const h2 = `จาก A เดิม จงหา cofactor ของแถวที่ 1<br>
+    C₁₁ = ${ab()} &nbsp;&nbsp; C₁₂ = ${ab()} &nbsp;&nbsp; C₁₃ = ${ab()}<br>
+    <span style="font-size:11px;color:#555">Cᵢⱼ = (−1)^(i+j) × det ของ 2×2 หลังตัดแถว i หลักที่ j ออก &nbsp;|&nbsp; เครื่องหมาย: +−+ / −+− / +−+</span>`;
+
+  // P3: cofactors แถวที่ 2 และ 3 + เขียน adj(A)
+  const h3 = `จาก A เดิม จงหา cofactor แถวที่ 2 และ 3 แล้วเขียน adj(A)<br>
+    C₂₁ = ${ab()} &nbsp; C₂₂ = ${ab()} &nbsp; C₂₃ = ${ab()}<br>
+    C₃₁ = ${ab()} &nbsp; C₃₂ = ${ab()} &nbsp; C₃₃ = ${ab()}<br>
+    <span style="font-size:11px;color:#555">adj(A) = (cofactor matrix)ᵀ &nbsp;→&nbsp; สลับแถว↔หลัก ของเมทริกซ์ cofactor</span>`;
+
+  // P4: คำนวณ A⁻¹
+  const h4 = `จาก det(A) ที่หาได้ในข้อ 1 และ adj(A) จากข้อ 3<br>
+    จงคำนวณ A⁻¹ = adj(A) ÷ det(A) &nbsp;(หารทุกสมาชิกด้วย det)`;
+
+  return [
+    {html:h1, ws:'ws-lg'},     // Sarrus
+    {html:h2, ws:'ws-lg'},     // cofactors แถว 1 (3 ตัว)
+    {html:h3, ws:'ws-xl'},     // cofactors แถว 2-3 + adj(A)
+    {html:h4, ws:'ws-md'},     // A⁻¹ = adj/det
+  ];
+}
+
+function g9(r) {
+  // แก้ระบบสมการ — A⁻¹B + Cramer's Rule
+  function genSys() {
+    let a,b,c,d,dv,x0,y0;
+    do {
+      a=r.i(1,4);b=r.i(1,3);c=r.i(1,4);d=r.i(1,3);
+      dv=a*d-b*c; x0=r.ne(-4,4,0); y0=r.ne(-4,4,0);
+    } while(dv===0||Math.abs(dv)>6);
+    return {a,b,c,d,dv,x0,y0,p:a*x0+b*y0,q:c*x0+d*y0};
+  }
+  const s1=genSys(), s2=genSys();
+
+  // P1: เขียน AX=B
+  const h1 = `กำหนดระบบสมการ:&nbsp; ${s1.a}x + ${s1.b}y = ${s1.p}&nbsp; ,&nbsp; ${s1.c}x + ${s1.d}y = ${s1.q}<br>
+    จงเขียนในรูป AX = B โดยระบุเมทริกซ์ A, X, B`;
+
+  // P2: หา det และ A⁻¹
+  const h2 = `จากข้อ 1 โดยที่ A = ${mt([[s1.a,s1.b],[s1.c,s1.d]])}<br>
+    ก) det(A) = ${ab()} &nbsp;&nbsp; ข) จงหา A⁻¹`;
+
+  // P3: แก้ X = A⁻¹B
+  const h3 = `โดยใช้ X = A⁻¹B จากข้อ 2 จงหาคำตอบของระบบสมการ<br>
+    x = ${ab()} &nbsp;&nbsp;&nbsp; y = ${ab()}`;
+
+  // P4: Cramer's Rule
+  const Dx = s2.p*s2.d - s2.b*s2.q;
+  const Dy = s2.a*s2.q - s2.c*s2.p;
+  const h4 = `แก้ระบบสมการต่อไปนี้โดยกฎของโครเมอร์ (Cramer's Rule):<br>
+    ${s2.a}x + ${s2.b}y = ${s2.p}&nbsp;&nbsp;,&nbsp;&nbsp; ${s2.c}x + ${s2.d}y = ${s2.q}<br>
+    <span style="font-size:11px;color:#555">D = det(A) &nbsp;|&nbsp;
+    Dₓ = det (แทนหลัก x ด้วย B) &nbsp;|&nbsp;
+    Dᵧ = det (แทนหลัก y ด้วย B) &nbsp;|&nbsp;
+    x = Dₓ/D , y = Dᵧ/D</span><br>
+    x = ${ab()} &nbsp;&nbsp;&nbsp; y = ${ab()}`;
+
+  return [
+    {html:h1, ws:'ws-xl'},
+    {html:h2, ws:'ws-xl'},
+    {html:h3, ws:'ws-lg'},
+    {html:h4, ws:'ws-xl'},
+  ];
+}
+
+// ── ใบความรู้ (เหมือนกันทุกใบในขั้นเดียวกัน) ───────────
+function makeRef(step) {
+  const R = {};
+
+  R[1] = `
+<b>เมทริกซ์ขนาด m×n</b> มี m แถว n หลัก &nbsp;|&nbsp; a<sub>ij</sub> = สมาชิกแถว i หลัก j<br>
+ตัวอย่าง A = ${mt([[1,2,3],[4,5,6]])} (ขนาด <b>2×3</b>)
+&nbsp;→&nbsp; a<sub>12</sub> = <b>2</b> (แถว 1 หลัก 2) &nbsp;&nbsp; a<sub>23</sub> = <b>6</b> (แถว 2 หลัก 3)<br>
+<b>ทรานสโพส A<sup>T</sup></b>: สลับทุกตำแหน่ง a<sub>ij</sub> → a<sub>ji</sub>
+&nbsp;→&nbsp; A<sup>T</sup> = ${mt([[1,4],[2,5],[3,6]])} (ขนาด <b>3×2</b>)`;
+
+  R[2] = `
+<b>A + B หรือ A − B</b>: บวก/ลบสมาชิก<u>ตำแหน่งเดียวกัน</u> — ขนาดต้องเท่ากันทุกมิติ<br>
+ตัวอย่าง: ${mt([[2,3],[-1,5]])} + ${mt([[1,4],[2,0]])} &nbsp;→&nbsp; คำนวณทีละตำแหน่ง:<br>
+&nbsp;&nbsp;แถว1 หลัก1: 2 + 1 = <b>3</b> &nbsp;&nbsp;&nbsp; แถว1 หลัก2: 3 + 4 = <b>7</b><br>
+&nbsp;&nbsp;แถว2 หลัก1: −1 + 2 = <b>1</b> &nbsp; แถว2 หลัก2: 5 + 0 = <b>5</b><br>
+ผลลัพธ์ = ${mt([[3,7],[1,5]])}`;
+
+  R[3] = `
+<b>kA</b>: คูณสมาชิก<u>ทุกตัว</u>ด้วย k<br>
+ตัวอย่าง: 3 × ${mt([[2,-1],[0,4]])} &nbsp;→&nbsp; คำนวณทีละตัว:<br>
+&nbsp;&nbsp;แถว1 หลัก1: 3 × 2 = <b>6</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; แถว1 หลัก2: 3 × (−1) = <b>−3</b><br>
+&nbsp;&nbsp;แถว2 หลัก1: 3 × 0 = <b>0</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; แถว2 หลัก2: 3 × 4 = <b>12</b><br>
+ผลลัพธ์ = ${mt([[6,-3],[0,12]])}`;
+
+  R[4] = `
+<b>AB</b>: สมาชิก (i,j) ของ AB = แถว i ของ A <b>·</b> หลัก j ของ B &nbsp;|&nbsp; เงื่อนไข: จำนวนหลัก A = จำนวนแถว B<br>
+ตัวอย่าง: ${mt([[1,2],[3,4]])} × ${mt([[5,6],[7,8]])} &nbsp;→&nbsp; คำนวณทีละตำแหน่ง:<br>
+&nbsp;&nbsp;(1,1): แถว1·หลัก1 = 1×5 + 2×7 = 5+14 = <b>19</b> &nbsp;&nbsp; (1,2): แถว1·หลัก2 = 1×6 + 2×8 = 6+16 = <b>22</b><br>
+&nbsp;&nbsp;(2,1): แถว2·หลัก1 = 3×5 + 4×7 = 15+28 = <b>43</b> &nbsp; (2,2): แถว2·หลัก2 = 3×6 + 4×8 = 18+32 = <b>50</b><br>
+ผลลัพธ์ = ${mt([[19,22],[43,50]])}`;
+
+  R[5] = `
+<b>det 2×2</b>: ${mt([['a','b'],['c','d']])} = ad − bc &nbsp;&nbsp; ตัวอย่าง: ${mt([[3,2],[1,4]])} = 3×4 − 2×1 = 12 − 2 = <b>10</b><br>
+<b>det 3×3 (กฎ Sarrus)</b>: ${mt([[1,2,1],[3,0,2],[1,4,1]])}<br>
+&nbsp;&nbsp;บวก (แนวทแยงหลัก): (1×0×1) + (2×2×1) + (1×3×4) = 0 + 4 + 12 = 16<br>
+&nbsp;&nbsp;ลบ &nbsp;(แนวทแยงรอง):&nbsp; (1×0×1) + (1×2×4) + (2×3×1) = 0 + 8 + 6 = 14<br>
+&nbsp;&nbsp;det = 16 − 14 = <b>2</b>`;
+
+  R[6] = `
+สมบัติดีเทอร์มิแนนต์ (A, B ขนาด n×n, k = สเกลาร์):<br>
+&nbsp;&nbsp;• <b>det(AB)</b> = det(A) · det(B) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; เช่น det(A)=3, det(B)=4 → det(AB) = 3 × 4 = <b>12</b><br>
+&nbsp;&nbsp;• <b>det(kA)</b> = k<sup>n</sup> · det(A) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; เช่น k=2, n=2, det(A)=5 → det(2A) = 2² × 5 = <b>20</b><br>
+&nbsp;&nbsp;• <b>det(A<sup>T</sup>)</b> = det(A) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; เช่น det(A)=7 → det(A<sup>T</sup>) = <b>7</b><br>
+&nbsp;&nbsp;• <b>det(A<sup>−1</sup>)</b> = 1 / det(A) &nbsp;&nbsp;&nbsp;&nbsp; เช่น det(A)=4 → det(A<sup>−1</sup>) = <b>1/4</b>`;
+
+  R[7] = `
+<b>สูตร A⁻¹ (2×2)</b>: เงื่อนไข det(A) ≠ 0 &nbsp;→&nbsp; A⁻¹ = <sup>1</sup>⁄<sub>det(A)</sub> × ${mt([['d','−b'],['−c','a']])} (สลับ a↔d, เปลี่ยนเครื่องหมาย b และ c)<br>
+ตัวอย่าง A = ${mt([[3,1],[2,1]])} &nbsp;→&nbsp; ขั้น 1: det(A) = 3×1 − 1×2 = 3 − 2 = <b>1</b><br>
+&nbsp;&nbsp;ขั้น 2: สลับ a↔d: (3↔1) &nbsp;|&nbsp; เปลี่ยนเครื่องหมาย: b = 1 → −1, &nbsp; c = 2 → −2<br>
+&nbsp;&nbsp;ขั้น 3: A⁻¹ = <sup>1</sup>⁄<sub>1</sub> × ${mt([[1,-1],[-2,3]])} = ${mt([[1,-1],[-2,3]])} &nbsp; ตรวจสอบ: AA⁻¹ = I`;
+
+  R[8] = `
+<b>C<sub>ij</sub></b> = (−1)^(i+j) × det(submatrix หลังตัดแถว i และหลัก j ออก) &nbsp;|&nbsp; pattern เครื่องหมาย: +−+ / −+− / +−+<br>
+ตัวอย่าง A = ${mt([[1,2,1],[3,0,2],[1,4,1]])}<br>
+&nbsp;&nbsp;C<sub>11</sub>: ตัดแถว1 หลัก1 → ${mt([[0,2],[4,1]])} &nbsp; det = 0×1 − 2×4 = −8 &nbsp; (−1)^2 × (−8) = (+1)(−8) = <b>−8</b><br>
+&nbsp;&nbsp;C<sub>12</sub>: ตัดแถว1 หลัก2 → ${mt([[3,2],[1,1]])} &nbsp; det = 3×1 − 2×1 = 1 &nbsp;&nbsp; (−1)^3 × 1 = (−1)(1) = <b>−1</b><br>
+<b>adj(A)</b> = transpose ของ cofactor matrix &nbsp;→&nbsp; <b>A⁻¹</b> = adj(A) ÷ det(A)`;
+
+  R[9] = `
+<b>AX = B</b>: {ax+by=p, cx+dy=q} → ${mt([['a','b'],['c','d']])}${mt([['x'],['y']])} = ${mt([['p'],['q']])}<br>
+ตัวอย่าง: 2x+y=5, x+3y=7 → A=${mt([[2,1],[1,3]])} B=${mt([[5],[7]])} &nbsp; det(A) = 2×3 − 1×1 = <b>5</b><br>
+<b>วิธี A⁻¹B</b>: A⁻¹ = <sup>1</sup>⁄<sub>5</sub> × ${mt([[3,-1],[-1,2]])} &nbsp;→&nbsp; X = <sup>1</sup>⁄<sub>5</sub>${mt([[3,-1],[-1,2]])}${mt([[5],[7]])} = <sup>1</sup>⁄<sub>5</sub>${mt([[8],[9]])}
+&nbsp; (คำนวณ: [3×5+(−1)×7 ; (−1)×5+2×7] = [15−7 ; −5+14]) &nbsp;→&nbsp; x = <b>8/5</b>, y = <b>9/5</b><br>
+<b>Cramer</b>: D<sub>x</sub> = det${mt([[5,1],[7,3]])} = 15−7 = 8 → x = 8÷5 = <b>8/5</b> &nbsp;|&nbsp; D<sub>y</sub> = det${mt([[2,5],[1,7]])} = 14−5 = 9 → y = 9÷5 = <b>9/5</b>`;
+
+  return `<div class="sh-ref"><div class="ref-hd">📚 ใบความรู้ · ขั้นที่ ${step}: ${SNAMES[step]}</div>${R[step]}</div>`;
+}
+
+const GENS = [null, g1, g2, g3, g4, g5, g6, g7, g8, g9];
+
+// ── Sheet builder ────────────────────────────────
+function buildSheet(step, n) {
+  const r     = mkR(step * 2003 + n * 97);
+  const probs = GENS[step](r);
+
+  const probsHTML = probs.map((prob, i) => `
+    <div class="prob">
+      <div class="prob-hd">ข้อที่ ${i+1}</div>
+      <div class="prob-bd">${prob.html}</div>
+      ${prob.ws ? `<div class="ws ${prob.ws}"></div>` : ''}
+    </div>${i < 3 ? div() : ''}`).join('');
+
+  return `<div class="sheet">
+    <div class="sh-hdr">
+      <div class="sh-school">${SCHOOL}</div>
+      <div class="sh-subject">${SUBJECT}</div>
+      <div class="sh-title">ใบงานเมทริกซ์ ขั้นที่ ${step}: ${SNAMES[step]}</div>
+    </div>
+    <div class="sh-info">
+      <div class="fi"><span>ชื่อ-นามสกุล</span><div class="fi-line"></div></div>
+      <div class="fi" style="max-width:70px"><span>เลขที่</span><div class="fi-line"></div></div>
+      <div class="fi" style="max-width:140px"><span>วันที่</span><div class="fi-line"></div></div>
+    </div>
+    ${makeRef(step)}
+    <div class="probs">${probsHTML}</div>
+    <div class="sh-ftr">
+      <span>ผ่านเกณฑ์: ถูกต้องทุกข้อ &nbsp; ⬜ ยังไม่ผ่าน</span>
+      <span>ตรวจโดย ${TEACHER}</span>
+    </div>
+  </div>`;
+}
+
+// ── UI ───────────────────────────────────────────
+function sel(n) {
+  curStep = n;
+  for(let i=1;i<=9;i++) document.getElementById(`sb${i}`).classList.toggle('on',i===n);
+  document.getElementById('output').innerHTML = '';
+  document.getElementById('status').textContent = `ขั้นที่ ${n}: ${SNAMES[n]} — กด "สร้าง 30 ใบงาน"`;
+}
+
+function generate() {
+  const st = document.getElementById('status');
+  st.textContent = '⏳ กำลังสร้างใบงาน...';
+  setTimeout(() => {
+    let html = '';
+    for(let i=1; i<=N; i++) html += buildSheet(curStep, i);
+    document.getElementById('output').innerHTML = html;
+    st.textContent = `✅ สร้าง ${N} ใบงาน ขั้นที่ ${curStep} เรียบร้อย — กด "พิมพ์" หรือ Ctrl+P`;
+  }, 20);
+}
+</script>
+</body>
+</html>
