@@ -341,10 +341,10 @@ body {
   <div class="h-controls">
     <div class="horizon-wrap">
       <label>🌫️ แสดงถึงขั้น</label>
-      <input type="range" id="horizonSlider" min="1" max="7" value="7"
+      <input type="range" id="horizonSlider" min="1" max="9" value="9"
              oninput="setHorizon(this.value)">
-      <strong id="horizonNum">7</strong>
-      <span style="font-size:11px;color:var(--muted)">/ 7</span>
+      <strong id="horizonNum">9</strong>
+      <span style="font-size:11px;color:var(--muted)">/ 9</span>
     </div>
     <button class="btn btn-ghost" onclick="manualRefresh()">🔄 รีเฟรช</button>
   </div>
@@ -416,7 +416,7 @@ const STEPS = [
   { id:1, emoji:'🌱', title:'นิยามและประเภทเมทริกซ์', color:'#2e7d32',
     topics:[
       'เมทริกซ์ขนาด m×n และสมาชิก aᵢⱼ',
-      'ประเภท: จตุรัส, เอกลักษณ์, ศูนย์, แถว, คอลัมน์',
+      'ประเภท: จตุรัส, เอกลักษณ์, ศูนย์, แถว, หลัก (Column)',
       'เมทริกซ์ทรานสโพส Aᵀ',
     ],
     quiz: 'บอกขนาด ระบุสมาชิก และแยกประเภทเมทริกซ์ได้ถูกต้อง' },
@@ -436,8 +436,8 @@ const STEPS = [
     quiz: 'คำนวณ kA ได้ถูกต้อง และบอกสมบัติได้' },
   { id:4, emoji:'⚡', title:'การคูณเมทริกซ์', color:'#bf360c',
     topics:[
-      'เงื่อนไข: คอลัมน์ของ A = แถวของ B',
-      'วิธีคำนวณ: แถวคูณคอลัมน์ (dot product)',
+      'เงื่อนไข: จำนวนหลักของ A = จำนวนแถวของ B',
+      'วิธีคำนวณ: แถวคูณหลัก (dot product)',
       'สมบัติ: AB ≠ BA โดยทั่วไป',
     ],
     quiz: 'คำนวณผลคูณ AB ได้ถูกต้อง และบอกเงื่อนไขได้' },
@@ -448,20 +448,34 @@ const STEPS = [
       'det(A) = 0 หมายความว่า: A ไม่มีผกผัน',
     ],
     quiz: 'หา det(A) ของ 2×2 และ 3×3 ได้ถูกต้อง' },
-  { id:6, emoji:'🔄', title:'เมทริกซ์ผกผัน A⁻¹', color:'#880e4f',
+  { id:6, emoji:'📐', title:'สมบัติดีเทอร์มิแนนต์', color:'#e65100',
+    topics:[
+      'det(AB) = det(A)·det(B)',
+      'det(kA) = kⁿ·det(A) เมื่อ A ขนาด n×n',
+      'det(Aᵀ) = det(A) และ det(A⁻¹) = 1/det(A)',
+    ],
+    quiz: 'ใช้สมบัติ det คำนวณโจทย์ได้ถูกต้องอย่างน้อย 3 ข้อ' },
+  { id:7, emoji:'🔄', title:'เมทริกซ์ผกผัน A⁻¹ (2×2)', color:'#880e4f',
     topics:[
       'เงื่อนไข: det(A) ≠ 0',
       'สูตร A⁻¹ ของ 2×2: A⁻¹ = (1/det) × adj(A)',
       'ตรวจสอบ: AA⁻¹ = A⁻¹A = I',
     ],
     quiz: 'หา A⁻¹ ของเมทริกซ์ 2×2 และตรวจสอบได้' },
-  { id:7, emoji:'🏆', title:'แก้ระบบสมการด้วยเมทริกซ์', color:'#4527a0',
+  { id:8, emoji:'🧮', title:'เมทริกซ์ผกผัน A⁻¹ (3×3)', color:'#4a148c',
+    topics:[
+      'Minor Mᵢⱼ และ Cofactor Cᵢⱼ = (−1)^(i+j)·Mᵢⱼ',
+      'adj(A) = ทรานสโพสของ cofactor matrix',
+      'A⁻¹ = adj(A) / det(A)',
+    ],
+    quiz: 'หา cofactor ทั้ง 9 ตัว สร้าง adj(A) และคำนวณ A⁻¹ ได้' },
+  { id:9, emoji:'🏆', title:'แก้ระบบสมการด้วยเมทริกซ์', color:'#004d40',
     topics:[
       'เขียนระบบสมการในรูป AX = B',
       'แก้ระบบโดย X = A⁻¹B',
-      'ประยุกต์กับโจทย์ 2 ตัวแปร 2 สมการ',
+      'กฎของโครเมอร์: x = Dₓ/D , y = Dᵧ/D',
     ],
-    quiz: 'แก้ระบบสมการ 2 ตัวแปร 2 สมการด้วยวิธีเมทริกซ์ได้สำเร็จ' },
+    quiz: 'แก้ระบบสมการด้วยวิธี A⁻¹B และ Cramer\'s Rule ได้สำเร็จ' },
 ];
 
 // ═══════════════════════════════════════════════════
@@ -532,7 +546,7 @@ function fmtTime(d) {
 // STATE
 // ═══════════════════════════════════════════════════
 let S = {
-  horizon:      parseInt(localStorage.getItem('m5_horizon') || '7'),
+  horizon:      parseInt(localStorage.getItem('m5_horizon') || '9'),
   myNo:         parseInt(localStorage.getItem('m5_myNo'))  || null,
   selectedStep: null,
   lastUpdated:  null,
