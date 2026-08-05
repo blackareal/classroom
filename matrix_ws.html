@@ -145,7 +145,7 @@ body { font-family:'Sarabun',sans-serif; background:#0d1117; color:#c9d1d9; }
 <div class="ctrl no-print">
   <div>
     <div class="ctrl-title">🖨️ ใบงานเมทริกซ์ · ม.5/1</div>
-    <div class="ctrl-sub">30 ใบต่อขั้น · โจทย์สุ่มไม่ซ้ำ ไม่ลอกกันได้</div>
+    <div class="ctrl-sub">31 ใบต่อขั้น · โจทย์สุ่มไม่ซ้ำ ไม่ลอกกันได้</div>
   </div>
   <div class="step-btns">
     <button class="sbtn on" id="sb1" onclick="sel(1)">🌱 ขั้น 1 นิยาม</button>
@@ -159,18 +159,18 @@ body { font-family:'Sarabun',sans-serif; background:#0d1117; color:#c9d1d9; }
     <button class="sbtn"    id="sb9" onclick="sel(9)">🏆 ขั้น 9 ระบบสมการ</button>
   </div>
   <div class="act-btns">
-    <button class="abtn abtn-gen" onclick="generate()">⚡ สร้าง 30 ใบงาน</button>
+    <button class="abtn abtn-gen" onclick="generate()">⚡ สร้าง 31 ใบงาน</button>
     <button class="abtn abtn-prt" onclick="window.print()">🖨️ พิมพ์</button>
   </div>
 </div>
-<div id="status" class="no-print">เลือกขั้นแล้วกด "สร้าง 30 ใบงาน"</div>
+<div id="status" class="no-print">เลือกขั้นแล้วกด "สร้าง 31 ใบงาน"</div>
 <div id="output"></div>
 
 <script>
 const SCHOOL  = 'โรงเรียนวังกระแสวิทยาคม';
 const SUBJECT = 'ค32201 คณิตศาสตร์เพิ่มเติม 3  ม.5/1  ภาคเรียน 1/2569';
 const TEACHER = 'ครูอนุพงศ์ ไชยบุตร';
-const N = 30;
+const N = 31;
 
 const SNAMES = ['',
   'นิยามและประเภทเมทริกซ์',
@@ -557,7 +557,7 @@ function sel(n) {
   curStep = n;
   for(let i=1;i<=9;i++) document.getElementById(`sb${i}`).classList.toggle('on',i===n);
   document.getElementById('output').innerHTML = '';
-  document.getElementById('status').textContent = `ขั้นที่ ${n}: ${SNAMES[n]} — กด "สร้าง 30 ใบงาน"`;
+  document.getElementById('status').textContent = `ขั้นที่ ${n}: ${SNAMES[n]} — กด "สร้าง 31 ใบงาน"`;
 }
 
 function generate() {
