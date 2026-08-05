@@ -268,12 +268,14 @@ theory: `
     <div class="formula">(A+B)ᵢⱼ = aᵢⱼ + bᵢⱼ</div>
     <div class="example-box">
       <strong>ตัวอย่าง:</strong><br><br>
-      ${matH([[1,2],[3,4]])} + ${matH([[5,6],[7,8]])}<br><br>
-      &nbsp;(1,1): a₁₁ + b₁₁ = 1 + 5 = <b>6</b><br>
-      &nbsp;(1,2): a₁₂ + b₁₂ = 2 + 6 = <b>8</b><br>
-      &nbsp;(2,1): a₂₁ + b₂₁ = 3 + 7 = <b>10</b><br>
-      &nbsp;(2,2): a₂₂ + b₂₂ = 4 + 8 = <b>12</b><br><br>
-      ผลลัพธ์ = ${matH([[6,8],[10,12]])}
+      A = ${matH([[1,2],[3,4]])} &nbsp; B = ${matH([[5,6],[7,8]])}<br><br>
+      <table style="border-collapse:collapse;margin:4px 0"><tr>
+        <td style="padding-right:6px;vertical-align:middle;white-space:nowrap">A + B =</td>
+        <td>${matH([['1+5','2+6'],['3+7','4+8']])}</td>
+      </tr><tr>
+        <td style="padding-right:6px;vertical-align:middle;white-space:nowrap">A + B =</td>
+        <td>${matH([[6,8],[10,12]])}</td>
+      </tr></table>
     </div>
   </div>
 </div>
@@ -327,13 +329,14 @@ theory: `
     คูณ<b>ทุกสมาชิก</b>ด้วย k
     <div class="formula">(kA)ᵢⱼ = k · aᵢⱼ</div>
     <div class="example-box">
-      <strong>ตัวอย่าง:</strong> k = 3<br><br>
-      3 × ${matH([[1,-2],[0,4]])}<br><br>
-      &nbsp;(1,1): 3 × 1 = <b>3</b><br>
-      &nbsp;(1,2): 3 × (−2) = <b>−6</b><br>
-      &nbsp;(2,1): 3 × 0 = <b>0</b><br>
-      &nbsp;(2,2): 3 × 4 = <b>12</b><br><br>
-      ผลลัพธ์ = ${matH([[3,-6],[0,12]])}
+      <strong>ตัวอย่าง:</strong> k = 3, A = ${matH([[1,-2],[0,4]])}<br><br>
+      <table style="border-collapse:collapse;margin:4px 0"><tr>
+        <td style="padding-right:6px;vertical-align:middle;white-space:nowrap">3A =</td>
+        <td>${matH([['3×1','3×(−2)'],['3×0','3×4']])}</td>
+      </tr><tr>
+        <td style="padding-right:6px;vertical-align:middle;white-space:nowrap">3A =</td>
+        <td>${matH([[3,-6],[0,12]])}</td>
+      </tr></table>
     </div>
   </div>
 </div>
@@ -392,12 +395,14 @@ theory: `
     <div class="formula">(AB)ᵢⱼ = aᵢ₁b₁ⱼ + aᵢ₂b₂ⱼ + … + aᵢₙbₙⱼ</div>
     <div class="example-box">
       <strong>ตัวอย่าง:</strong><br><br>
-      ${matH([[1,2],[3,4]])} × ${matH([[5,6],[7,8]])}<br><br>
-      &nbsp;(1,1): (1×5) + (2×7) = 5 + 14 = <b>19</b><br>
-      &nbsp;(1,2): (1×6) + (2×8) = 6 + 16 = <b>22</b><br>
-      &nbsp;(2,1): (3×5) + (4×7) = 15 + 28 = <b>43</b><br>
-      &nbsp;(2,2): (3×6) + (4×8) = 18 + 32 = <b>50</b><br><br>
-      ผลลัพธ์ = ${matH([[19,22],[43,50]])}
+      A = ${matH([[1,2],[3,4]])} &nbsp; B = ${matH([[5,6],[7,8]])}<br><br>
+      <table style="border-collapse:collapse;margin:4px 0"><tr>
+        <td style="padding-right:6px;vertical-align:middle;white-space:nowrap">A × B =</td>
+        <td>${matH([['(1×5)+(2×7)','(1×6)+(2×8)'],['(3×5)+(4×7)','(3×6)+(4×8)']])}</td>
+      </tr><tr>
+        <td style="padding-right:6px;vertical-align:middle;white-space:nowrap">A × B =</td>
+        <td>${matH([[19,22],[43,50]])}</td>
+      </tr></table>
     </div>
     <div style="margin-top:10px;color:var(--rd);font-size:13px;">⚠ AB ≠ BA โดยทั่วไป (การคูณ<b>ไม่สลับที่</b>)</div>
   </div>
@@ -818,21 +823,54 @@ makeQ() {
   return Q;
 }};
 
+// ── Google Sheets Horizon Sync ────────────────────────
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTkRLvKkv25XcnLr1kUppjvhyb6K08wXQHYlLxGKScovRbPlTPfgeyjUY1W0m9M2Wl79YkRu3B0QOFt/pub?gid=0&single=true&output=csv';
+let horizon = 9;
+
+async function fetchHorizon() {
+  try {
+    const res = await fetch(CSV_URL);
+    if (!res.ok) return;
+    const text = await res.text();
+    const rows = text.trim().split('\n').map(r => r.split(',').map(c => c.trim().replace(/^"|"$/g,'')));
+    const hdr  = rows[0].map(h => h.toLowerCase());
+    const iNo  = hdr.indexOf('no');
+    const iSt  = hdr.indexOf('step');
+    if (iNo < 0 || iSt < 0) return;
+    const cfg  = rows.slice(1).find(r => parseInt(r[iNo]) === 0);
+    if (cfg) {
+      const h = parseInt(cfg[iSt]);
+      if (!isNaN(h) && h !== horizon) {
+        horizon = Math.min(9, Math.max(1, h));
+        buildSidebar();
+        // ถ้าขั้นปัจจุบันถูก lock → กลับไปขั้นสูงสุดที่เปิด
+        if (curStep > horizon) { curStep = horizon; renderContent(); }
+      }
+    }
+  } catch(e) { /* silent — no internet */ }
+}
+
 // ── State ─────────────────────────────────────────────
 let curStep=1, curTab='learn', quiz=null, userAns={}, submitted=false;
 
 // ── Sidebar ───────────────────────────────────────────
 function buildSidebar(){
   const el=document.getElementById('side');
-  el.innerHTML=SM.map(s=>`
-    <button class="s-btn${s.id===curStep?' active':''}" onclick="showStep(${s.id})">
-      <span class="s-emoji">${s.emoji}</span>
-      <span>ขั้น ${s.id}<br><small style="font-weight:400;font-size:11px">${s.title}</small></span>
-    </button>`).join('');
+  el.innerHTML=SM.map(s=>{
+    const locked = s.id > horizon;
+    return `<button class="s-btn${s.id===curStep&&!locked?' active':''}"
+      onclick="${locked?'':'showStep('+s.id+')'}"
+      style="${locked?'opacity:0.32;cursor:not-allowed;':''}"
+      ${locked?'disabled':''}>
+      <span class="s-emoji">${locked?'🔒':s.emoji}</span>
+      <span>ขั้น ${s.id}<br><small style="font-weight:400;font-size:11px">${locked?'ล็อคอยู่':s.title}</small></span>
+    </button>`;
+  }).join('');
 }
 
 // ── Show Step ─────────────────────────────────────────
 function showStep(id){
+  if(id > horizon) return; // ล็อคอยู่
   curStep=id; curTab='learn'; quiz=null; userAns={}; submitted=false;
   buildSidebar();
   document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',i===0);});
@@ -962,6 +1000,8 @@ function resetQuiz(){
 // ── Init ──────────────────────────────────────────────
 buildSidebar();
 renderContent();
+fetchHorizon();
+setInterval(fetchHorizon, 60000);
 </script>
 </body>
 </html>
