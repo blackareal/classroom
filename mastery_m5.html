@@ -599,8 +599,8 @@ async function fetchSteps() {
       const s = S.students.find(x => x.no === no);
       if (!s) return;
       s.step = Math.min(9, Math.max(0, step));
-      const displayName = (iName >= 0 && row[iName]) ? row[iName]
-                        : (iNick >= 0 && row[iNick]) ? row[iNick]
+      const displayName = (iNick >= 0 && row[iNick]) ? row[iNick]
+                        : (iName >= 0 && row[iName]) ? row[iName]
                         : null;
       if (displayName) {
         s.nick  = displayName;
@@ -791,30 +791,14 @@ function buildDetailHTML(id) {
   return `
     <div class="d-emoji">${step.emoji}</div>
     <div class="d-title">${step.title}</div>
-    <div class="d-sub" style="color:${step.color}">ขั้นที่ ${id} จาก 7</div>
+    <div class="d-sub" style="color:${step.color}">ขั้นที่ ${id} จาก 9</div>
 
     <div class="d-section">📚 สิ่งที่ต้องเรียนรู้</div>
     ${step.topics.map(t => `<div class="d-topic">${t}</div>`).join('')}
 
-    <div class="d-section">✅ เกณฑ์ผ่านขั้น</div>
-    <div class="quiz-box">${step.quiz}</div>
-
-    <div class="d-section">👥 นักเรียนในขั้นนี้ (${here.length} คน)</div>
-    ${studentListHTML}
-
-    <div class="d-section">📖 ใบเรียน</div>
-    <a href="matrix.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(79,163,227,.1);border:1px solid rgba(79,163,227,.3);border-radius:8px;color:var(--accent);text-decoration:none;font-size:13px;font-weight:700;">
-      📚 เปิดใบความรู้ + แบบทดสอบ ขั้น ${id}
-    </a>
-
-    ${id < 7 ? `
-    <div class="d-section">⬆️ ขั้นถัดไป</div>
-    <div class="next-step-preview">
-      <span style="font-size:22px">${STEPS[id].emoji}</span>
-      <strong>${STEPS[id].title}</strong>
-    </div>` : `
-    <div style="text-align:center;padding:20px;font-size:28px">🎉🏆🎉<br>
-    <span style="font-size:14px;color:var(--gold)">ขั้นสูงสุด!</span></div>`}`;
+    <a href="matrix.html" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 16px;background:#e65100;border-radius:10px;color:#fff;text-decoration:none;font-size:15px;font-weight:700;margin-top:14px;box-shadow:0 3px 8px rgba(230,81,0,.35);">
+      🎓 เรียนรู้ ขั้น ${id}
+    </a>`;
 }
 
 function renderDetail(id) {
