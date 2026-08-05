@@ -340,11 +340,9 @@ body {
   </div>
   <div class="h-controls">
     <div class="horizon-wrap">
-      <label>🌫️ แสดงถึงขั้น</label>
-      <input type="range" id="horizonSlider" min="1" max="9" value="9"
-             oninput="setHorizon(this.value)">
-      <strong id="horizonNum">9</strong>
-      <span style="font-size:11px;color:var(--muted)">/ 9</span>
+      <label>🌫️ เปิดถึงขั้น</label>
+      <strong id="horizonNum" style="font-size:15px">9</strong>
+      <span style="font-size:11px;color:var(--muted)">/ 9 &nbsp;(ตั้งค่าใน Google Sheets แถว no=0)</span>
     </div>
     <button class="btn btn-ghost" onclick="manualRefresh()">🔄 รีเฟรช</button>
   </div>
@@ -406,7 +404,7 @@ body {
 // ═══════════════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════════════
-const CSV_URL     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRvHA5w5IVu6bBe1JEQ_HLtBAkBc_FW7Ivtvxwxkg5izgiJ2rrLY29tE52ZHeEux2cUj_J6GD_IHeDt/pub?output=csv';
+const CSV_URL     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTkRLvKkv25XcnLr1kUppjvhyb6K08wXQHYlLxGKScovRbPlTPfgeyjUY1W0m9M2Wl79YkRu3B0QOFt/pub?gid=0&single=true&output=csv';
 const REFRESH_SEC = 60;      // auto-refresh ทุกกี่วินาที
 
 // ═══════════════════════════════════════════════════
@@ -501,7 +499,7 @@ const ROSTER = [
   {no:17, name:'นางสาวจิตรรัตร์ดา หอมยา',     nick:'อิม',      gender:'หญิง'},
   {no:18, name:'นางสาวธันย์ชนก นูนวน',         nick:'เอย',      gender:'หญิง'},
   {no:19, name:'นางสาวนิชานันท์ ไชยรี',        nick:'มิ้น',     gender:'หญิง'},
-  {no:20, name:'นางสาวปาณิศา นันสี',           nick:'ปาณิศา',   gender:'หญิง'},
+  {no:20, name:'นางสาวปาณิศา นันสี',           nick:'เฟิร์น',   gender:'หญิง'},
   {no:21, name:'นางสาวพัชรี ญาปัน',            nick:'หนึ่ง',    gender:'หญิง'},
   {no:22, name:'นางสาวพิชญธิดา ปาวัน',         nick:'ไอด้า',    gender:'หญิง'},
   {no:23, name:'นางสาวพิทยาภรณ์ อินแสงแวง',   nick:'กิ่งแก้ว', gender:'หญิง'},
@@ -546,7 +544,7 @@ function fmtTime(d) {
 // STATE
 // ═══════════════════════════════════════════════════
 let S = {
-  horizon:      parseInt(localStorage.getItem('m5_horizon') || '9'),
+  horizon:      (h => h >= 8 ? h : 9)(parseInt(localStorage.getItem('m5_horizon') || '0')),
   myNo:         parseInt(localStorage.getItem('m5_myNo'))  || null,
   selectedStep: null,
   lastUpdated:  null,
@@ -582,6 +580,7 @@ async function fetchSteps() {
     const iNo   = header.indexOf('no');
     const iStep = header.indexOf('step');
     const iNick = header.indexOf('nick');
+    const iName = header.indexOf('name');
     if (iNo < 0 || iStep < 0) throw new Error('ไม่พบคอลัมน์ "no" หรือ "step" ใน Sheet');
 
     let updated = 0;
@@ -589,12 +588,24 @@ async function fetchSteps() {
       const no   = parseInt(row[iNo]);
       const step = parseInt(row[iStep]);
       if (isNaN(no) || isNaN(step)) return;
+
+      // แถว no=0 = ตั้งค่า horizon
+      if (no === 0) {
+        S.horizon = Math.min(9, Math.max(1, step));
+        document.getElementById('horizonNum').textContent = S.horizon;
+        localStorage.setItem('m5_horizon', S.horizon);
+        return;
+      }
+
       const s = S.students.find(x => x.no === no);
       if (!s) return;
-      s.step = Math.min(7, Math.max(0, step));
-      if (iNick >= 0 && row[iNick]) {
-        s.nick  = row[iNick];
-        s.short = row[iNick].slice(0, 5);
+      s.step = Math.min(9, Math.max(0, step));
+      const displayName = (iName >= 0 && row[iName]) ? row[iName]
+                        : (iNick >= 0 && row[iNick]) ? row[iNick]
+                        : null;
+      if (displayName) {
+        s.nick  = displayName;
+        s.short = displayName.split(' ')[0].slice(0, 5);
       }
       updated++;
     });
@@ -604,7 +615,7 @@ async function fetchSteps() {
     setStatus('ok', `อัปเดตล่าสุด ${fmtTime(S.lastUpdated)} · ${updated} นักเรียน`);
   } catch(e) {
     S.error = e.message;
-    setStatus('error', `โหลดไม่สำเร็จ: ${e.message} · ข้อมูลล่าสุด ${fmtTime(S.lastUpdated) || '—'}`);
+    setStatus('loading', `ไม่มีสัญญาณ Google Sheets ${S.lastUpdated ? '· ข้อมูลล่าสุด ' + fmtTime(S.lastUpdated) : '· ยังไม่ได้เชื่อมต่อ'}`);
   }
 
   S.loading = false;
@@ -638,7 +649,7 @@ function renderBoard() {
   const board = document.getElementById('board');
   board.innerHTML = '';
 
-  for (let id = 7; id >= 0; id--) {
+  for (let id = 9; id >= 0; id--) {
     const row   = document.createElement('div');
     row.className = 'step-row';
     const block = document.createElement('div');
