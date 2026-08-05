@@ -147,8 +147,10 @@ const SM = [
   {id:3,emoji:'✖️',title:'คูณด้วยสเกลาร์',color:'#6a1b9a'},
   {id:4,emoji:'⚡',title:'การคูณเมทริกซ์',color:'#bf360c'},
   {id:5,emoji:'🔍',title:'ดีเทอร์มิแนนต์',color:'#b71c1c'},
-  {id:6,emoji:'🔄',title:'เมทริกซ์ผกผัน',color:'#880e4f'},
-  {id:7,emoji:'🏆',title:'แก้ระบบสมการ',color:'#4527a0'},
+  {id:6,emoji:'📐',title:'สมบัติ det',color:'#e65100'},
+  {id:7,emoji:'🔄',title:'A⁻¹ ของ 2×2',color:'#880e4f'},
+  {id:8,emoji:'🧮',title:'A⁻¹ ของ 3×3',color:'#4a148c'},
+  {id:9,emoji:'🏆',title:'แก้ระบบสมการ',color:'#004d40'},
 ];
 
 // ── Content (theory + quiz generators) ───────────────
@@ -161,8 +163,8 @@ theory: `
   <div class="th-label">นิยาม</div>
   <div class="th-card">
     <h4>เมทริกซ์ขนาด m×n</h4>
-    ตารางตัวเลขที่มี <b>m แถว</b> (row) และ <b>n คอลัมน์</b> (column)<br>
-    สมาชิกตำแหน่งแถวที่ i คอลัมน์ที่ j เขียนแทนด้วย <b>aᵢⱼ</b>
+    ตารางตัวเลขที่มี <b>m แถว</b> (row) และ <b>n หลัก</b> (column)<br>
+    สมาชิกตำแหน่งแถวที่ i หลักที่ j เขียนแทนด้วย <b>aᵢⱼ</b>
     <div class="example-box">
       <strong>ตัวอย่าง:</strong> A ขนาด 2×3<br><br>
       ${matH([[1,2,3],[4,5,6]])} &nbsp; a₁₂ = 2 &nbsp;,&nbsp; a₂₃ = 6
@@ -178,14 +180,14 @@ theory: `
       <tr><td>เอกลักษณ์ (I)</td><td>แนวทแยง=1, อื่น=0</td><td>${matH([[1,0],[0,1]])}</td></tr>
       <tr><td>ศูนย์ (Zero)</td><td>ทุกสมาชิก = 0</td><td>${matH([[0,0],[0,0]])}</td></tr>
       <tr><td>แถว (Row)</td><td>m = 1</td><td>${matH([[2,5,3]])}</td></tr>
-      <tr><td>คอลัมน์ (Column)</td><td>n = 1</td><td>${matH([[2],[5]])}</td></tr>
+      <tr><td>หลัก (Column)</td><td>n = 1</td><td>${matH([[2],[5]])}</td></tr>
     </table>
   </div>
 </div>
 <div class="th-section">
   <div class="th-label">เมทริกซ์ทรานสโพส</div>
   <div class="th-card">
-    <h4>Aᵀ — สลับแถวกับคอลัมน์</h4>
+    <h4>Aᵀ — สลับแถวกับหลัก</h4>
     ถ้า A ขนาด m×n แล้ว Aᵀ ขนาด <b>n×m</b>
     <div class="example-box">
       <strong>ตัวอย่าง:</strong><br><br>
@@ -206,7 +208,7 @@ makeQ() {
   const c1 = sh([[correct1,true],...w1]);
   Q.push({type:'mc',stem:`เมทริกซ์ A นี้มีขนาดเท่าไหร่?<br><br>${matH(A1)}`,
     choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),
-    explain:`เมทริกซ์มี ${m1} แถว ${n1} คอลัมน์ → ขนาด ${m1}×${n1}`});
+    explain:`เมทริกซ์มี ${m1} แถว ${n1} หลัก → ขนาด ${m1}×${n1}`});
 
   // Q2: หา aᵢⱼ
   const A2 = Array.from({length:3},()=>Array.from({length:3},()=>ri(-5,9)));
@@ -218,13 +220,13 @@ makeQ() {
   const c2=sh([[ans2,true],...wrong2.map(v=>[v,false])]);
   Q.push({type:'mc',stem:`จากเมทริกซ์ A ต่อไปนี้ a₍${i2+1}${j2+1}₎ มีค่าเท่าไหร่?<br><br>${matH(A2,i2,j2)}`,
     choices:c2.map(x=>`${x[0]}`),answer:c2.findIndex(x=>x[1]),
-    explain:`aᵢⱼ = สมาชิกแถวที่ ${i2+1} คอลัมน์ที่ ${j2+1} = ${ans2}`});
+    explain:`aᵢⱼ = สมาชิกแถวที่ ${i2+1} หลักที่ ${j2+1} = ${ans2}`});
 
   // Q3: ประเภท
   const types=[
     {mat:[[ri(1,4),ri(1,4)],[ri(1,4),ri(1,4)]],ans:'เมทริกซ์จตุรัส (2×2)',w:['เมทริกซ์เอกลักษณ์','เมทริกซ์แถว','เมทริกซ์ศูนย์']},
     {mat:[[1,0,0],[0,1,0],[0,0,1]],ans:'เมทริกซ์เอกลักษณ์ I₃',w:['เมทริกซ์จตุรัสทั่วไป','เมทริกซ์ศูนย์','เมทริกซ์แถว']},
-    {mat:[[ri(1,5),ri(1,5),ri(1,5)]],ans:'เมทริกซ์แถว (1×3)',w:['เมทริกซ์จตุรัส','เมทริกซ์คอลัมน์','เมทริกซ์เอกลักษณ์']},
+    {mat:[[ri(1,5),ri(1,5),ri(1,5)]],ans:'เมทริกซ์แถว (1×3)',w:['เมทริกซ์จตุรัส','เมทริกซ์หลัก','เมทริกซ์เอกลักษณ์']},
   ];
   const t3=types[ri(0,types.length-1)];
   const c3=sh([[t3.ans,true],...t3.w.map(v=>[v,false])]);
@@ -237,7 +239,7 @@ makeQ() {
   const c4=sh([[`${n4}×${m4}`,true],[`${m4}×${n4}`,false],[`${m4}×${m4}`,false],[`${n4}×${n4}`,false]]);
   Q.push({type:'mc',stem:`ถ้า A มีขนาด ${m4}×${n4} แล้ว Aᵀ มีขนาดเท่าไหร่?`,
     choices:c4.map(x=>x[0]),answer:c4.findIndex(x=>x[1]),
-    explain:`ทรานสโพสสลับแถว↔คอลัมน์ → ${m4}×${n4} กลายเป็น ${n4}×${m4}`});
+    explain:`ทรานสโพสสลับแถว↔หลัก → ${m4}×${n4} กลายเป็น ${n4}×${m4}`});
 
   // Q5: เมทริกซ์เอกลักษณ์
   const mats5=[[[1,0],[0,1]],[[1,1],[0,1]],[[2,0],[0,2]],[[0,1],[1,0]]];
@@ -283,8 +285,8 @@ theory: `
 makeQ() {
   const Q = [];
   // Q1 MC: เงื่อนไข
-  const c1=sh([['A และ B มีขนาดเท่ากัน (m×n ทั้งคู่)',true],['A และ B เป็นเมทริกซ์จตุรัส',false],['จำนวนแถวของ A = จำนวนคอลัมน์ของ B',false],['A และ B มีขนาดอะไรก็ได้',false]]);
-  Q.push({type:'mc',stem:'A + B มีนิยามเมื่อใด?',choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:'ต้องมีขนาดเท่ากันทุกมิติ: m แถวเท่ากัน และ n คอลัมน์เท่ากัน'});
+  const c1=sh([['A และ B มีขนาดเท่ากัน (m×n ทั้งคู่)',true],['A และ B เป็นเมทริกซ์จตุรัส',false],['จำนวนแถวของ A = จำนวนหลักของ B',false],['A และ B มีขนาดอะไรก็ได้',false]]);
+  Q.push({type:'mc',stem:'A + B มีนิยามเมื่อใด?',choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:'ต้องมีขนาดเท่ากันทุกมิติ: m แถวเท่ากัน และ n หลักเท่ากัน'});
 
   // Q2 MC: สมบัติ
   const c2=sh([['A + B = B + A',true],['A − B = B − A',false],'(A+B)ᵀ = Aᵀ − Bᵀ'.split()].flat().map((s,i)=>typeof s==='string'?[s,false]:[s,false]).filter((_,i)=>i<4));
@@ -364,7 +366,7 @@ theory: `
 <div class="th-section">
   <div class="th-label">เงื่อนไขและขนาดผลลัพธ์</div>
   <div class="th-card">
-    <h4>AB มีนิยามเมื่อ: คอลัมน์ของ A = แถวของ B</h4>
+    <h4>AB มีนิยามเมื่อ: หลักของ A = แถวของ B</h4>
     A ขนาด <b>m×n</b> &nbsp;×&nbsp; B ขนาด <b>n×p</b> &nbsp;=&nbsp; AB ขนาด <b>m×p</b>
     <div class="example-box">A ขนาด 2×3 × B ขนาด 3×4 → AB ขนาด <b>2×4</b></div>
   </div>
@@ -372,7 +374,7 @@ theory: `
 <div class="th-section">
   <div class="th-label">วิธีคำนวณ</div>
   <div class="th-card">
-    <h4>(AB)ᵢⱼ = dot product ของแถวที่ i ของ A กับคอลัมน์ที่ j ของ B</h4>
+    <h4>(AB)ᵢⱼ = dot product ของแถวที่ i ของ A กับหลักที่ j ของ B</h4>
     <div class="formula">(AB)ᵢⱼ = aᵢ₁b₁ⱼ + aᵢ₂b₂ⱼ + … + aᵢₙbₙⱼ</div>
     <div class="example-box">
       <strong>ตัวอย่าง:</strong><br><br>
@@ -385,8 +387,8 @@ theory: `
 makeQ() {
   const Q = [];
   // Q1 MC: เงื่อนไข
-  const c1=sh([['คอลัมน์ของ A = แถวของ B',true],['แถวของ A = แถวของ B',false],['A และ B มีขนาดเท่ากัน',false],['คอลัมน์ของ A = คอลัมน์ของ B',false]]);
-  Q.push({type:'mc',stem:'AB มีนิยามเมื่อใด?',choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:'จำนวนคอลัมน์ของ A ต้องเท่ากับจำนวนแถวของ B'});
+  const c1=sh([['หลักของ A = แถวของ B',true],['แถวของ A = แถวของ B',false],['A และ B มีขนาดเท่ากัน',false],['หลักของ A = หลักของ B',false]]);
+  Q.push({type:'mc',stem:'AB มีนิยามเมื่อใด?',choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:'จำนวนหลักของ A ต้องเท่ากับจำนวนแถวของ B'});
 
   // Q2 MC: ขนาดผลลัพธ์
   const m=ri(2,4),n=ri(2,4),p=ri(2,4);
@@ -421,7 +423,7 @@ theory: `
 <div class="th-section">
   <div class="th-label">ดีเทอร์มิแนนต์ 3×3 (กฎ Sarrus)</div>
   <div class="th-card">
-    <div class="formula">คัดลอกคอลัมน์ที่ 1,2 ต่อท้าย → บวกแนวลง 3 เส้น − ลบแนวขึ้น 3 เส้น</div>
+    <div class="formula">คัดลอกหลักที่ 1,2 ต่อท้าย → บวกแนวลง 3 เส้น − ลบแนวขึ้น 3 เส้น</div>
     <div class="example-box">
       <strong>สูตร:</strong><br>
       det ${matH([['a','b','c'],['d','e','f'],['g','h','i']])} = aei + bfg + cdh − ceg − afh − bdi
@@ -472,8 +474,82 @@ makeQ() {
   return Q;
 }};
 
-// ── Step 6 ────────────────────────────────────────────
+// ── Step 6 ── สมบัติดีเทอร์มิแนนต์ ──────────────────────────
 C[6] = {
+theory: `
+<div class="th-section">
+  <div class="th-label">สมบัติหลักของ det</div>
+  <div class="th-card">
+    <table>
+      <tr><th>สมบัติ</th><th>สูตร</th><th>เงื่อนไข</th></tr>
+      <tr><td>ผลคูณ</td><td><b>det(AB) = det(A)·det(B)</b></td><td>A, B จตุรัสขนาดเท่ากัน</td></tr>
+      <tr><td>สเกลาร์</td><td><b>det(kA) = kⁿ·det(A)</b></td><td>A ขนาด n×n</td></tr>
+      <tr><td>ทรานสโพส</td><td><b>det(Aᵀ) = det(A)</b></td><td></td></tr>
+      <tr><td>ผกผัน</td><td><b>det(A⁻¹) = 1/det(A)</b></td><td>ต้องมี A⁻¹ ก่อน</td></tr>
+      <tr><td>เอกลักษณ์</td><td><b>det(I) = 1</b></td><td></td></tr>
+    </table>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">ตัวอย่างการใช้สมบัติ</div>
+  <div class="th-card">
+    <div class="example-box">
+      <strong>ตัวอย่าง 1:</strong> ถ้า det(A) = 3 และ det(B) = 4<br>
+      det(AB) = det(A)·det(B) = 3 × 4 = <b>12</b><br>
+      det(BA) = det(B)·det(A) = 4 × 3 = <b>12</b> &nbsp;(เท่ากัน แม้ AB ≠ BA)
+    </div>
+    <div class="example-box">
+      <strong>ตัวอย่าง 2:</strong> ถ้า A ขนาด 2×2 และ det(A) = 5 &nbsp; , &nbsp; k = 3<br>
+      det(3A) = 3² × 5 = 9 × 5 = <b>45</b>
+    </div>
+    <div class="example-box">
+      <strong>ตัวอย่าง 3:</strong> ถ้า det(A) = 4<br>
+      det(A⁻¹) = 1/det(A) = 1/4 = <b>0.25</b>
+    </div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">สมบัติเพิ่มเติม (แนว TCAS)</div>
+  <div class="th-card">
+    <table>
+      <tr><th>สมบัติ</th><th>สูตร</th></tr>
+      <tr><td>กำลัง n</td><td>det(Aⁿ) = [det(A)]ⁿ</td></tr>
+      <tr><td>det(AB) = det(BA)</td><td>แม้ AB ≠ BA แต่ det เท่ากัน</td></tr>
+      <tr><td>det(O) = 0</td><td>เมทริกซ์ศูนย์ det = 0 เสมอ</td></tr>
+    </table>
+  </div>
+</div>`,
+
+makeQ() {
+  const Q = [];
+  // Q1 MC: det(AB)
+  const c1=sh([['det(A) · det(B)',true],['det(A) + det(B)',false],['det(A) − det(B)',false],['det(A) / det(B)',false]]);
+  Q.push({type:'mc',stem:'det(AB) = ?',choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:'สมบัติผลคูณ: det(AB) = det(A)·det(B) เสมอ (สำคัญมากใน TCAS)'});
+
+  // Q2 MC: det(Aᵀ)
+  const c2=sh([['det(A)',true],['−det(A)',false],['1/det(A)',false],['[det(A)]²',false]]);
+  Q.push({type:'mc',stem:'det(Aᵀ) = ?',choices:c2.map(x=>x[0]),answer:c2.findIndex(x=>x[1]),explain:'det(Aᵀ) = det(A) เสมอ — ทรานสโพสไม่เปลี่ยนค่า det'});
+
+  // Q3 Num: det(AB)
+  const da=ri(2,6), db=ri(2,6);
+  Q.push({type:'num',stem:`ถ้า det(A) = ${da} และ det(B) = ${db} &nbsp; จงหา det(AB)`,
+    answer:da*db,tol:0,explain:`det(AB) = det(A)·det(B) = ${da} × ${db} = ${da*db}`});
+
+  // Q4 Num: det(kA) สำหรับเมทริกซ์ 2×2
+  const k4=ri(2,4), d4=ri(2,5);
+  Q.push({type:'num',stem:`ถ้า A เป็นเมทริกซ์ขนาด 2×2 และ det(A) = ${d4} &nbsp; จงหา det(${k4}A)`,
+    answer:k4*k4*d4,tol:0,explain:`det(kA) = kⁿ·det(A) โดย n=2 &nbsp;→&nbsp; ${k4}² × ${d4} = ${k4*k4} × ${d4} = ${k4*k4*d4}`});
+
+  // Q5 Num: det(A⁻¹)
+  const d5=ri(2,6);
+  Q.push({type:'num',stem:`ถ้า det(A) = ${d5} &nbsp; จงหา det(A⁻¹) (ทศนิยม 4 ตำแหน่ง)`,
+    answer:rnd(1/d5,4),tol:0.001,explain:`det(A⁻¹) = 1/det(A) = 1/${d5} ≈ ${rnd(1/d5,4)}`});
+
+  return Q;
+}};
+
+// ── Step 7 ── A⁻¹ ของ 2×2 (เดิมขั้น 6) ─────────────────────
+C[7] = {
 theory: `
 <div class="th-section">
   <div class="th-label">เงื่อนไขและสูตร</div>
@@ -519,8 +595,93 @@ makeQ() {
   return Q;
 }};
 
-// ── Step 7 ────────────────────────────────────────────
-C[7] = {
+// ── Step 8 ── A⁻¹ ของ 3×3 (Adjugate) ────────────────────────
+C[8] = {
+theory: `
+<div class="th-section">
+  <div class="th-label">Minor และ Cofactor</div>
+  <div class="th-card">
+    <h4>Minor Mᵢⱼ</h4>
+    det ของเมทริกซ์ 2×2 ที่ได้หลัง<b>ตัดแถวที่ i และหลักที่ j</b> ออก
+    <h4 style="margin-top:10px">Cofactor Cᵢⱼ</h4>
+    <div class="formula">Cᵢⱼ = (−1)^(i+j) · Mᵢⱼ</div>
+    เครื่องหมาย (−1)^(i+j) เรียงตำแหน่ง:
+    <div class="formula" style="font-family:monospace;font-size:14px">+ − +<br>− + −<br>+ − +</div>
+    <div class="example-box">
+      <strong>ตัวอย่าง:</strong> A = ${matH([[1,2,3],[0,4,5],[1,0,6]])}<br><br>
+      M₁₁ = det${matH([[4,5],[0,6]])} = 24−0 = 24 &nbsp;→&nbsp; C₁₁ = (+1)·24 = <b>24</b><br>
+      M₁₂ = det${matH([[0,5],[1,6]])} = 0−5 = −5 &nbsp;→&nbsp; C₁₂ = (−1)·(−5) = <b>5</b>
+    </div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">Adjugate และสูตร A⁻¹</div>
+  <div class="th-card">
+    <h4>ขั้นตอน</h4>
+    1. หา det(A) — ถ้า = 0 แสดงว่าไม่มี A⁻¹<br>
+    2. หา cofactor Cᵢⱼ ทั้ง 9 ตัว<br>
+    3. สร้าง adj(A) = <b>ทรานสโพสของ cofactor matrix</b> &nbsp;(สลับแถว↔หลัก)<br>
+    4. คำนวณ:
+    <div class="formula">A⁻¹ = <sup>1</sup>⁄<sub>det(A)</sub> · adj(A)</div>
+    <div class="example-box">
+      <strong>สำหรับ A = ${matH([[1,2,3],[0,4,5],[1,0,6]])}</strong><br>
+      det(A) = 1·4·6 + 2·5·1 + 3·0·0 − 3·4·1 − 1·5·0 − 2·0·6 = 24+10+0−12−0−0 = <b>22</b>
+    </div>
+  </div>
+</div>`,
+
+makeQ() {
+  const Q = [];
+  const mkNice = () => {
+    let M, dv;
+    do {
+      M = Array.from({length:3},()=>Array.from({length:3},()=>ri(-2,3)));
+      const [a,b,c]=[M[0][0],M[0][1],M[0][2]];
+      const [d,e,f]=[M[1][0],M[1][1],M[1][2]];
+      const [g,h,ii]=[M[2][0],M[2][1],M[2][2]];
+      dv = a*e*ii+b*f*g+c*d*h-c*e*g-a*f*h-b*d*ii;
+    } while(dv===0||Math.abs(dv)>8);
+    return M;
+  };
+  const A = mkNice();
+  const [a,b,c]=[A[0][0],A[0][1],A[0][2]];
+  const [d,e,f]=[A[1][0],A[1][1],A[1][2]];
+  const [g,h,ii]=[A[2][0],A[2][1],A[2][2]];
+  const det=a*e*ii+b*f*g+c*d*h-c*e*g-a*f*h-b*d*ii;
+  const C11=e*ii-f*h;
+  const C12=-(d*ii-f*g);
+
+  // Q1 MC: cofactor definition
+  const c1=sh([['(−1)^(i+j) × det ของเมทริกซ์หลังตัดแถว i หลัก j ออก',true],
+    ['det ของเมทริกซ์หลังตัดแถว i หลัก j (ไม่มีเครื่องหมาย)',false],
+    ['(−1)^(i·j) × det(A)',false],
+    ['สมาชิก aᵢⱼ หารด้วย det(A)',false]]);
+  Q.push({type:'mc',stem:'Cofactor Cᵢⱼ คืออะไร?',choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:'Cᵢⱼ = (−1)^(i+j) × Mᵢⱼ โดย Mᵢⱼ = det ของ 2×2 หลังตัดแถว i หลัก j ออก'});
+
+  // Q2 Num: หา C₁₁
+  Q.push({type:'num',stem:`กำหนด A = ${matH(A)}<br>จงหา C₁₁`,
+    answer:C11,tol:0,explain:`M₁₁ = det${matH([[e,f],[h,ii]])} = ${e}·${ii}−${f}·${h} = ${e*ii-f*h}<br>C₁₁ = (+1)·M₁₁ = ${C11}`});
+
+  // Q3 Num: หา C₁₂
+  Q.push({type:'num',stem:`จาก A เดิม = ${matH(A)}<br>จงหา C₁₂`,
+    answer:C12,tol:0,explain:`M₁₂ = det${matH([[d,f],[g,ii]])} = ${d}·${ii}−${f}·${g} = ${d*ii-f*g}<br>C₁₂ = (−1)·M₁₂ = (−1)·${d*ii-f*g} = ${C12}`});
+
+  // Q4 MC: adj(A)
+  const c4=sh([['ทรานสโพสของ cofactor matrix (สลับแถว↔หลักของเมทริกซ์ cofactor)',true],
+    ['cofactor matrix โดยตรง (ไม่สลับ)',false],
+    ['ทรานสโพสของ A',false],
+    ['minor matrix',false]]);
+  Q.push({type:'mc',stem:'adj(A) คืออะไร?',choices:c4.map(x=>x[0]),answer:c4.findIndex(x=>x[1]),explain:'adj(A) = ทรานสโพสของ cofactor matrix (เรียกว่า adjugate หรือ adjoint ของ A)'});
+
+  // Q5 Num: det(A)
+  Q.push({type:'num',stem:`จาก A เดิม = ${matH(A)}<br>det(A) = ? (ใช้ Sarrus)`,
+    answer:det,tol:0,explain:`Sarrus: ${a}·${e}·${ii}+${b}·${f}·${g}+${c}·${d}·${h}−${c}·${e}·${g}−${a}·${f}·${h}−${b}·${d}·${ii} = ${det}`});
+
+  return Q;
+}};
+
+// ── Step 9 ── แก้ระบบสมการ (เดิมขั้น 7) ─────────────────────
+C[9] = {
 theory: `
 <div class="th-section">
   <div class="th-label">รูปแบบเมทริกซ์</div>
@@ -536,7 +697,7 @@ theory: `
   </div>
 </div>
 <div class="th-section">
-  <div class="th-label">วิธีแก้</div>
+  <div class="th-label">วิธีแก้ (วิธี A⁻¹)</div>
   <div class="th-card">
     <div class="formula">X = A⁻¹ · B</div>
     <div class="example-box">
@@ -547,32 +708,71 @@ theory: `
       <br><br>∴ x = 2, y = 1
     </div>
   </div>
+</div>
+<div class="th-section">
+  <div class="th-label">กฎของโครเมอร์ (Cramer's Rule)</div>
+  <div class="th-card">
+    <h4>ระบบ: ax + by = p &nbsp;,&nbsp; cx + dy = q</h4>
+    <div class="formula">
+      D = det(A) = ad − bc<br><br>
+      Dₓ = det${matH([['p','b'],['q','d']])} &nbsp;(แทนหลัก x ด้วย B)<br><br>
+      Dᵧ = det${matH([['a','p'],['c','q']])} &nbsp;(แทนหลัก y ด้วย B)<br><br>
+      x = Dₓ/D &nbsp;&nbsp;&nbsp; y = Dᵧ/D
+    </div>
+    <div class="example-box">
+      <strong>ตัวอย่าง:</strong> 2x + y = 5 &nbsp;,&nbsp; 5x + 3y = 13<br><br>
+      D = det${matH([[2,1],[5,3]])} = 6−5 = 1<br>
+      Dₓ = det${matH([[5,1],[13,3]])} = 15−13 = 2 &nbsp;→&nbsp; x = 2/1 = <b>2</b><br>
+      Dᵧ = det${matH([[2,5],[5,13]])} = 26−25 = 1 &nbsp;→&nbsp; y = 1/1 = <b>1</b>
+    </div>
+  </div>
 </div>`,
 
 makeQ() {
   const Q = [];
   // Q1 MC: รูปแบบ AX=B
   const c1=sh([['AX = B โดย X = A⁻¹B',true],['AX = B โดย X = BA⁻¹',false],['XA = B โดย X = BA⁻¹',false],['AX = B โดย X = AB⁻¹',false]]);
-  Q.push({type:'mc',stem:'ถ้าเขียนระบบสมการในรูป AX = B แล้ว X มีค่าเท่าไหร่?',choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:'X = A⁻¹B (คูณทางซ้ายด้วย A⁻¹ ทั้งสองข้าง: A⁻¹AX = A⁻¹B → IX = A⁻¹B)'});
+  Q.push({type:'mc',stem:'ถ้าเขียนระบบสมการในรูป AX = B แล้ว X มีค่าเท่าไหร่?',choices:c1.map(x=>x[0]),answer:c1.findIndex(x=>x[1]),explain:'X = A⁻¹B (คูณทางซ้ายด้วย A⁻¹: A⁻¹AX = A⁻¹B → IX = A⁻¹B)'});
 
-  // Q2 MC: ระบุเมทริกซ์ A
-  let a2,b2,c2,d2,det2;
-  do{a2=ri(1,4);b2=ri(1,3);c2=ri(1,4);d2=ri(1,3);det2=a2*d2-b2*c2;}while(det2===0);
-  const mats=[[[a2,b2],[c2,d2]],[[a2,c2],[b2,d2]],[[d2,b2],[c2,a2]],[[b2,a2],[d2,c2]]];
-  const smats=sh(mats);
-  const ai=smats.findIndex(m=>m[0][0]===a2&&m[0][1]===b2&&m[1][0]===c2&&m[1][1]===d2);
-  Q.push({type:'mc',stem:`ระบบ ${a2}x + ${b2}y = p &nbsp; , &nbsp; ${c2}x + ${d2}y = q<br>เมทริกซ์ A ในรูป AX = B คืออะไร?`,choices:smats.map(m=>matH(m)),answer:ai,explain:`A = เมทริกซ์ค่าสัมประสิทธิ์ = ${matH([[a2,b2],[c2,d2]])}`});
+  // Q2 MC: Cramer's Rule — Dₓ
+  let a2,b2,c2,d2,p2,q2,x2,y2,det2;
+  do{a2=ri(1,4);b2=ri(1,3);c2=ri(1,4);d2=ri(1,3);det2=a2*d2-b2*c2;x2=ri(-4,4);y2=ri(-4,4);}
+  while(det2===0||x2===0||y2===0);
+  p2=a2*x2+b2*y2; q2=c2*x2+d2*y2;
+  const Dx2=p2*d2-b2*q2;
+  const mDx=[[[p2,b2],[q2,d2]],[[a2,p2],[c2,q2]],[[p2,b2],[c2,d2]],[[a2,b2],[q2,d2]]];
+  const sDx=sh(mDx);
+  const di=sDx.findIndex(m=>m[0][0]===p2&&m[0][1]===b2&&m[1][0]===q2&&m[1][1]===d2);
+  Q.push({type:'mc',stem:`ระบบ ${a2}x+${b2}y=${p2} , ${c2}x+${d2}y=${q2}<br>ใน Cramer's Rule &nbsp; Dₓ = det(?) = ?`,
+    choices:sDx.map(m=>matH(m)),answer:di,
+    explain:`Dₓ = det (แทนหลัก x ด้วย B) = det${matH([[p2,b2],[q2,d2]])} = ${p2}·${d2}−${b2}·${q2} = ${Dx2}`});
 
-  // Q3-Q5 Num: หา x หรือ y
-  for(let q=0;q<3;q++){
-    let a,b,c,d,det,x0,y0;
-    do{x0=ri(-5,5);y0=ri(-5,5);a=ri(1,4);b=ri(1,3);c=ri(1,4);d=ri(1,3);det=a*d-b*c;}while(det===0||x0===0||y0===0);
-    const p=a*x0+b*y0, qq=c*x0+d*y0;
-    const askX=ri(0,1)===0;
-    const ans=askX?x0:y0;
-    Q.push({type:'num',stem:`แก้ระบบสมการ: ${a}x + ${b}y = ${p} &nbsp; , &nbsp; ${c}x + ${d}y = ${qq}<br>หาค่า ${askX?'x':'y'}`,
-      answer:ans,tol:0.01,explain:`A = ${matH([[a,b],[c,d]])} &nbsp; det = ${det}<br>X = A⁻¹B → x = ${x0}, y = ${y0}`});
-  }
+  // Q3 Num: หา Dₓ
+  let a3,b3,c3,d3,p3,q3,x3,y3,det3;
+  do{a3=ri(1,4);b3=ri(1,3);c3=ri(1,4);d3=ri(1,3);det3=a3*d3-b3*c3;x3=ri(-4,4);y3=ri(-4,4);}
+  while(det3===0||x3===0||y3===0);
+  p3=a3*x3+b3*y3; q3=c3*x3+d3*y3;
+  const Dx3=p3*d3-b3*q3;
+  Q.push({type:'num',stem:`ระบบ ${a3}x+${b3}y=${p3} , ${c3}x+${d3}y=${q3}<br>จงหา Dₓ = det${matH([[p3,b3],[q3,d3]])}`,
+    answer:Dx3,tol:0,explain:`Dₓ = ${p3}·${d3}−${b3}·${q3} = ${p3*d3}−${b3*q3} = ${Dx3}`});
+
+  // Q4 Num: แก้ด้วย A⁻¹
+  let a4,b4,c4,d4,x4,y4,det4;
+  do{x4=ri(-5,5);y4=ri(-5,5);a4=ri(1,4);b4=ri(1,3);c4=ri(1,4);d4=ri(1,3);det4=a4*d4-b4*c4;}
+  while(det4===0||x4===0||y4===0);
+  const p4=a4*x4+b4*y4, q4=c4*x4+d4*y4;
+  Q.push({type:'num',stem:`แก้ด้วยวิธี A⁻¹: ${a4}x+${b4}y=${p4} , ${c4}x+${d4}y=${q4}<br>หาค่า x`,
+    answer:x4,tol:0.01,explain:`det(A)=${det4} &nbsp; X=A⁻¹B → x=${x4}, y=${y4}`});
+
+  // Q5 Num: แก้ด้วย Cramer
+  let a5,b5,c5,d5,x5,y5,det5;
+  do{x5=ri(-5,5);y5=ri(-5,5);a5=ri(1,4);b5=ri(1,3);c5=ri(1,4);d5=ri(1,3);det5=a5*d5-b5*c5;}
+  while(det5===0||x5===0||y5===0);
+  const p5=a5*x5+b5*y5, q5=c5*x5+d5*y5;
+  const Dy5=a5*q5-c5*p5;
+  Q.push({type:'num',stem:`แก้ด้วย Cramer's Rule: ${a5}x+${b5}y=${p5} , ${c5}x+${d5}y=${q5}<br>หาค่า y = Dᵧ/D`,
+    answer:y5,tol:0.01,explain:`D=${det5} &nbsp; Dᵧ=det${matH([[a5,p5],[c5,q5]])}=${a5*q5}−${c5*p5}=${Dy5} &nbsp;→&nbsp; y=${Dy5}/${det5}=${y5}`});
+
   return Q;
 }};
 
