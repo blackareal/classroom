@@ -788,6 +788,10 @@ function buildDetailHTML(id) {
     ${studentListHTML}`;
 
   const step = STEPS[id - 1];
+  const nameListHTML = here.length === 0
+    ? `<div style="color:var(--muted);font-size:12px;padding:4px 0">ไม่มีนักเรียนในขั้นนี้</div>`
+    : here.map(s => `<div style="font-size:12px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text)">${s.no}. ${s.name}</div>`).join('');
+
   return `
     <div class="d-emoji">${step.emoji}</div>
     <div class="d-title">${step.title}</div>
@@ -796,9 +800,12 @@ function buildDetailHTML(id) {
     <div class="d-section">📚 สิ่งที่ต้องเรียนรู้</div>
     ${step.topics.map(t => `<div class="d-topic">${t}</div>`).join('')}
 
-    <a href="matrix.html" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 16px;background:#e65100;border-radius:10px;color:#fff;text-decoration:none;font-size:15px;font-weight:700;margin-top:14px;box-shadow:0 3px 8px rgba(230,81,0,.35);">
+    <a href="matrix.html?step=${id}" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 16px;background:#e65100;border-radius:10px;color:#fff;text-decoration:none;font-size:15px;font-weight:700;margin-top:14px;box-shadow:0 3px 8px rgba(230,81,0,.35);">
       🎓 เรียนรู้ ขั้น ${id}
-    </a>`;
+    </a>
+
+    <div class="d-section" style="margin-top:18px">👥 นักเรียนในขั้นนี้ (${here.length} คน)</div>
+    <div style="padding:2px 0">${nameListHTML}</div>`;
 }
 
 function renderDetail(id) {
