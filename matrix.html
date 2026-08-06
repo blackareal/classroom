@@ -222,9 +222,9 @@ makeQ() {
   const wrong2=[];
   while(wrong2.length<3){const v=ri(-5,9);if(!w2.has(v)){w2.add(v);wrong2.push(v);}}
   const c2=sh([[ans2,true],...wrong2.map(v=>[v,false])]);
-  Q.push({type:'mc',stem:`จากเมทริกซ์ A ต่อไปนี้ a₍${i2+1}${j2+1}₎ มีค่าเท่าไหร่?<br><br>${matH(A2)}`,
+  Q.push({type:'mc',stem:`จากเมทริกซ์ A ต่อไปนี้ a<sub>${i2+1}${j2+1}</sub> มีค่าเท่าไหร่?<br><br>${matH(A2)}`,
     choices:c2.map(x=>`${x[0]}`),answer:c2.findIndex(x=>x[1]),
-    explain:`aᵢⱼ = สมาชิกแถวที่ ${i2+1} หลักที่ ${j2+1} = ${ans2}`});
+    explain:`a<sub>${i2+1}${j2+1}</sub> = สมาชิกแถวที่ ${i2+1} หลักที่ ${j2+1} = ${ans2}`});
 
   // Q3: ประเภท
   const types=[
@@ -1001,6 +1001,8 @@ function resetQuiz(){
 }
 
 // ── Init ──────────────────────────────────────────────
+const _urlStep = parseInt(new URLSearchParams(location.search).get('step'));
+if (_urlStep >= 1 && _urlStep <= 9) curStep = _urlStep;
 buildSidebar();
 renderContent();
 fetchHorizon();
