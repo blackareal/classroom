@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>📚 ใบเรียน เมทริกซ์ — ม.5/1</title>
+<title>📚 เรียนรู้ เมทริกซ์ — ม.5/1</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&display=swap');
 :root {
@@ -114,7 +114,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--tx);min-h
 
 <div id="hdr">
   <a href="mastery_m5.html">← Mastery Path</a>
-  <h1>📚 ใบเรียน <span>เมทริกซ์</span> · ม.5/1</h1>
+  <h1>📚 เรียนรู้ <span>เมทริกซ์</span> · ม.5/1</h1>
 </div>
 
 <div id="wrap">
@@ -222,7 +222,7 @@ makeQ() {
   const wrong2=[];
   while(wrong2.length<3){const v=ri(-5,9);if(!w2.has(v)){w2.add(v);wrong2.push(v);}}
   const c2=sh([[ans2,true],...wrong2.map(v=>[v,false])]);
-  Q.push({type:'mc',stem:`จากเมทริกซ์ A ต่อไปนี้ a₍${i2+1}${j2+1}₎ มีค่าเท่าไหร่?<br><br>${matH(A2,i2,j2)}`,
+  Q.push({type:'mc',stem:`จากเมทริกซ์ A ต่อไปนี้ a₍${i2+1}${j2+1}₎ มีค่าเท่าไหร่?<br><br>${matH(A2)}`,
     choices:c2.map(x=>`${x[0]}`),answer:c2.findIndex(x=>x[1]),
     explain:`aᵢⱼ = สมาชิกแถวที่ ${i2+1} หลักที่ ${j2+1} = ${ans2}`});
 
