@@ -102,7 +102,8 @@ body { font-family:'Sarabun',sans-serif; background:#0d1117; color:#c9d1d9; }
 .ws-3xl { height: 167px; }
 
 /* Divider */
-.div { border:none; border-top:1px dashed #ccc; margin:3px 0 5px; }
+.div { border:none; border-top:1px solid #ccc; margin:3px 0 5px; }
+.no-screen { display:none; }
 
 /* Inline matrix bracket */
 .m  { display:inline-flex; align-items:stretch; vertical-align:middle; margin:0 3px; }
@@ -134,8 +135,15 @@ body { font-family:'Sarabun',sans-serif; background:#0d1117; color:#c9d1d9; }
     padding:13mm 17mm 10mm !important;
     page-break-after:always !important;
     break-after:page !important;
+    min-height:297mm !important;
+    display:flex !important; flex-direction:column !important;
   }
   .sheet:last-child { page-break-after:avoid !important; }
+  .probs { flex:1 !important; display:flex !important; flex-direction:column !important; }
+  .no-screen { display:block !important; }
+  .ws-fill { flex:1 !important; min-height:30px; border:1px solid #bbb;
+    background:repeating-linear-gradient(transparent,transparent 22px,#dce8f5 22px,#dce8f5 23px);
+    background-position:0 7px; margin:3px 0 7px; }
   @page { size:A4; margin:0; }
 }
 </style>
