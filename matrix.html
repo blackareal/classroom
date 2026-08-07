@@ -147,6 +147,7 @@ function matH(rows, hiR=-1, hiC=-1) {
 const SM = [
   {id:1,emoji:'🌱',title:'นิยามและประเภท',color:'#2e7d32'},
   {id:2,emoji:'➕',title:'การบวก-ลบเมทริกซ์',color:'#1565c0'},
+  {id:2.5,emoji:'🔢',title:'ทบทวนจำนวนเต็ม',color:'#e65100',side:true,unlockAt:2},
   {id:3,emoji:'✖️',title:'คูณด้วยสเกลาร์',color:'#6a1b9a'},
   {id:4,emoji:'⚡',title:'การคูณเมทริกซ์',color:'#bf360c'},
   {id:5,emoji:'🔍',title:'ดีเทอร์มิแนนต์',color:'#b71c1c'},
@@ -318,6 +319,80 @@ makeQ() {
     const ans=R[ir][ic];
     Q.push({type:'num',stem:`กำหนด A = ${matH(A)} และ B = ${matH(B)}<br>A ${op} B มีค่าที่ตำแหน่ง (${ir+1},${ic+1}) เท่าไหร่?`,
       answer:ans,tol:0,explain:`(A${op}B)₍${ir+1}${ic+1}₎ = ${A[ir][ic]} ${op} ${op==='+'?B[ir][ic]:B[ir][ic]} = ${ans}`});
+  }
+  return Q;
+}};
+
+// ── Step 2.5 ── ทบทวนจำนวนเต็ม (Side Step) ─────────────
+C[2.5] = {
+theory: `
+<div class="th-section">
+  <div class="th-label">การบวกจำนวนเต็ม</div>
+  <div class="th-body">
+    <p><b>เครื่องหมายเดียวกัน</b> → บวกค่าสัมบูรณ์ ใส่เครื่องหมายเดิม<br>
+    (−3) + (−5) = −8 &nbsp;|&nbsp; 4 + 7 = 11</p>
+    <p><b>เครื่องหมายต่างกัน</b> → ลบค่าสัมบูรณ์ (ใหญ่ − เล็ก) ใส่เครื่องหมายของค่าที่ใหญ่กว่า<br>
+    (−3) + 8 = 5 &nbsp;|&nbsp; 3 + (−8) = −5</p>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">การลบจำนวนเต็ม</div>
+  <div class="th-body">
+    <p><b>a − b = a + (−b)</b> &nbsp;→&nbsp; เปลี่ยนลบเป็นบวกตัวตรงข้ามเสมอ</p>
+    <p>5 − (−3) = 5 + 3 = 8 &nbsp;|&nbsp; (−2) − 4 = (−2) + (−4) = −6</p>
+    <div style="background:rgba(230,81,0,.08);border-left:3px solid #e65100;padding:8px 12px;border-radius:4px;margin-top:8px">
+      <b>⚠ จุดผิดบ่อย:</b> 5 − (−3) ≠ 2 &nbsp;→&nbsp; ลบ(−3) ต้องเปลี่ยนเป็น +3<br>
+      (−4) − (−7) ≠ −11 &nbsp;→&nbsp; เปลี่ยนเป็น (−4) + 7 = 3
+    </div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">การคูณและหารจำนวนเต็ม</div>
+  <div class="th-body">
+    <p style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px">
+      <span>(+) × (+) = <b>+</b></span><span>(−) × (−) = <b>+</b></span>
+      <span>(+) × (−) = <b>−</b></span><span>(−) × (+) = <b>−</b></span>
+    </p>
+    <p style="margin-top:8px">กฎเดียวกันใช้กับการหาร<br>
+    (−3) × (−4) = 12 &nbsp;|&nbsp; (−12) ÷ 4 = −3 &nbsp;|&nbsp; (−12) ÷ (−4) = 3</p>
+  </div>
+</div>
+`,
+quiz(){
+  const Q=[];
+  function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+  function fmt(n){return n<0?`(${n})`:`${n}`;}
+  // Q1–3: บวก (มีติดลบ)
+  for(let i=0;i<3;i++){
+    const a=i===0?ri(-9,-1):(Math.random()<0.5?ri(-9,-1):ri(1,9));
+    const b=i===0?ri(1,9):(Math.random()<0.5?ri(-9,-1):ri(1,9));
+    const ans=a+b;
+    Q.push({type:'num',stem:`${fmt(a)} + ${fmt(b)} = ?`,answer:ans,tol:0,
+      explain:`${fmt(a)} + ${fmt(b)} = ${ans}`});
+  }
+  // Q4–6: ลบ (รวม double negative)
+  const subFns=[
+    ()=>{const a=ri(2,9),b=ri(1,9);return{stem:`${a} − (−${b}) = ?`,answer:a+b,
+      explain:`${a} − (−${b}) = ${a} + ${b} = ${a+b}`};},
+    ()=>{const a=ri(-9,-1),b=ri(1,9);return{stem:`${fmt(a)} − ${b} = ?`,answer:a-b,
+      explain:`${fmt(a)} − ${b} = ${a-b}`};},
+    ()=>{const a=ri(-9,-1),b=ri(-9,-1);return{stem:`${fmt(a)} − ${fmt(b)} = ?`,answer:a-b,
+      explain:`${fmt(a)} − ${fmt(b)} = ${fmt(a)} + ${-b} = ${a-b}`};},
+  ];
+  subFns.forEach(fn=>{const o=fn();Q.push({type:'num',stem:o.stem,answer:o.answer,tol:0,explain:o.explain});});
+  // Q7–8: คูณ
+  for(let i=0;i<2;i++){
+    const a=(Math.random()<0.5?-1:1)*ri(2,6), b=(Math.random()<0.5?-1:1)*ri(2,6);
+    const ans=a*b;
+    Q.push({type:'num',stem:`${fmt(a)} × ${fmt(b)} = ?`,answer:ans,tol:0,
+      explain:`${fmt(a)} × ${fmt(b)} = ${ans} (เครื่องหมาย${ans>0?'เดียวกัน→+':'ต่างกัน→−'})`});
+  }
+  // Q9–10: หาร (ผลลัพธ์เป็นจำนวนเต็มเสมอ)
+  for(let i=0;i<2;i++){
+    const b=(Math.random()<0.5?-1:1)*ri(2,5), q=(Math.random()<0.5?-1:1)*ri(2,6);
+    const a=b*q;
+    Q.push({type:'num',stem:`${fmt(a)} ÷ ${fmt(b)} = ?`,answer:q,tol:0,
+      explain:`${fmt(a)} ÷ ${fmt(b)} = ${q} (เครื่องหมาย${q>0?'เดียวกัน→+':'ต่างกัน→−'})`});
   }
   return Q;
 }};
@@ -850,7 +925,9 @@ async function fetchHorizon() {
         horizon = Math.min(9, Math.max(1, h));
         buildSidebar();
         // ถ้าขั้นปัจจุบันถูก lock → กลับไปขั้นสูงสุดที่เปิด
-        if (curStep > horizon) { curStep = horizon; renderContent(); }
+        const curSM=SM.find(s=>s.id===curStep);
+        const curLockAt=(curSM&&curSM.unlockAt!==undefined)?curSM.unlockAt:curStep;
+        if (curLockAt > horizon) { curStep = horizon; renderContent(); }
       }
     }
   } catch(e) { /* silent — no internet */ }
@@ -863,20 +940,28 @@ let curStep=1, curTab='learn', quiz=null, userAns={}, submitted=false;
 function buildSidebar(){
   const el=document.getElementById('side');
   el.innerHTML=SM.map(s=>{
-    const locked = s.id > horizon;
-    return `<button class="s-btn${s.id===curStep&&!locked?' active':''}"
+    const lockAt = s.unlockAt !== undefined ? s.unlockAt : s.id;
+    const locked = lockAt > horizon;
+    const isCur = s.id===curStep && !locked;
+    const sideStyle = s.side
+      ? `margin-left:14px;border-left:2px solid ${locked?'#555':'#e65100'};padding-left:8px;`
+      : '';
+    return `<button class="s-btn${isCur?' active':''}"
       onclick="${locked?'':'showStep('+s.id+')'}"
-      style="${locked?'opacity:0.32;cursor:not-allowed;':''}"
+      style="${locked?'opacity:0.32;cursor:not-allowed;':''}${sideStyle}"
       ${locked?'disabled':''}>
       <span class="s-emoji">${locked?'🔒':s.emoji}</span>
-      <span>ขั้น ${s.id}<br><small style="font-weight:400;font-size:11px">${locked?'ล็อคอยู่':s.title}</small></span>
+      <span>ขั้น ${s.id}${s.side?' <span style="font-size:9px;background:#e65100;color:#fff;border-radius:3px;padding:0 3px">ทบทวน</span>':''}<br>
+        <small style="font-weight:400;font-size:11px">${locked?'ล็อคอยู่':s.title}</small></span>
     </button>`;
   }).join('');
 }
 
 // ── Show Step ─────────────────────────────────────────
 function showStep(id){
-  if(id > horizon) return; // ล็อคอยู่
+  const sm=SM.find(s=>s.id===id);
+  const lockAt=(sm&&sm.unlockAt!==undefined)?sm.unlockAt:id;
+  if(lockAt > horizon) return; // ล็อคอยู่
   curStep=id; curTab='learn'; quiz=null; userAns={}; submitted=false;
   buildSidebar();
   document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',i===0);});
@@ -1018,8 +1103,8 @@ function resetQuiz(){
 }
 
 // ── Init ──────────────────────────────────────────────
-const _urlStep = parseInt(new URLSearchParams(location.search).get('step'));
-if (_urlStep >= 1 && _urlStep <= 9) curStep = _urlStep;
+const _urlStep = parseFloat(new URLSearchParams(location.search).get('step'));
+if (!isNaN(_urlStep) && SM.find(s=>s.id===_urlStep)) curStep = _urlStep;
 buildSidebar();
 renderContent();
 fetchHorizon();
