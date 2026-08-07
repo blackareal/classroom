@@ -79,10 +79,13 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--tx);min-h
 .choice.correct .choice-dot{background:var(--gr);border-color:var(--gr);}
 .choice.wrong .choice-dot{background:var(--rd);border-color:var(--rd);}
 .choice.disabled{cursor:default;}
-.num-input{width:120px;background:var(--sf2);border:1px solid var(--bd);border-radius:7px;color:var(--tx);padding:8px 12px;font-family:inherit;font-size:15px;outline:none;margin-right:8px;}
+.num-input{width:120px;background:var(--sf2);border:1px solid var(--bd);border-radius:7px;color:var(--tx);padding:8px 12px;font-family:inherit;font-size:15px;outline:none;margin-right:4px;}
 .num-input:focus{border-color:var(--ac);}
 .num-input.correct{border-color:var(--gr);background:rgba(63,185,80,.08);}
 .num-input.wrong{border-color:var(--rd);background:rgba(248,81,73,.06);}
+.sign-btn{background:var(--sf2);border:1px solid var(--bd);border-radius:7px;color:var(--tx);padding:7px 11px;font-size:16px;cursor:pointer;line-height:1;margin-right:4px;}
+.sign-btn:hover:not(:disabled){border-color:var(--ac);color:var(--ac);}
+.sign-btn:disabled{opacity:0.4;cursor:default;}
 .q-explain{font-size:12px;color:var(--mu);margin-top:10px;padding:8px 12px;background:rgba(255,255,255,.03);border-radius:6px;display:none;line-height:1.6;}
 .q-explain.show{display:block;}
 .q-feedback{font-size:12px;font-weight:700;margin-top:6px;}
@@ -932,7 +935,8 @@ function renderQ(q,i){
       <div class="q-num">ข้อที่ ${i+1}</div>
       <div class="q-stem">${q.stem}</div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <input class="num-input" id="ni-${i}" type="number" step="any"
+        <button class="sign-btn" onclick="toggleSign(${i})" ${submitted?'disabled':''}>±</button>
+        <input class="num-input" id="ni-${i}" type="text" inputmode="decimal"
           placeholder="คำตอบ" value="${userAns[i]!==undefined?userAns[i]:''}"
           oninput="userAns[${i}]=parseFloat(this.value)"
           ${submitted?'disabled':''}>
@@ -942,6 +946,19 @@ function renderQ(q,i){
       <div class="q-explain" id="ex-${i}">${q.explain}</div>
     </div>`;
   }
+}
+
+function toggleSign(i){
+  if(submitted) return;
+  const inp=document.getElementById('ni-'+i);
+  const raw=inp.value.trim();
+  if(raw===''||raw==='-'){
+    inp.value = raw==='-' ? '' : '-';
+  } else {
+    const v=parseFloat(raw);
+    if(!isNaN(v)){ inp.value=String(-v); }
+  }
+  userAns[i]=parseFloat(inp.value);
 }
 
 function pickMC(qi,ci){
