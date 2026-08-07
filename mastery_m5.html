@@ -472,6 +472,11 @@ const STEPS = [
     quiz: 'แก้ระบบสมการด้วยวิธี A⁻¹B และ Cramer\'s Rule ได้สำเร็จ' },
 ];
 
+// ── Step 2.5 (Side Step — ทบทวนจำนวนเต็ม) ───────────
+const STEP_25 = { id:2.5, emoji:'🔢', title:'ทบทวนจำนวนเต็ม', color:'#e65100',
+  topics:['บวก-ลบจำนวนเต็ม รวม double negative เช่น −2−(−3)','คูณ-หารจำนวนเต็ม (กฎเครื่องหมาย)'],
+  quiz:'ทำแบบทดสอบ 10 ข้อใน matrix.html ขั้น 2.5 → โชว์ผลครู → ขึ้นขั้น 3 ได้เลย'};
+
 // ═══════════════════════════════════════════════════
 // ROSTER (ชื่อ + nickname ถาวร — ไม่เปลี่ยน)
 // ═══════════════════════════════════════════════════
@@ -585,12 +590,12 @@ async function fetchSteps() {
     let updated = 0;
     rows.slice(1).forEach(row => {
       const no   = parseInt(row[iNo]);
-      const step = parseInt(row[iStep]);
+      const step = parseFloat(row[iStep]);
       if (isNaN(no) || isNaN(step)) return;
 
       // แถว no=0 = ตั้งค่า horizon
       if (no === 0) {
-        S.horizon = Math.min(9, Math.max(1, step));
+        S.horizon = Math.min(9, Math.max(1, Math.round(step)));
         document.getElementById('horizonNum').textContent = S.horizon;
         localStorage.setItem('m5_horizon', S.horizon);
         return;
@@ -647,7 +652,8 @@ function renderBoard() {
   const board = document.getElementById('board');
   board.innerHTML = '';
 
-  for (let id = 9; id >= 0; id--) {
+  const STEP_IDS = [9,8,7,6,5,4,3,2.5,2,1,0];
+  for (const id of STEP_IDS) {
     const row   = document.createElement('div');
     row.className = 'step-row';
     const block = document.createElement('div');
@@ -667,6 +673,36 @@ function renderBoard() {
         <div class="step-avatars" id="av-0"></div>`;
       block.onclick = () => selectStep(0);
 
+    } else if (id === 2.5) {
+      // Side Step — ทบทวนจำนวนเต็ม (accessible เมื่อ horizon >= 2)
+      const locked = 2 > S.horizon;
+      block.className = 'step-block' + (locked ? ' locked' : '') +
+                        (S.selectedStep === 2.5 ? ' selected' : '');
+      block.style.marginLeft = `${(2 - 1) * INDENT + 20}px`; // indent เดียวกับขั้น 2 + เยื้องพิเศษ
+      if (locked) {
+        block.innerHTML = `
+          <div class="step-top">
+            <span class="step-emoji">🔒</span>
+            <div>
+              <div class="step-label" style="color:#555">ขั้นที่ 2.5</div>
+              <div class="step-title" style="color:#444">ล็อคอยู่</div>
+            </div>
+          </div>`;
+      } else {
+        block.style.background  = `${STEP_25.color}12`;
+        block.style.borderColor = `${STEP_25.color}50`;
+        block.style.borderLeft  = `3px solid ${STEP_25.color}`;
+        block.innerHTML = `
+          <div class="step-top">
+            <span class="step-emoji">${STEP_25.emoji}</span>
+            <div>
+              <div class="step-label" style="color:${STEP_25.color}">ขั้นที่ 2.5 <span style="font-size:9px;background:${STEP_25.color};color:#fff;border-radius:3px;padding:0 4px">ทบทวน</span></div>
+              <div class="step-title">${STEP_25.title}</div>
+            </div>
+          </div>
+          <div class="step-avatars" id="av-2.5"></div>`;
+        block.onclick = () => selectStep(2.5);
+      }
     } else {
       const step   = STEPS[id - 1];
       const locked = id > S.horizon;
@@ -736,10 +772,14 @@ function renderStats() {
   if (counts[0]) bar.innerHTML +=
     `<div class="stat-chip"><div class="stat-dot" style="background:var(--accent)"></div>เริ่มต้น: ${counts[0]} คน</div>`;
   for (let i = 1; i <= 7; i++) {
-    if (!counts[i]) continue;
-    const step = STEPS[i - 1];
-    bar.innerHTML +=
-      `<div class="stat-chip"><div class="stat-dot" style="background:${step.color}"></div>ขั้น ${i}: ${counts[i]} คน</div>`;
+    if (counts[i]) {
+      const step = STEPS[i - 1];
+      bar.innerHTML +=
+        `<div class="stat-chip"><div class="stat-dot" style="background:${step.color}"></div>ขั้น ${i}: ${counts[i]} คน</div>`;
+    }
+    // แทรก 2.5 หลัง step 2
+    if (i === 2 && counts[2.5]) bar.innerHTML +=
+      `<div class="stat-chip" style="border-color:${STEP_25.color}40"><div class="stat-dot" style="background:${STEP_25.color}"></div>ขั้น 2.5 🔢: ${counts[2.5]} คน</div>`;
   }
   if (counts[7]) bar.innerHTML +=
     `<div class="stat-chip" style="background:rgba(240,192,0,.12);border-color:var(--gold)">🏆 สำเร็จครบ: ${counts[7]} คน</div>`;
@@ -762,6 +802,7 @@ function renderIdentityBar() {
     if (me) {
       const stepLabel = me.step === 0 ? '🚀 เริ่มต้น'
         : me.step === 7 ? '🏆 สำเร็จแล้ว!'
+        : me.step === 2.5 ? `${STEP_25.emoji} ขั้น 2.5 — ${STEP_25.title}`
         : `${STEPS[me.step-1].emoji} ขั้น ${me.step} — ${STEPS[me.step-1].title}`;
       statusEl.textContent = `✨ ฉันอยู่: ${stepLabel}`;
     }
@@ -786,6 +827,25 @@ function buildDetailHTML(id) {
     <div class="d-sub">นักเรียนที่ยังไม่เริ่มขั้นแรก</div>
     <div class="d-section">นักเรียนที่นี่ (${here.length} คน)</div>
     ${studentListHTML}`;
+
+  if (id === 2.5) {
+    const nameListHTML2 = here.length === 0
+      ? `<div style="color:var(--muted);font-size:12px;padding:4px 0">ไม่มีนักเรียนในขั้นนี้</div>`
+      : here.map(s => `<div style="font-size:12px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text)">${s.no}. ${s.name}</div>`).join('');
+    return `
+      <div class="d-emoji">${STEP_25.emoji}</div>
+      <div class="d-title">${STEP_25.title}</div>
+      <div class="d-sub" style="color:${STEP_25.color}">Side Step — ทบทวนพื้นฐาน</div>
+      <div class="d-section">📚 เนื้อหา</div>
+      ${STEP_25.topics.map(t=>`<div class="d-topic">${t}</div>`).join('')}
+      <div class="d-section" style="margin-top:12px">✅ เกณฑ์ผ่าน</div>
+      <div class="d-topic">${STEP_25.quiz}</div>
+      <a href="matrix.html?step=2.5" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 16px;background:${STEP_25.color};border-radius:10px;color:#fff;text-decoration:none;font-size:15px;font-weight:700;margin-top:14px;box-shadow:0 3px 8px rgba(230,81,0,.35);">
+        🎓 เรียนรู้ ขั้น 2.5
+      </a>
+      <div class="d-section" style="margin-top:18px">👥 นักเรียนในขั้นนี้ (${here.length} คน)</div>
+      <div style="padding:2px 0">${nameListHTML2}</div>`;
+  }
 
   const step = STEPS[id - 1];
   const nameListHTML = here.length === 0
