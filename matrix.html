@@ -42,6 +42,14 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--tx);min-h
 /* Content */
 #content{padding:28px;max-width:800px;width:100%;}
 
+/* 6-color scheme for matrix multiplication (Step 4) */
+.c1{color:#f85149;font-weight:700}
+.c2{color:#f0a050;font-weight:700}
+.c3{color:#f0c000;font-weight:700}
+.c4{color:#3fb950;font-weight:700}
+.c5{color:#4fa3e3;font-weight:700}
+.c6{color:#d2a8ff;font-weight:700}
+
 /* Theory styles */
 .th-section{margin-bottom:24px;}
 .th-label{font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--mu);text-transform:uppercase;margin-bottom:10px;}
@@ -328,33 +336,65 @@ C[2.5] = {
 theory: `
 <div class="th-section">
   <div class="th-label">การบวกจำนวนเต็ม</div>
-  <div class="th-body">
-    <p><b>เครื่องหมายเดียวกัน</b> → บวกค่าสัมบูรณ์ ใส่เครื่องหมายเดิม<br>
-    (−3) + (−5) = −8 &nbsp;|&nbsp; 4 + 7 = 11</p>
-    <p><b>เครื่องหมายต่างกัน</b> → ลบค่าสัมบูรณ์ (ใหญ่ − เล็ก) ใส่เครื่องหมายของค่าที่ใหญ่กว่า<br>
-    (−3) + 8 = 5 &nbsp;|&nbsp; 3 + (−8) = −5</p>
-  </div>
-</div>
-<div class="th-section">
-  <div class="th-label">การลบจำนวนเต็ม</div>
-  <div class="th-body">
-    <p><b>a − b = a + (−b)</b> &nbsp;→&nbsp; เปลี่ยนลบเป็นบวกตัวตรงข้ามเสมอ</p>
-    <p>5 − (−3) = 5 + 3 = 8 &nbsp;|&nbsp; (−2) − 4 = (−2) + (−4) = −6</p>
-    <div style="background:rgba(230,81,0,.08);border-left:3px solid #e65100;padding:8px 12px;border-radius:4px;margin-top:8px">
-      <b>⚠ จุดผิดบ่อย:</b> 5 − (−3) ≠ 2 &nbsp;→&nbsp; ลบ(−3) ต้องเปลี่ยนเป็น +3<br>
-      (−4) − (−7) ≠ −11 &nbsp;→&nbsp; เปลี่ยนเป็น (−4) + 7 = 3
+  <div class="th-card">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:13px;line-height:1.9">
+      <div><span style="font-size:11px;color:var(--mu)">(+) + (+) → <b style="color:var(--gr)">บวก</b></span><br>
+        <span style="color:var(--gr)">3</span> + <span style="color:var(--gr)">5</span> = <b style="color:var(--gr)">8</b></div>
+      <div><span style="font-size:11px;color:var(--mu)">(−) + (−) → <b style="color:var(--rd)">ลบ</b></span><br>
+        <span style="color:var(--rd)">(−3)</span> + <span style="color:var(--rd)">(−5)</span> = <b style="color:var(--rd)">−8</b></div>
+      <div><span style="font-size:11px;color:var(--mu)">(+) + (−) · |+| ใหญ่กว่า → <b style="color:var(--gr)">บวก</b></span><br>
+        <span style="color:var(--gr)">8</span> + <span style="color:var(--rd)">(−3)</span> = <b style="color:var(--gr)">5</b></div>
+      <div><span style="font-size:11px;color:var(--mu)">(−) + (+) · |−| ใหญ่กว่า → <b style="color:var(--rd)">ลบ</b></span><br>
+        <span style="color:var(--rd)">(−8)</span> + <span style="color:var(--gr)">3</span> = <b style="color:var(--rd)">−5</b></div>
     </div>
   </div>
 </div>
 <div class="th-section">
-  <div class="th-label">การคูณและหารจำนวนเต็ม</div>
-  <div class="th-body">
-    <p style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px">
-      <span>(+) × (+) = <b>+</b></span><span>(−) × (−) = <b>+</b></span>
-      <span>(+) × (−) = <b>−</b></span><span>(−) × (+) = <b>−</b></span>
-    </p>
-    <p style="margin-top:8px">กฎเดียวกันใช้กับการหาร<br>
-    (−3) × (−4) = 12 &nbsp;|&nbsp; (−12) ÷ 4 = −3 &nbsp;|&nbsp; (−12) ÷ (−4) = 3</p>
+  <div class="th-label">การลบจำนวนเต็ม — เปลี่ยนเป็น บวกตัวตรงข้าม เสมอ</div>
+  <div class="th-card">
+    <div style="background:rgba(230,81,0,.08);border-left:3px solid #e65100;padding:7px 12px;border-radius:4px;margin-bottom:10px;font-size:13px">
+      <b>กฎ: a − b = a + (−b)</b>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:13px;line-height:1.9">
+      <div><span style="font-size:11px;color:var(--mu)">(+) − (+)</span><br>
+        <span style="color:var(--gr)">5</span> − <span style="color:var(--gr)">3</span> = <b style="color:var(--gr)">2</b></div>
+      <div><span style="font-size:11px;color:var(--mu)">(−) − (+)</span><br>
+        <span style="color:var(--rd)">(−2)</span> − <span style="color:var(--gr)">4</span> = <span style="color:var(--rd)">(−2)</span> + <span style="color:var(--rd)">(−4)</span> = <b style="color:var(--rd)">−6</b></div>
+      <div><span style="font-size:11px;color:var(--mu)">(+) − (−) <b>⚠ ระวัง!</b></span><br>
+        <span style="color:var(--gr)">5</span> − <span style="color:var(--rd)">(−3)</span> = <span style="color:var(--gr)">5</span> + <span style="color:var(--gr)">3</span> = <b style="color:var(--gr)">8</b></div>
+      <div><span style="font-size:11px;color:var(--mu)">(−) − (−) <b>⚠ ระวัง!</b></span><br>
+        <span style="color:var(--rd)">(−4)</span> − <span style="color:var(--rd)">(−7)</span> = <span style="color:var(--rd)">(−4)</span> + <span style="color:var(--gr)">7</span> = <b style="color:var(--gr)">3</b></div>
+    </div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">การคูณจำนวนเต็ม</div>
+  <div class="th-card">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:13px;line-height:1.9">
+      <div><span style="font-size:11px;color:var(--mu)">(+) × (+) → <b style="color:var(--gr)">บวก</b></span><br>
+        <span style="color:var(--gr)">3</span> × <span style="color:var(--gr)">4</span> = <b style="color:var(--gr)">12</b></div>
+      <div><span style="font-size:11px;color:var(--mu)">(−) × (−) → <b style="color:var(--gr)">บวก</b></span><br>
+        <span style="color:var(--rd)">(−3)</span> × <span style="color:var(--rd)">(−4)</span> = <b style="color:var(--gr)">12</b></div>
+      <div><span style="font-size:11px;color:var(--mu)">(+) × (−) → <b style="color:var(--rd)">ลบ</b></span><br>
+        <span style="color:var(--gr)">3</span> × <span style="color:var(--rd)">(−4)</span> = <b style="color:var(--rd)">−12</b></div>
+      <div><span style="font-size:11px;color:var(--mu)">(−) × (+) → <b style="color:var(--rd)">ลบ</b></span><br>
+        <span style="color:var(--rd)">(−3)</span> × <span style="color:var(--gr)">4</span> = <b style="color:var(--rd)">−12</b></div>
+    </div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">การหารจำนวนเต็ม — กฎเครื่องหมายเดียวกับการคูณ</div>
+  <div class="th-card">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:13px;line-height:1.9">
+      <div><span style="font-size:11px;color:var(--mu)">(+) ÷ (+) → <b style="color:var(--gr)">บวก</b></span><br>
+        <span style="color:var(--gr)">12</span> ÷ <span style="color:var(--gr)">4</span> = <b style="color:var(--gr)">3</b></div>
+      <div><span style="font-size:11px;color:var(--mu)">(−) ÷ (−) → <b style="color:var(--gr)">บวก</b></span><br>
+        <span style="color:var(--rd)">(−12)</span> ÷ <span style="color:var(--rd)">(−4)</span> = <b style="color:var(--gr)">3</b></div>
+      <div><span style="font-size:11px;color:var(--mu)">(+) ÷ (−) → <b style="color:var(--rd)">ลบ</b></span><br>
+        <span style="color:var(--gr)">12</span> ÷ <span style="color:var(--rd)">(−4)</span> = <b style="color:var(--rd)">−3</b></div>
+      <div><span style="font-size:11px;color:var(--mu)">(−) ÷ (+) → <b style="color:var(--rd)">ลบ</b></span><br>
+        <span style="color:var(--rd)">(−12)</span> ÷ <span style="color:var(--gr)">4</span> = <b style="color:var(--rd)">−3</b></div>
+    </div>
   </div>
 </div>
 `,
@@ -461,28 +501,53 @@ theory: `
 <div class="th-section">
   <div class="th-label">เงื่อนไขและขนาดผลลัพธ์</div>
   <div class="th-card">
-    <h4>AB มีนิยามเมื่อ: หลักของ A = แถวของ B</h4>
+    <h4>AB มีนิยามเมื่อ: จำนวนหลักของ A = จำนวนแถวของ B</h4>
     A ขนาด <b>m×n</b> &nbsp;×&nbsp; B ขนาด <b>n×p</b> &nbsp;=&nbsp; AB ขนาด <b>m×p</b>
-    <div class="example-box">A ขนาด 2×3 × B ขนาด 3×4 → AB ขนาด <b>2×4</b></div>
+    <div class="example-box" style="margin-top:8px">
+      A ขนาด 2×<b style="color:var(--rd)">3</b> &nbsp;×&nbsp; B ขนาด <b style="color:var(--rd)">3</b>×2 &nbsp;→&nbsp; AB ขนาด <b style="color:var(--go)">2×2</b>
+    </div>
   </div>
 </div>
 <div class="th-section">
-  <div class="th-label">วิธีคำนวณ</div>
+  <div class="th-label">ตัวอย่าง — 2×3 × 3×2 &nbsp;·&nbsp; <span style="font-weight:400;color:var(--mu)">สีเดียวกัน = คูณกัน</span></div>
   <div class="th-card">
-    <h4>(AB)ᵢⱼ = dot product ของแถวที่ i ของ A กับหลักที่ j ของ B</h4>
-    <div class="formula">(AB)ᵢⱼ = aᵢ₁b₁ⱼ + aᵢ₂b₂ⱼ + … + aᵢₙbₙⱼ</div>
-    <div class="example-box">
-      <strong>ตัวอย่าง:</strong><br><br>
-      A = ${matH([[1,2],[3,4]])} &nbsp; B = ${matH([[5,6],[7,8]])}<br><br>
-      <table style="border-collapse:collapse;margin:4px 0"><tr>
-        <td style="padding-right:6px;vertical-align:middle;white-space:nowrap">A × B =</td>
-        <td>${matH([['(1×5)+(2×7)','(1×6)+(2×8)'],['(3×5)+(4×7)','(3×6)+(4×8)']])}</td>
-      </tr><tr>
-        <td style="padding-right:6px;vertical-align:middle;white-space:nowrap">A × B =</td>
-        <td>${matH([[19,22],[43,50]])}</td>
-      </tr></table>
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:16px;font-size:14px">
+      A = ${matH([['<span class="c1">1</span>','<span class="c2">2</span>','<span class="c3">3</span>'],['<span class="c4">4</span>','<span class="c5">5</span>','<span class="c6">6</span>']])}
+      &nbsp;×&nbsp;
+      B = ${matH([['<span class="c1">7</span>','<span class="c1">8</span>'],['<span class="c2">9</span>','<span class="c2">10</span>'],['<span class="c3">11</span>','<span class="c3">12</span>']])}
+      &nbsp;=&nbsp;
+      ${matH([[58,64],[139,154]])}
     </div>
-    <div style="margin-top:10px;color:var(--rd);font-size:13px;">⚠ AB ≠ BA โดยทั่วไป (การคูณ<b>ไม่สลับที่</b>)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;line-height:2.1">
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--mu);letter-spacing:1px;font-weight:800;margin-bottom:6px">AB₁₁ — แถว 1 × หลัก 1</div>
+        <span class="c1">1</span>&times;<span class="c1">7</span> + <span class="c2">2</span>&times;<span class="c2">9</span> + <span class="c3">3</span>&times;<span class="c3">11</span><br>
+        = <span class="c1">7</span> + <span class="c2">18</span> + <span class="c3">33</span> = <b style="font-size:15px">58</b>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--mu);letter-spacing:1px;font-weight:800;margin-bottom:6px">AB₁₂ — แถว 1 × หลัก 2</div>
+        <span class="c1">1</span>&times;<span class="c1">8</span> + <span class="c2">2</span>&times;<span class="c2">10</span> + <span class="c3">3</span>&times;<span class="c3">12</span><br>
+        = <span class="c1">8</span> + <span class="c2">20</span> + <span class="c3">36</span> = <b style="font-size:15px">64</b>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--mu);letter-spacing:1px;font-weight:800;margin-bottom:6px">AB₂₁ — แถว 2 × หลัก 1</div>
+        <span class="c4">4</span>&times;<span class="c4">7</span> + <span class="c5">5</span>&times;<span class="c5">9</span> + <span class="c6">6</span>&times;<span class="c6">11</span><br>
+        = <span class="c4">28</span> + <span class="c5">45</span> + <span class="c6">66</span> = <b style="font-size:15px">139</b>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--mu);letter-spacing:1px;font-weight:800;margin-bottom:6px">AB₂₂ — แถว 2 × หลัก 2</div>
+        <span class="c4">4</span>&times;<span class="c4">8</span> + <span class="c5">5</span>&times;<span class="c5">10</span> + <span class="c6">6</span>&times;<span class="c6">12</span><br>
+        = <span class="c4">32</span> + <span class="c5">50</span> + <span class="c6">72</span> = <b style="font-size:15px">154</b>
+      </div>
+    </div>
+    <div style="margin-top:10px;color:var(--rd);font-size:13px">⚠ AB ≠ BA โดยทั่วไป (การคูณ<b>ไม่สลับที่</b>)</div>
+  </div>
+</div>
+<div class="th-section">
+  <div class="th-label">สูตรทั่วไป</div>
+  <div class="th-card">
+    <div class="formula">(AB)ᵢⱼ = aᵢ₁·b₁ⱼ + aᵢ₂·b₂ⱼ + … + aᵢₙ·bₙⱼ</div>
+    <div style="font-size:13px;color:var(--mu);margin-top:6px">→ dot product ของแถวที่ i ของ A กับหลักที่ j ของ B</div>
   </div>
 </div>`,
 
@@ -504,7 +569,7 @@ makeQ() {
     const ir=ri(0,1),ic=ri(0,1);
     const ans=A[ir][0]*B[0][ic]+A[ir][1]*B[1][ic];
     Q.push({type:'num',stem:`กำหนด A = ${matH(A)} และ B = ${matH(B)}<br>AB มีค่าที่ตำแหน่ง (${ir+1},${ic+1}) เท่าไหร่?`,
-      answer:ans,tol:0,explain:`(AB)₍${ir+1}${ic+1}₎ = ${A[ir][0]}×${B[0][ic]} + ${A[ir][1]}×${B[1][ic]} = ${A[ir][0]*B[0][ic]} + ${A[ir][1]*B[1][ic]} = ${ans}`});
+      answer:ans,tol:0,explain:`(AB)₍${ir+1}${ic+1}₎ = แถว${ir+1} · หลัก${ic+1}<br>${A[ir][0]}×${B[0][ic]} + ${A[ir][1]}×${B[1][ic]} = ${A[ir][0]*B[0][ic]} + (${A[ir][1]*B[1][ic]}) = <b>${ans}</b>`});
   }
   return Q;
 }};
