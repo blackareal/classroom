@@ -504,40 +504,40 @@ theory: `
     <h4>AB มีนิยามเมื่อ: จำนวนหลักของ A = จำนวนแถวของ B</h4>
     A ขนาด <b>m×n</b> &nbsp;×&nbsp; B ขนาด <b>n×p</b> &nbsp;=&nbsp; AB ขนาด <b>m×p</b>
     <div class="example-box" style="margin-top:8px">
-      A ขนาด 2×<b style="color:var(--rd)">3</b> &nbsp;×&nbsp; B ขนาด <b style="color:var(--rd)">3</b>×2 &nbsp;→&nbsp; AB ขนาด <b style="color:var(--go)">2×2</b>
+      A ขนาด 2×<b class="c1">3</b> &nbsp;×&nbsp; B ขนาด <b class="c1">3</b>×2 &nbsp;→&nbsp; AB ขนาด <b class="c4">2×2</b>
     </div>
   </div>
 </div>
 <div class="th-section">
-  <div class="th-label">ตัวอย่าง — 2×3 × 3×2 &nbsp;·&nbsp; <span style="font-weight:400;color:var(--mu)">สีเดียวกัน = คูณกัน</span></div>
+  <div class="th-label">ตัวอย่าง — 2×3 × 3×2 &nbsp;·&nbsp; <span style="font-weight:400;color:var(--mu)"><span class="c3">A แถว1</span> / <span class="c1">A แถว2</span> &nbsp;·&nbsp; <span class="c5">B หลัก1</span> / <span class="c4">B หลัก2</span></span></div>
   <div class="th-card">
     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:16px;font-size:14px">
-      A = ${matH([['<span class="c1">1</span>','<span class="c2">2</span>','<span class="c3">3</span>'],['<span class="c4">4</span>','<span class="c5">5</span>','<span class="c6">6</span>']])}
+      A = ${matH([['<span class="c3">1</span>','<span class="c3">2</span>','<span class="c3">3</span>'],['<span class="c1">4</span>','<span class="c1">5</span>','<span class="c1">6</span>']])}
       &nbsp;×&nbsp;
-      B = ${matH([['<span class="c1">7</span>','<span class="c1">8</span>'],['<span class="c2">9</span>','<span class="c2">10</span>'],['<span class="c3">11</span>','<span class="c3">12</span>']])}
+      B = ${matH([['<span class="c5">7</span>','<span class="c4">8</span>'],['<span class="c5">9</span>','<span class="c4">10</span>'],['<span class="c5">11</span>','<span class="c4">12</span>']])}
       &nbsp;=&nbsp;
       ${matH([[58,64],[139,154]])}
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;line-height:2.1">
       <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 12px">
         <div style="font-size:10px;color:var(--mu);letter-spacing:1px;font-weight:800;margin-bottom:6px">AB₁₁ — แถว 1 × หลัก 1</div>
-        <span class="c1">1</span>&times;<span class="c1">7</span> + <span class="c2">2</span>&times;<span class="c2">9</span> + <span class="c3">3</span>&times;<span class="c3">11</span><br>
-        = <span class="c1">7</span> + <span class="c2">18</span> + <span class="c3">33</span> = <b style="font-size:15px">58</b>
+        <span class="c3">1</span>&times;<span class="c5">7</span> + <span class="c3">2</span>&times;<span class="c5">9</span> + <span class="c3">3</span>&times;<span class="c5">11</span><br>
+        = 7 + 18 + 33 = <b style="font-size:15px">58</b>
       </div>
       <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 12px">
         <div style="font-size:10px;color:var(--mu);letter-spacing:1px;font-weight:800;margin-bottom:6px">AB₁₂ — แถว 1 × หลัก 2</div>
-        <span class="c1">1</span>&times;<span class="c1">8</span> + <span class="c2">2</span>&times;<span class="c2">10</span> + <span class="c3">3</span>&times;<span class="c3">12</span><br>
-        = <span class="c1">8</span> + <span class="c2">20</span> + <span class="c3">36</span> = <b style="font-size:15px">64</b>
+        <span class="c3">1</span>&times;<span class="c4">8</span> + <span class="c3">2</span>&times;<span class="c4">10</span> + <span class="c3">3</span>&times;<span class="c4">12</span><br>
+        = 8 + 20 + 36 = <b style="font-size:15px">64</b>
       </div>
       <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 12px">
         <div style="font-size:10px;color:var(--mu);letter-spacing:1px;font-weight:800;margin-bottom:6px">AB₂₁ — แถว 2 × หลัก 1</div>
-        <span class="c4">4</span>&times;<span class="c4">7</span> + <span class="c5">5</span>&times;<span class="c5">9</span> + <span class="c6">6</span>&times;<span class="c6">11</span><br>
-        = <span class="c4">28</span> + <span class="c5">45</span> + <span class="c6">66</span> = <b style="font-size:15px">139</b>
+        <span class="c1">4</span>&times;<span class="c5">7</span> + <span class="c1">5</span>&times;<span class="c5">9</span> + <span class="c1">6</span>&times;<span class="c5">11</span><br>
+        = 28 + 45 + 66 = <b style="font-size:15px">139</b>
       </div>
       <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 12px">
         <div style="font-size:10px;color:var(--mu);letter-spacing:1px;font-weight:800;margin-bottom:6px">AB₂₂ — แถว 2 × หลัก 2</div>
-        <span class="c4">4</span>&times;<span class="c4">8</span> + <span class="c5">5</span>&times;<span class="c5">10</span> + <span class="c6">6</span>&times;<span class="c6">12</span><br>
-        = <span class="c4">32</span> + <span class="c5">50</span> + <span class="c6">72</span> = <b style="font-size:15px">154</b>
+        <span class="c1">4</span>&times;<span class="c4">8</span> + <span class="c1">5</span>&times;<span class="c4">10</span> + <span class="c1">6</span>&times;<span class="c4">12</span><br>
+        = 32 + 50 + 72 = <b style="font-size:15px">154</b>
       </div>
     </div>
     <div style="margin-top:10px;color:var(--rd);font-size:13px">⚠ AB ≠ BA โดยทั่วไป (การคูณ<b>ไม่สลับที่</b>)</div>
