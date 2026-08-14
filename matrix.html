@@ -992,7 +992,7 @@ async function fetchHorizon() {
         // ถ้าขั้นปัจจุบันถูก lock → กลับไปขั้นสูงสุดที่เปิด
         const curSM=SM.find(s=>s.id===curStep);
         const curLockAt=(curSM&&curSM.unlockAt!==undefined)?curSM.unlockAt:curStep;
-        if (curLockAt > horizon) { curStep = horizon; renderContent(); }
+        if (curLockAt > horizon) { curStep = horizon; quiz = null; userAns = {}; submitted = false; renderContent(); }
       }
     }
   } catch(e) { /* silent — no internet */ }
@@ -1035,7 +1035,10 @@ function showStep(id){
 
 function showTab(tab){
   curTab=tab;
-  if(tab==='quiz'&&!quiz){ quiz=C[curStep].makeQ(); userAns={}; submitted=false; }
+  if(tab==='quiz'&&!quiz){
+    try{ quiz=C[curStep].makeQ(); userAns={}; submitted=false; }
+    catch(e){ console.error('[quiz] makeQ failed step',curStep,e); quiz=null; }
+  }
   document.querySelectorAll('.tab').forEach(t=>{t.classList.toggle('active',t.textContent.includes(tab==='learn'?'ใบความรู้':'แบบทดสอบ'));});
   renderContent();
 }
@@ -1054,6 +1057,10 @@ function renderContent(){
 }
 
 function renderQuiz(el, sm){
+  if(!quiz){
+    el.innerHTML=`<div style="padding:40px;text-align:center;color:var(--mu)">⚠ โหลดแบบทดสอบไม่ได้ — ลองรีเฟรชหน้าใหม่</div>`;
+    return;
+  }
   const total=quiz.length;
   el.innerHTML=`<h2 style="font-size:20px;font-weight:800;margin-bottom:4px">✏️ แบบทดสอบ ขั้น ${curStep}</h2>
     <p style="color:var(--mu);font-size:13px;margin-bottom:20px">${total} ข้อ · ผ่านเกณฑ์ ${Math.ceil(total*0.8)} ข้อ (80%)</p>
@@ -1131,6 +1138,7 @@ function submitQuiz(){
       ok=(ans===q.answer);
       q.choices.forEach((_,j)=>{
         const el=document.getElementById(`ch-${i}-${j}`);
+        if(!el) return;
         el.classList.add('disabled');
         if(j===q.answer) el.classList.add('correct');
         else if(j===ans&&!ok) el.classList.add('wrong');
