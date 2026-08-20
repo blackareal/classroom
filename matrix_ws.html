@@ -315,10 +315,11 @@ function g4(r) {
     ข) A ขนาด ${n}×${p},&nbsp;B ขนาด ${p}×${m} : ${ab('ab-lg')}<br>
     ค) A ขนาด ${m}×${p},&nbsp;B ขนาด ${n}×${p} : ${ab('ab-lg')}`;
 
-  const A2=mkM(2,2,r,-3,3), B2=mkM(2,2,r,-3,3);
+  const A2=mkM(3,2,r,-3,3), B2=mkM(2,3,r,-3,3);
   const h2 = `คำนวณ AB เมื่อ A = ${mt(A2)} และ B = ${mt(B2)}`;
 
-  const A3=mkM(2,3,r,-2,3), B3=mkM(3,2,r,-2,3);
+  const r3=r.p([2,3]), c3=(r3===2)?3:2;
+  const A3=mkM(r3,4,r,-2,3), B3=mkM(4,c3,r,-2,3);
   const h3 = `คำนวณ AB เมื่อ A = ${mt(A3)} และ B = ${mt(B3)}`;
 
   const A4=mkM(2,2,r,-2,3), B4=mkM(2,2,r,-2,3);
