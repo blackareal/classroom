@@ -326,7 +326,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d1117;font-family:
 ═══════════════════════════════════════════════ -->
 <div class="slide" data-step="3">
   <div class="slide-header" style="background:#6a1b9a22;border-bottom:3px solid #6a1b9a">
-    <div class="slide-step-badge" style="color:#c792ea">✖️ ขั้นที่ 3 · หน้า 1/2</div>
+    <div class="slide-step-badge" style="color:#c792ea">✖️ ขั้นที่ 3 · หน้า 1/3</div>
     <div class="slide-title">การคูณด้วยสเกลาร์</div>
   </div>
   <div class="slide-body">
@@ -358,7 +358,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d1117;font-family:
 
 <div class="slide" data-step="3">
   <div class="slide-header" style="background:#6a1b9a22;border-bottom:3px solid #6a1b9a">
-    <div class="slide-step-badge" style="color:#c792ea">✖️ ขั้นที่ 3 · หน้า 2/2</div>
+    <div class="slide-step-badge" style="color:#c792ea">✖️ ขั้นที่ 3 · หน้า 2/3</div>
     <div class="slide-title">สมบัติการคูณสเกลาร์</div>
   </div>
   <div class="slide-body">
@@ -383,6 +383,51 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d1117;font-family:
   </div>
 </div>
 
+<div class="slide" data-step="3">
+  <div class="slide-header" style="background:#6a1b9a22;border-bottom:3px solid #6a1b9a">
+    <div class="slide-step-badge" style="color:#c792ea">✖️ ขั้นที่ 3 · หน้า 3/3</div>
+    <div class="slide-title">ทบทวนข้อ 4 — หา k จาก kA = B</div>
+  </div>
+  <div class="slide-body">
+    <div class="card" style="border-color:#f8514933">
+      <div class="card-title">❌ ข้อผิดพลาดที่พบบ่อย</div>
+      <div class="card-body" style="font-size:20px;line-height:1.8">
+        <span class="err">k ไม่ใช่เมทริกซ์</span> — k คือ <span class="hl">จำนวน (สเกลาร์)</span> ตัวเดียว<br>
+        <span class="note">ถ้าตอบ k เป็นเมทริกซ์ทั้งก้อน → ผิดทันที</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">วิธีหา k</div>
+      <div class="card-body" style="font-size:19px;line-height:1.9">
+        เลือก<span class="hl">ช่องใดก็ได้</span>ที่ A ≠ 0 แล้วคำนวณ
+        <div class="formula" style="font-size:22px;margin-top:10px">k = B<sub>ij</sub> ÷ A<sub>ij</sub></div>
+        <span class="note" style="margin-top:8px;display:block">ตรวจสอบกับช่องอื่นให้ครบ — ถ้า k เท่ากันทุกช่อง แปลว่าถูก</span>
+      </div>
+    </div>
+    <div class="card" style="border-color:#56d36433">
+      <div class="card-title">✅ ตัวอย่าง — ถ้า kA = B จงหา k</div>
+      <div class="card-body" style="font-size:18px">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+          <span>A =</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>2</span><span>−1</span></div>
+            <div class="mat-row"><span>4</span><span>3</span></div>
+          </div><div class="mat-rb">]</div></div>
+          <span>,&nbsp; B =</span>
+          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
+            <div class="mat-row"><span>6</span><span>−3</span></div>
+            <div class="mat-row"><span>12</span><span>9</span></div>
+          </div><div class="mat-rb">]</div></div>
+        </div>
+        เลือกช่อง (1,1): &nbsp; k = B<sub>11</sub> ÷ A<sub>11</sub> = <span class="hl">6 ÷ 2 = 3</span><br>
+        ตรวจช่อง (1,2): &nbsp; k = −3 ÷ (−1) = <span class="ok">3 ✓</span><br>
+        ตรวจช่อง (2,1): &nbsp; k = 12 ÷ 4 = <span class="ok">3 ✓</span><br>
+        <span style="font-size:16px;color:#8b949e;margin-top:4px;display:block">∴ k = <strong style="color:#f0c040">3</strong></span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════════════════════════════════════
      STEP 4 — คูณเมทริกซ์
 ═══════════════════════════════════════════════ -->
@@ -402,11 +447,18 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d1117;font-family:
     <div class="card">
       <div class="card-title">วิธีคำนวณ — แถว × หลัก (dot product)</div>
       <div class="card-body" style="font-size:18px;line-height:1.7">
-        (AB)ᵢⱼ = ผลรวมของ <span class="hl">แถวที่ i ของ A</span> คูณกับ <span class="hl">หลักที่ j ของ B</span><br>
-        <span class="note">ทำทีละช่อง ทีละขั้นตอน</span>
+        (AB)<sub style="font-size:0.75em">ij</sub> = ผลรวมของ <span class="hl">แถวที่ i ของ A</span> คูณกับ <span class="hl">หลักที่ j ของ B</span><br>
+        <span class="note">ทำทีละช่อง ทีละขั้นตอน · ผลลัพธ์อยู่ที่ตำแหน่ง (i, j)</span>
       </div>
     </div>
-    <div class="formula">c₁₁ = a₁₁·b₁₁ + a₁₂·b₂₁</div>
+    <div class="card" style="background:#1a1f2b">
+      <div class="card-title">ตัวอย่างขนาดในวันนี้</div>
+      <div class="card-body" style="font-size:20px;text-align:center">
+        A ขนาด <span style="color:#f59e0b;font-weight:800">3×2</span> &nbsp;×&nbsp;
+        B ขนาด <span style="color:#22c55e;font-weight:800">2×3</span> &nbsp;=&nbsp;
+        AB ขนาด <span class="hl">3×3</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -416,35 +468,103 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d1117;font-family:
     <div class="slide-title">ตัวอย่าง A × B</div>
   </div>
   <div class="slide-body">
-    <div class="card">
-      <div class="card-body" style="font-size:17px;line-height:1.8">
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
-            <div class="mat-row"><span>1</span><span>2</span></div>
-            <div class="mat-row"><span>3</span><span>4</span></div>
-          </div><div class="mat-rb">]</div></div>
-          <span>×</span>
-          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
-            <div class="mat-row"><span>5</span><span>6</span></div>
-            <div class="mat-row"><span>7</span><span>8</span></div>
-          </div><div class="mat-rb">]</div></div>
-          <span>=</span>
-          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
-            <div class="mat-row"><span style="color:#f0c040">(1×5)+(2×7)</span><span style="color:#f0c040">(1×6)+(2×8)</span></div>
-            <div class="mat-row"><span style="color:#f0c040">(3×5)+(4×7)</span><span style="color:#f0c040">(3×6)+(4×8)</span></div>
-          </div><div class="mat-rb">]</div></div>
+    <!-- Legend -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <div class="card" style="flex:1;padding:12px 16px">
+        <div class="card-title">สีแถวของ A (ตัวตั้ง)</div>
+        <div class="card-body" style="font-size:17px;line-height:1.8">
+          <span style="color:#f59e0b;font-weight:800">■</span> แถวที่ 1 &nbsp;
+          <span style="color:#ef4444;font-weight:800">■</span> แถวที่ 2 &nbsp;
+          <span style="color:#3b82f6;font-weight:800">■</span> แถวที่ 3
         </div>
-        <div class="arr">↓</div>
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
-            <div class="mat-row"><span style="color:#f0c040">5+14</span><span style="color:#f0c040">6+16</span></div>
-            <div class="mat-row"><span style="color:#f0c040">15+28</span><span style="color:#f0c040">18+32</span></div>
-          </div><div class="mat-rb">]</div></div>
-          <span>=</span>
-          <div class="mat-wrap"><div class="mat-lb">[</div><div class="mat-inner">
-            <div class="mat-row"><span class="ok">19</span><span class="ok">22</span></div>
-            <div class="mat-row"><span class="ok">43</span><span class="ok">50</span></div>
-          </div><div class="mat-rb">]</div></div>
+      </div>
+      <div class="card" style="flex:1;padding:12px 16px">
+        <div class="card-title">สีหลักของ B (ตัวคูณ)</div>
+        <div class="card-body" style="font-size:17px;line-height:1.8">
+          <span style="color:#22c55e;font-weight:800">■</span> หลักที่ 1 &nbsp;
+          <span style="color:#a855f7;font-weight:800">■</span> หลักที่ 2 &nbsp;
+          <span style="color:#f97316;font-weight:800">■</span> หลักที่ 3
+        </div>
+      </div>
+    </div>
+    <!-- Matrices -->
+    <div class="card">
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center">
+          <!-- A 3×2 colored by row -->
+          <div style="text-align:center">
+            <div style="font-size:13px;color:#8b949e;margin-bottom:4px">A (3×2)</div>
+            <div class="mat-wrap">
+              <div class="mat-lb" style="font-size:5em">[</div>
+              <div class="mat-inner">
+                <div class="mat-row"><span style="color:#f59e0b;font-weight:700">1</span><span style="color:#f59e0b;font-weight:700">2</span></div>
+                <div class="mat-row"><span style="color:#ef4444;font-weight:700">3</span><span style="color:#ef4444;font-weight:700">4</span></div>
+                <div class="mat-row"><span style="color:#3b82f6;font-weight:700">5</span><span style="color:#3b82f6;font-weight:700">6</span></div>
+              </div>
+              <div class="mat-rb" style="font-size:5em">]</div>
+            </div>
+          </div>
+          <span style="font-size:28px;color:#8b949e">×</span>
+          <!-- B 2×3 colored by col -->
+          <div style="text-align:center">
+            <div style="font-size:13px;color:#8b949e;margin-bottom:4px">B (2×3)</div>
+            <div class="mat-wrap">
+              <div class="mat-lb">[</div>
+              <div class="mat-inner">
+                <div class="mat-row">
+                  <span style="color:#22c55e;font-weight:700">1</span>
+                  <span style="color:#a855f7;font-weight:700">2</span>
+                  <span style="color:#f97316;font-weight:700">3</span>
+                </div>
+                <div class="mat-row">
+                  <span style="color:#22c55e;font-weight:700">4</span>
+                  <span style="color:#a855f7;font-weight:700">5</span>
+                  <span style="color:#f97316;font-weight:700">6</span>
+                </div>
+              </div>
+              <div class="mat-rb">]</div>
+            </div>
+          </div>
+          <span style="font-size:28px;color:#8b949e">=</span>
+          <!-- Result 3×3 intermediate -->
+          <div style="text-align:center">
+            <div style="font-size:13px;color:#8b949e;margin-bottom:4px">แต่ละช่อง</div>
+            <div class="mat-wrap">
+              <div class="mat-lb" style="font-size:5em">[</div>
+              <div class="mat-inner" style="gap:10px">
+                <div class="mat-row" style="gap:8px">
+                  <span style="font-size:13px;white-space:nowrap"><span style="color:#f59e0b">1</span>×<span style="color:#22c55e">1</span>+<span style="color:#f59e0b">2</span>×<span style="color:#22c55e">4</span></span>
+                  <span style="font-size:13px;white-space:nowrap"><span style="color:#f59e0b">1</span>×<span style="color:#a855f7">2</span>+<span style="color:#f59e0b">2</span>×<span style="color:#a855f7">5</span></span>
+                  <span style="font-size:13px;white-space:nowrap"><span style="color:#f59e0b">1</span>×<span style="color:#f97316">3</span>+<span style="color:#f59e0b">2</span>×<span style="color:#f97316">6</span></span>
+                </div>
+                <div class="mat-row" style="gap:8px">
+                  <span style="font-size:13px;white-space:nowrap"><span style="color:#ef4444">3</span>×<span style="color:#22c55e">1</span>+<span style="color:#ef4444">4</span>×<span style="color:#22c55e">4</span></span>
+                  <span style="font-size:13px;white-space:nowrap"><span style="color:#ef4444">3</span>×<span style="color:#a855f7">2</span>+<span style="color:#ef4444">4</span>×<span style="color:#a855f7">5</span></span>
+                  <span style="font-size:13px;white-space:nowrap"><span style="color:#ef4444">3</span>×<span style="color:#f97316">3</span>+<span style="color:#ef4444">4</span>×<span style="color:#f97316">6</span></span>
+                </div>
+                <div class="mat-row" style="gap:8px">
+                  <span style="font-size:13px;white-space:nowrap"><span style="color:#3b82f6">5</span>×<span style="color:#22c55e">1</span>+<span style="color:#3b82f6">6</span>×<span style="color:#22c55e">4</span></span>
+                  <span style="font-size:13px;white-space:nowrap"><span style="color:#3b82f6">5</span>×<span style="color:#a855f7">2</span>+<span style="color:#3b82f6">6</span>×<span style="color:#a855f7">5</span></span>
+                  <span style="font-size:13px;white-space:nowrap"><span style="color:#3b82f6">5</span>×<span style="color:#f97316">3</span>+<span style="color:#3b82f6">6</span>×<span style="color:#f97316">6</span></span>
+                </div>
+              </div>
+              <div class="mat-rb" style="font-size:5em">]</div>
+            </div>
+          </div>
+          <span style="font-size:28px;color:#8b949e">=</span>
+          <!-- Final answer -->
+          <div style="text-align:center">
+            <div style="font-size:13px;color:#56d364;margin-bottom:4px">คำตอบ</div>
+            <div class="mat-wrap">
+              <div class="mat-lb" style="font-size:5em">[</div>
+              <div class="mat-inner">
+                <div class="mat-row"><span class="ok">9</span><span class="ok">12</span><span class="ok">15</span></div>
+                <div class="mat-row"><span class="ok">19</span><span class="ok">26</span><span class="ok">33</span></div>
+                <div class="mat-row"><span class="ok">29</span><span class="ok">40</span><span class="ok">51</span></div>
+              </div>
+              <div class="mat-rb" style="font-size:5em">]</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -464,6 +584,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d1117;font-family:
         AB และ BA อาจได้คำตอบต่างกัน<br>
         หรืออาจคูณได้ทางเดียว (ขนาดไม่ตรง)<br>
         <span class="note">ลำดับการคูณสำคัญมาก — ต้องระวัง</span>
+      </div>
+    </div>
+    <div class="card" style="border-color:#f0c04033">
+      <div class="card-title">⚠ ตัวอย่างนี้ — BA คูณได้ แต่ขนาดต่างกัน!</div>
+      <div class="card-body" style="font-size:18px;line-height:1.9">
+        A (3×2) × B (2×3) = AB ขนาด <span class="hl">3×3</span><br>
+        B (2×3) × A (3×2) = BA ขนาด <span style="color:#ef4444;font-weight:800">2×2</span><br>
+        <span class="note">ขนาดต่างกันแล้ว — พิสูจน์ว่า AB ≠ BA ได้ทันที</span>
       </div>
     </div>
     <div class="card">
