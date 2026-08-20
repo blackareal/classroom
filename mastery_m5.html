@@ -319,6 +319,29 @@ body {
 }
 #sheetContent { padding: 16px 20px 40px; }
 
+/* ── Assistant Bar ───────────────────────────────── */
+#assistBar {
+  padding: 6px 16px;
+  background: rgba(34,197,94,.06);
+  border-bottom: 1px solid rgba(34,197,94,.15);
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: 6px; min-height: 36px;
+  font-size: 12px;
+}
+.asst-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 20px;
+  background: rgba(34,197,94,.12);
+  border: 1px solid rgba(34,197,94,.3);
+  color: #86efac; font-weight: 700; font-size: 13px;
+  white-space: nowrap;
+}
+.asst-badge {
+  background: #22c55e; color: #000;
+  border-radius: 10px; padding: 0 6px;
+  font-size: 11px; font-weight: 800;
+}
+
 /* ── Responsive ─────────────────────────────────── */
 @media (max-width: 700px) {
   #detail { display: none; }
@@ -361,6 +384,9 @@ body {
 
 <!-- Stats Bar -->
 <div id="statsBar"></div>
+
+<!-- Assistant Leaderboard -->
+<div id="assistBar"></div>
 
 <!-- Main -->
 <div id="main">
@@ -551,6 +577,7 @@ let S = {
   lastUpdated:  null,
   loading:      false,
   error:        null,
+  assistMap:    {},
   students: ROSTER.map((r, i) => {
     const nick = r.nick || r.name.replace(/^(นาย|นางสาว|นาง)\s*/, '').split(/\s+/)[0];
     return {
@@ -585,13 +612,21 @@ async function fetchSteps() {
     const iStep = header.indexOf('step');
     const iNick = header.indexOf('nick');
     const iName = header.indexOf('name');
+    const iAsst = header.indexOf('assistant');
     if (iNo < 0 || iStep < 0) throw new Error('ไม่พบคอลัมน์ "no" หรือ "step" ใน Sheet');
 
     let updated = 0;
+    S.assistMap = {};   // reset ทุกครั้งที่ fetch
     rows.slice(1).forEach(row => {
       const no   = parseInt(row[iNo]);
       const step = parseFloat(row[iStep]);
       if (isNaN(no) || isNaN(step)) return;
+
+      // นับ assistant (ก่อน skip no=0)
+      if (iAsst >= 0 && row[iAsst]) {
+        const aName = row[iAsst].trim();
+        if (aName) S.assistMap[aName] = (S.assistMap[aName] || 0) + 1;
+      }
 
       // แถว no=0 = ตั้งค่า horizon
       if (no === 0) {
@@ -640,9 +675,25 @@ async function manualRefresh() {
 // ═══════════════════════════════════════════════════
 // RENDER
 // ═══════════════════════════════════════════════════
+function renderAssist() {
+  const bar = document.getElementById('assistBar');
+  if (!bar) return;
+  const entries = Object.entries(S.assistMap)
+    .sort((a, b) => b[1] - a[1])
+    .filter(([, c]) => c > 0);
+  if (entries.length === 0) { bar.innerHTML = ''; return; }
+  const medals = ['🥇','🥈','🥉'];
+  bar.innerHTML =
+    `<span style="color:#86efac;font-size:12px;font-weight:700;white-space:nowrap">🤝 คะแนนผู้ช่วย:</span>` +
+    entries.map(([nick, count], i) =>
+      `<div class="asst-chip">${medals[i] || '·'} ${nick} <span class="asst-badge">+${count}</span></div>`
+    ).join('');
+}
+
 function render() {
   renderBoard();
   renderStats();
+  renderAssist();
   renderIdentityBar();
   if (S.selectedStep !== null) renderDetail(S.selectedStep);
   document.getElementById('horizonNum').textContent = S.horizon;
