@@ -119,14 +119,14 @@ input[type=text]::placeholder{color:rgba(255,255,255,.55);}
 
 <div class="content">
 
-<!-- CONFIG: ครูกรอก URL ของ Google Apps Script (อันเดียวกับที่ใส่ใน index.html) ตรงนี้ครั้งเดียว -->
+<!-- CONFIG: ครูกรอก URL ของ Google Apps Script (อันเดียวกับที่ใส่ใน HBDschool.html) ตรงนี้ครั้งเดียว -->
 <script>
 const CONFIG = {
   SCHOOL_NAME: "โรงเรียนวังกระแสวิทยาคม",
-  GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbw0zfYJrOqk9yb3BdbBqSYCArsoyYh-XbOnNJLnZ5-zsTCP5VLoZiTjaFCmaO9_6wbR/exec", // <-- วาง Web app URL จาก Apps Script ตรงนี้ (อันเดียวกับ index.html)
+  GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbw0zfYJrOqk9yb3BdbBqSYCArsoyYh-XbOnNJLnZ5-zsTCP5VLoZiTjaFCmaO9_6wbR/exec", // <-- วาง Web app URL จาก Apps Script ตรงนี้ (อันเดียวกับ HBDschool.html)
   POLL_INTERVAL_MS: 1500,
-  // คำถาม/ตัวเลือก คัดลอกมาจาก QUIZ_DATA ในไฟล์ index.html (ไม่มีเฉลยติดมาด้วย เพื่อไม่ให้รั่วไปหน้านักเรียน)
-  // ถ้าแก้คำถามในไฟล์ index.html ภายหลัง อย่าลืมมาแก้ตรงนี้ให้ตรงกันด้วย
+  // คำถาม/ตัวเลือก คัดลอกมาจาก QUIZ_DATA ในไฟล์ HBDschool.html (ไม่มีเฉลยติดมาด้วย เพื่อไม่ให้รั่วไปหน้านักเรียน)
+  // ถ้าแก้คำถามในไฟล์ HBDschool.html ภายหลัง อย่าลืมมาแก้ตรงนี้ให้ตรงกันด้วย
   QUESTIONS_PUBLIC: [
   {
     "question": "โรงเรียนวังกระแสวิทยาคม ตั้งอยู่ที่ตำบลและอำเภอใดของจังหวัดนครพนม?",
