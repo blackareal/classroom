@@ -334,7 +334,7 @@ const CONFIG = {
 
 <!-- ================= ต้นไม้แห่งอนาคต (SWOT) ================= -->
 <div id="view-swot" class="hidden">
-<div class="card" style="text-align:left;">
+<div class="card" id="swot-form-card" style="text-align:left;">
   <div class="logo" style="margin:0 auto 14px;"><img src="data:image/png;base64,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" alt="ตราโรงเรียน"></div>
   <h1 style="text-align:center;">ต้นไม้แห่งอนาคต</h1>
   <p class="sub" style="text-align:center;">ร่วมแสดงความคิดเห็น S-W-O-T เพื่ออนาคตของโรงเรียน</p>
@@ -343,7 +343,7 @@ const CONFIG = {
   <input type="text" id="swot-name" placeholder="เว้นว่างไว้ได้ถ้าไม่อยากระบุชื่อ" style="margin-bottom:16px;">
 
   <div class="swot-field s">
-    <div class="tag">🟢 [S] สิ่งที่เราเจ๋งที่สุดในโรงเรียน</div>
+    <div class="tag">🟢 [S] สิ่งที่โรงเรียนเราเจ๋งที่สุด</div>
     <textarea id="swot-s" rows="2" placeholder="พิมพ์ความคิดเห็น..."></textarea>
   </div>
   <div class="swot-field w">
@@ -361,6 +361,13 @@ const CONFIG = {
 
   <button class="btn btn-primary" id="btn-swot-submit">ส่งความคิดเห็น 🌱</button>
   <p style="font-size:11.5px; opacity:.65; margin-top:12px; text-align:center;">ระบบจะบันทึกไว้ในเครื่องนี้ทันที และส่งขึ้น Google Sheets อัตโนมัติเมื่อมีอินเทอร์เน็ต</p>
+</div>
+
+<div class="card hidden" id="swot-success-card">
+  <div class="result-icon">🌱</div>
+  <h1>บันทึกความคิดเห็นเรียบร้อยแล้ว!</h1>
+  <p class="sub">ขอบคุณที่ร่วมแบ่งปันความคิดเห็นเพื่ออนาคตของโรงเรียนครับ/ค่ะ</p>
+  <button class="btn btn-primary" id="btn-swot-again">✏️ ส่งความคิดเห็นเพิ่มเติม</button>
 </div>
 </div><!-- /#view-swot -->
 
@@ -511,10 +518,18 @@ async function submitSwot() {
 
   fields.forEach(f => { document.getElementById(f.el).value = ""; });
   document.getElementById("swot-name").value = "";
-  Sound.pop();
+  Sound.correct();
   showToast("ขอบคุณสำหรับความคิดเห็น 🌱");
+
+  // โชว์การ์ด "บันทึกเรียบร้อยแล้ว" แบบเต็มจอ ให้เห็นชัดว่าส่งสำเร็จ ไม่ใช่แค่ toast ที่หายไปเร็ว
+  document.getElementById("swot-form-card").classList.add("hidden");
+  document.getElementById("swot-success-card").classList.remove("hidden");
 }
 document.getElementById("btn-swot-submit").addEventListener("click", submitSwot);
+document.getElementById("btn-swot-again").addEventListener("click", () => {
+  document.getElementById("swot-success-card").classList.add("hidden");
+  document.getElementById("swot-form-card").classList.remove("hidden");
+});
 
 async function retrySwotOutbox() {
   const outbox = lsGet(SWOT_OUTBOX_KEY, []);
