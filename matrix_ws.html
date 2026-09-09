@@ -337,10 +337,10 @@ function g5(r) {
   let a,b,c,d; do{a=r.i(-5,5);b=r.i(-5,5);c=r.i(-5,5);d=r.i(-5,5);}while(a*d-b*c===0);
   const h1 = `หา det(A) เมื่อ A = ${mt([[a,b],[c,d]])}`;
 
-  let a2,b2,c2,d2;
-  do{a2=r.i(-5,5);b2=r.i(-5,5);c2=r.i(-5,5);d2=r.i(-5,5);}
-  while(a2*d2-b2*c2===0||(a2===a&&b2===b));
-  const h2 = `หา det(B) เมื่อ B = ${mt([[a2,b2],[c2,d2]])}`;
+  let a2,b2,c2,d2v;
+  do{a2=r.i(-5,5);b2=r.i(-5,5);c2=r.i(-5,5);d2v=r.i(-5,5);}
+  while(a2*d2v-b2*c2===0||(a2===a&&b2===b));
+  const h2 = `หา det(B) เมื่อ B = ${mt([[a2,b2],[c2,d2v]])}`;
 
   let M3,dv; do{M3=mkM(3,3,r,-2,3);dv=d3(M3);}while(dv===0);
   const h3 = `หา det(C) โดยใช้กฎ Sarrus เมื่อ C = ${mt(M3)}<br>
