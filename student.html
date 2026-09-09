@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<title>กิจกรรมนักเรียน — โรงเรียนวังกระแสวิทยาคม</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet" onerror="this.remove()">
+<style>
+:root{
+  --color-primary:#c8952b; --color-primary-dark:#a3741a;
+  --color-secondary:#173a63; --color-secondary-light:#2f9bd6;
+  --a-red:#e6425a; --a-blue:#2f7fe6; --a-yellow:#e8b93a; --a-green:#2ea86b;
+  --radius-lg:22px; --radius-md:14px;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; min-height:100vh; min-height:100dvh;
+  font-family:"Sarabun","Tahoma","Leelawadee UI",sans-serif;
+  background:linear-gradient(160deg,#0f2540,#173a63 55%,#0b1c30);
+  color:#fff; display:flex; flex-direction:column;
+  text-align:center;
+}
+.top-nav{
+  display:flex; gap:8px; padding:12px 16px; flex-shrink:0;
+  position:sticky; top:0; z-index:10;
+  background:rgba(11,28,48,.92); backdrop-filter:blur(6px);
+  border-bottom:1px solid rgba(255,255,255,.12);
+}
+.top-nav button{
+  flex:1; padding:11px 8px; border-radius:12px; border:2px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.05); color:#fff; font-family:inherit; font-weight:700; font-size:13.5px;
+  cursor:pointer; transition:.15s;
+}
+.top-nav button.active{background:var(--color-primary); border-color:var(--color-primary); color:#26241e;}
+.content{
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:20px; overflow-y:auto;
+}
+.card{
+  width:100%; max-width:440px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14);
+  border-radius:var(--radius-lg); padding:26px 22px; backdrop-filter:blur(6px);
+}
+.logo{width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,.92); display:flex; align-items:center; justify-content:center; margin:0 auto 14px; overflow:hidden;}
+.logo img{width:100%; height:100%; object-fit:contain; padding:4px;}
+h1{font-size:19px; margin:0 0 4px; font-weight:800;}
+.sub{font-size:13px; opacity:.8; margin:0 0 20px;}
+input[type=text]{
+  width:100%; padding:14px 16px; border-radius:12px; border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.08); color:#fff; font-size:16px; font-family:inherit; text-align:center;
+}
+input[type=text]::placeholder{color:rgba(255,255,255,.55);}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:14px 22px; border-radius:12px; border:none; font-size:16px; font-weight:700;
+  font-family:inherit; cursor:pointer; width:100%; margin-top:14px; transition:transform .15s ease, filter .15s ease;
+}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--color-primary); color:#26241e;}
+.btn-primary:hover{filter:brightness(1.08);}
+.btn:disabled{opacity:.5; cursor:not-allowed;}
+.pill{display:inline-block; padding:6px 14px; border-radius:999px; background:rgba(255,255,255,.12); font-size:13px; margin-bottom:10px;}
+.spinner{width:34px; height:34px; border-radius:50%; border:4px solid rgba(255,255,255,.2); border-top-color:var(--color-primary); animation:spin 1s linear infinite; margin:10px auto 18px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.q-text{font-size:18px; font-weight:800; line-height:1.5; margin:6px 0 18px;}
+.timer-wrap{margin:0 0 16px;}
+.timer-num{font-size:34px; font-weight:800; color:var(--color-primary);}
+.timer-track{height:8px; border-radius:99px; background:rgba(255,255,255,.15); overflow:hidden; margin-top:8px;}
+.timer-fill{height:100%; background:var(--color-primary); transition:width 1s linear;}
+.choices{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;}
+.choice-btn{
+  aspect-ratio:1.3; border-radius:14px; border:none; color:#fff; font-weight:800; font-size:15px;
+  padding:12px; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  transition:transform .12s ease, filter .12s ease; line-height:1.3;
+}
+.choice-btn:active{transform:scale(.95);}
+.choice-btn:disabled{opacity:.45; cursor:not-allowed;}
+.choice-a{background:var(--a-red);} .choice-b{background:var(--a-blue);}
+.choice-c{background:var(--a-yellow); color:#2b2308;} .choice-d{background:var(--a-green);}
+.choice-btn .shape{font-size:20px;}
+.result-icon{font-size:52px; margin-bottom:8px;}
+.result-title{font-size:22px; font-weight:800; margin-bottom:4px;}
+.result-points{font-size:16px; opacity:.9; margin-bottom:16px;}
+.score-box{background:rgba(255,255,255,.1); border-radius:14px; padding:14px; margin-top:6px;}
+.score-box .label{font-size:12px; opacity:.75;}
+.score-box .value{font-size:26px; font-weight:800; color:var(--color-primary);}
+.rank-medal{font-size:46px; margin-bottom:6px;}
+.name-tag{font-size:14px; opacity:.85; margin-top:14px;}
+.hidden{display:none !important;}
+.toast{
+  position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px);
+  background:#1c1c1c; color:#fff; padding:11px 18px; border-radius:12px; font-size:14px;
+  opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; max-width:88vw; text-align:center;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+.field-label{display:block; text-align:left; font-size:12.5px; opacity:.75; margin:0 0 6px;}
+.swot-field{border-radius:var(--radius-md); padding:14px 16px; margin-bottom:14px; border:2px solid; text-align:left;}
+.swot-field.s{border-color:var(--a-green); background:rgba(46,168,107,.1);}
+.swot-field.w{border-color:var(--a-yellow); background:rgba(232,185,58,.1);}
+.swot-field.o{border-color:var(--a-blue); background:rgba(47,127,230,.1);}
+.swot-field.t{border-color:var(--a-red); background:rgba(230,66,90,.1);}
+.swot-field .tag{font-weight:800; font-size:13px; margin-bottom:8px; display:flex; align-items:center; gap:6px;}
+.swot-field textarea{
+  width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.08); color:#fff; font-size:14.5px; font-family:inherit; resize:vertical; min-height:56px;
+}
+.swot-field textarea::placeholder{color:rgba(255,255,255,.55);}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<nav class="top-nav hidden" id="top-nav">
+  <button type="button" data-view="trivia" class="active">🏆 แฟนพันธุ์แท้</button>
+  <button type="button" data-view="swot">🌳 ต้นไม้แห่งอนาคต</button>
+</nav>
+
+<div class="content">
+
+<!-- CONFIG: ครูกรอก URL ของ Google Apps Script (อันเดียวกับที่ใส่ใน index.html) ตรงนี้ครั้งเดียว -->
+<script>
+const CONFIG = {
+  SCHOOL_NAME: "โรงเรียนวังกระแสวิทยาคม",
+  GOOGLE_SCRIPT_URL: "", // <-- วาง Web app URL จาก Apps Script ตรงนี้ (อันเดียวกับ index.html)
+  POLL_INTERVAL_MS: 1500,
+  // คำถาม/ตัวเลือก คัดลอกมาจาก QUIZ_DATA ในไฟล์ index.html (ไม่มีเฉลยติดมาด้วย เพื่อไม่ให้รั่วไปหน้านักเรียน)
+  // ถ้าแก้คำถามในไฟล์ index.html ภายหลัง อย่าลืมมาแก้ตรงนี้ให้ตรงกันด้วย
+  QUESTIONS_PUBLIC: [
+  {
+    "question": "โรงเรียนวังกระแสวิทยาคม ตั้งอยู่ที่ตำบลและอำเภอใดของจังหวัดนครพนม?",
+    "choices": [
+      "ตำบลบ้านผึ้ง อำเภอเมืองนครพนม",
+      "ตำบลกุรุคุ อำเภอเมืองนครพนม",
+      "ตำบลนามะเขือ อำเภอปลาปาก",
+      "ตำบลโพนสว่าง อำเภอท่าอุเทน"
+    ]
+  },
+  {
+    "question": "โรงเรียนวังกระแสวิทยาคมเปิดทำการเรียนการสอนครั้งแรก (ตอนยังเป็นสาขาของโรงเรียนบ้านผึ้งวิทยาคม) ในปีการศึกษาใด?",
+    "choices": [
+      "2530",
+      "2535",
+      "2538",
+      "2540"
+    ]
+  },
+  {
+    "question": "โรงเรียนได้รับการประกาศจัดตั้งเป็น \"เอกเทศ\" แยกจากโรงเรียนบ้านผึ้งวิทยาคม เมื่อวันที่เท่าไร?",
+    "choices": [
+      "10 กันยายน 2540",
+      "1 พฤษภาคม 2538",
+      "16 พฤษภาคม 2535",
+      "5 ธันวาคม 2542"
+    ]
+  },
+  {
+    "question": "ใครคือผู้ดำรงตำแหน่งอาจารย์ใหญ่คนแรกของโรงเรียนวังกระแสวิทยาคม?",
+    "choices": [
+      "นายทนงชัย เจริญรัตน์",
+      "นายคมสิน ศรีมานะศักดิ์",
+      "นายวันศักดิ์ คำแหง",
+      "นางนฤมล ทัดสา"
+    ]
+  },
+  {
+    "question": "สีประจำโรงเรียนวังกระแสวิทยาคมคือสีใด?",
+    "choices": [
+      "แดง-ขาว",
+      "เขียว-เหลือง",
+      "ฟ้า-ทอง",
+      "ม่วง-ขาว"
+    ]
+  },
+  {
+    "question": "\"สีฟ้า\" ซึ่งเป็นสีประจำโรงเรียน สื่อความหมายถึงสิ่งใด?",
+    "choices": [
+      "ความสามัคคีของหมู่คณะ",
+      "ความฉลาดไหวพริบและวิสัยทัศน์ที่กว้างไกล",
+      "ความสงบร่มเย็น",
+      "ความปลอดภัยของนักเรียน"
+    ]
+  },
+  {
+    "question": "คำขวัญของโรงเรียนวังกระแสวิทยาคมคือข้อใด?",
+    "choices": [
+      "เรียนดี มีวินัย ใฝ่คุณธรรม",
+      "การเรียนดี กีฬาเด่น เน้นคุณธรรม นำชุมชน",
+      "ความรู้คู่คุณธรรม นำสังคม",
+      "สร้างคนดี มีปัญญา พัฒนาสังคม"
+    ]
+  },
+  {
+    "question": "ปรัชญาของโรงเรียน \"วิชชา จรณสัมปนโน\" มีความหมายตรงกับข้อใด?",
+    "choices": [
+      "ผู้ถึงพร้อมด้วยความรู้และความประพฤติ",
+      "ความรู้คือพลัง",
+      "ปัญญาประเสริฐกว่าทรัพย์",
+      "รู้จริงทำจริง"
+    ]
+  },
+  {
+    "question": "เอกลักษณ์และอัตลักษณ์ของโรงเรียนวังกระแสวิทยาคม (ตามแผนปฏิบัติการปีการศึกษา 2569) คือข้อใด?",
+    "choices": [
+      "ยิ้มสวย ไหว้งาม",
+      "ทักษะดี วิถีพอเพียง เคียงวิวงาม เปี่ยมจิตอาสา",
+      "เก่ง ดี มีสุข",
+      "รักษ์ถิ่น รักษ์ไทย"
+    ]
+  },
+  {
+    "question": "ปัจจุบันโรงเรียนวังกระแสวิทยาคมมีเนื้อที่ทั้งหมดประมาณเท่าไร? (ข้อมูลล่าสุด)",
+    "choices": [
+      "25 ไร่",
+      "35 ไร่",
+      "49 ไร่",
+      "70 ไร่"
+    ]
+  },
+  {
+    "question": "สนามกีฬามาตรฐานสากลภายในโรงเรียน (ที่ระบุไว้ในแผนปฏิบัติการปีการศึกษา 2569) คือสนามประเภทใด?",
+    "choices": [
+      "สนามฟุตซอล มาตรฐาน FIFA",
+      "สนามบาสเกตบอล มาตรฐาน FIBA",
+      "สนามวอลเลย์บอล มาตรฐาน FIVB",
+      "สนามเทนนิส มาตรฐาน ITF"
+    ]
+  },
+  {
+    "question": "โรงเรียนวังกระแสวิทยาคมเปิดสอนตั้งแต่ระดับชั้นใดถึงชั้นใด?",
+    "choices": [
+      "ป.1 ถึง ป.6",
+      "ม.1 ถึง ม.6",
+      "ม.1 ถึง ม.3 เท่านั้น",
+      "ม.4 ถึง ม.6 เท่านั้น"
+    ]
+  },
+  {
+    "question": "ผู้อำนวยการโรงเรียนวังกระแสวิทยาคมคนปัจจุบันคือใคร?",
+    "choices": [
+      "นางนฤมล ทัดสา",
+      "นายวันศักดิ์ คำแหง",
+      "นายทนงชัย เจริญรัตน์",
+      "นายศรราม นาบุญ"
+    ]
+  }
+]
+};
+</script>
+
+<div id="view-trivia">
+
+<!-- ================= หน้าตั้งค่ายังไม่พร้อม ================= -->
+<div class="card hidden" id="screen-not-configured">
+  <div class="logo"><img src="data:image/png;base64,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" alt="ตราโรงเรียน"></div>
+  <h1>ยังเปิดใช้งานไม่ได้</h1>
+  <p class="sub">ครูยังไม่ได้ตั้งค่า Google Apps Script ในไฟล์นี้ (CONFIG.GOOGLE_SCRIPT_URL ว่างอยู่) กรุณาแจ้งครูผู้ดูแลระบบ</p>
+</div>
+
+<!-- ================= หน้าเข้าร่วม (กรอกชื่อ) ================= -->
+<div class="card hidden" id="screen-join">
+  <div class="logo"><img src="data:image/png;base64,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" alt="ตราโรงเรียน"></div>
+  <h1>แฟนพันธุ์แท้โรงเรียน</h1>
+  <p class="sub" id="join-sub">${CONFIG.SCHOOL_NAME}</p>
+  <input type="text" id="input-name" placeholder="พิมพ์ชื่อของคุณ" maxlength="40" autocomplete="off">
+  <button class="btn btn-primary" id="btn-join">เข้าร่วมเกม 🎮</button>
+</div>
+
+<!-- ================= รอเกมเปิด / รอครูเริ่ม ================= -->
+<div class="card hidden" id="screen-waiting">
+  <div class="logo"><img src="data:image/png;base64,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" alt="ตราโรงเรียน"></div>
+  <div class="pill" id="waiting-name-pill">สวัสดี!</div>
+  <div class="spinner"></div>
+  <h1 id="waiting-title">รอครูเริ่มเกม...</h1>
+  <p class="sub" id="waiting-sub">เตรียมตัวให้พร้อม แล้วรอสัญญาณจากจอโปรเจกเตอร์</p>
+</div>
+
+<!-- ================= หน้าคำถาม ================= -->
+<div class="card hidden" id="screen-question">
+  <div class="timer-wrap">
+    <span class="timer-num" id="q-timer">20</span>
+    <div class="timer-track"><div class="timer-fill" id="q-timer-fill" style="width:100%"></div></div>
+  </div>
+  <div class="q-text" id="q-text">คำถาม</div>
+  <div class="choices" id="q-choices">
+    <button class="choice-btn choice-a" data-idx="0"><span class="shape">▲</span><span></span></button>
+    <button class="choice-btn choice-b" data-idx="1"><span class="shape">◆</span><span></span></button>
+    <button class="choice-btn choice-c" data-idx="2"><span class="shape">●</span><span></span></button>
+    <button class="choice-btn choice-d" data-idx="3"><span class="shape">■</span><span></span></button>
+  </div>
+</div>
+
+<!-- ================= รอผลหลังตอบ ================= -->
+<div class="card hidden" id="screen-answered">
+  <div class="spinner"></div>
+  <h1>ส่งคำตอบแล้ว ✅</h1>
+  <p class="sub">รอครูเฉลยคำตอบ...</p>
+</div>
+
+<!-- ================= เฉลยคำตอบ ================= -->
+<div class="card hidden" id="screen-revealed">
+  <div class="result-icon" id="result-icon">🎉</div>
+  <div class="result-title" id="result-title">ถูกต้อง!</div>
+  <div class="result-points" id="result-points">+500 คะแนน</div>
+  <div class="score-box">
+    <div class="label">คะแนนรวมของคุณ</div>
+    <div class="value" id="result-total-score">0</div>
+  </div>
+  <p class="sub" style="margin-top:16px;">รอครูไปข้อถัดไป...</p>
+</div>
+
+<!-- ================= จบเกม / กระดานคะแนนสุดท้าย ================= -->
+<div class="card hidden" id="screen-ended">
+  <div class="rank-medal" id="ended-medal">🏆</div>
+  <h1 id="ended-rank">อันดับที่ 1</h1>
+  <div class="score-box">
+    <div class="label">คะแนนรวม</div>
+    <div class="value" id="ended-score">0</div>
+  </div>
+  <div class="name-tag" id="ended-name"></div>
+</div>
+
+<!-- ================= เกมใหม่เริ่มแล้ว (ต้องเข้าร่วมใหม่) ================= -->
+<div class="card hidden" id="screen-rejoin">
+  <div class="logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAADAFBMVEVHcEx8U0QAbnSAcViSeGPe55xsV0dckIC4/7RXABt3Vj56SSGmbVyVn4Tn3MNmbUEWtMCNeD2OaS4CfZCopZKAbEEJlqa7jT8YhZKNZS/Br5CHhVYEy9ojkJWnyZVxqp1ZNR+kk1qljU5XmJQrvMWTiUU7NB9FNC+AbUwqmaFc0slzekuNhE2IcUf11Gbf0bhsb1ucbzajk3ucpmGgln8+h3mvvqhFPyN0hFKKe0Yvi5Glk118n3putpJqqYN+k2tWU0ajllslf4SJVCgIv85RhGd+glLfs01co5imyr6HmWN4o3dO7+5MSyyej2U/ycWPVx5ix686iZBNMBuYZCRLKxophY9buaw0n6c9OyVr8e6qu5JYh3tMmp1tYUdGkn14w8N5lmtBnKtJ0eFRkoJpfGuammKYnWRrRCCdi3A1e39BiYeE37k/endXzdI7hYqChlli2MtY2txil5aU6Nw91uCF3tZZtrOHomwpl6CUczJdnZxRd2OGh1ZSOiAlcnaG1KtJc27Uu2VRWUxxrJBPvrZr9PFPMxyNfUpku6KqhEFSTCche4OZpZBi2MW2iDRdeVQsk5o2s7w4iI5emntaWTKkh0Fn5duEuIdNaWxdn6eOn2dg9PlPUkiGWCfNo0g5e3hHw8WNu5zduVmNXCLQoDuUsIrJpERoZDXN0HyHfEa5vm13+PBU5+mfl0+UXCBYPR6ZbjnQokSRg2UkbnpXqKZITDMkrLStjEGEcDyFnGVnvaKFmJvh0n5ydGpXt6rAkj/n9++6sJutp5VgTiWmo1MIbp707NgIna6dbjYMjZ5wQR6NWymugzvv59EB2ehnORqIwY4FhJZyl2cIpraJlFcDxtTs48hYMRu6lUeqejgvoqd/i1Ti1rz48uCctnTGolLcvmjLm0HHq2ED0N7ayrDqw1ks1d6/rZAczNkD4fKEUCOI78+jk02HnWKcZR6iilxPpI2g0plh//+HqHHSw6Z3+uxFtaPKu5+tn4lp5NDMtG3k05sfVWDP9J015fB8U2K1AAAA8nRSTlMAAwIbAgIHAwEBEf4MHv7+/ndI/ig0/v7//RBq/v0EVC9WNEf6/Vod/fu2/Icm/f4vzf7+Ff0zif1Z6Epq/v58/mr9Vf77m/yOCbD5+8JB84v9tEJnn/i20nigXlp3+f1GpCk1UzuGltP+pWv9kXbVusaNNCDUXnnE3Z9kScni/vv+kWrKleDB/tSfqOtB/rv7mNuD+ube1+x+9u53ltbevlyfzbJsf7Tb/uf6vujn9Ovn/vXiqfLq5azZ9IfazOfqD83D7+///////////////////////////////////////////////////////////iQtejEAAAowSURBVFjDnFcHUFNbGj4hl+SmERJJIERCKNJ7lS6iIFUQFKkKKEWRoq4ixXFWQLBgb8/euz7L89le2TYhDQmCEEBCYCkKCtIEdXb33Ph2doTgY9+ZSXLvnfN/5zvf//3/uQHgW2OPGwAJNPBHBonHoyVsZGzbaDLklpbA4xH/AAa1syoxdNO6kqT+n/7v5YnAIcPqZMztSq4hI/HQ3oR4qwwqisw4XgN+yFd9+o96h3iT8YE2SVHZ7wpxJICiM4uH0/QJAMcq9jtv5KBBZXFTGNF8AAj6kNrM4lMPlJcfzbc6f9nLFrAcAMvo8nmr/KPlt8qCZ8IBRfELD20bkp0I8fOPIKAxMYDs5Z9+5ca1fw35hvCQmQgYHHAxxMNhg3e6kQ4VML2AizE33VDH+NKVi6wZZhMNTsupDM0wMvIyJkXakCK8jDxCjuWfTEO/CPR7GXDLsVpcJQthefsZ+TuATEcQ4e9hk8gsGOovj9+08fcQiCCp52M2DF9ZagMRjM0pujoRRoGrAgtSMYixWybgm7tAwIb3vrKCiNTYUOaiFH9/20xx816WPzfPkBFalmr0RObzi/43M4GA1TYphqn7fZ7Y/pDnn84FS8XNhTxGOvfJZubIhySa98502rc3AflRD1rKMvCVJd4ZNrYQoGMn8LBJ8ThRZlsQtaXoy5RveZh80PODj3/a05KiAq4NwGVSgs7gCIHcUuY7K1qG7MOWIh5Ap/UjCRDWbrH0OWZ8LurIqlCPEjzKp/QplcaAmcKoZDovTkuQ+bQsN5nW0Qhpw/L6FlksvqzqUfFTRgoDgEgJR2n3ZwDyvPPyA5yrzhkfk7Vox06nIw/s1/aVleGtPt4uPppXNJeAEk73ca59+omA8l+sPhEf4/xxPT5W5mM6XSo1wNmGE4apt/r/wbx5gh8aAwBTQuEo2z/vIYHHpdFD8TGKsZsul9++WwTXUj+MjcnnwvqdPW7KomOv44hgl6RP0tkO96Bp/iInsv8kQzFW7kY21plOBIi7fjjb2SM+O/LcSABACJl9lD65vPMMAQWRPhscx07aKPrHNgGgqT5eE9Dyh7cpuOv7HVOfOsK2xqdQxBSprq6cBRDzOfn822M5gYr+4XgqQNTHryyH8X7rx+bwrZyZgADMxBSxuLlZV+oBbyJlJwMUw+dSFNnDN9WWFBGYLO7xUfhtDnOOydm2FyA4CCCurRUKm5s9AA4lP/qYVigLWxWiiOr5haYmkURwsHrfyKK1PbLCtKp2JiAigN9U2wQBhEIWBse4cRR/ZNvi4tI5C+vVJZIIlrx4m5Ko7XMb/6ehvfAW+nJrbS3cQvNdKiChCPnX/niWc9SPJiVC3yQ1ACQ0sJCbqP3embX+4z1jOEEDmH8vpvS1t8t/xUPVcODSp7GV/ooPPxYzHnPhrbqxur5F4ZcWduMKtgCO5K7SQKrbnoFCQgjhzFCYfsGI9hbydJVcbNAyUkq9lR2kg8JM48DSpqZailQqFEZigDxwqXssnnzMt94Tr44A7CXL2KHHyFZh0Hk8rLTImZS+voEgpVJ5QZ8EVdckXrg2vMlEcYidS1adXl8XAslht+iQzNAwbMiOhh2DCLJUTKHUioVwD/d2ElUUjOyyw1wWKVaIzpI1SFPOo1y2q6yMvLjqCwEsB+JacdOArgQ64S4Bs7+mxgW7sHxS5cgy9rrJaSABZItBQyWI7blm56I6h0kgE0pQ290tEUqEjr+p5GUn+/dmmm+F5X41AJ5zGjaufS37QgB7sgPG1yqDIIDE8b9uv9AdZergLW1YMhWAF8iwdTAwVQZRVTbF8aiYjSjydl25rvSRPg+nohARdMPUk7fahjG1njBRctnO3ZdUBEgkmESxRCLp6JZ2tHfA1qzSnQiuBPmy16j3AQGsE7l2nKFiTRcFwQlZva9qBL263b2NNVqjvQn6WAUSUeMOqYEoUV1LwoFiPT2LDn/MIyTE/G8CQVuboG1c2j2quhL81VwTwSjsle4T7cZP9QF8Ldhdt2/gCAEhYdO2j2pp1QgEgk9SZee4QFDTqNV1XOVv1LZ5wLXuLE5jqpHXiOZzhLDy4V40QZ69ViME6GyWSNu74PqNWvYlGihCgPMKByz0RKumlCMEYFsPOMK6d4lAgbmT/atGQc3o4FuO9N6nRkhB69UEHxC9iAiK50gWVq9VA7DfVTLAhATwOwFxey8EqFG+bZfDnjoob8QAxo8jtHSA4kDkAMdSHYN1FXcuYp2HeYQGfh6FAFrSTnlHp26QvVwJAey7fgZed12gCvjTd1qnAiCAGYDHDEli3T3CuN/VBbcwrjUh17WQ2ivbVQBZgUJHfZVfbGNs1TdmEglHJKKnOBVOGECN4HNNJyer87O8tw2K2DU4hxMACERkusMZwemoUGlcs79bjNtr1bTVDL6tyMoaHHQStME0TNC/jzPCq5ZxIU5tytB/vPPBIMDmsSM/ei69t2u8d8LJ6f7gRNagk5PTRO/oKydra7MAx0A/FiBe5ql9XXP57i/u9IfJQuF1epOFhUXyvHnzhJwKC44FvEhOtkhumntfKDw8jx6tWUqbLAEC9gRr0ExX7qC7E8zuiJeG72tttU5+GMc4zZFc3H5qHr2ioYG+dEff6WhyOD1uo2kqquk2KYnPngGdBbH8h9bX85LpdHq4u5lZ3I6tuw7vygwP3xq+3czs1FX4+GqItfVWck7PHmD47KtEEsGeFpNg09du5u7hhw/viovGtoiCaPc4nLl7HF/VMwlm7ruuHg6PI1NNX+u4fGf4FQAK9C0N/A68OQBVJjw4jhU3gfA/qREcjkCAvw5nzeH3/jemEbktOl/LoAGWiETaz//puZ1saOn64DhexQtDwb5U7QhdvWZ+dREgr1vwxtRTtJxImiRCkUi04Pns+rrdnius59ftXpP41Z+1YLekXL26WQa5ax5Uz37+ki1aNMnLKHBZxlYB6LW8WDh/lohdbbn8h82GG3R03FZuyok90FItqpvl+uK9qK76JQRYpjM5kdjprgIweN/aOtfVdQW7Xvvl7Ndw9PT0zF6gXc0W6S1sbVjxn8kKgww4EYRRuXEw8VSCDBDWFHNVtXjrqi17RUDg2pPzr16dPw/Uf+WK7OWrqqp3ZDXBBmjqcrJgFknFKkADJG6fuFQ/4eqdO5en3P74UQZowKvzT77fife+anHHolH4xG0JoAEvs7G1FNkZ5J8/uSIx6/YpYeF67bdXVa9evmwXGOjv//37O6Dtby0a64VPnZglcULmlQf2liY7Q4K/wCWnxnqnS5eEnVzvvLv87p3xO2+7L+/eXr5qAQzZSxJhjU7CV16WM7Bz4mghmHiEXQr7O3ey1akTJ8Rk4z9evnz53UegS+JPAEFYUO7f+kungK1tVk7cvQXm7KB8AwYeZY+I7cBYkJG59uQJkLomMGlrtQgDV6NVUAwbvh4DsCnDwGIC6dzxJpS3apWCgFZRmdlBUHJlSzXB6HEAAA1E1ppmE7AMAAAAAElFTkSuQmCC" alt="ตราโรงเรียน"></div>
+  <h1>เริ่มเกมใหม่แล้ว</h1>
+  <p class="sub">ครูเริ่มเกมรอบใหม่ กรุณาเข้าร่วมอีกครั้ง</p>
+  <input type="text" id="input-name-rejoin" placeholder="พิมพ์ชื่อของคุณ" maxlength="40" autocomplete="off">
+  <button class="btn btn-primary" id="btn-rejoin">เข้าร่วมเกม 🎮</button>
+</div>
+
+</div><!-- /#view-trivia -->
+
+<!-- ================= ต้นไม้แห่งอนาคต (SWOT) ================= -->
+<div id="view-swot" class="hidden">
+<div class="card" style="text-align:left;">
+  <div class="logo" style="margin:0 auto 14px;"><img src="data:image/png;base64,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" alt="ตราโรงเรียน"></div>
+  <h1 style="text-align:center;">ต้นไม้แห่งอนาคต</h1>
+  <p class="sub" style="text-align:center;">ร่วมแสดงความคิดเห็น S-W-O-T เพื่ออนาคตของโรงเรียน</p>
+
+  <label class="field-label">ชื่อผู้แสดงความเห็น (ไม่บังคับ)</label>
+  <input type="text" id="swot-name" placeholder="เว้นว่างไว้ได้ถ้าไม่อยากระบุชื่อ" style="margin-bottom:16px;">
+
+  <div class="swot-field s">
+    <div class="tag">🟢 [S] สิ่งที่เราเจ๋งที่สุดในโรงเรียน</div>
+    <textarea id="swot-s" rows="2" placeholder="พิมพ์ความคิดเห็น..."></textarea>
+  </div>
+  <div class="swot-field w">
+    <div class="tag">🟠 [W] สิ่งที่อยากให้ปรับปรุงด่วนที่สุด</div>
+    <textarea id="swot-w" rows="2" placeholder="พิมพ์ความคิดเห็น..."></textarea>
+  </div>
+  <div class="swot-field o">
+    <div class="tag">🔵 [O] กิจกรรมหรือไอเดียใหม่ๆ ที่อยากให้มี</div>
+    <textarea id="swot-o" rows="2" placeholder="พิมพ์ความคิดเห็น..."></textarea>
+  </div>
+  <div class="swot-field t">
+    <div class="tag">🔴 [T] สิ่งที่กังวลในอนาคต</div>
+    <textarea id="swot-t" rows="2" placeholder="พิมพ์ความคิดเห็น..."></textarea>
+  </div>
+
+  <button class="btn btn-primary" id="btn-swot-submit">ส่งความคิดเห็น 🌱</button>
+  <p style="font-size:11.5px; opacity:.65; margin-top:12px; text-align:center;">ระบบจะบันทึกไว้ในเครื่องนี้ทันที และส่งขึ้น Google Sheets อัตโนมัติเมื่อมีอินเทอร์เน็ต</p>
+</div>
+</div><!-- /#view-swot -->
+
+</div><!-- /.content -->
+
+<script>
+/* ======================================================================
+   สถานะฝั่งผู้เล่น
+   ====================================================================== */
+const LS_KEY = "wk_trivia_player_v1";
+let myPlayerId = null;
+let myGameId = null;
+let myName = "";
+let lastRenderedQIndex = -1;
+let answeredQIndex = new Set();
+let pollTimer = null;
+let localTickTimer = null;
+let currentDeadline = 0;
+let currentTimePerQ = 20;
+
+function loadLocal() {
+  try { return JSON.parse(sessionStorage.getItem(LS_KEY) || "null"); } catch (e) { return null; }
+}
+function saveLocal() {
+  try { sessionStorage.setItem(LS_KEY, JSON.stringify({ playerId: myPlayerId, gameId: myGameId, name: myName })); } catch (e) {}
+}
+
+function showScreen(id) {
+  // จำกัดขอบเขตไว้แค่การ์ดของโซนเกมเท่านั้น กันไม่ให้ไปซ่อนการ์ด SWOT ที่อาจเปิดอยู่คนละแท็บ
+  document.querySelectorAll("#view-trivia .card").forEach(c => c.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
+
+/* ======================================================================
+   สลับแท็บบนสุด: แฟนพันธุ์แท้ (เกม) <-> ต้นไม้แห่งอนาคต (SWOT)
+   ====================================================================== */
+function showTopView(view) {
+  document.getElementById("view-trivia").classList.toggle("hidden", view !== "trivia");
+  document.getElementById("view-swot").classList.toggle("hidden", view !== "swot");
+  document.querySelectorAll("#top-nav button").forEach(b => b.classList.toggle("active", b.dataset.view === view));
+}
+document.querySelectorAll("#top-nav button").forEach(btn => {
+  btn.addEventListener("click", () => showTopView(btn.dataset.view));
+});
+
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2600);
+}
+
+/* ---------------- เสียงสั้น ๆ (ไม่ต้องพึ่งไฟล์เสียงภายนอก) ---------------- */
+const Sound = {
+  ctx: null,
+  ensure() {
+    if (!this.ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) this.ctx = new AC();
+    }
+    if (this.ctx && this.ctx.state === "suspended") this.ctx.resume();
+    return this.ctx;
+  },
+  tone(freq, duration, type, gainVal, delay) {
+    const ctx = this.ensure();
+    if (!ctx) return;
+    const osc = ctx.createOscillator(), gain = ctx.createGain();
+    osc.type = type || "sine"; osc.frequency.value = freq; gain.gain.value = gainVal || 0.18;
+    osc.connect(gain).connect(ctx.destination);
+    const t0 = ctx.currentTime + (delay || 0);
+    gain.gain.setValueAtTime(gainVal || 0.18, t0);
+    gain.gain.exponentialRampToValueAtTime(0.001, t0 + duration);
+    osc.start(t0); osc.stop(t0 + duration + 0.02);
+  },
+  pop() { this.tone(660, 0.08, "sine", 0.16); },
+  correct() { this.tone(523, 0.12, "triangle", 0.2); this.tone(784, 0.18, "triangle", 0.2, 0.1); },
+  wrong() { this.tone(220, 0.25, "sawtooth", 0.15); }
+};
+document.body.addEventListener("click", () => Sound.ensure(), { once: true });
+
+/* ======================================================================
+   เรียก API
+   ====================================================================== */
+async function apiPost(type, payload) {
+  const res = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ type, payload, ts: new Date().toISOString() })
+  });
+  return res.json();
+}
+async function apiGetState() {
+  const url = CONFIG.GOOGLE_SCRIPT_URL + (CONFIG.GOOGLE_SCRIPT_URL.includes("?") ? "&" : "?") + "action=game_state";
+  const res = await fetch(url, { method: "GET" });
+  return res.json();
+}
+
+/* ======================================================================
+   ต้นไม้แห่งอนาคต (SWOT) — ส่งความคิดเห็นจากมือถือนักเรียน
+   ====================================================================== */
+const SWOT_LS_KEY = "wk_trivia_swot_entries_v1";
+const SWOT_OUTBOX_KEY = "wk_trivia_swot_outbox_v1";
+function lsGet(key, fallback) {
+  try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; }
+}
+function lsSet(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* เก็บไม่ได้ก็ไม่เป็นไร ไม่ให้พัง */ }
+}
+function uidLocal() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+
+async function submitSwot() {
+  const name = document.getElementById("swot-name").value.trim() || "ไม่ระบุชื่อ";
+  const fields = [
+    { key: "s", el: "swot-s" }, { key: "w", el: "swot-w" },
+    { key: "o", el: "swot-o" }, { key: "t", el: "swot-t" }
+  ];
+  const entries = [];
+  fields.forEach(f => {
+    const val = document.getElementById(f.el).value.trim();
+    if (val) entries.push({ id: uidLocal(), category: f.key, text: val, name, date: new Date().toISOString() });
+  });
+  if (!entries.length) { showToast("กรุณาพิมพ์ความคิดเห็นอย่างน้อย 1 หัวข้อ"); return; }
+
+  // บันทึกลงเครื่องนักเรียนเองก่อนเสมอ กันข้อมูลหายถ้าเน็ตหลุดตอนส่ง
+  const all = lsGet(SWOT_LS_KEY, []);
+  entries.forEach(e => all.unshift(e));
+  lsSet(SWOT_LS_KEY, all);
+
+  const btn = document.getElementById("btn-swot-submit");
+  if (btn) btn.disabled = true;
+  for (const e of entries) {
+    try {
+      const r = await apiPost("swot", e);
+      if (!r || !r.ok) {
+        const outbox = lsGet(SWOT_OUTBOX_KEY, []);
+        outbox.push(e);
+        lsSet(SWOT_OUTBOX_KEY, outbox);
+      }
+    } catch (err) {
+      const outbox = lsGet(SWOT_OUTBOX_KEY, []);
+      outbox.push(e);
+      lsSet(SWOT_OUTBOX_KEY, outbox);
+    }
+  }
+  if (btn) btn.disabled = false;
+
+  fields.forEach(f => { document.getElementById(f.el).value = ""; });
+  document.getElementById("swot-name").value = "";
+  Sound.pop();
+  showToast("ขอบคุณสำหรับความคิดเห็น 🌱");
+}
+document.getElementById("btn-swot-submit").addEventListener("click", submitSwot);
+
+async function retrySwotOutbox() {
+  const outbox = lsGet(SWOT_OUTBOX_KEY, []);
+  if (!outbox.length) return;
+  const remaining = [];
+  for (const e of outbox) {
+    try {
+      const r = await apiPost("swot", e);
+      if (!r || !r.ok) remaining.push(e);
+    } catch (err) { remaining.push(e); }
+  }
+  lsSet(SWOT_OUTBOX_KEY, remaining);
+}
+
+/* ======================================================================
+   เข้าร่วมเกม
+   ====================================================================== */
+async function doJoin(name) {
+  name = (name || "").trim();
+  if (!name) { showToast("กรุณาพิมพ์ชื่อก่อนเข้าร่วม"); return; }
+  const btn = document.getElementById("btn-join");
+  if (btn) btn.disabled = true;
+  try {
+    const r = await apiPost("game_join", { name });
+    if (!r.ok) { showToast(r.error || "เข้าร่วมไม่สำเร็จ ลองใหม่อีกครั้ง"); if (btn) btn.disabled = false; return; }
+    myPlayerId = r.playerId;
+    myGameId = r.state.gameId;
+    myName = name;
+    answeredQIndex = new Set();
+    lastRenderedQIndex = -1;
+    saveLocal();
+    Sound.pop();
+    renderFromState(r.state);
+  } catch (e) {
+    showToast("เชื่อมต่อไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่");
+    if (btn) btn.disabled = false;
+  }
+}
+
+document.getElementById("btn-join").addEventListener("click", () => doJoin(document.getElementById("input-name").value));
+document.getElementById("input-name").addEventListener("keydown", e => { if (e.key === "Enter") doJoin(e.target.value); });
+document.getElementById("btn-rejoin").addEventListener("click", () => doJoin(document.getElementById("input-name-rejoin").value));
+document.getElementById("input-name-rejoin").addEventListener("keydown", e => { if (e.key === "Enter") doJoin(e.target.value); });
+
+/* ======================================================================
+   ส่งคำตอบ
+   ====================================================================== */
+async function submitAnswer(qIndex, choice) {
+  document.querySelectorAll("#q-choices .choice-btn").forEach(b => b.disabled = true);
+  Sound.pop();
+  try {
+    const r = await apiPost("game_submit_answer", { playerId: myPlayerId, qIndex, choice });
+    if (r.ok && r.accepted) {
+      answeredQIndex.add(qIndex);
+      showScreen("screen-answered");
+    } else if (r.ok && !r.accepted) {
+      showToast(r.reason === "หมดเวลาแล้ว" ? "⏱ หมดเวลาแล้ว รอเฉลย" : "ส่งคำตอบไม่สำเร็จ");
+      answeredQIndex.add(qIndex);
+    } else {
+      showToast(r.error || "ส่งคำตอบไม่สำเร็จ");
+      document.querySelectorAll("#q-choices .choice-btn").forEach(b => b.disabled = false);
+    }
+  } catch (e) {
+    showToast("เชื่อมต่อไม่ได้ ลองแตะคำตอบอีกครั้ง");
+    document.querySelectorAll("#q-choices .choice-btn").forEach(b => b.disabled = false);
+  }
+}
+document.querySelectorAll("#q-choices .choice-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (lastRenderedQIndex < 0) return;
+    submitAnswer(lastRenderedQIndex, parseInt(btn.dataset.idx, 10));
+  });
+});
+
+/* ======================================================================
+   นาฬิกาจับเวลาฝั่งนักเรียน (แสดงผลเฉย ๆ — เซิร์ฟเวอร์เป็นคนตัดสินเวลาจริง)
+   ====================================================================== */
+function startLocalTicker() {
+  clearInterval(localTickTimer);
+  localTickTimer = setInterval(() => {
+    const secLeft = Math.max(0, Math.ceil((currentDeadline - Date.now()) / 1000));
+    const el = document.getElementById("q-timer");
+    const fill = document.getElementById("q-timer-fill");
+    if (el) el.textContent = secLeft;
+    if (fill) fill.style.width = (currentTimePerQ > 0 ? Math.max(0, secLeft / currentTimePerQ * 100) : 0) + "%";
+  }, 250);
+}
+
+/* ======================================================================
+   Render ตามสถานะเกมล่าสุด
+   ====================================================================== */
+function renderQuestion(state) {
+  const q = CONFIG.QUESTIONS_PUBLIC[state.qIndex];
+  if (!q) { showScreen("screen-waiting"); return; }
+  currentDeadline = state.deadline;
+  currentTimePerQ = state.timePerQ;
+  if (lastRenderedQIndex !== state.qIndex) {
+    lastRenderedQIndex = state.qIndex;
+    document.getElementById("q-text").textContent = q.question;
+    const buttons = document.querySelectorAll("#q-choices .choice-btn");
+    buttons.forEach((b, i) => {
+      b.querySelector("span:last-child").textContent = q.choices[i] || "";
+      b.disabled = false;
+    });
+    startLocalTicker();
+  }
+  if (answeredQIndex.has(state.qIndex)) {
+    showScreen("screen-answered");
+  } else {
+    showScreen("screen-question");
+  }
+}
+
+function renderRevealed(state) {
+  const result = state.lastResult;
+  if (!result) { showScreen("screen-waiting"); return; }
+  const me = state.players[myPlayerId];
+  const pts = (result.scored && result.scored[myPlayerId]) || 0;
+  const answered = answeredQIndex.has(result.qIndex);
+  const icon = document.getElementById("result-icon");
+  const title = document.getElementById("result-title");
+  const pointsEl = document.getElementById("result-points");
+  if (pts > 0) {
+    icon.textContent = "🎉"; title.textContent = "ถูกต้อง!"; pointsEl.textContent = "+" + pts + " คะแนน";
+    Sound.correct();
+  } else if (answered) {
+    icon.textContent = "😅"; title.textContent = "ไม่ถูกต้อง"; pointsEl.textContent = "ลองข้อถัดไปนะ";
+    Sound.wrong();
+  } else {
+    icon.textContent = "⏱"; title.textContent = "ไม่ได้ตอบข้อนี้"; pointsEl.textContent = "รอข้อถัดไป";
+  }
+  document.getElementById("result-total-score").textContent = me ? me.score : 0;
+  showScreen("screen-revealed");
+}
+
+function renderEnded(state) {
+  const ranked = Object.keys(state.players)
+    .map(pid => ({ pid, name: state.players[pid].name, score: state.players[pid].score }))
+    .sort((a, b) => b.score - a.score);
+  const myRank = ranked.findIndex(p => p.pid === myPlayerId) + 1;
+  const me = state.players[myPlayerId];
+  const medals = { 1: "🥇", 2: "🥈", 3: "🥉" };
+  document.getElementById("ended-medal").textContent = medals[myRank] || "🏅";
+  document.getElementById("ended-rank").textContent = myRank ? ("อันดับที่ " + myRank) : "จบเกมแล้ว";
+  document.getElementById("ended-score").textContent = me ? me.score : 0;
+  document.getElementById("ended-name").textContent = myName;
+  showScreen("screen-ended");
+}
+
+function renderFromState(state) {
+  if (!state) { showScreen("screen-waiting"); return; }
+  if (myGameId && state.gameId !== myGameId) {
+    // ครูเริ่มเกมใหม่แล้ว ต้องเข้าร่วมใหม่
+    myPlayerId = null; myGameId = null;
+    document.getElementById("input-name-rejoin").value = myName || "";
+    showScreen("screen-rejoin");
+    return;
+  }
+  if (!myPlayerId || !state.players[myPlayerId]) {
+    showScreen("screen-join");
+    return;
+  }
+  document.getElementById("waiting-name-pill").textContent = "สวัสดี " + myName + " 👋";
+  if (state.phase === "lobby") { showScreen("screen-waiting"); return; }
+  if (state.phase === "question") { renderQuestion(state); return; }
+  if (state.phase === "revealed") { renderRevealed(state); return; }
+  if (state.phase === "ended") { renderEnded(state); return; }
+  showScreen("screen-waiting");
+}
+
+/* ======================================================================
+   Poll สถานะเกมทุก ๆ POLL_INTERVAL_MS
+   ====================================================================== */
+async function pollLoop() {
+  try {
+    const r = await apiGetState();
+    if (r.ok) renderFromState(r.state);
+  } catch (e) { /* เน็ตหลุดชั่วคราว ไม่ต้องแจ้งเตือนถี่เกินไป — poll รอบถัดไปจะลองใหม่เอง */ }
+}
+
+/* ======================================================================
+   INIT
+   ====================================================================== */
+(function init() {
+  if (!CONFIG.GOOGLE_SCRIPT_URL || CONFIG.GOOGLE_SCRIPT_URL.trim().length < 5) {
+    showScreen("screen-not-configured");
+    return;
+  }
+  document.getElementById("join-sub").textContent = CONFIG.SCHOOL_NAME;
+  document.getElementById("top-nav").classList.remove("hidden");
+  showTopView("trivia");
+  const saved = loadLocal();
+  if (saved && saved.playerId && saved.gameId) {
+    myPlayerId = saved.playerId; myGameId = saved.gameId; myName = saved.name || "";
+  }
+  showScreen("screen-join");
+  pollLoop();
+  pollTimer = setInterval(pollLoop, CONFIG.POLL_INTERVAL_MS);
+  retrySwotOutbox();
+})();
+</script>
+</body>
+</html>
