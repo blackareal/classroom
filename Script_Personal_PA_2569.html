@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สคริปต์นำเสนอ PA — เมทริกซ์ Mastery Learning</title>
+<style>
+  :root{
+    --navy:#1E2761;
+    --navy2:#2A3573;
+    --gold:#FFC145;
+    --ice:#CADCFC;
+    --lightbg:#F6F8FC;
+    --darktext:#1B1F3B;
+    --muted:#5B6478;
+    --card:#FFFFFF;
+    --border:#E3E8F4;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"TH Sarabun New","Sarabun","Noto Sans Thai",-apple-system,sans-serif;
+    background:var(--lightbg);
+    color:var(--darktext);
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:880px;margin:0 auto;padding:32px 24px 80px;}
+
+  header.hero{
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff;
+    border-radius:16px;
+    padding:32px 36px;
+    margin-bottom:28px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.hero::after{
+    content:"";
+    position:absolute; right:-40px; top:-40px;
+    width:180px; height:180px;
+    background:radial-gradient(circle, rgba(255,193,69,0.25) 0%, transparent 70%);
+  }
+  .eyebrow{
+    font-size:15px; letter-spacing:1px; color:var(--ice); text-transform:uppercase;
+    margin:0 0 8px;
+  }
+  h1{
+    font-size:30px; margin:0 0 10px; line-height:1.3; font-weight:700;
+  }
+  .meta{
+    display:flex; flex-wrap:wrap; gap:10px 22px; font-size:16px; color:var(--ice); margin-top:14px;
+  }
+  .meta span{display:flex; align-items:center; gap:6px;}
+  .badge-total{
+    display:inline-block; background:var(--gold); color:var(--navy);
+    font-weight:700; font-size:15px; padding:6px 14px; border-radius:999px; margin-top:16px;
+  }
+
+  .timeline{
+    display:flex; gap:4px; margin:24px 0 8px; border-radius:8px; overflow:hidden; height:10px;
+  }
+  .timeline div{height:100%;}
+
+  .section{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 26px;
+    margin-bottom:16px;
+    box-shadow:0 1px 3px rgba(30,39,97,0.05);
+  }
+  .section-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+    margin-bottom:10px; flex-wrap:wrap;
+  }
+  .slide-tag{
+    display:flex; align-items:center; gap:10px;
+  }
+  .slide-num{
+    background:var(--navy); color:#fff; font-weight:700; font-size:14px;
+    width:28px; height:28px; border-radius:8px;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .slide-title{font-size:19px; font-weight:700; color:var(--navy);}
+  .time-tag{
+    font-size:14px; color:var(--navy); background:var(--ice);
+    padding:4px 10px; border-radius:999px; font-weight:700; white-space:nowrap;
+  }
+  .script-text{
+    font-size:19px; line-height:1.85; color:var(--darktext);
+  }
+  .cue{
+    margin-top:12px; font-size:15px; color:#8A6A00; background:#FFF6DF;
+    border:1px solid #FFE49B; border-radius:8px; padding:8px 12px;
+    display:flex; gap:8px; align-items:flex-start;
+  }
+  .cue b{color:#8A6A00;}
+
+  .tips{
+    background:var(--navy); color:var(--ice); border-radius:14px;
+    padding:22px 26px; margin-top:28px;
+  }
+  .tips h2{color:#fff; font-size:19px; margin:0 0 12px;}
+  .tips ul{margin:0; padding-left:20px; line-height:1.9; font-size:16px;}
+  .tips li{margin-bottom:6px;}
+  .tips li b{color:var(--gold);}
+
+  footer{
+    text-align:center; color:var(--muted); font-size:14px; margin-top:32px;
+  }
+
+  @media print{
+    body{background:#fff;}
+    .section{box-shadow:none; break-inside:avoid;}
+    header.hero{background:var(--navy) !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .tips{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  }
+  @media (max-width:600px){
+    .page{padding:20px 14px 60px;}
+    header.hero{padding:24px 20px;}
+    h1{font-size:24px;}
+    .script-text{font-size:17px;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <p class="eyebrow">สคริปต์นำเสนอ · ข้อตกลงในการพัฒนางาน (PA) ส่วนที่ 2</p>
+    <h1>การพัฒนาผลสัมฤทธิ์ทางการเรียนเรื่องเมทริกซ์<br>โดยใช้สื่อดิจิทัลแบบ Mastery Learning</h1>
+    <div class="meta">
+      <span>👤 นายอนุพงศ์ ไชยบุตร · ครูวิทยฐานะครูชำนาญการ</span>
+      <span>🏫 โรงเรียนวังกระแสวิทยาคม · สพม.นครพนม</span>
+    </div>
+    <div class="meta">
+      <span>📅 นำเสนอวันที่ 10 กันยายน 2569</span>
+      <span>🎯 นักเรียน ม.5/1 · ค32201</span>
+    </div>
+    <span class="badge-total">⏱ ความยาวรวมประมาณ 5:12 นาที · 8 สไลด์</span>
+  </header>
+
+  <div class="timeline">
+    <div style="flex:25;  background:#8FA8E8;"></div>
+    <div style="flex:58;  background:#5A72C6;"></div>
+    <div style="flex:30;  background:var(--navy2);"></div>
+    <div style="flex:67;  background:var(--navy);"></div>
+    <div style="flex:54;  background:var(--gold);"></div>
+    <div style="flex:41;  background:#FFA93F;"></div>
+    <div style="flex:27;  background:#E08A1D;"></div>
+    <div style="flex:10;  background:var(--muted);"></div>
+  </div>
+
+  <!-- Slide 1 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="slide-tag"><span class="slide-num">1</span><span class="slide-title">เปิดการนำเสนอ</span></div>
+      <span class="time-tag">0:00 – 0:25</span>
+    </div>
+    <p class="script-text">
+      สวัสดีครับ กระผมนายอนุพงศ์ ไชยบุตร ครูวิทยฐานะครูชำนาญการ โรงเรียนวังกระแสวิทยาคม สังกัด สพม.นครพนม
+      วันนี้ขอนำเสนอผลการดำเนินงานตามข้อตกลงในการพัฒนางาน หรือ PA ส่วนที่ 2 ประเด็นท้าทาย
+      เรื่อง การพัฒนาผลสัมฤทธิ์ทางการเรียนเรื่องเมทริกซ์ โดยใช้สื่อดิจิทัลแบบ Mastery Learning
+      ของนักเรียนชั้นมัธยมศึกษาปีที่ 5/1 รายวิชาคณิตศาสตร์เพิ่มเติม 3 ภาคเรียนที่ 1 ปีการศึกษา 2569 ครับ
+    </p>
+  </div>
+
+  <!-- Slide 2 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="slide-tag"><span class="slide-num">2</span><span class="slide-title">สภาพปัญหา</span></div>
+      <span class="time-tag">0:25 – 1:23</span>
+    </div>
+    <p class="script-text">
+      ที่มาของประเด็นท้าทายนี้ เกิดจากสภาพปัญหา 2 ด้านครับ
+      ด้านแรก คือ ความพร้อมของผู้เรียนที่แตกต่างกัน นักเรียนชั้น ม.5 มีกิจกรรมของโรงเรียนค่อนข้างมาก บางคาบต้องไปร่วมกิจกรรมและไม่ได้อยู่ในห้องเรียน
+      ดังปรากฏในข้อมูลการเช็คชื่อตลอดภาคเรียน อีกทั้งบางครั้งก็มาเรียนด้วยความไม่พร้อม เช่น ง่วงหรือเหนื่อยล้าจากกิจกรรมก่อนหน้า
+      ทำให้พื้นฐานและความพร้อมของแต่ละคนไม่เท่ากัน ผมจึงอยากให้นักเรียนได้เรียนตามจังหวะของตนเอง หรือ Self-paced Learning
+      ด้านที่สอง คือ การที่นักเรียนไม่ฝึกคิดด้วยตนเอง ทั้งจากการพึ่งพาเทคโนโลยี AI และการลอกคำตอบเพื่อน
+      เพราะแบบฝึกหัดและแบบทดสอบเป็นชุดเดียวกันทั้งห้อง คะแนนจึงไม่สะท้อนความเข้าใจที่แท้จริงเป็นรายบุคคล
+      นอกจากนี้ เนื้อหาเรื่องเมทริกซ์ยังมีลักษณะเป็นลำดับขั้นต่อเนื่องกัน ตั้งแต่การคูณเมทริกซ์ ดีเทอร์มิแนนต์ ไปจนถึงเมทริกซ์ผกผัน
+      หากพลาดขั้นใดขั้นหนึ่ง จะต่อยอดขั้นถัดไปไม่ได้ แม้จะสอนเนื้อหาใหม่ไปแล้วก็ตามครับ
+    </p>
+  </div>
+
+  <!-- Slide 3 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="slide-tag"><span class="slide-num">3</span><span class="slide-title">กรอบแนวคิด — Cone of Learning</span></div>
+      <span class="time-tag">1:23 – 1:53</span>
+    </div>
+    <p class="script-text">
+      กระผมจึงนำกรอบแนวคิด Cone of Learning ของ Edgar Dale ปี 1969 มาอธิบายปัญหานี้ครับ
+      ซึ่งพบว่า ยิ่งผู้เรียนอยู่ในการเรียนรู้แบบรับ เช่น อ่าน ฟังบรรยาย หรือดูตัวอย่าง จะจดจำเนื้อหาได้เพียงร้อยละ 10 ถึง 30 เท่านั้น
+      แต่ถ้าผู้เรียนได้ลงมือทำและอธิบายให้ผู้อื่นฟังด้วยตนเอง จะจดจำได้สูงถึงร้อยละ 90
+      การสอนแบบบรรยายรวมทั้งห้องแบบเดิม จึงเป็นการเรียนรู้แบบรับที่มีอัตราการจดจำต่ำ
+      ผมจึงออกแบบระบบที่ให้ผู้เรียนต้องลงมือฝึกทำโจทย์และทำแบบทดสอบด้วยตนเองทุกขั้นตอนครับ
+    </p>
+  </div>
+
+  <!-- Slide 4 (รวมสไลด์เดิม 4-5) -->
+  <div class="section">
+    <div class="section-head">
+      <div class="slide-tag"><span class="slide-num">4</span><span class="slide-title">นวัตกรรมและวิธีดำเนินการ</span></div>
+      <span class="time-tag">1:53 – 3:00</span>
+    </div>
+    <p class="script-text">
+      นวัตกรรมที่พัฒนาขึ้น คือ ระบบ Mastery Learning ที่ชื่อ matrix.html ครับ
+      ระบบนี้แบ่งเนื้อหาออกเป็น 9 ขั้นเรียงลำดับ ตั้งแต่นิยามเมทริกซ์ไปจนถึงการแก้ระบบสมการ
+      นักเรียนต้องทำแบบทดสอบผ่านเกณฑ์ร้อยละ 80 จึงจะปลดล็อกขั้นถัดไปได้ และสามารถทำซ้ำได้ไม่จำกัดจำนวนครั้ง
+      ระบบยังเชื่อมโยงกับ Google Sheets ทำให้ผมติดตามความก้าวหน้าของนักเรียนแบบ Real-time ได้ทุกคน
+      และที่สำคัญคือ โจทย์ในแบบทดสอบและใบงานของนักเรียนแต่ละคนไม่เหมือนกัน เพื่อป้องกันการลอกคำตอบและส่งเสริมให้นักเรียนคิดเองครับ
+      ในแต่ละขั้น นักเรียนจะดำเนินการ 4 ขั้นตอนก่อนผ่านไปขั้นถัดไปครับ เริ่มจากสอนผ่าน Presentation จากนั้นศึกษาใบความรู้ด้วยตนเอง
+      แล้วทำแบบทดสอบในระบบให้ผ่านเกณฑ์ร้อยละ 80 ก่อนจะได้รับใบงานเพื่อปลดล็อกขั้นถัดไป
+      ระหว่างดำเนินการจริง ผมได้ปรับปรุงระบบอยู่ 2 เรื่องครับ
+      เรื่องแรก คือ การเพิ่มขั้นเสริม Step 2.5 เพราะพบว่านักเรียนบางส่วนติดขั้นต้น เนื่องจากพื้นฐานการบวกลบจำนวนเต็มยังไม่แน่น
+      จึงเพิ่มขั้นทบทวนแทรกไว้ระหว่างขั้น 2 กับ 3
+      เรื่องที่สอง คือ กลไก “คะแนนผู้ช่วย” ให้นักเรียนที่ผ่านขั้นสูงกว่าช่วยอธิบายเพื่อนที่ยังติดขัด
+      ซึ่งช่วยสร้างแรงจูงใจและบรรยากาศการช่วยเหลือกันเรียนรู้ในชั้นเรียนครับ
+    </p>
+    <div class="cue">🔗 <span><b>คิวสาธิตสด:</b> คลิกลิงก์ในสไลด์เพื่อเปิดหน้าระบบจริง (matrix.html) ให้กรรมการเห็นเป็นเวลาสั้น ๆ</span></div>
+  </div>
+
+  <!-- Slide 5 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="slide-tag"><span class="slide-num">5</span><span class="slide-title">ผลลัพธ์เชิงปริมาณ</span></div>
+      <span class="time-tag">3:00 – 3:54</span>
+    </div>
+    <p class="script-text">
+      สำหรับผลลัพธ์เชิงปริมาณ ข้อมูล ณ วันที่ 10 กันยายน 2569 ครับ ตัวชี้วัดหลักของผมคือความก้าวหน้าตามระบบขั้นบันได Mastery Learning
+      ซึ่งบรรลุเป้าหมายทั้งสองตัวแล้วครับ — ผู้เรียนก้าวผ่านขั้นที่ 4 การคูณเมทริกซ์ ขึ้นไปแล้ว 25 จาก 31 คน คิดเป็นร้อยละ 80.65 สูงกว่าเป้าหมายร้อยละ 70 ที่ตั้งไว้
+      และผู้เรียนก้าวถึงขั้นที่ 7 ขึ้นไปแล้ว 10 จาก 31 คน คิดเป็นร้อยละ 32.26 สูงกว่าเป้าหมายร้อยละ 20 ที่ตั้งไว้เช่นกันครับ
+      นอกจากนี้ผมยังได้ทดสอบก่อนเรียน หรือ Pre-test แบบปรนัย 20 ข้อ เป็นข้อมูลพื้นฐานเพิ่มเติมครับ
+      มีผู้เข้าสอบ 28 คน จากทั้งหมด 31 คน นักเรียน 3 คนขาดสอบเนื่องจากอัตราการเข้าเรียนต่ำมาก
+      คะแนนเฉลี่ยก่อนเรียนเท่ากับ 2.71 จาก 20 คะแนน หรือคิดเป็นร้อยละ 13.57 สะท้อนว่าผู้เรียนยังไม่มีพื้นฐานเรื่องเมทริกซ์มาก่อนเรียน สอดคล้องกับที่คาดไว้ครับ
+      ซึ่งยืนยันได้ว่าความก้าวหน้าตามขั้นบันไดที่เกิดขึ้นเป็นผลจากการจัดการเรียนรู้ตามระบบนี้จริงครับ
+    </p>
+  </div>
+
+  <!-- Slide 6 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="slide-tag"><span class="slide-num">6</span><span class="slide-title">ผลลัพธ์เชิงคุณภาพ</span></div>
+      <span class="time-tag">3:54 – 4:35</span>
+    </div>
+    <p class="script-text">
+      ในด้านผลลัพธ์เชิงคุณภาพ ข้อมูล ณ วันที่ 10 กันยายน 2569 นี้ครับ
+      ผู้เรียนแสดงความกระตือรือร้นและมีส่วนร่วมในการเรียนรู้อย่างชัดเจนตั้งแต่คาบแรกที่เริ่มใช้ระบบ Mastery Learning
+      เกิดบรรยากาศการช่วยเหลือกันเรียนรู้ผ่านกลไกคะแนนผู้ช่วย โดยผู้เรียนที่ก้าวหน้าไปก่อนสามารถอธิบายและช่วยเพื่อนที่ยังติดขัดได้ดี
+      และผู้เรียนสามารถกำกับจังหวะการเรียนรู้ของตนเองได้เหมาะสมกับความสามารถของแต่ละคน สอดคล้องกับความก้าวหน้าเชิงปริมาณที่รายงานไปก่อนหน้านี้ครับ
+      แม้ผู้เรียนบางส่วนยังอยู่ระหว่างไต่ขั้นถัดไป แต่ภาพรวมสะท้อนชัดเจนว่าระบบนี้ช่วยให้ผู้เรียนแต่ละคนก้าวหน้าได้ตามศักยภาพและจังหวะของตนเองอย่างเป็นรูปธรรมครับ
+    </p>
+    <div class="cue">🔗 <span><b>คิวสาธิตสด (ถ้ามีเวลา):</b> คลิกลิงก์เปิดบอร์ดติดตามผลจริง (mastery_m5.html) ให้กรรมการเห็นข้อมูล Real-time</span></div>
+  </div>
+
+  <!-- Slide 7 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="slide-tag"><span class="slide-num">7</span><span class="slide-title">สรุปผล</span></div>
+      <span class="time-tag">4:35 – 5:02</span>
+    </div>
+    <p class="script-text">
+      โดยสรุปครับ ผลการดำเนินการสอดคล้องกับหลักการ Mastery Learning ของ Bloom ปี 1968 อย่างชัดเจน
+      ผู้เรียนร้อยละ 80.65 ก้าวผ่านขั้นที่ 4 ขึ้นไป และร้อยละ 32.26 ก้าวถึงขั้นที่ 7 ขึ้นไป เกินเป้าหมายที่กำหนดไว้ทั้งสองตัวชี้วัด
+      ประกอบกับผู้เรียนมีส่วนร่วมและช่วยเหลือกันเรียนรู้อย่างเป็นรูปธรรมตลอดกระบวนการ ยืนยันได้ว่าการจัดการเรียนรู้แบบ Mastery Learning ช่วยให้ผู้เรียนแต่ละคนก้าวหน้าได้ตามศักยภาพและจังหวะของตนเองจริงครับ
+    </p>
+  </div>
+
+  <!-- Slide 8 -->
+  <div class="section">
+    <div class="section-head">
+      <div class="slide-tag"><span class="slide-num">8</span><span class="slide-title">ปิดการนำเสนอ</span></div>
+      <span class="time-tag">5:02 – 5:12</span>
+    </div>
+    <p class="script-text">
+      ขอบคุณครับ ยินดีรับฟังคำถามและข้อเสนอแนะจากท่านกรรมการครับ
+    </p>
+  </div>
+
+  <div class="tips">
+    <h2>💡 ข้อควรระวังก่อนขึ้นนำเสนอ</h2>
+    <ul>
+      <li><b>ซ้อมจับเวลาจริง</b> — สคริปต์นี้ยาวประมาณ 5:12 นาที ควรซ้อมอ่านออกเสียง 1–2 รอบเพื่อเช็กจังหวะจริงของตัวเอง ตัดคำเชื่อมที่ไม่จำเป็นได้หากพูดช้ากว่าที่ประเมินไว้</li>
+      <li><b>สไลด์ 5 พูดด้วยน้ำเสียงมั่นใจ</b> — ตัวชี้วัดหลัก (80.65% และ 32.26%) บรรลุเป้าหมายแล้วจริง พูดได้เต็มที่ ส่วนคะแนน Pre-test เฉลี่ยที่ต่ำ (13.57%) ไม่ใช่จุดอ่อน แต่เป็นข้อมูลพื้นฐานที่ยืนยันว่านักเรียนยังไม่เคยเรียนเนื้อหานี้มาก่อน พูดตรงไปตรงมาได้เช่นกัน ไม่ต้องขอโทษ</li>
+      <li><b>ลิงก์สาธิตสด</b> — ถ้าอินเทอร์เน็ตในห้องนำเสนอไม่เสถียร ให้ข้ามการคลิกลิงก์และพูดต่อได้เลย ไม่กระทบเนื้อหาหลัก</li>
+      <li>เตรียมคำตอบสำรองไว้ล่วงหน้า เผื่อกรรมการถามเรื่องผล Pre-test หรือเกณฑ์การให้คะแนนคะแนนผู้ช่วย</li>
+    </ul>
+  </div>
+
+  <footer>
+    สคริปต์นี้จัดทำขึ้นเพื่อประกอบการนำเสนอ PA ส่วนที่ 2 · อ้างอิงเนื้อหาให้ตรงกับสไลด์ที่ใช้จริง (นำเสนอ ประเด็นท้าทาย เมทริกซ์ ม.5 Mastery Learning.pptx)
+  </footer>
+
+</div>
+</body>
+</html>
