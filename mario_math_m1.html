@@ -606,15 +606,13 @@ function spawnQB(){
 //  HIT OBSTACLE
 // ══════════════════════════════════════════════════
 function hitObstacle(idx){
-  lives--;
-  updLives();
+  // ชนสิ่งกีดขวางแล้วไม่ลดหัวใจ — หัวใจลดเฉพาะตอบโจทย์คณิตศาสตร์ผิดเท่านั้น
   mInv=90;
   document.getElementById('mario').classList.add('hurt');
   setTimeout(()=>document.getElementById('mario').classList.remove('hurt'),500);
   ents[idx].el.remove();
   ents.splice(idx,1);
   showFb('💥');
-  if(lives<=0){ gs='over'; setTimeout(()=>showResult(),1500); showFb('💀'); }
 }
 
 // ══════════════════════════════════════════════════
