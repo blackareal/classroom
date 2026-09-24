@@ -498,6 +498,10 @@ const STEPS = [
     quiz: 'แก้ระบบสมการด้วยวิธี A⁻¹B และ Cramer\'s Rule ได้สำเร็จ' },
 ];
 
+// ── Step 10 (Finish Line — เส้นชัย / สำเร็จการศึกษา) ──
+// ไม่ใช่ขั้นเรียนจริง ไม่มีเนื้อหา/quiz — แค่โชว์รายชื่อนักเรียนที่ผ่านขั้น 9 แล้ว
+const STEP_FINISH = { id:10, emoji:'🏁', title:'เส้นชัย — สำเร็จการศึกษา', color:'#f0c000' };
+
 // ── Step 2.5 (Side Step — ทบทวนจำนวนเต็ม) ───────────
 const STEP_25 = { id:2.5, emoji:'🔢', title:'ทบทวนจำนวนเต็ม', color:'#e65100',
   topics:['บวก-ลบจำนวนเต็ม รวม double negative เช่น −2−(−3)','คูณ-หารจำนวนเต็ม (กฎเครื่องหมาย)'],
@@ -638,7 +642,7 @@ async function fetchSteps() {
 
       const s = S.students.find(x => x.no === no);
       if (!s) return;
-      s.step = Math.min(9, Math.max(0, step));
+      s.step = Math.min(10, Math.max(0, step));
       const displayName = (iNick >= 0 && row[iNick]) ? row[iNick]
                         : (iName >= 0 && row[iName]) ? row[iName]
                         : null;
@@ -703,14 +707,44 @@ function renderBoard() {
   const board = document.getElementById('board');
   board.innerHTML = '';
 
-  const STEP_IDS = [9,8,7,6,5,4,3,2.5,2,1,0];
+  const STEP_IDS = [10,9,8,7,6,5,4,3,2.5,2,1,0];
   for (const id of STEP_IDS) {
     const row   = document.createElement('div');
     row.className = 'step-row';
     const block = document.createElement('div');
     const INDENT = 40;
 
-    if (id === 0) {
+    if (id === 10) {
+      // Finish line — ไม่มีการล็อค/ปลดล็อคแบบขั้นเรียน แค่โชว์เมื่อขั้น 9 ปลดล็อคแล้ว
+      const locked = 9 > S.horizon;
+      block.className = 'step-block' + (locked ? ' locked' : '') +
+                        (S.selectedStep === 10 ? ' selected' : '');
+      block.style.marginLeft = `${9 * INDENT}px`;
+      if (locked) {
+        block.innerHTML = `
+          <div class="step-top">
+            <span class="step-emoji">🔒</span>
+            <div>
+              <div class="step-label" style="color:#555">เส้นชัย</div>
+              <div class="step-title" style="color:#444">ล็อคอยู่</div>
+            </div>
+          </div>`;
+      } else {
+        block.style.background  = `${STEP_FINISH.color}18`;
+        block.style.borderColor = `${STEP_FINISH.color}70`;
+        block.innerHTML = `
+          <div class="step-top">
+            <span class="step-emoji">${STEP_FINISH.emoji}</span>
+            <div>
+              <div class="step-label" style="color:${STEP_FINISH.color}">เส้นชัย</div>
+              <div class="step-title">${STEP_FINISH.title}</div>
+            </div>
+          </div>
+          <div class="step-avatars" id="av-10"></div>`;
+        block.onclick = () => selectStep(10);
+      }
+
+    } else if (id === 0) {
       block.className = 'step-block start-block';
       block.style.marginLeft = '0px';
       block.innerHTML = `
@@ -822,7 +856,7 @@ function renderStats() {
 
   if (counts[0]) bar.innerHTML +=
     `<div class="stat-chip"><div class="stat-dot" style="background:var(--accent)"></div>เริ่มต้น: ${counts[0]} คน</div>`;
-  for (let i = 1; i <= 7; i++) {
+  for (let i = 1; i <= 9; i++) {
     if (counts[i]) {
       const step = STEPS[i - 1];
       bar.innerHTML +=
@@ -832,8 +866,8 @@ function renderStats() {
     if (i === 2 && counts[2.5]) bar.innerHTML +=
       `<div class="stat-chip" style="border-color:${STEP_25.color}40"><div class="stat-dot" style="background:${STEP_25.color}"></div>ขั้น 2.5 🔢: ${counts[2.5]} คน</div>`;
   }
-  if (counts[7]) bar.innerHTML +=
-    `<div class="stat-chip" style="background:rgba(240,192,0,.12);border-color:var(--gold)">🏆 สำเร็จครบ: ${counts[7]} คน</div>`;
+  if (counts[10]) bar.innerHTML +=
+    `<div class="stat-chip" style="background:rgba(240,192,0,.12);border-color:var(--gold)">🏁 ผ่านเส้นชัย: ${counts[10]} คน</div>`;
 }
 
 function renderIdentityBar() {
@@ -852,7 +886,7 @@ function renderIdentityBar() {
     const me = S.students.find(s => s.no === S.myNo);
     if (me) {
       const stepLabel = me.step === 0 ? '🚀 เริ่มต้น'
-        : me.step === 7 ? '🏆 สำเร็จแล้ว!'
+        : me.step === 10 ? '🏁 ผ่านเส้นชัยแล้ว!'
         : me.step === 2.5 ? `${STEP_25.emoji} ขั้น 2.5 — ${STEP_25.title}`
         : `${STEPS[me.step-1].emoji} ขั้น ${me.step} — ${STEPS[me.step-1].title}`;
       statusEl.textContent = `✨ ฉันอยู่: ${stepLabel}`;
@@ -863,6 +897,19 @@ function renderIdentityBar() {
 }
 
 function buildDetailHTML(id) {
+  if (id === 10) {
+    const graduates = S.students.filter(s => s.step === 10);
+    const gradListHTML = graduates.length === 0
+      ? `<div style="color:var(--muted);font-size:12px;padding:4px 0">ยังไม่มีนักเรียนผ่านเส้นชัย</div>`
+      : graduates.map(s => `<div style="font-size:12px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text)">${s.no}. ${s.name}</div>`).join('');
+    return `
+      <div class="d-emoji">${STEP_FINISH.emoji}</div>
+      <div class="d-title" style="color:${STEP_FINISH.color}">${STEP_FINISH.title}</div>
+      <div class="d-sub">นักเรียนที่ทำขั้นที่ 9 สำเร็จ ครูปรับ step = 10 ใน Google Sheet ให้แล้ว</div>
+      <div class="d-section">🏁 รายชื่อผู้ผ่านเส้นชัย (${graduates.length} คน)</div>
+      ${gradListHTML}`;
+  }
+
   const here = S.students.filter(s => s.step === id);
   const studentListHTML = here.length === 0
     ? '<div style="color:var(--muted);font-size:13px;padding:6px">ไม่มีนักเรียนในขั้นนี้</div>'
