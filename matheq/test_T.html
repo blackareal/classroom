@@ -1,0 +1,227 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MathEQ — ทดสอบสาย T</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:#070b16;color:#dce8f5;font-family:'TH Sarabun New','Sarabun',system-ui,sans-serif;font-size:19px;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 14px 40px}
+h1{margin:0;font-size:26px}h2{margin:0 0 8px;font-size:22px}.sub{color:#7f93aa;font-size:15px;margin:2px 0 12px}
+.hide{display:none!important}
+.card{background:#0d1424;border:1px solid #243049;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+input,select,button{font:inherit;color:#dce8f5;background:#121a2c;border:1px solid #2a3a55;border-radius:9px;padding:8px 14px}
+input{width:100%}button{cursor:pointer}button:hover:not(:disabled){border-color:#4fa3e3}button:disabled{opacity:.5;cursor:default}
+button.pri{background:#1d5fb0;border-color:#4fa3e3;color:#fff}
+.err{color:#ff8a7a;margin-top:8px;min-height:1.3em}.muted{color:#7f93aa;font-size:16px}
+.login{max-width:420px;margin:8vh auto 0;text-align:center}.login input{text-align:center;font-size:30px;letter-spacing:8px;margin:12px 0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.demo{background:#3a2a00;color:#ffcc55;border:1px solid #7a5a00;border-radius:10px;padding:0 9px;font-size:14px;margin-left:8px}
+.deck{background:linear-gradient(#10182a,#0a0f1d);border:1px solid #243049;border-radius:14px;padding:14px}
+.lcd{font-family:'Courier New',monospace;background:#071a12;color:#4dff9a;border:1px solid #1d4a35;border-radius:6px;padding:3px 12px;font-size:24px;letter-spacing:2px;text-shadow:0 0 8px #1fd17a}.lcd small{font-size:14px;color:#2fae72;margin-left:6px}
+.eq{display:grid;grid-template-columns:repeat(9,1fr);gap:9px;align-items:end;padding:4px}
+.band{display:flex;flex-direction:column;align-items:center;min-width:0;cursor:pointer}
+.col{position:relative;display:flex;flex-direction:column-reverse;gap:3px;width:100%;max-width:64px;height:280px;padding:2px;background:#050810;border-radius:6px;border:1px solid #1a2438}
+.band:hover .col,.band.sel .col{border-color:#4fa3e3}
+.seg{flex:1;border-radius:2px;background:#111a2b;transition:background .25s}.seg.lit{box-shadow:0 0 6px currentColor}.seg.na{background:#0b101c}
+.avg{position:absolute;left:-5px;right:-5px;height:0;border-top:2px dashed #fff;opacity:.9;z-index:2}
+.lbl{margin-top:7px;font-weight:700;font-size:20px;color:#fff}.nm{font-size:14px;color:#8fa4bd;text-align:center;line-height:1.2;min-height:34px}
+.val{font-size:14px;color:#4dff9a;font-family:'Courier New',monospace;text-align:center}.val.none{color:#6b7a92}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+table.tb{width:100%;border-collapse:collapse;font-size:16px}table.tb th,table.tb td{border-bottom:1px solid #1e2a42;padding:4px 6px;text-align:center}table.tb td:first-child,table.tb th:first-child,table.tb td:nth-child(3),table.tb th:nth-child(3){text-align:left}
+table.tb th{color:#8fa4bd;position:sticky;top:0;background:#0d1424}
+.cell{display:inline-block;min-width:34px;border-radius:5px;padding:0 4px;font-family:'Courier New',monospace}
+.sc0{background:#1a2438;color:#6b7a92}.sc1{background:#5a2a20;color:#ffb09a}.sc2{background:#5a4a14;color:#ffe08a}.sc3{background:#14502f;color:#7dffb4}
+@media(max-width:700px){.eq{gap:3px}.col{height:200px}.nm{font-size:11px}}
+.tcard{background:#f3f6fb;color:#1a2233;border-radius:16px;padding:18px 20px;margin-bottom:14px;font-size:21px;line-height:1.45}
+.tcard .muted{color:#5b6b82}
+.tcard button{background:#0d47a1;color:#fff;border:0;border-radius:12px;padding:10px 18px}.tcard button.skip{background:#fff;color:#7a869a;border:1px solid #c9d6ea}
+.tcard input[type=text]{background:#fff;color:#1a2233;border:2px solid #c9d6ea;border-radius:10px;width:auto}
+.q{font-size:25px;margin:6px 0 14px}
+.ch{display:block;width:100%;text-align:left;background:#f5f8fe!important;color:#1a2233!important;border:2px solid #d3def2!important;margin:8px 0;padding:11px 14px!important}
+.ch:hover:not(:disabled){border-color:#0d47a1!important}.ch.ok{background:#c9efd5!important;border-color:#2e9b55!important}.ch.no{background:#ffd9d6!important;border-color:#d65a50!important}
+.tcard .row input{flex:1;min-width:140px}
+.fb{margin-top:12px;padding:10px 14px;border-radius:12px}.fb.ok{background:#e4f6ea}.fb.no{background:#fdeceb}
+.big{font-size:32px;font-weight:700;color:#0d47a1}
+.fr{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;line-height:1.1;margin:0 2px}.fr span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+table.mx{display:inline-table;border-left:2px solid #1a2233;border-right:2px solid #1a2233;border-radius:6px;margin:0 6px;vertical-align:middle;border-collapse:collapse}table.mx td{padding:1px 8px;text-align:center}
+table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px solid #aab;padding:2px 12px;text-align:center}
+.ladder{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{min-width:44px;text-align:center;padding:3px 9px;border-radius:9px;background:#e4e9f2;color:#6b7a92;font-size:16px;border:2px solid transparent}.chip.pass{background:#c9efd5;color:#12692f}.chip.fail{background:#ffd9d6;color:#a3261d}
+</style></head><body><div class="wrap">
+<div id="vTest">
+ <div class="row" style="margin-bottom:10px"><button id="btnQuit">← กลับ MathEQ</button><span class="muted" id="tTitle"></span></div>
+ <div id="tIntro" class="tcard"></div>
+ <div id="tQ" class="hide"><div class="tcard"><div class="muted" id="stepName"></div><div class="q" id="q"></div><div id="ans"></div><div id="fb"></div></div></div>
+ <div id="tR" class="hide">
+  <div class="tcard"><div class="muted" id="rSub"></div><div class="big" id="rTitle"></div><p id="rDesc"></p><div class="ladder" id="rLadder"></div><div class="muted" id="saveSt"></div></div>
+  <div class="tcard"><b>จุดที่ควรทบทวน</b><div id="rWrong"></div></div>
+  <div class="row"><button class="pri" id="btnHome">กลับ MathEQ</button></div>
+ </div>
+</div>
+
+
+</div>
+<script>
+const SID="T";
+let API_URL="";try{API_URL=sessionStorage.getItem("matheq_api")||""}catch(e){}
+const DEMO=!API_URL;
+let TOKEN=null;try{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token}catch(e){}
+if(!TOKEN){location.replace("MathEQ.html")}
+// ===== คลังข้อสอบสาย N (สร้างข้อจากเลขสุ่ม) =====
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+const SUP={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'};
+const sup=n=>String(n).split('').map(c=>SUP[c]).join('');
+const sgn=n=>n<0?'−'+(-n):''+n;                       // แสดงเครื่องหมายลบแบบ −
+const par=n=>n<0?'(−'+(-n)+')':''+n;                  // ใส่วงเล็บถ้าติดลบ
+const frac=(n,d)=>{const g=gcd(n,d);n/=g;d/=g;return d===1?String(n):n+'/'+d};
+const fh=(n,d)=>`<span class="fr"><span>${n}</span><span>${d}</span></span>`;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=R(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
+// mc: correct + wrongs [{t,tag}]
+function MC(q,ans,wrongs,exp){
+  const seen=new Set([String(ans)]);const w=[];
+  for(const x of wrongs){const k=String(x.t);if(!seen.has(k)){seen.add(k);w.push(x)}}
+  const fill=[];let i=1;while(w.length+fill.length<3){const t=typeof ans==='number'?ans+i*(i%2?1:-1)*R(1,3):ans+'?'.repeat(i);const k=String(t);if(!seen.has(k)){seen.add(k);fill.push({t,tag:'คำนวณคลาดเคลื่อน'})}i++}
+  const ch=shuffle([{t:ans,ok:1},...w.slice(0,3).concat(fill).slice(0,3)]);
+  return {type:'mc',q,ans,choices:ch,exp};
+}
+// num: ตอบพิมพ์ — hints [{v,tag}] เฉพาะคำตอบผิดที่พบบ่อย
+function NUM(q,ans,hints,exp){return {type:'num',q,ans:String(ans),hints:hints||[],exp}}
+
+
+const TB=(head,rows)=>`<table class="t"><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</table>`;
+const TFL=['จริง','เท็จ','ไม่สามารถบอกได้','ไม่เป็นทั้งจริงและเท็จ'];
+function TF(q,v,exp,tag){const ok=v?'จริง':'เท็จ';return MC(q,ok,TFL.filter(x=>x!==ok).map(x=>({t:x,tag:x===(v?'เท็จ':'จริง')?(tag||'ประเมินค่าความจริงผิด'):'ทุกประพจน์มีค่าความจริงแน่นอน'})),exp)}
+const sgx=n=>n<0?`− ${-n}`:`+ ${n}`;
+const pt=(a,b)=>`(${sgn(a)}, ${sgn(b)})`;
+const sg=n=>n<0?`− ${-n}`:`+ ${n}`;
+
+const META={sid:'T',name:'ตรีโกณมิติ',base:'ตอนนี้ควรเริ่มซ่อมจากขั้น T1 (อัตราส่วนตรีโกณมิติในสามเหลี่ยมมุมฉาก) ก่อน แล้วค่อยไล่ขึ้นไปทีละขั้น',note:p=>p.length>=2?'ขั้น T2 ขึ้นไปเป็นเนื้อหาของ ม.5 (รายวิชาเพิ่มเติม)':''};
+const TRI=[[3,4,5],[5,12,13],[8,15,17],[7,24,25]];
+// ค่ามุมพิเศษ: sin,cos,tan ของ 0..360 (มุมอ้างอิง 30,45,60) เป็นสตริงเทียบได้
+const BASEV={sin:{0:'0',30:'1/2',45:'√2/2',60:'√3/2',90:'1'},cos:{0:'1',30:'√3/2',45:'√2/2',60:'1/2',90:'0'},tan:{0:'0',30:'√3/3',45:'1',60:'√3'}};
+function sgnQ(fn,d){d=((d%360)+360)%360;const q=d<90?1:d<180?2:d<270?3:4;if(fn==='sin')return q<=2?1:-1;if(fn==='cos')return(q===1||q===4)?1:-1;return(q===1||q===3)?1:-1}
+function refA(d){d=((d%360)+360)%360;if(d<=90)return d;if(d<=180)return 180-d;if(d<=270)return d-180;return 360-d}
+function valS(fn,d){const r=refA(d);const b=BASEV[fn][r];if(b===undefined)return null;if(b==='0')return '0';const s=sgnQ(fn,d);return (s<0?'−':'')+b}
+var STEPS=[
+{id:'T1',name:'อัตราส่วนตรีโกณมิติในสามเหลี่ยมมุมฉาก',gen:[
+ ()=>{const [o,a,h]=pick(TRI);const ang=pick(['A','B']);const op=ang==='A'?o:a,ad=ang==='A'?a:o;const fn=pick(['sin','cos','tan']);const num=fn==='tan'?op:fn==='sin'?op:ad,den=fn==='tan'?ad:h;return NUM(`สามเหลี่ยม ABC มีมุม C เป็นมุมฉาก AC = ${ang==='A'?a:o}, BC = ${ang==='A'?o:a}, AB = ${h} แล้ว ${fn} ${ang} = ?  (ตอบเป็นเศษส่วน)`,frac(num,den),[{v:frac(fn==='sin'?ad:fn==='cos'?op:ad,fn==='tan'?op:h),tag:'ใช้ด้านผิดคู่ (ตรงข้าม/ประชิด/ด้านตรงข้ามมุมฉาก)'}],`${fn} = ${fn==='tan'?'ตรงข้าม/ประชิด':fn==='sin'?'ตรงข้าม/ด้านตรงข้ามมุมฉาก':'ประชิด/ด้านตรงข้ามมุมฉาก'}`)},
+ ()=>{const items=[['sin 30°','1/2'],['cos 60°','1/2'],['tan 45°','1'],['sin 45°','√2/2'],['cos 45°','√2/2'],['sin 60°','√3/2'],['cos 30°','√3/2'],['tan 60°','√3'],['tan 30°','√3/3']];const it=pick(items);const pool=['1/2','1','√2/2','√3/2','√3','√3/3'].filter(x=>x!==it[1]);return MC(`${it[0]} มีค่าเท่ากับข้อใด`,it[1],shuffle(pool).slice(0,3).map(x=>({t:x,tag:'จำค่ามุมพิเศษสลับ sin กับ cos'})),'ค่ามุมพิเศษ 30°, 45°, 60°')},
+ ()=>{const x=R(3,12);return NUM(`สามเหลี่ยมมุมฉากมีมุม 30° ด้านตรงข้ามมุม 30° ยาว ${x} หน่วย ด้านตรงข้ามมุมฉากยาวกี่หน่วย`,2*x,[{v:x/2,tag:'สลับว่าด้านตรงข้ามมุม 30° คือครึ่งหนึ่งของด้านตรงข้ามมุมฉาก'}],'sin 30° = ½ → ด้านตรงข้ามมุมฉาก = 2 เท่า')},
+ ()=>{let a;do{a=R(10,80)}while(a===45);return NUM(`ถ้า sin ${a}° = cos x° เมื่อ 0 < x < 90 แล้ว x เท่ากับเท่าใด`,90-a,[{v:a,tag:'ลืมว่า sin θ = cos(90° − θ)'}],'sin θ = cos(90° − θ)')}]},
+{id:'T2',name:'วงกลมหนึ่งหน่วย เรเดียน',gen:[
+ ()=>{const p=[[30,'π/6'],[45,'π/4'],[60,'π/3'],[90,'π/2'],[120,'2π/3'],[135,'3π/4'],[150,'5π/6'],[180,'π'],[270,'3π/2']];const it=pick(p);const pool=p.map(x=>x[1]).filter(x=>x!==it[1]);return MC(`${it[0]}° เท่ากับกี่เรเดียน`,it[1],shuffle(pool).slice(0,3).map(x=>({t:x,tag:'แปลงองศาเป็นเรเดียนผิด (ใช้ 180° = π)'})),`${it[0]}° = ${it[0]}π/180`)},
+ ()=>{const p=[['π/6',30],['π/4',45],['π/3',60],['π/2',90],['2π/3',120],['3π/4',135],['5π/6',150],['3π/2',270]];const it=pick(p);return NUM(`${it[0]} เรเดียน เท่ากับกี่องศา`,it[1],[{v:it[1]===90?180:it[1]*2,tag:'ใช้ตัวคูณแปลงผิด'}],'คูณด้วย 180/π')},
+ ()=>{const Q=[[1,'sin θ > 0, cos θ > 0'],[2,'sin θ > 0, cos θ < 0'],[3,'sin θ < 0, cos θ < 0'],[4,'sin θ < 0, cos θ > 0']];const q=R(1,4);return MC(`ถ้ามุม θ อยู่ในจตุภาคที่ ${q} ข้อใดถูกต้อง`,Q[q-1][1],Q.filter(x=>x[0]!==q).map(x=>({t:x[1],tag:'เครื่องหมายของ sin/cos ในแต่ละจตุภาคไม่ถูก'})),'จตุภาค 1: ทั้งคู่บวก 2: sin บวก 3: ทั้งคู่ลบ 4: cos บวก')},
+ ()=>{const fn=pick(['sin','cos']);const d=pick([120,135,150,210,225,240,300,315,330]);const v=valS(fn,d);const pool=['1/2','−1/2','√2/2','−√2/2','√3/2','−√3/2'].filter(x=>x!==v);const flip=v[0]==='−'?v.slice(1):'−'+v;return MC(`${fn} ${d}° มีค่าเท่ากับข้อใด`,v,[{t:flip,tag:'ผิดเครื่องหมายตามจตุภาค'},...shuffle(pool.filter(x=>x!==flip)).slice(0,2).map(x=>({t:x,tag:'ใช้มุมอ้างอิงผิด'}))],`มุมอ้างอิง ${refA(d)}° เครื่องหมายตามจตุภาค`)}]},
+{id:'T3',name:'ฟังก์ชันตรีโกณมิติอื่น และค่ามุมพิเศษ',gen:[
+ ()=>{const it=pick([['sec 60°','2'],['csc 30°','2'],['cot 45°','1'],['sec 45°','√2'],['csc 45°','√2'],['cot 30°','√3'],['cot 60°','√3/3']]);const pool=['1','2','√2','√3','√3/3','1/2'].filter(x=>x!==it[1]);return MC(`${it[0]} มีค่าเท่ากับข้อใด`,it[1],shuffle(pool).slice(0,3).map(x=>({t:x,tag:'ใช้ค่ากลับกันผิด (secant/cosecant/cotangent)'})),'ใช้ส่วนกลับ: sec=1/cos, csc=1/sin, cot=1/tan')},
+ ()=>{const f=pick([['sec θ','1/cos θ'],['csc θ','1/sin θ'],['cot θ','cos θ / sin θ']]);const all=['1/cos θ','1/sin θ','1/tan θ','sin θ / cos θ'];return MC(`${f[0]} เท่ากับข้อใด`,f[1],all.filter(x=>x!==f[1]&&!(f[0]==='cot θ'&&x==='1/tan θ')).slice(0,3).map(x=>({t:x,tag:'สับสนนิยามของ sec/csc/cot'})),'sec=1/cos, csc=1/sin, cot=cos/sin')},
+ ()=>{const d=pick([135,225,315,120,150]);const v=valS('tan',d);const pool=['1','−1','√3','−√3','√3/3','−√3/3'].filter(x=>x!==v);return MC(`tan ${d}° มีค่าเท่ากับข้อใด`,v,shuffle(pool).slice(0,3).map(x=>({t:x,tag:'ผิดเครื่องหมายหรือมุมอ้างอิงของ tan'})),'tan = sin/cos')},
+ ()=>{const a=pick([['sin 90°',1],['cos 0°',1],['sin 180°',0],['cos 90°',0],['cos 180°',-1],['sin 270°',-1],['cos 270°',0]]),b=pick([['sin 90°',1],['cos 0°',1],['cos 180°',-1],['sin 270°',-1],['sin 0°',0]]);const op=pick(['+','−']);const val=op==='+'?a[1]+b[1]:a[1]-b[1];return NUM(`${a[0]} ${op} ${b[0]} มีค่าเท่าใด`,val,[{v:op==='+'?a[1]-b[1]:a[1]+b[1],tag:'ใช้เครื่องหมายผิดเมื่อค่าเป็นลบ'}].filter(h=>h.v!==val),'แทนค่า sin/cos ของมุมบนแกน')}]},
+{id:'T4',name:'กราฟฟังก์ชันตรีโกณมิติ',gen:[
+ ()=>{let a,b;do{a=pick([2,3,4,5]);b=pick([2,3])}while(a===b);return NUM(`กราฟ y = ${a} sin ${b}x มีแอมพลิจูด (ค่าสูงสุดจากแกนกลาง) เท่ากับเท่าใด`,a,[{v:b,tag:'สับสนแอมพลิจูดกับสัมประสิทธิ์ภายใน x'},{v:a*b,tag:'คูณสัมประสิทธิ์ทั้งสองแทนที่จะดูตัวหน้า'}],'แอมพลิจูด = |ตัวคูณหน้า sin|')},
+ ()=>{const b=pick([2,3,4]);const per={2:'π',3:'2π/3',4:'π/2'}[b];const all=['π','2π/3','π/2','2π','4π','π/3'].filter(x=>x!==per);return MC(`กราฟ y = sin ${b}x มีคาบเท่ากับข้อใด`,per,shuffle(all).slice(0,3).map(x=>({t:x,tag:'หาคาบผิด (คาบ = 2π ÷ สัมประสิทธิ์ของ x)'})),`คาบ = 2π/${b}`)},
+ ()=>{const a=pick([2,3,4]),c=pick([-3,-2,-1,1,2,3]);return NUM(`ค่าสูงสุดของ y = ${a} sin x ${sg(c)} เท่ากับเท่าใด`,a+c,[{v:-a+c,tag:'ตอบค่าต่ำสุดแทนค่าสูงสุด'},{v:a,tag:'ลืมการเลื่อนขึ้น/ลงด้วยค่าคงที่'}].filter(h=>h.v!==a+c),'ค่าสูงสุด = |a| + c')},
+ ()=>{const a=pick([2,3,4]),c=pick([-2,-1,1,2]);const pt=pick([['π/2',a+c],['3π/2',-a+c],['0',c]]);return NUM(`ถ้า y = ${a} sin x ${sg(c)} ค่า y เมื่อ x = ${pt[0]} เท่ากับเท่าใด`,pt[1],[{v:pt[0]==='3π/2'?a+c:pt[0]==='π/2'?-a+c:a+c,tag:'ค่า sin ที่มุมบนแกนผิด'}].filter(h=>h.v!==pt[1]),'sin 0 = 0, sin π/2 = 1, sin 3π/2 = −1')}]},
+{id:'T5',name:'เอกลักษณ์ตรีโกณมิติ',gen:[
+ ()=>{const [o,a,h]=pick(TRI.slice(0,3));const fn=pick(['sin','cos']);const given=fn==='sin'?o:a,ask=fn==='sin'?a:o;return NUM(`ถ้า ${fn} θ = ${given}/${h} และ θ อยู่ในจตุภาคที่ 1 แล้ว ${fn==='sin'?'cos':'sin'} θ เท่ากับเท่าใด`,frac(ask,h),[{v:frac(h*h-given*given,h*h),tag:'ลืมถอดรากที่สองหลังใช้ sin²θ + cos²θ = 1'}],'sin²θ + cos²θ = 1')},
+ ()=>{const f=pick([['sin(A + B)','sin A cos B + cos A sin B'],['cos(A + B)','cos A cos B − sin A sin B'],['sin(A − B)','sin A cos B − cos A sin B'],['cos(A − B)','cos A cos B + sin A sin B']]);const all=['sin A cos B + cos A sin B','cos A cos B − sin A sin B','sin A cos B − cos A sin B','cos A cos B + sin A sin B','sin A + sin B'];return MC(`${f[0]} เท่ากับข้อใด`,f[1],all.filter(x=>x!==f[1]).slice(0,3).map(x=>({t:x,tag:'จำสูตรผลบวก/ผลต่างของมุมสลับกัน'})),'สูตรผลบวก/ผลต่างของมุม')},
+ ()=>{const [o,a,h]=pick(TRI.slice(0,3));return NUM(`ถ้า sin θ = ${o}/${h} และ cos θ = ${a}/${h} แล้ว sin 2θ เท่ากับเท่าใด`,frac(2*o*a,h*h),[{v:frac(2*o,h),tag:'ลืมคูณ cos θ ในสูตร sin 2θ = 2 sin θ cos θ'}],'sin 2θ = 2 sin θ cos θ')},
+ ()=>{const [o,a,h]=pick(TRI.slice(0,3));return NUM(`ถ้า sin θ = ${o}/${h} แล้ว cos 2θ = 1 − 2sin²θ เท่ากับเท่าใด`,frac(h*h-2*o*o,h*h),[{v:frac(h-2*o,h),tag:'ลืมยกกำลังสองของ sin θ'}],'cos 2θ = 1 − 2sin²θ')}]},
+{id:'T6',name:'ตัวผกผันและสมการตรีโกณมิติ',gen:[
+ ()=>{const it=pick([['sin⁻¹(1/2)',30],['cos⁻¹(1/2)',60],['tan⁻¹(1)',45],['sin⁻¹(1)',90],['cos⁻¹(0)',90],['sin⁻¹(0)',0]]);return NUM(`${it[0]} มีค่ากี่องศา`,it[1],[{v:90-it[1],tag:'สับสน sin⁻¹ กับ cos⁻¹ (มุมประกอบ)'}].filter(h=>h.v!==it[1]),'ค่าหลักของฟังก์ชันผกผัน')},
+ ()=>{const T=[['sin x = 1/2',[30,150]],['cos x = 1/2',[60,300]],['sin x = −1/2',[210,330]],['cos x = −1/2',[120,240]],['tan x = 1',[45,225]]];const t=pick(T);const [p,q]=t[1];const cand=[`x = ${p}° เท่านั้น`,`x = ${p}° หรือ x = ${(360-p)%360}°`,`x = ${p}° หรือ x = ${180-p}°`,`x = ${q}° เท่านั้น`,`x = ${p}° หรือ x = ${p+90}°`];const ok=`x = ${p}° หรือ x = ${q}°`;const w=cand.filter(x=>x!==ok&&!(x.includes(`${q}°`)&&x.includes(`${p}°`)));return MC(`คำตอบของ ${t[0]} เมื่อ 0° ≤ x < 360° คือข้อใด`,ok,shuffle(w).slice(0,3).map(x=>({t:x,tag:'ลืมคำตอบอื่นในช่วงที่กำหนด หรือใช้จตุภาคผิด'})),'ตรวจเครื่องหมายของฟังก์ชันในแต่ละจตุภาคเพื่อหาคำตอบทุกค่า')},
+ ()=>{const [o,a,h]=pick(TRI.slice(0,3));return NUM(`cos(sin⁻¹(${o}/${h})) เท่ากับเท่าใด`,frac(a,h),[{v:frac(o,h),tag:'ตอบค่า sin เดิมแทน cos'}],'สร้างสามเหลี่ยมมุมฉากจากค่า sin')},
+ ()=>{const it=pick([['sin x = 1/2',2],['sin x = 1',1],['sin x = 2',0],['cos x = −1',1],['cos x = 3/2',0],['sin x = −1',1]]);return NUM(`สมการ ${it[0]} มีกี่คำตอบ เมื่อ 0° ≤ x < 360°`,it[1],[{v:it[1]===1?2:1,tag:'นับจำนวนคำตอบในช่วงผิด'}],'ตรวจว่าค่าอยู่ในช่วง [−1, 1] แล้วนับมุมที่ได้ค่านั้น')}]},
+{id:'T7',name:'กฎไซน์และกฎโคไซน์',gen:[
+ ()=>{const it=pick([['มีด้านสองด้านและมุมระหว่างด้านทั้งสอง (ด.ม.ด.)','กฎโคไซน์'],['มีมุมสองมุมและด้านหนึ่งด้าน','กฎไซน์'],['มีด้านครบสามด้าน','กฎโคไซน์'],['มีด้านสองด้านและมุมตรงข้ามด้านหนึ่ง','กฎไซน์']]);const other=it[1]==='กฎไซน์'?'กฎโคไซน์':'กฎไซน์';return MC(`สามเหลี่ยม${it[0]} ต้องการหาองค์ประกอบที่เหลือ ควรเลือกใช้กฎใดเป็นอันดับแรก`,it[1],[{t:other,tag:'เลือกกฎไม่ถูกกับข้อมูลที่โจทย์ให้'},{t:'ทฤษฎีบทพีทาโกรัสเสมอ',tag:'พีทาโกรัสใช้ได้เฉพาะสามเหลี่ยมมุมฉาก'},{t:'ไม่มีกฎใดใช้ได้',tag:''}],'ไซน์: มีคู่มุม–ด้านตรงข้าม; โคไซน์: ด.ม.ด. หรือ ด.ด.ด.')},
+ ()=>{const a=R(2,9),b=R(2,9);const C=pick([60,90,120]);const c2=C===90?a*a+b*b:C===60?a*a+b*b-a*b:a*a+b*b+a*b;const hint=C===90?(a+b)*(a+b):C===60?a*a+b*b+a*b:a*a+b*b-a*b;return NUM(`สามเหลี่ยมมีด้าน a = ${a}, b = ${b} และมุม C = ${C}° ระหว่างด้านทั้งสอง แล้ว c² เท่ากับเท่าใด`,c2,[{v:hint,tag:'ใช้เครื่องหมายผิดในกฎโคไซน์ (cos 120° ติดลบ, cos 60° บวก)'}].filter(h=>h.v!==c2),'c² = a² + b² − 2ab cos C')},
+ ()=>{const a=R(2,8)*2;const sw=pick([[30,90],[90,30]]);const b=a*(sw[1]===90?2:1)/(sw[0]===90?2:1);/* b = a sinB / sinA */const sinv=x=>x===30?0.5:1;const bb=a*sinv(sw[1])/sinv(sw[0]);return NUM(`สามเหลี่ยม ABC มี a = ${a} ตรงข้ามมุม A = ${sw[0]}° และมุม B = ${sw[1]}° แล้ว b เท่ากับเท่าใด`,bb,[{v:a,tag:'ลืมใช้อัตราส่วน sin B / sin A'}].filter(h=>h.v!==bb),'a/sin A = b/sin B')},
+ ()=>{const R0=R(3,12);return NUM(`สามเหลี่ยม ABC มีด้านตรงข้ามมุม A ยาว ${2*R0} และ ∠A = 90° แล้วรัศมีวงกลมล้อมรอบสามเหลี่ยมยาวเท่าใด (R = a / (2 sin A))`,R0,[{v:2*R0,tag:'ลืมหารสองในสูตร R = a/(2 sin A)'}],'sin 90° = 1')}]},
+{id:'T8',name:'โจทย์ระยะทางและความสูง',gen:[
+ ()=>{const L=2*R(3,10);return NUM(`บันไดยาว ${L} เมตร พิงกำแพงทำมุม 30° กับพื้น ปลายบันไดสูงจากพื้นกี่เมตร`,L/2,[{v:L,tag:'สับสนด้านตรงข้ามมุม 30° กับด้านตรงข้ามมุมฉาก'}],'สูง = L sin 30° = L/2')},
+ ()=>{const d=R(10,40),e=R(1,2);return NUM(`ยืนห่างอาคาร ${d} เมตร มองยอดอาคารเป็นมุมเงย 45° ระดับสายตาสูง ${e} เมตร อาคารสูงกี่เมตร`,d+e,[{v:d,tag:'ลืมบวกความสูงระดับสายตา'}],'tan 45° = 1 จึงสูงจากระดับสายตา = d')},
+ ()=>{const a=pick([20,25,30,35,40,50]);return NUM(`จากยอดตึกมองรถที่จอดอยู่ด้วยมุมก้ม ${a}° มุมเงยจากรถมองยอดตึกเท่ากับกี่องศา`,a,[{v:90-a,tag:'สับสนมุมก้ม–มุมเงยกับมุมประกอบ'}],'มุมก้มเท่ากับมุมเงยสลับ (มุมแย้ง)')},
+ ()=>{const [a,b,c]=pick([[5,12,13],[8,15,17],[3,4,5]]);return NUM(`บันไดยาว ${c} เมตร ฐานบันไดห่างกำแพง ${a} เมตร ปลายบันไดสูงจากพื้นกี่เมตร`,b,[{v:c-a,tag:'ลบแทนการใช้พีทาโกรัส'}],`สูง² = ${c}² − ${a}²`)}]},
+];
+
+const STR=[{"id":"N","name":"จำนวน","steps":[["N1","จำนวนนับ ทศนิยม เศษส่วนระดับประถม (คิดเลข 4 ประการให้คล่อง)"],["N2","จำนวนเต็ม: ความหมาย เส้นจำนวน การเปรียบเทียบ"],["N3","บวก-ลบจำนวนเต็ม"],["N4","คูณ-หารจำนวนเต็ม (กฎเครื่องหมาย) และลำดับการดำเนินการ"],["N5","ทศนิยมและเศษส่วน: เปรียบเทียบ + บวก ลบ คูณ หาร"],["N6","จำนวนตรรกยะ (เศษส่วน ทศนิยมซ้ำ ทศนิยมจำกัด)"],["N7","เลขยกกำลัง (เลขชี้กำลังจำนวนเต็ม) และสมบัติ aᵐ·aⁿ, aᵐ÷aⁿ, (aᵐ)ⁿ"],["N8","สัญกรณ์วิทยาศาสตร์"],["N9","จำนวนจริง: รากที่สอง รากที่สาม จำนวนอตรรกยะ"],["N10","การดำเนินการของราก (ทำให้เป็นรูปอย่างง่าย บวก ลบ คูณ)"],["N11","เลขชี้กำลังตรรกยะ / รากที่ n"],["N12","จำนวนเชิงซ้อน กราฟ ค่าสัมบูรณ์ และรูปเชิงขั้ว (ค32202)"]]},{"id":"A","name":"พีชคณิต","steps":[["A1","นิพจน์พีชคณิต: ตัวแปร สัมประสิทธิ์ การแทนค่า"],["A2","สมการเชิงเส้นตัวแปรเดียว"],["A3","อัตราส่วน สัดส่วน ร้อยละ"],["A4","พหุนาม: บวก ลบ คูณ"],["A5","แยกตัวประกอบ: ตัวร่วม ผลต่างกำลังสอง กำลังสองสมบูรณ์"],["A6","ระบบสมการเชิงเส้นสองตัวแปร (กราฟ แทนที่ กำจัด)"],["A7","โจทย์ปัญหาระบบสมการ (ตั้งสมการจากข้อความ)"],["A8","สมการกำลังสองตัวแปรเดียว"],["A9","อสมการและค่าสัมบูรณ์"],["A10","ลำดับและอนุกรม (เลขคณิต เรขาคณิต)"],["A11","ดอกเบี้ยและมูลค่าของเงิน"]]},{"id":"F","name":"กราฟ/ฟังก์ชัน","steps":[["F1","ระบบพิกัดฉาก (อ่านและพล็อตจุด)"],["F2","กราฟสมการเชิงเส้น: ความชัน จุดตัดแกน"],["F3","เส้นขนาน เส้นตั้งฉาก และการเขียนสมการเส้นตรง"],["F4","ความสัมพันธ์และฟังก์ชัน: โดเมน เรนจ์ กราฟ"],["F5","ฟังก์ชันกำลังสองและกราฟพาราโบลา (จุดยอด ค่าสูงสุด/ต่ำสุด)"],["F6","ฟังก์ชันเอกซ์โพเนนเชียลและลอการิทึม (รายวิชาเพิ่มเติม)"]]},{"id":"D","name":"เรขาคณิต","steps":[["D1","รูปเรขาคณิตสองมิติ: มุม สามเหลี่ยม สี่เหลี่ยม"],["D2","การสร้างทางเรขาคณิต (ส่วนของเส้นตรง มุม สามเหลี่ยม)"],["D3","เส้นรอบรูปและพื้นที่: สามเหลี่ยม สี่เหลี่ยม วงกลม"],["D4","รูปสามมิติ: ปริซึม พีระมิด ทรงกระบอก — พื้นที่ผิวและปริมาตร"],["D5","ทฤษฎีบทพีทาโกรัสและบทกลับ"],["D6","ความเท่ากันทุกประการและการให้เหตุผลทางเรขาคณิต"],["D7","ความคล้ายของรูปเรขาคณิต"],["D8","พื้นที่ผิวและปริมาตรกรวย ทรงกลม"],["D9","วงกลม (มุมที่จุดศูนย์กลาง คอร์ด เส้นสัมผัส)"],["D10","เส้นขนาน มุมภายใน และสมบัติของสามเหลี่ยม"],["D11","การแปลงทางเรขาคณิต (เลื่อน สะท้อน หมุน)"],["D12","ภาคตัดกรวย: จุด เส้นตรง วงกลม พาราโบลา วงรี ไฮเพอร์โบลา"],["D13","เวกเตอร์ในสามมิติ (บวก ลบ สเกลาร์ dot/cross)"]]},{"id":"T","name":"ตรีโกณ","steps":[["T1","อัตราส่วนตรีโกณมิติของมุมแหลม (sin cos tan ในสามเหลี่ยมมุมฉาก)"],["T2","วงกลมหนึ่งหน่วย เรเดียน ฟังก์ชันไซน์-โคไซน์ของมุมใด ๆ"],["T3","ฟังก์ชันอื่น (tan cot sec csc) และค่ามุมพิเศษ"],["T4","กราฟฟังก์ชันตรีโกณมิติ (คาบ แอมพลิจูด)"],["T5","เอกลักษณ์ตรีโกณมิติ และผลบวก/ผลต่างของมุม"],["T6","ตัวผกผันของฟังก์ชันตรีโกณมิติ และสมการตรีโกณมิติ"],["T7","กฎไซน์และกฎโคไซน์"],["T8","โจทย์ระยะทางและความสูง"]]},{"id":"S","name":"สถิติ","steps":[["S0","อ่านตารางและแผนภาพง่าย ๆ + อัตราส่วน"],["S1","ความหมายสถิติศาสตร์ ประเภทข้อมูล ประชากร/ตัวอย่าง/ตัวแปร"],["S2","การนำเสนอ: ตาราง แผนภาพแท่ง วงกลม เส้น และการเลือกกราฟ"],["S3","ตารางแจกแจงความถี่ ฮิสโทแกรม ฟรีเควนซีโพลิกอน โอไจฟ์"],["S4","ค่ากลาง: ค่าเฉลี่ย มัธยฐาน ฐานนิยม (รวมถ่วงน้ำหนัก ∑fx/∑f)"],["S5","การกระจาย: พิสัย ส่วนเบี่ยงเบนมาตรฐาน (σ และ s)"],["S6","การแปลความหมายและวิจารณ์ผลสรุปทางสถิติ"],["S7","ความน่าจะเป็นเบื้องต้น (การนับ ปริภูมิตัวอย่าง เหตุการณ์)"],["S8","ตัวแปรสุ่มและการแจกแจงความน่าจะเป็น (ไม่ต่อเนื่อง/ต่อเนื่อง) — ค33202"]]},{"id":"L","name":"เซต/ตรรกะ","steps":[["L1","เซต: สมาชิก เซตจำกัด/อนันต์ การเท่ากัน เอกภพสัมพัทธ์"],["L2","สับเซต เพาเวอร์เซต แผนภาพเวนน์-ออยเลอร์"],["L3","การดำเนินการของเซต (∪ ∩ คอมพลีเมนต์) และจำนวนสมาชิก"],["L4","ประพจน์ ตัวเชื่อม ค่าความจริง ตารางค่าความจริง"],["L5","ประพจน์สมมูล เดอมอร์แกน สัจนิรันดร์"],["L6","การอ้างเหตุผล (Modus Ponens / Modus Tollens / Disjunctive Syllogism)"],["L7","ประโยคเปิดและตัวบ่งปริมาณ"]]},{"id":"M","name":"เมทริกซ์","steps":[["M0","ซ่อมฐาน: บวก-ลบ-คูณ-หารจำนวนเต็ม (ขั้น 2.5 ที่เพิ่มกลางเทอม)"],["M1","นิยามและประเภทเมทริกซ์ (ขนาด สมาชิก ทรานสโพส)"],["M2","การบวก-ลบเมทริกซ์"],["M3","การคูณด้วยสเกลาร์"],["M4","การคูณเมทริกซ์"],["M5","ดีเทอร์มิแนนต์ 2×2 และ 3×3 (Sarrus)"],["M6","สมบัติของดีเทอร์มิแนนต์"],["M7","เมทริกซ์ผกผัน 2×2"],["M8","เมทริกซ์ผกผัน 3×3 (Minor, Cofactor, adj)"],["M9","แก้ระบบสมการด้วยเมทริกซ์ (X = A⁻¹B, Cramer)"],["M10","เส้นชัย (ขั้น 10) และขั้นต่อยอด"]]},{"id":"C","name":"แคลคูลัส","steps":[["C0","ซ่อมฐาน: การแยกตัวประกอบ ฟังก์ชัน และกราฟ"],["C1","ลิมิต: ความหมายและการหาจากตาราง/กราฟ (lim⁻ = lim⁺)"],["C2","กฎลิมิต และกรณี 0/0 (ตัดตัวประกอบ)"],["C3","ความต่อเนื่องของฟังก์ชัน (เงื่อนไข 3 ข้อ)"],["C4","อนุพันธ์จากนิยาม"],["C5","กฎอนุพันธ์: กำลัง ผลคูณ ผลหาร"],["C6","กฎลูกโซ่ และอนุพันธ์ฟังก์ชันตรีโกณมิติ"],["C7","อนุพันธ์อันดับสูง และเส้นสัมผัส"],["C8","จุดวิกฤต ค่าสูงสุด-ต่ำสุดสัมพัทธ์ (y′ และ y″)"],["C9","โจทย์ปัญหาค่าสูงสุด-ต่ำสุด (Optimization)"],["C10","ปริพันธ์ไม่จำกัดเขต (สูตรกำลัง + C)"],["C11","ปริพันธ์จำกัดเขตและพื้นที่ใต้เส้นโค้ง"]]}];
+const $=id=>document.getElementById(id);
+const show=()=>{};
+let PROG={},AVG={},CUR=SID,STEPS_,META_;
+const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1}};
+let MEM={};
+function demoDB(){try{return JSON.parse(localStorage.getItem('idpDemo')||'{}')}catch(e){return MEM}}
+function demoSave(d){MEM=d;try{localStorage.setItem('idpDemo',JSON.stringify(d))}catch(e){}}
+function demoAvg(cls){const d=demoDB(),s={},n={};Object.keys(DEMO_ROSTER).forEach(id=>{if(DEMO_ROSTER[id].cls!==cls||!d[id])return;for(const k in d[id]){s[k]=(s[k]||0)+d[id][k].passed.length;n[k]=(n[k]||0)+1}});const o={};for(const k in s)o[k]={avg:Math.round(s[k]/n[k]*10)/10,n:n[k]};return o}
+async function api(body){
+ if(!DEMO){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return await r.json()}
+ const d=demoDB();
+ if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347)'};
+  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='save'){d[body.token]=d[body.token]||{};d[body.token][body.strand]={passed:body.passed,failedAt:body.failedAt,updated:new Date().toISOString()};demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
+ if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
+ if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
+ if(body.action==='adminReset'){if(d[body.id])delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+}
+async function call(body,errEl){try{const r=await api(body);if(!r.ok&&errEl)errEl.textContent=r.error||'เกิดข้อผิดพลาด';return r}catch(e){if(errEl)errEl.textContent='เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง';return{ok:false}}}
+
+
+const NEED=2,MAXWRONG=2;let S;
+function parseNum(s){s=String(s).trim().replace(/−|–/g,'-').replace(/,/g,'').replace(/[๐-๙]/g,c=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(c)).replace(/\s+/g,'');
+ if(!s)return NaN;const m=s.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);if(m)return +m[1]/+m[2];return /^-?\d+(\.\d+)?$/.test(s)?+s:NaN}
+function same(a,b){return Math.abs(a-b)<1e-9}
+function openTest(id){
+ CUR=id;S=null;const s=STR.find(x=>x.id===id);
+ $('tTitle').textContent=`สาย ${id} ${s.name}`;
+ ['tQ','tR'].forEach(x=>$(x).classList.add('hide'));$('tIntro').classList.remove('hide');
+ $('tIntro').innerHTML=`<h2 style="color:#0d47a1;margin:0 0 6px">ทดสอบระดับตนเอง — สาย ${id} ${s.name}</h2><p>ข้อสอบจะไล่จากขั้นง่ายไปยาก แต่ละขั้นต้องตอบ<b>ถูก 2 ข้อ</b>จึงขึ้นขั้นถัดไป ถ้า<b>ผิด 2 ข้อในขั้นเดียวกัน</b> ระบบจะหยุดและบอกว่าตอนนี้คุณอยู่ที่ขั้นไหน ไม่ใช่การตัดเกรด ตอบตามที่ทำได้จริง ถ้าไม่รู้กด "ไม่รู้" ได้</p><p>ใช้กระดาษทดได้ แต่<b>ห้ามใช้เครื่องคิดเลข</b> · ผลจะบันทึกให้อัตโนมัติเมื่อจบ</p><button id="btnGo">เริ่มทำข้อสอบ</button>`;
+ $('btnGo').onclick=startTest}
+function startTest(){S={i:0,right:0,wrong:0,passed:[],failed:-1,wrongTags:[],cur:null,seen:new Set(),n:0};$('tIntro').classList.add('hide');$('tQ').classList.remove('hide');nextQ()}
+function nextQ(){
+ const st=STEPS[S.i];let q,tries=0;do{q=pick(st.gen)();tries++}while(S.seen.has(q.q)&&tries<30);S.seen.add(q.q);S.cur=q;
+ S.n++;$('stepName').textContent=`ข้อที่ ${S.n}`;$('q').innerHTML=q.q;$('fb').innerHTML='';
+ const a=$('ans');a.innerHTML='';
+ if(q.type==='mc'){q.choices.forEach((c,ix)=>{const b=document.createElement('button');b.className='ch';b.innerHTML=String(c.t);b.onclick=()=>answer(ix);a.appendChild(b)})}
+ else{a.innerHTML='<div class="row"><input type="text" id="inp" autocomplete="off" placeholder="พิมพ์คำตอบ"><button id="sub">ส่งคำตอบ</button></div>';
+  $('sub').onclick=()=>answer($('inp').value);$('inp').onkeydown=e=>{if(e.key==='Enter')answer($('inp').value)};$('inp').focus()}
+ const sk=document.createElement('div');sk.style.marginTop='10px';sk.innerHTML='<button class="skip" id="skip">ไม่รู้ / ข้ามข้อนี้</button>';a.appendChild(sk);$('skip').onclick=()=>answer(null)}
+function answer(v){
+ const q=S.cur;let ok=false,tag='';
+ if(v===null){tag='ไม่รู้ / ข้าม'}
+ else if(q.type==='mc'){const c=q.choices[v];ok=!!c.ok;tag=ok?'':(c.tag||'เลือกคำตอบผิด');
+  [...document.querySelectorAll('.ch')].forEach((b,ix)=>{b.disabled=true;if(q.choices[ix].ok)b.classList.add('ok');else if(ix===v)b.classList.add('no')})}
+ else{const n=parseNum(v);if(isNaN(n)){$('fb').innerHTML='<div class="fb no">พิมพ์ตัวเลขหรือเศษส่วน เช่น 12, −5, 3/4, 0.25</div>';return}
+  ok=same(n,parseNum(q.ans));if(!ok){const h=q.hints.find(h=>same(n,parseNum(h.v)));tag=h?h.tag:'คำนวณคลาดเคลื่อน'}
+  $('inp').disabled=true;$('sub').disabled=true}
+ $('skip').disabled=true;
+ if(ok)S.right++;else{S.wrong++;S.wrongTags.push({step:STEPS[S.i].id,tag})}
+ const done=S.right>=NEED||S.wrong>=MAXWRONG;
+ $('fb').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?'✓ ถูกต้อง':'✗ ยังไม่ถูก'+(tag&&v!==null?` — ${tag}`:'')}<br><span class="muted">${q.exp}</span></div><div style="margin-top:10px"><button id="nx">${done?'ต่อไป':'ข้อถัดไป'}</button></div>`;
+ $('nx').onclick=()=>{
+  if(S.right>=NEED){S.passed.push(S.i);S.i++;S.right=S.wrong=0;S.seen=new Set();if(S.i>=STEPS.length){S.done=true;return finish()}return nextQ()}
+  if(S.wrong>=MAXWRONG){S.failed=S.i;S.done=true;return finish()}
+  nextQ()}}
+async function finish(){
+ $('tQ').classList.add('hide');$('tR').classList.remove('hide');
+ const ids=S.passed.map(k=>STEPS[k].id),top=ids.length?ids[ids.length-1]:null,nx=S.failed>=0?STEPS[S.failed]:null;
+ $('rSub').textContent=`ผลการประเมินตนเอง · สาย ${CUR}`;
+ $('rTitle').textContent=top?`ผ่านถึงขั้น ${top}`:'ยังไม่ผ่านขั้น '+STEPS[0].id;
+ let d=!top?META.base:!nx?'ผ่านทุกขั้นของสายนี้ — เก่งมาก!':`ขั้นถัดไปที่ควรฝึกคือ <b>${nx.id} · ${nx.name}</b>`;
+ const nt=META.note(S.passed);if(nt)d+='<br><span class="muted">'+nt+'</span>';
+ $('rDesc').innerHTML=d;
+ $('rLadder').innerHTML=STEPS.map((s,k)=>`<span class="chip ${S.passed.includes(k)?'pass':S.failed===k?'fail':''}">${s.id}</span>`).join('');
+ const g={};S.wrongTags.forEach(w=>{if(!g[w.tag])g[w.tag]={n:0,steps:new Set()};g[w.tag].n++;g[w.tag].steps.add(w.step)});
+ const items=Object.entries(g).filter(([t])=>t&&t!=='ไม่รู้ / ข้าม').map(([t,x])=>`<li>${t} <span class="muted">(${[...x.steps].join(', ')})</span></li>`);
+ const sk=(g['ไม่รู้ / ข้าม']||{n:0}).n;
+ $('rWrong').innerHTML=(items.length?'<ul>'+items.join('')+'</ul>':'<p class="muted">ไม่มีจุดผิดที่ระบุได้</p>')+(sk?`<p class="muted">ข้ามข้อ ${sk} ข้อ</p>`:'');
+ $('saveSt').textContent='กำลังบันทึกผล…';
+ const r=await call({action:'save',token:TOKEN,strand:CUR,passed:ids,failedAt:nx?nx.id:''});
+ if(r.ok){PROG=r.progress;AVG=r.classAvg||AVG;$('saveSt').textContent='✓ บันทึกผลเรียบร้อยแล้ว'}
+ else{PROG[CUR]={passed:ids,failedAt:nx?nx.id:'',updated:new Date().toISOString()};$('saveSt').textContent='⚠ บันทึกไม่สำเร็จ — ถ่ายภาพหน้าจอนี้ส่งครู (ผ่านถึง '+(top||'-')+')'}}
+$('btnHome').onclick=()=>{location.href='MathEQ.html?s='+CUR};
+$('btnQuit').onclick=()=>{if(S&&S.n&&!S.done&&!confirm('ออกกลางคัน ผลจะไม่ถูกบันทึก ต้องการออกหรือไม่?'))return;location.href='MathEQ.html?s='+CUR};
+
+
+if(TOKEN)openTest(SID);
+</script></body></html>
