@@ -1,0 +1,244 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MathEQ — ทดสอบสาย A</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:#070b16;color:#dce8f5;font-family:'TH Sarabun New','Sarabun',system-ui,sans-serif;font-size:19px;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 14px 40px}
+h1{margin:0;font-size:26px}h2{margin:0 0 8px;font-size:22px}.sub{color:#7f93aa;font-size:15px;margin:2px 0 12px}
+.hide{display:none!important}
+.card{background:#0d1424;border:1px solid #243049;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+input,select,button{font:inherit;color:#dce8f5;background:#121a2c;border:1px solid #2a3a55;border-radius:9px;padding:8px 14px}
+input{width:100%}button{cursor:pointer}button:hover:not(:disabled){border-color:#4fa3e3}button:disabled{opacity:.5;cursor:default}
+button.pri{background:#1d5fb0;border-color:#4fa3e3;color:#fff}
+.err{color:#ff8a7a;margin-top:8px;min-height:1.3em}.muted{color:#7f93aa;font-size:16px}
+.login{max-width:420px;margin:8vh auto 0;text-align:center}.login input{text-align:center;font-size:30px;letter-spacing:8px;margin:12px 0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.demo{background:#3a2a00;color:#ffcc55;border:1px solid #7a5a00;border-radius:10px;padding:0 9px;font-size:14px;margin-left:8px}
+.deck{background:linear-gradient(#10182a,#0a0f1d);border:1px solid #243049;border-radius:14px;padding:14px}
+.lcd{font-family:'Courier New',monospace;background:#071a12;color:#4dff9a;border:1px solid #1d4a35;border-radius:6px;padding:3px 12px;font-size:24px;letter-spacing:2px;text-shadow:0 0 8px #1fd17a}.lcd small{font-size:14px;color:#2fae72;margin-left:6px}
+.eq{display:grid;grid-template-columns:repeat(9,1fr);gap:9px;align-items:end;padding:4px}
+.band{display:flex;flex-direction:column;align-items:center;min-width:0;cursor:pointer}
+.col{position:relative;display:flex;flex-direction:column-reverse;gap:3px;width:100%;max-width:64px;height:280px;padding:2px;background:#050810;border-radius:6px;border:1px solid #1a2438}
+.band:hover .col,.band.sel .col{border-color:#4fa3e3}
+.seg{flex:1;border-radius:2px;background:#111a2b;transition:background .25s}.seg.lit{box-shadow:0 0 6px currentColor}.seg.na{background:#0b101c}
+.avg{position:absolute;left:-5px;right:-5px;height:0;border-top:2px dashed #fff;opacity:.9;z-index:2}
+.lbl{margin-top:7px;font-weight:700;font-size:20px;color:#fff}.nm{font-size:14px;color:#8fa4bd;text-align:center;line-height:1.2;min-height:34px}
+.val{font-size:14px;color:#4dff9a;font-family:'Courier New',monospace;text-align:center}.val.none{color:#6b7a92}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+table.tb{width:100%;border-collapse:collapse;font-size:16px}table.tb th,table.tb td{border-bottom:1px solid #1e2a42;padding:4px 6px;text-align:center}table.tb td:first-child,table.tb th:first-child,table.tb td:nth-child(3),table.tb th:nth-child(3){text-align:left}
+table.tb th{color:#8fa4bd;position:sticky;top:0;background:#0d1424}
+.cell{display:inline-block;min-width:34px;border-radius:5px;padding:0 4px;font-family:'Courier New',monospace}
+.sc0{background:#1a2438;color:#6b7a92}.sc1{background:#5a2a20;color:#ffb09a}.sc2{background:#5a4a14;color:#ffe08a}.sc3{background:#14502f;color:#7dffb4}
+@media(max-width:700px){.eq{gap:3px}.col{height:200px}.nm{font-size:11px}}
+.tcard{background:#f3f6fb;color:#1a2233;border-radius:16px;padding:18px 20px;margin-bottom:14px;font-size:21px;line-height:1.45}
+.tcard .muted{color:#5b6b82}
+.tcard button{background:#0d47a1;color:#fff;border:0;border-radius:12px;padding:10px 18px}.tcard button.skip{background:#fff;color:#7a869a;border:1px solid #c9d6ea}
+.tcard input[type=text]{background:#fff;color:#1a2233;border:2px solid #c9d6ea;border-radius:10px;width:auto}
+.q{font-size:25px;margin:6px 0 14px}
+.ch{display:block;width:100%;text-align:left;background:#f5f8fe!important;color:#1a2233!important;border:2px solid #d3def2!important;margin:8px 0;padding:11px 14px!important}
+.ch:hover:not(:disabled){border-color:#0d47a1!important}.ch.ok{background:#c9efd5!important;border-color:#2e9b55!important}.ch.no{background:#ffd9d6!important;border-color:#d65a50!important}
+.tcard .row input{flex:1;min-width:140px}
+.fb{margin-top:12px;padding:10px 14px;border-radius:12px}.fb.ok{background:#e4f6ea}.fb.no{background:#fdeceb}
+.big{font-size:32px;font-weight:700;color:#0d47a1}
+.fr{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;line-height:1.1;margin:0 2px}.fr span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+table.mx{display:inline-table;border-left:2px solid #1a2233;border-right:2px solid #1a2233;border-radius:6px;margin:0 6px;vertical-align:middle;border-collapse:collapse}table.mx td{padding:1px 8px;text-align:center}
+table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px solid #aab;padding:2px 12px;text-align:center}
+.ladder{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{min-width:44px;text-align:center;padding:3px 9px;border-radius:9px;background:#e4e9f2;color:#6b7a92;font-size:16px;border:2px solid transparent}.chip.pass{background:#c9efd5;color:#12692f}.chip.fail{background:#ffd9d6;color:#a3261d}
+</style></head><body><div class="wrap">
+<div id="vTest">
+ <div class="row" style="margin-bottom:10px"><button id="btnQuit">← กลับ MathEQ</button><span class="muted" id="tTitle"></span></div>
+ <div id="tIntro" class="tcard"></div>
+ <div id="tQ" class="hide"><div class="tcard"><div class="muted" id="stepName"></div><div class="q" id="q"></div><div id="ans"></div><div id="fb"></div></div></div>
+ <div id="tR" class="hide">
+  <div class="tcard"><div class="muted" id="rSub"></div><div class="big" id="rTitle"></div><p id="rDesc"></p><div class="ladder" id="rLadder"></div><div class="muted" id="saveSt"></div></div>
+  <div class="tcard"><b>จุดที่ควรทบทวน</b><div id="rWrong"></div></div>
+  <div class="row"><button class="pri" id="btnHome">กลับ MathEQ</button></div>
+ </div>
+</div>
+
+
+</div>
+<script>
+const SID="A";
+let API_URL="";try{API_URL=sessionStorage.getItem("matheq_api")||""}catch(e){}
+const DEMO=!API_URL;
+let TOKEN=null;try{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token}catch(e){}
+if(!TOKEN){location.replace("MathEQ.html")}
+// ===== คลังข้อสอบสาย N (สร้างข้อจากเลขสุ่ม) =====
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+const SUP={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'};
+const sup=n=>String(n).split('').map(c=>SUP[c]).join('');
+const sgn=n=>n<0?'−'+(-n):''+n;                       // แสดงเครื่องหมายลบแบบ −
+const par=n=>n<0?'(−'+(-n)+')':''+n;                  // ใส่วงเล็บถ้าติดลบ
+const frac=(n,d)=>{const g=gcd(n,d);n/=g;d/=g;return d===1?String(n):n+'/'+d};
+const fh=(n,d)=>`<span class="fr"><span>${n}</span><span>${d}</span></span>`;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=R(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
+// mc: correct + wrongs [{t,tag}]
+function MC(q,ans,wrongs,exp){
+  const seen=new Set([String(ans)]);const w=[];
+  for(const x of wrongs){const k=String(x.t);if(!seen.has(k)){seen.add(k);w.push(x)}}
+  const fill=[];let i=1;while(w.length+fill.length<3){const t=typeof ans==='number'?ans+i*(i%2?1:-1)*R(1,3):ans+'?'.repeat(i);const k=String(t);if(!seen.has(k)){seen.add(k);fill.push({t,tag:'คำนวณคลาดเคลื่อน'})}i++}
+  const ch=shuffle([{t:ans,ok:1},...w.slice(0,3).concat(fill).slice(0,3)]);
+  return {type:'mc',q,ans,choices:ch,exp};
+}
+// num: ตอบพิมพ์ — hints [{v,tag}] เฉพาะคำตอบผิดที่พบบ่อย
+function NUM(q,ans,hints,exp){return {type:'num',q,ans:String(ans),hints:hints||[],exp}}
+
+
+const TB=(head,rows)=>`<table class="t"><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</table>`;
+const TFL=['จริง','เท็จ','ไม่สามารถบอกได้','ไม่เป็นทั้งจริงและเท็จ'];
+function TF(q,v,exp,tag){const ok=v?'จริง':'เท็จ';return MC(q,ok,TFL.filter(x=>x!==ok).map(x=>({t:x,tag:x===(v?'เท็จ':'จริง')?(tag||'ประเมินค่าความจริงผิด'):'ทุกประพจน์มีค่าความจริงแน่นอน'})),exp)}
+const sgx=n=>n<0?`− ${-n}`:`+ ${n}`;
+const pt=(a,b)=>`(${sgn(a)}, ${sgn(b)})`;
+const sg=n=>n<0?`− ${-n}`:`+ ${n}`;
+
+const META={sid:'A',name:'พีชคณิตและสมการ',base:'ตอนนี้ควรเริ่มซ่อมจากขั้น A1 (การแทนค่าและเครื่องหมายในนิพจน์) ก่อน แล้วค่อยไล่ขึ้นไปทีละขั้น',note:p=>p.some(k=>k>=7)?'A8 ขึ้นไปเป็นขั้นต่อยอดของ ม.3–ม.5':''};
+// ---- helpers พีชคณิต ----
+const X=(p)=>p===0?'':p===1?'x':'x'+sup(p);
+function term(c,p,first){ // c สัมประสิทธิ์ p กำลังของ x
+  if(c===0)return '';const a=Math.abs(c);const v=X(p);const body=(a===1&&p>0)?v:a+v;
+  return first?(c<0?'−':'')+body:(c<0?' − ':' + ')+body}
+function poly(arr){ // arr: [[c,p],...]
+  let s='',first=true;for(const [c,p] of arr){const t=term(c,p,first);if(t){s+=t;first=false}}return s||'0'}
+const fac=(p)=>p===0?'x':(p<0?`x − ${-p}`:`x + ${p}`);
+const STEPS=[
+{id:'A1',name:'นิพจน์พีชคณิต: แทนค่า สัมประสิทธิ์ ดีกรี',gen:[
+ ()=>{const a=R(2,6),b=R(1,9),x=-R(1,5);const v=a*x+b;return NUM(`ถ้า x = ${sgn(x)} แล้ว ${a}x + ${b} มีค่าเท่ากับเท่าใด`,v,[{v:a*(-x)+b,tag:'แทนค่าติดลบแล้วทิ้งเครื่องหมาย'}],`${a}×(${sgn(x)}) + ${b} = ${v}`)},
+ ()=>{const k=R(2,6);return NUM(`ถ้า x = −${k} แล้ว x${sup(2)} − 2x มีค่าเท่ากับเท่าใด`,k*k+2*k,[{v:-k*k+2*k,tag:'คิดว่า x² ของ −k เป็นลบ (ลืมวงเล็บ)'},{v:k*k-2*k,tag:'เครื่องหมายของ −2x เมื่อ x เป็นลบ'}],`(−${k})² − 2(−${k}) = ${k*k} + ${2*k} = ${k*k+2*k}`)},
+ ()=>{const a=pick([-5,-3,-2,2,3,4,6]),b=pick([-7,-4,-1,1,5,8]),c=pick([-6,-2,3,9]);const w=pick(['x'+sup(2),'x']);const ans=w==='x'?b:a;return MC(`สัมประสิทธิ์ของ ${w} ในพหุนาม ${poly([[a,2],[b,1],[c,0]])} คือข้อใด`,String(ans),[{t:String(w==='x'?a:b),tag:'สับสนสัมประสิทธิ์ของแต่ละพจน์'},{t:String(c),tag:'เลือกพจน์คงที่แทนสัมประสิทธิ์'},{t:String(-ans),tag:'ผิดเครื่องหมายของสัมประสิทธิ์'}],'สัมประสิทธิ์คือตัวเลขที่คูณหน้าตัวแปร รวมเครื่องหมายด้วย')},
+ ()=>{const a=R(2,7),m=R(1,3),n=R(1,3);return MC(`ดีกรีของพจน์ ${a}x${m>1?sup(m):''}y${n>1?sup(n):''} คือข้อใด`,String(m+n),[{t:String(m*n),tag:'คูณกำลังแทนการบวก'},{t:String(a+m+n),tag:'รวมสัมประสิทธิ์เข้าไปด้วย'},{t:String(Math.max(m,n)),tag:'เลือกกำลังมากสุดของตัวแปรเดียว'}],'ดีกรีของพจน์ = ผลบวกของเลขชี้กำลังของตัวแปรทั้งหมด')}]},
+{id:'A2',name:'สมการเชิงเส้นตัวแปรเดียว',gen:[
+ ()=>{const x=R(-6,9),a=R(2,7),b=R(1,12);const c=a*x+b;return NUM(`แก้สมการ ${a}x + ${b} = ${c}`,x,[{v:frac(c+b,a),tag:'ย้ายค่าคงที่แล้วไม่เปลี่ยนเครื่องหมาย'}],`${a}x = ${c} − ${b} = ${c-b} ดังนั้น x = ${x}`)},
+ ()=>{let x,a,c,d,b;do{x=R(-5,8);a=R(3,9);c=R(2,a-1);d=R(1,9);b=(a-c)*x-d}while(b===0||x===0);return NUM(`แก้สมการ ${a}x ${sg(-b)} = ${c}x + ${d}`,x,[{v:frac(d+b,a+c),tag:'ย้าย cx ไปรวมผิดเครื่องหมาย'}],`${a}x − ${c}x = ${d} ${sg(b)} → ${a-c}x = ${d+b} → x = ${x}`)},
+ ()=>{const k=pick([2,3,4,5]),x=R(1,9)*k,m=R(1,9),n=x/k+m;return NUM(`แก้สมการ x/${k} + ${m} = ${n}`,x,[{v:n-m,tag:'ลืมคูณตัวหารกลับ'}],`x/${k} = ${n-m} → x = ${n-m}×${k} = ${x}`)},
+ ()=>{const x=R(-4,7),a=R(2,5),b=R(1,6);const c=a*(x+b);return NUM(`แก้สมการ ${a}(x + ${b}) = ${c}`,x,[{v:frac(c-b,a),tag:'แจกแจงไม่ครบทุกพจน์'}],`${a}x + ${a*b} = ${c} → x = ${x}`)}]},
+{id:'A3',name:'อัตราส่วน สัดส่วน ร้อยละ',gen:[
+ ()=>{const P=pick([200,400,500,800,1000,1200]),r=pick([10,20,25,30,40]);return NUM(`สินค้าราคา ${P} บาท ลดราคา ${r}% ราคาหลังลดเป็นกี่บาท`,P-P*r/100,[{v:P*r/100,tag:'ตอบส่วนลดแทนราคาหลังลด'}],`ส่วนลด = ${P*r/100} บาท ราคาหลังลด = ${P-P*r/100} บาท`)},
+ ()=>{const a=pick([2,3,4]),b=pick([5,7,9]);const k=R(3,9);return NUM(`${a} : ${b} = x : ${b*k} ค่าของ x คือเท่าใด`,a*k,[{v:a+(b*k-b),tag:'ใช้การบวกแทนการคูณในสัดส่วน'}],`ส่วนหลังคูณ ${k} ส่วนหน้าต้องคูณ ${k} ด้วย: ${a}×${k} = ${a*k}`)},
+ ()=>{let p,q;do{p=R(1,4);q=R(2,5)}while(p===q);const T=(p+q)*R(20,60);return NUM(`แบ่งเงิน ${T} บาท ให้ ก : ข = ${p} : ${q} ก ได้กี่บาท`,T/(p+q)*p,[{v:T/(p+q)*q,tag:'สลับส่วนแบ่งของ ก กับ ข'}],`ทั้งหมด ${p+q} ส่วน ส่วนละ ${T/(p+q)} บาท`)},
+ ()=>{const c=pick([50,80,200,40]);const pr=pick([10,20,25,30]);const s=c+c*pr/100;return NUM(`ซื้อมา ${c} บาท ขายไป ${s} บาท ได้กำไรกี่เปอร์เซ็นต์`,pr,[{v:frac((s-c)*100,s),tag:'คิดกำไรจากราคาขายแทนต้นทุน'}],`กำไร ${s-c} บาท ÷ ต้นทุน ${c} × 100 = ${pr}%`)}]},
+{id:'A4',name:'พหุนาม: บวก ลบ คูณ',gen:[
+ ()=>{const a=R(2,6),b=R(-6,6)||3,c=R(-5,5)||2,d=R(1,4),e=R(1,7),f=R(1,6);const ok=poly([[a-d,2],[b-e,1],[c-f,0]]);return MC(`(${poly([[a,2],[b,1],[c,0]])}) − (${poly([[d,2],[e,1],[f,0]])}) เท่ากับข้อใด`,ok,[{t:poly([[a-d,2],[b+e,1],[c+f,0]]),tag:'ลบแล้วไม่เปลี่ยนเครื่องหมายทุกพจน์ในวงเล็บหลัง'},{t:poly([[a-d,2],[b-e,1],[c+f,0]]),tag:'ลืมเปลี่ยนเครื่องหมายพจน์สุดท้าย'},{t:poly([[a+d,2],[b-e,1],[c-f,0]]),tag:'บวกแทนการลบพจน์ x²'}],'ลบพหุนาม = บวกด้วยจำนวนตรงข้ามของทุกพจน์ในวงเล็บหลัง')},
+ ()=>{let p=pick([-5,-3,-2,2,3,4,6]),q=pick([-4,-1,1,3,5,7]);return MC(`(${fac(p)})(${fac(q)}) เท่ากับข้อใด`,poly([[1,2],[p+q,1],[p*q,0]]),[{t:poly([[1,2],[p*q,0]]),tag:'ลืมพจน์กลางเมื่อกระจาย'},{t:poly([[1,2],[p*q,1],[p+q,0]]),tag:'สลับตำแหน่งผลบวกกับผลคูณ'},{t:poly([[1,2],[p+q,1],[-p*q,0]]),tag:'ผิดเครื่องหมายของพจน์คงที่'}],`x² + (${p}+${q})x + (${p})(${q})`)},
+ ()=>{const a=R(2,5),b=R(2,5),m=R(1,3),n=R(1,3);const t=(c,p)=>`${c}x${p>1?sup(p):''}`;return MC(`(${t(a,m)})(${t(b,n)}) เท่ากับข้อใด`,t(a*b,m+n),[{t:t(a*b,m*n),tag:'คูณเลขชี้กำลังแทนการบวก'},{t:t(a+b,m+n),tag:'บวกสัมประสิทธิ์แทนการคูณ'},{t:t(a*b,Math.max(m,n)),tag:'ใช้เลขชี้กำลังที่มากกว่า'}],'คูณสัมประสิทธิ์กัน บวกเลขชี้กำลังของ x')},
+ ()=>{const a=R(2,7),s=pick([1,-1]);const w=s*a;return MC(`(${fac(w)})${sup(2)} เท่ากับข้อใด`,poly([[1,2],[2*w,1],[a*a,0]]),[{t:poly([[1,2],[a*a,0]]),tag:'ยกกำลังสองแต่ละพจน์ ไม่คิดพจน์กลาง'},{t:poly([[1,2],[w,1],[a*a,0]]),tag:'พจน์กลางต้องเป็น 2 เท่า'},{t:poly([[1,2],[2*w,1],[-a*a,0]]),tag:'ผิดเครื่องหมายพจน์สุดท้าย'}],`(x+a)² = x² + 2ax + a²`)}]},
+{id:'A5',name:'แยกตัวประกอบพหุนาม',gen:[
+ ()=>{const g=R(2,5);let a,b;do{a=R(1,4);b=R(1,5)}while(gcd(a,b)!==1);return MC(`แยกตัวประกอบ ${g*a}x${sup(2)} + ${g*b}x`,`${g}x(${a===1?'x':a+'x'} + ${b})`,[{t:`${g*a}x(x + ${g*b})`,tag:'ดึงตัวร่วมไม่หมด'},{t:`x(${g*a}x + ${g*b})`,tag:'ดึงตัวร่วมไม่หมด'},{t:`${g}x(${a===1?'x':a+'x'} − ${b})`,tag:'ผิดเครื่องหมายหลังดึงตัวร่วม'}],'ดึงตัวร่วมมากที่สุด (ทั้งตัวเลขและตัวแปร)')},
+ ()=>{const k=R(2,9);return MC(`แยกตัวประกอบ x${sup(2)} − ${k*k}`,`(x − ${k})(x + ${k})`,[{t:`(x − ${k})${sup(2)}`,tag:'สับสนผลต่างกำลังสองกับกำลังสองสมบูรณ์'},{t:`(x + ${k})${sup(2)}`,tag:'สับสนผลต่างกำลังสองกับกำลังสองสมบูรณ์'},{t:`(x − ${k*k})(x + 1)`,tag:'ไม่ถอดรากของจำนวน'}],'a² − b² = (a − b)(a + b)')},
+ ()=>{let p=pick([-6,-4,-3,-2,1,2,3,5]),q=pick([-5,-2,-1,2,4,6]);if(p===q)q+=1;if(p+q===0)q+=2;return MC(`แยกตัวประกอบ ${poly([[1,2],[p+q,1],[p*q,0]])}`,`(${fac(p)})(${fac(q)})`,[{t:`(${fac(-p)})(${fac(-q)})`,tag:'กลับเครื่องหมายของตัวประกอบ'},{t:`(${fac(p)})(${fac(-q)})`,tag:'เครื่องหมายตัวประกอบตัวใดตัวหนึ่งผิด'},{t:`(${fac(p+q)})(${fac(p*q)})`,tag:'ใช้ผลบวกและผลคูณเป็นตัวประกอบโดยตรง'}],`หาสองจำนวนที่คูณได้ ${p*q} และบวกได้ ${p+q}`)},
+ ()=>{const k=R(2,8);return MC(`แยกตัวประกอบ x${sup(2)} + ${2*k}x + ${k*k}`,`(x + ${k})${sup(2)}`,[{t:`(x + ${k})(x − ${k})`,tag:'สับสนกำลังสองสมบูรณ์กับผลต่างกำลังสอง'},{t:`(x + ${2*k})(x + ${k*k})`,tag:'ใช้สัมประสิทธิ์เป็นตัวประกอบโดยตรง'},{t:`(x − ${k})${sup(2)}`,tag:'ผิดเครื่องหมาย'}],'a² + 2ab + b² = (a + b)²')}]},
+{id:'A6',name:'ระบบสมการเชิงเส้นสองตัวแปร',gen:[
+ ()=>{const x=R(2,9),y=R(1,x-1);return NUM(`ถ้า x + y = ${x+y} และ x − y = ${x-y} แล้ว x มีค่าเท่าใด`,x,[{v:y,tag:'ตอบค่าของ y แทน x'}],`บวกสองสมการ: 2x = ${2*x} → x = ${x}`)},
+ ()=>{const x=R(1,7),a=R(2,4),b=R(1,5);const y=a*x+b;return NUM(`ถ้า y = ${a}x + ${b} และ x + y = ${x+y} แล้ว x มีค่าเท่าใด`,x,[{v:frac(x+y-b,a),tag:'แทนค่า y แล้วลืมรวมพจน์ x'}],`x + ${a}x + ${b} = ${x+y} → ${a+1}x = ${x+y-b} → x = ${x}`)},
+ ()=>{let x,y;do{x=R(1,7);y=R(-4,6)}while(x===y);return NUM(`ถ้า 2x + y = ${2*x+y} และ x − y = ${x-y} แล้ว y มีค่าเท่าใด`,y,[{v:x,tag:'ตอบค่าของ x แทน y'}],`บวกสองสมการ: 3x = ${3*x} → x = ${x} แล้วแทนค่าหา y = ${y}`)},
+ ()=>{let x,y;do{x=R(1,6);y=R(1,6)}while(x===y);return NUM(`ถ้า 2x + 3y = ${2*x+3*y} และ 3x − y = ${3*x-y} แล้ว x มีค่าเท่าใด`,x,[{v:y,tag:'ตอบค่าของ y แทน x'}],`คูณสมการที่สองด้วย 3 แล้วบวกกับสมการแรก: 11x = ${11*x} → x = ${x}`)}]},
+{id:'A7',name:'โจทย์ปัญหาระบบสมการ',gen:[
+ ()=>{const big=R(12,30),small=R(3,10);return NUM(`ผลบวกของสองจำนวนเท่ากับ ${big+small} และผลต่างเท่ากับ ${big-small} จำนวนที่มากกว่าคือเท่าใด`,big,[{v:small,tag:'ตอบจำนวนที่น้อยกว่า'}],`x + y = ${big+small}, x − y = ${big-small} → x = ${big}`)},
+ ()=>{let p,q;do{p=R(3,10);q=R(5,15)}while(p===q);return NUM(`ดินสอ 3 แท่ง กับปากกา 2 ด้าม ราคา ${3*p+2*q} บาท ดินสอ 1 แท่ง กับปากกา 1 ด้าม ราคา ${p+q} บาท ปากกา 1 ด้ามราคากี่บาท`,q,[{v:p,tag:'ตอบราคาดินสอแทนปากกา'}],`ให้ดินสอ x ปากกา y: 3x+2y=${3*p+2*q}, x+y=${p+q} → y = ${q}`)},
+ ()=>{let ad,kd;do{ad=R(3,12);kd=R(3,12)}while(ad===kd);return NUM(`ตั๋วผู้ใหญ่ใบละ 60 บาท เด็กใบละ 30 บาท ขายได้ ${ad+kd} ใบ ได้เงิน ${60*ad+30*kd} บาท ขายตั๋วผู้ใหญ่ได้กี่ใบ`,ad,[{v:kd,tag:'ตอบจำนวนตั๋วเด็กแทนผู้ใหญ่'}],`x + y = ${ad+kd}, 60x + 30y = ${60*ad+30*kd} → x = ${ad}`)},
+ ()=>{const x=R(5,15),k=pick([2,3,4]);return NUM(`พ่อมีอายุเป็น ${k} เท่าของลูก อายุรวมกัน ${(k+1)*x} ปี พ่ออายุกี่ปี`,k*x,[{v:x,tag:'ตอบอายุลูกแทนพ่อ'}],`ลูก x ปี พ่อ ${k}x ปี → ${k+1}x = ${(k+1)*x}`)}]},
+{id:'A8',name:'สมการกำลังสองตัวแปรเดียว (ต่อยอด)',gen:[
+ ()=>{let p,q;do{p=R(-6,6);q=R(-6,6)}while(p===q||p===0||q===0);const hi=Math.max(p,q);return NUM(`ถ้า (x ${sg(-p)})(x ${sg(-q)}) = 0 แล้วคำตอบที่<b>มากที่สุด</b>ของสมการคือเท่าใด`,hi,[{v:-hi,tag:'ผิดเครื่องหมายเมื่อให้ตัวประกอบเป็นศูนย์'}],`x = ${p} หรือ x = ${q}`)},
+ ()=>{const k=R(2,9);return MC(`คำตอบของสมการ x${sup(2)} = ${k*k} คือข้อใด`,`x = ${k} หรือ x = −${k}`,[{t:`x = ${k} เท่านั้น`,tag:'ลืมกรณีติดลบ'},{t:`x = ${k*k}`,tag:'ไม่ถอดรากที่สอง'},{t:`x = −${k} เท่านั้น`,tag:'ลืมกรณีบวก'}],`x = ±${k}`)},
+ ()=>{const k=R(2,9);return NUM(`ผลบวกของคำตอบทั้งหมดของ x${sup(2)} + ${k}x = 0 เท่ากับเท่าใด`,-k,[{v:k,tag:'ผิดเครื่องหมายของคำตอบ x + k = 0'},{v:0,tag:'ลืมคำตอบที่ไม่ใช่ศูนย์'}],`x(x + ${k}) = 0 → x = 0 หรือ x = −${k}`)},
+ ()=>{let a,b,c;do{a=R(1,3);b=R(-6,6);c=R(-4,3)}while(c===0||b===0);return NUM(`ค่า b${sup(2)} − 4ac ของสมการ ${poly([[a,2],[b,1],[c,0]])} = 0 เท่ากับเท่าใด`,b*b-4*a*c,[{v:b*b+4*a*c,tag:'ใช้เครื่องหมายผิดใน −4ac'},{v:-b*b-4*a*c,tag:'ยกกำลังสองของ b ที่ติดลบแล้วได้ลบ'}],`(${sgn(b)})² − 4(${a})(${sgn(c)}) = ${b*b-4*a*c}`)}]},
+{id:'A9',name:'อสมการและค่าสัมบูรณ์ (ต่อยอด)',gen:[
+ ()=>{const k=R(2,5),x0=R(-4,6),b=R(1,9);const c=b-(-k)*x0*0;/* −kx + b > c  → x < (b−c)/k */const cc=b-k*x0;return MC(`แก้อสมการ −${k}x + ${b} > ${sgn(cc)}`,`x < ${sgn(x0)}`,[{t:`x > ${sgn(x0)}`,tag:'หารด้วยจำนวนลบแล้วไม่กลับเครื่องหมายอสมการ'},{t:`x < ${sgn(-x0)}`,tag:'ผิดเครื่องหมายของคำตอบ'},{t:`x > ${sgn(-x0)}`,tag:'ผิดทั้งเครื่องหมายและทิศ'}],`−${k}x > ${cc-b} → หารด้วย −${k} ต้องกลับเครื่องหมาย: x < ${sgn(x0)}`)},
+ ()=>{const a=R(-5,5),k=R(1,6);return MC(`คำตอบของ |x ${sg(-a)}| = ${k} คือข้อใด`,`x = ${sgn(a+k)} หรือ x = ${sgn(a-k)}`,[{t:`x = ${sgn(a+k)} เท่านั้น`,tag:'ลืมกรณีด้านลบของค่าสัมบูรณ์'},{t:`x = ${sgn(k-a)} หรือ x = ${sgn(-k-a)}`,tag:'ผิดเครื่องหมายเมื่อย้าย a'},{t:`x = ${k}`,tag:'ไม่คิดค่าคงที่ในค่าสัมบูรณ์'}],'|u| = k แปลว่า u = k หรือ u = −k')},
+ ()=>{const k=R(2,9);return MC(`คำตอบของ |x| < ${k} คือข้อใด`,`−${k} < x < ${k}`,[{t:`x < ${k}`,tag:'ลืมขอบเขตด้านลบ'},{t:`x < −${k} หรือ x > ${k}`,tag:'สลับกับกรณี |x| > k'},{t:`x > ${k}`,tag:'อ่านทิศอสมการผิด'}],'|x| < k แปลว่า x อยู่ห่างจาก 0 น้อยกว่า k')},
+ ()=>{const a=R(2,4),b=R(1,6),c=R(8,20);return NUM(`จำนวนเต็ม x ที่<b>มากที่สุด</b>ที่ทำให้ ${a}x − ${b} ≤ ${c} เป็นจริง คือเท่าใด`,Math.floor((c+b)/a),[{v:Math.floor((c+b)/a)+1,tag:'ปัดขึ้นแทนที่จะปัดลง (เกินขอบเขต)'}],`${a}x ≤ ${c+b} → x ≤ ${(c+b)/a}`)}]},
+{id:'A10',name:'ลำดับและอนุกรม (ต่อยอด)',gen:[
+ ()=>{const a=R(-5,10),d=R(2,6),n=R(8,20);return NUM(`ลำดับเลขคณิต มีพจน์แรก ${sgn(a)} ผลต่างร่วม ${d} พจน์ที่ ${n} มีค่าเท่าใด`,a+(n-1)*d,[{v:a+n*d,tag:'ใช้ n แทน n − 1'}],`aₙ = a₁ + (n−1)d = ${a+(n-1)*d}`)},
+ ()=>{const a=R(1,4),r=pick([2,3]),n=R(4,6);return NUM(`ลำดับเรขาคณิต มีพจน์แรก ${a} อัตราส่วนร่วม ${r} พจน์ที่ ${n} มีค่าเท่าใด`,a*Math.pow(r,n-1),[{v:a*Math.pow(r,n),tag:'ใช้ n แทน n − 1 ในเลขชี้กำลัง'},{v:a*r*(n-1),tag:'คูณแทนการยกกำลัง'}],`aₙ = a₁rⁿ⁻¹ = ${a*Math.pow(r,n-1)}`)},
+ ()=>{const a=R(1,6),d=R(2,5),n=R(6,14);return NUM(`ผลบวก ${n} พจน์แรกของอนุกรมเลขคณิต ที่มีพจน์แรก ${a} ผลต่างร่วม ${d} เท่ากับเท่าใด`,n*(2*a+(n-1)*d)/2,[{v:a+(n-1)*d,tag:'ตอบค่าพจน์ที่ n แทนผลบวก'}],`Sₙ = n[2a₁+(n−1)d]/2 = ${n*(2*a+(n-1)*d)/2}`)},
+ ()=>{const a=R(1,8),d=R(2,6),n=R(8,25);return NUM(`ลำดับ ${a}, ${a+d}, ${a+2*d}, … พจน์ใดมีค่า ${a+(n-1)*d} (ตอบเป็นลำดับที่ของพจน์)`,n,[{v:n-1,tag:'นับลำดับผิดไป 1'},{v:n+1,tag:'นับลำดับผิดไป 1'}],`${a}+(n−1)${d} = ${a+(n-1)*d} → n = ${n}`)}]},
+{id:'A11',name:'ดอกเบี้ยและมูลค่าของเงิน (ต่อยอด)',gen:[
+ ()=>{const P=R(1,10)*1000,r=R(2,6),t=R(2,5);return NUM(`ฝากเงิน ${P} บาท ดอกเบี้ยคงต้น ${r}% ต่อปี นาน ${t} ปี ได้ดอกเบี้ยกี่บาท`,P*r*t/100,[{v:P+P*r*t/100,tag:'ตอบเงินรวมแทนดอกเบี้ย'}],`I = Prt = ${P}×${r/100}×${t} = ${P*r*t/100}`)},
+ ()=>{const [P,r]=pick([[10000,5],[10000,10],[10000,20],[20000,10]]);const v=Math.round(P*Math.pow(1+r/100,2));return NUM(`ฝากเงิน ${P} บาท ดอกเบี้ยทบต้นปีละ ${r}% นาน 2 ปี เงินรวมทั้งหมดกี่บาท`,v,[{v:P+2*P*r/100,tag:'คิดดอกเบี้ยคงต้นแทนทบต้น'}],`P(1+r)ⁿ = ${P}(${1+r/100})² = ${v}`)},
+ ()=>{const P=R(2,9)*1000,r=pick([2,4,5]),t=R(2,4);return NUM(`กู้เงิน ${P} บาท ดอกเบี้ยคงต้น ${r}% ต่อปี นาน ${t} ปี ต้องชำระเงินรวมเท่าใด`,P+P*r*t/100,[{v:P*r*t/100,tag:'ตอบเฉพาะดอกเบี้ย ลืมบวกเงินต้น'}],`${P} + ${P*r*t/100} = ${P+P*r*t/100}`)},
+ ()=>{const [P,r]=pick([[10000,10],[20000,5],[5000,20]]);return NUM(`ฝากเงิน ${P} บาท นาน 2 ปี ดอกเบี้ยทบต้นปีละ ${r}% ได้เงินมากกว่าดอกเบี้ยคงต้นอัตราเดียวกันกี่บาท`,Math.round(P*r*r/10000),[{v:Math.round(P*r/100),tag:'ตอบดอกเบี้ยปีแรก'}],`ต่างกัน = P·r² = ${Math.round(P*r*r/10000)}`)}]},
+];
+
+const STR=[{"id":"N","name":"จำนวน","steps":[["N1","จำนวนนับ ทศนิยม เศษส่วนระดับประถม (คิดเลข 4 ประการให้คล่อง)"],["N2","จำนวนเต็ม: ความหมาย เส้นจำนวน การเปรียบเทียบ"],["N3","บวก-ลบจำนวนเต็ม"],["N4","คูณ-หารจำนวนเต็ม (กฎเครื่องหมาย) และลำดับการดำเนินการ"],["N5","ทศนิยมและเศษส่วน: เปรียบเทียบ + บวก ลบ คูณ หาร"],["N6","จำนวนตรรกยะ (เศษส่วน ทศนิยมซ้ำ ทศนิยมจำกัด)"],["N7","เลขยกกำลัง (เลขชี้กำลังจำนวนเต็ม) และสมบัติ aᵐ·aⁿ, aᵐ÷aⁿ, (aᵐ)ⁿ"],["N8","สัญกรณ์วิทยาศาสตร์"],["N9","จำนวนจริง: รากที่สอง รากที่สาม จำนวนอตรรกยะ"],["N10","การดำเนินการของราก (ทำให้เป็นรูปอย่างง่าย บวก ลบ คูณ)"],["N11","เลขชี้กำลังตรรกยะ / รากที่ n"],["N12","จำนวนเชิงซ้อน กราฟ ค่าสัมบูรณ์ และรูปเชิงขั้ว (ค32202)"]]},{"id":"A","name":"พีชคณิต","steps":[["A1","นิพจน์พีชคณิต: ตัวแปร สัมประสิทธิ์ การแทนค่า"],["A2","สมการเชิงเส้นตัวแปรเดียว"],["A3","อัตราส่วน สัดส่วน ร้อยละ"],["A4","พหุนาม: บวก ลบ คูณ"],["A5","แยกตัวประกอบ: ตัวร่วม ผลต่างกำลังสอง กำลังสองสมบูรณ์"],["A6","ระบบสมการเชิงเส้นสองตัวแปร (กราฟ แทนที่ กำจัด)"],["A7","โจทย์ปัญหาระบบสมการ (ตั้งสมการจากข้อความ)"],["A8","สมการกำลังสองตัวแปรเดียว"],["A9","อสมการและค่าสัมบูรณ์"],["A10","ลำดับและอนุกรม (เลขคณิต เรขาคณิต)"],["A11","ดอกเบี้ยและมูลค่าของเงิน"]]},{"id":"F","name":"กราฟ/ฟังก์ชัน","steps":[["F1","ระบบพิกัดฉาก (อ่านและพล็อตจุด)"],["F2","กราฟสมการเชิงเส้น: ความชัน จุดตัดแกน"],["F3","เส้นขนาน เส้นตั้งฉาก และการเขียนสมการเส้นตรง"],["F4","ความสัมพันธ์และฟังก์ชัน: โดเมน เรนจ์ กราฟ"],["F5","ฟังก์ชันกำลังสองและกราฟพาราโบลา (จุดยอด ค่าสูงสุด/ต่ำสุด)"],["F6","ฟังก์ชันเอกซ์โพเนนเชียลและลอการิทึม (รายวิชาเพิ่มเติม)"]]},{"id":"D","name":"เรขาคณิต","steps":[["D1","รูปเรขาคณิตสองมิติ: มุม สามเหลี่ยม สี่เหลี่ยม"],["D2","การสร้างทางเรขาคณิต (ส่วนของเส้นตรง มุม สามเหลี่ยม)"],["D3","เส้นรอบรูปและพื้นที่: สามเหลี่ยม สี่เหลี่ยม วงกลม"],["D4","รูปสามมิติ: ปริซึม พีระมิด ทรงกระบอก — พื้นที่ผิวและปริมาตร"],["D5","ทฤษฎีบทพีทาโกรัสและบทกลับ"],["D6","ความเท่ากันทุกประการและการให้เหตุผลทางเรขาคณิต"],["D7","ความคล้ายของรูปเรขาคณิต"],["D8","พื้นที่ผิวและปริมาตรกรวย ทรงกลม"],["D9","วงกลม (มุมที่จุดศูนย์กลาง คอร์ด เส้นสัมผัส)"],["D10","เส้นขนาน มุมภายใน และสมบัติของสามเหลี่ยม"],["D11","การแปลงทางเรขาคณิต (เลื่อน สะท้อน หมุน)"],["D12","ภาคตัดกรวย: จุด เส้นตรง วงกลม พาราโบลา วงรี ไฮเพอร์โบลา"],["D13","เวกเตอร์ในสามมิติ (บวก ลบ สเกลาร์ dot/cross)"]]},{"id":"T","name":"ตรีโกณ","steps":[["T1","อัตราส่วนตรีโกณมิติของมุมแหลม (sin cos tan ในสามเหลี่ยมมุมฉาก)"],["T2","วงกลมหนึ่งหน่วย เรเดียน ฟังก์ชันไซน์-โคไซน์ของมุมใด ๆ"],["T3","ฟังก์ชันอื่น (tan cot sec csc) และค่ามุมพิเศษ"],["T4","กราฟฟังก์ชันตรีโกณมิติ (คาบ แอมพลิจูด)"],["T5","เอกลักษณ์ตรีโกณมิติ และผลบวก/ผลต่างของมุม"],["T6","ตัวผกผันของฟังก์ชันตรีโกณมิติ และสมการตรีโกณมิติ"],["T7","กฎไซน์และกฎโคไซน์"],["T8","โจทย์ระยะทางและความสูง"]]},{"id":"S","name":"สถิติ","steps":[["S0","อ่านตารางและแผนภาพง่าย ๆ + อัตราส่วน"],["S1","ความหมายสถิติศาสตร์ ประเภทข้อมูล ประชากร/ตัวอย่าง/ตัวแปร"],["S2","การนำเสนอ: ตาราง แผนภาพแท่ง วงกลม เส้น และการเลือกกราฟ"],["S3","ตารางแจกแจงความถี่ ฮิสโทแกรม ฟรีเควนซีโพลิกอน โอไจฟ์"],["S4","ค่ากลาง: ค่าเฉลี่ย มัธยฐาน ฐานนิยม (รวมถ่วงน้ำหนัก ∑fx/∑f)"],["S5","การกระจาย: พิสัย ส่วนเบี่ยงเบนมาตรฐาน (σ และ s)"],["S6","การแปลความหมายและวิจารณ์ผลสรุปทางสถิติ"],["S7","ความน่าจะเป็นเบื้องต้น (การนับ ปริภูมิตัวอย่าง เหตุการณ์)"],["S8","ตัวแปรสุ่มและการแจกแจงความน่าจะเป็น (ไม่ต่อเนื่อง/ต่อเนื่อง) — ค33202"]]},{"id":"L","name":"เซต/ตรรกะ","steps":[["L1","เซต: สมาชิก เซตจำกัด/อนันต์ การเท่ากัน เอกภพสัมพัทธ์"],["L2","สับเซต เพาเวอร์เซต แผนภาพเวนน์-ออยเลอร์"],["L3","การดำเนินการของเซต (∪ ∩ คอมพลีเมนต์) และจำนวนสมาชิก"],["L4","ประพจน์ ตัวเชื่อม ค่าความจริง ตารางค่าความจริง"],["L5","ประพจน์สมมูล เดอมอร์แกน สัจนิรันดร์"],["L6","การอ้างเหตุผล (Modus Ponens / Modus Tollens / Disjunctive Syllogism)"],["L7","ประโยคเปิดและตัวบ่งปริมาณ"]]},{"id":"M","name":"เมทริกซ์","steps":[["M0","ซ่อมฐาน: บวก-ลบ-คูณ-หารจำนวนเต็ม (ขั้น 2.5 ที่เพิ่มกลางเทอม)"],["M1","นิยามและประเภทเมทริกซ์ (ขนาด สมาชิก ทรานสโพส)"],["M2","การบวก-ลบเมทริกซ์"],["M3","การคูณด้วยสเกลาร์"],["M4","การคูณเมทริกซ์"],["M5","ดีเทอร์มิแนนต์ 2×2 และ 3×3 (Sarrus)"],["M6","สมบัติของดีเทอร์มิแนนต์"],["M7","เมทริกซ์ผกผัน 2×2"],["M8","เมทริกซ์ผกผัน 3×3 (Minor, Cofactor, adj)"],["M9","แก้ระบบสมการด้วยเมทริกซ์ (X = A⁻¹B, Cramer)"],["M10","เส้นชัย (ขั้น 10) และขั้นต่อยอด"]]},{"id":"C","name":"แคลคูลัส","steps":[["C0","ซ่อมฐาน: การแยกตัวประกอบ ฟังก์ชัน และกราฟ"],["C1","ลิมิต: ความหมายและการหาจากตาราง/กราฟ (lim⁻ = lim⁺)"],["C2","กฎลิมิต และกรณี 0/0 (ตัดตัวประกอบ)"],["C3","ความต่อเนื่องของฟังก์ชัน (เงื่อนไข 3 ข้อ)"],["C4","อนุพันธ์จากนิยาม"],["C5","กฎอนุพันธ์: กำลัง ผลคูณ ผลหาร"],["C6","กฎลูกโซ่ และอนุพันธ์ฟังก์ชันตรีโกณมิติ"],["C7","อนุพันธ์อันดับสูง และเส้นสัมผัส"],["C8","จุดวิกฤต ค่าสูงสุด-ต่ำสุดสัมพัทธ์ (y′ และ y″)"],["C9","โจทย์ปัญหาค่าสูงสุด-ต่ำสุด (Optimization)"],["C10","ปริพันธ์ไม่จำกัดเขต (สูตรกำลัง + C)"],["C11","ปริพันธ์จำกัดเขตและพื้นที่ใต้เส้นโค้ง"]]}];
+const $=id=>document.getElementById(id);
+const show=()=>{};
+let PROG={},AVG={},CUR=SID,STEPS_,META_;
+const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1}};
+let MEM={};
+function demoDB(){try{return JSON.parse(localStorage.getItem('idpDemo')||'{}')}catch(e){return MEM}}
+function demoSave(d){MEM=d;try{localStorage.setItem('idpDemo',JSON.stringify(d))}catch(e){}}
+function demoAvg(cls){const d=demoDB(),s={},n={};Object.keys(DEMO_ROSTER).forEach(id=>{if(DEMO_ROSTER[id].cls!==cls||!d[id])return;for(const k in d[id]){s[k]=(s[k]||0)+d[id][k].passed.length;n[k]=(n[k]||0)+1}});const o={};for(const k in s)o[k]={avg:Math.round(s[k]/n[k]*10)/10,n:n[k]};return o}
+async function api(body){
+ if(!DEMO){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return await r.json()}
+ const d=demoDB();
+ if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347)'};
+  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='save'){d[body.token]=d[body.token]||{};d[body.token][body.strand]={passed:body.passed,failedAt:body.failedAt,updated:new Date().toISOString()};demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
+ if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
+ if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
+ if(body.action==='adminReset'){if(d[body.id])delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+}
+async function call(body,errEl){try{const r=await api(body);if(!r.ok&&errEl)errEl.textContent=r.error||'เกิดข้อผิดพลาด';return r}catch(e){if(errEl)errEl.textContent='เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง';return{ok:false}}}
+
+
+const NEED=2,MAXWRONG=2;let S;
+function parseNum(s){s=String(s).trim().replace(/−|–/g,'-').replace(/,/g,'').replace(/[๐-๙]/g,c=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(c)).replace(/\s+/g,'');
+ if(!s)return NaN;const m=s.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);if(m)return +m[1]/+m[2];return /^-?\d+(\.\d+)?$/.test(s)?+s:NaN}
+function same(a,b){return Math.abs(a-b)<1e-9}
+function openTest(id){
+ CUR=id;S=null;const s=STR.find(x=>x.id===id);
+ $('tTitle').textContent=`สาย ${id} ${s.name}`;
+ ['tQ','tR'].forEach(x=>$(x).classList.add('hide'));$('tIntro').classList.remove('hide');
+ $('tIntro').innerHTML=`<h2 style="color:#0d47a1;margin:0 0 6px">ทดสอบระดับตนเอง — สาย ${id} ${s.name}</h2><p>ข้อสอบจะไล่จากขั้นง่ายไปยาก แต่ละขั้นต้องตอบ<b>ถูก 2 ข้อ</b>จึงขึ้นขั้นถัดไป ถ้า<b>ผิด 2 ข้อในขั้นเดียวกัน</b> ระบบจะหยุดและบอกว่าตอนนี้คุณอยู่ที่ขั้นไหน ไม่ใช่การตัดเกรด ตอบตามที่ทำได้จริง ถ้าไม่รู้กด "ไม่รู้" ได้</p><p>ใช้กระดาษทดได้ แต่<b>ห้ามใช้เครื่องคิดเลข</b> · ผลจะบันทึกให้อัตโนมัติเมื่อจบ</p><button id="btnGo">เริ่มทำข้อสอบ</button>`;
+ $('btnGo').onclick=startTest}
+function startTest(){S={i:0,right:0,wrong:0,passed:[],failed:-1,wrongTags:[],cur:null,seen:new Set(),n:0};$('tIntro').classList.add('hide');$('tQ').classList.remove('hide');nextQ()}
+function nextQ(){
+ const st=STEPS[S.i];let q,tries=0;do{q=pick(st.gen)();tries++}while(S.seen.has(q.q)&&tries<30);S.seen.add(q.q);S.cur=q;
+ S.n++;$('stepName').textContent=`ข้อที่ ${S.n}`;$('q').innerHTML=q.q;$('fb').innerHTML='';
+ const a=$('ans');a.innerHTML='';
+ if(q.type==='mc'){q.choices.forEach((c,ix)=>{const b=document.createElement('button');b.className='ch';b.innerHTML=String(c.t);b.onclick=()=>answer(ix);a.appendChild(b)})}
+ else{a.innerHTML='<div class="row"><input type="text" id="inp" autocomplete="off" placeholder="พิมพ์คำตอบ"><button id="sub">ส่งคำตอบ</button></div>';
+  $('sub').onclick=()=>answer($('inp').value);$('inp').onkeydown=e=>{if(e.key==='Enter')answer($('inp').value)};$('inp').focus()}
+ const sk=document.createElement('div');sk.style.marginTop='10px';sk.innerHTML='<button class="skip" id="skip">ไม่รู้ / ข้ามข้อนี้</button>';a.appendChild(sk);$('skip').onclick=()=>answer(null)}
+function answer(v){
+ const q=S.cur;let ok=false,tag='';
+ if(v===null){tag='ไม่รู้ / ข้าม'}
+ else if(q.type==='mc'){const c=q.choices[v];ok=!!c.ok;tag=ok?'':(c.tag||'เลือกคำตอบผิด');
+  [...document.querySelectorAll('.ch')].forEach((b,ix)=>{b.disabled=true;if(q.choices[ix].ok)b.classList.add('ok');else if(ix===v)b.classList.add('no')})}
+ else{const n=parseNum(v);if(isNaN(n)){$('fb').innerHTML='<div class="fb no">พิมพ์ตัวเลขหรือเศษส่วน เช่น 12, −5, 3/4, 0.25</div>';return}
+  ok=same(n,parseNum(q.ans));if(!ok){const h=q.hints.find(h=>same(n,parseNum(h.v)));tag=h?h.tag:'คำนวณคลาดเคลื่อน'}
+  $('inp').disabled=true;$('sub').disabled=true}
+ $('skip').disabled=true;
+ if(ok)S.right++;else{S.wrong++;S.wrongTags.push({step:STEPS[S.i].id,tag})}
+ const done=S.right>=NEED||S.wrong>=MAXWRONG;
+ $('fb').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?'✓ ถูกต้อง':'✗ ยังไม่ถูก'+(tag&&v!==null?` — ${tag}`:'')}<br><span class="muted">${q.exp}</span></div><div style="margin-top:10px"><button id="nx">${done?'ต่อไป':'ข้อถัดไป'}</button></div>`;
+ $('nx').onclick=()=>{
+  if(S.right>=NEED){S.passed.push(S.i);S.i++;S.right=S.wrong=0;S.seen=new Set();if(S.i>=STEPS.length){S.done=true;return finish()}return nextQ()}
+  if(S.wrong>=MAXWRONG){S.failed=S.i;S.done=true;return finish()}
+  nextQ()}}
+async function finish(){
+ $('tQ').classList.add('hide');$('tR').classList.remove('hide');
+ const ids=S.passed.map(k=>STEPS[k].id),top=ids.length?ids[ids.length-1]:null,nx=S.failed>=0?STEPS[S.failed]:null;
+ $('rSub').textContent=`ผลการประเมินตนเอง · สาย ${CUR}`;
+ $('rTitle').textContent=top?`ผ่านถึงขั้น ${top}`:'ยังไม่ผ่านขั้น '+STEPS[0].id;
+ let d=!top?META.base:!nx?'ผ่านทุกขั้นของสายนี้ — เก่งมาก!':`ขั้นถัดไปที่ควรฝึกคือ <b>${nx.id} · ${nx.name}</b>`;
+ const nt=META.note(S.passed);if(nt)d+='<br><span class="muted">'+nt+'</span>';
+ $('rDesc').innerHTML=d;
+ $('rLadder').innerHTML=STEPS.map((s,k)=>`<span class="chip ${S.passed.includes(k)?'pass':S.failed===k?'fail':''}">${s.id}</span>`).join('');
+ const g={};S.wrongTags.forEach(w=>{if(!g[w.tag])g[w.tag]={n:0,steps:new Set()};g[w.tag].n++;g[w.tag].steps.add(w.step)});
+ const items=Object.entries(g).filter(([t])=>t&&t!=='ไม่รู้ / ข้าม').map(([t,x])=>`<li>${t} <span class="muted">(${[...x.steps].join(', ')})</span></li>`);
+ const sk=(g['ไม่รู้ / ข้าม']||{n:0}).n;
+ $('rWrong').innerHTML=(items.length?'<ul>'+items.join('')+'</ul>':'<p class="muted">ไม่มีจุดผิดที่ระบุได้</p>')+(sk?`<p class="muted">ข้ามข้อ ${sk} ข้อ</p>`:'');
+ $('saveSt').textContent='กำลังบันทึกผล…';
+ const r=await call({action:'save',token:TOKEN,strand:CUR,passed:ids,failedAt:nx?nx.id:''});
+ if(r.ok){PROG=r.progress;AVG=r.classAvg||AVG;$('saveSt').textContent='✓ บันทึกผลเรียบร้อยแล้ว'}
+ else{PROG[CUR]={passed:ids,failedAt:nx?nx.id:'',updated:new Date().toISOString()};$('saveSt').textContent='⚠ บันทึกไม่สำเร็จ — ถ่ายภาพหน้าจอนี้ส่งครู (ผ่านถึง '+(top||'-')+')'}}
+$('btnHome').onclick=()=>{location.href='MathEQ.html?s='+CUR};
+$('btnQuit').onclick=()=>{if(S&&S.n&&!S.done&&!confirm('ออกกลางคัน ผลจะไม่ถูกบันทึก ต้องการออกหรือไม่?'))return;location.href='MathEQ.html?s='+CUR};
+
+
+if(TOKEN)openTest(SID);
+</script></body></html>
