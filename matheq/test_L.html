@@ -94,6 +94,7 @@ const sgx=n=>n<0?`− ${-n}`:`+ ${n}`;
 const pt=(a,b)=>`(${sgn(a)}, ${sgn(b)})`;
 const sg=n=>n<0?`− ${-n}`:`+ ${n}`;
 
+
 const META={sid:'L',name:'เซตและตรรกศาสตร์',base:'ตอนนี้ควรเริ่มซ่อมจากขั้น L1 (ความหมายและสัญลักษณ์ของเซต) ก่อน แล้วค่อยไล่ขึ้นไปทีละขั้น',note:p=>'สายนี้เป็นเนื้อหาของ ม.4 ถ้านักเรียนยังไม่เคยเรียน ผลที่ได้เป็นการวัดพื้นฐานก่อนเรียน'};
 const st=a=>'{'+a.join(', ')+'}';
 function subset(n,k){const a=[];while(a.length<k){const x=R(1,n);if(!a.includes(x))a.push(x)}return a.sort((x,y)=>x-y)}
