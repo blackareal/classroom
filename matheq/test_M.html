@@ -94,6 +94,7 @@ const sgx=n=>n<0?`− ${-n}`:`+ ${n}`;
 const pt=(a,b)=>`(${sgn(a)}, ${sgn(b)})`;
 const sg=n=>n<0?`− ${-n}`:`+ ${n}`;
 
+
 const META={sid:'M',name:'เมทริกซ์',base:'ตอนนี้ควรเริ่มซ่อมจากขั้น M0 (การคำนวณจำนวนเต็ม) ก่อน แล้วค่อยไล่ขึ้นไปทีละขั้น',note:p=>'สายนี้เป็นเนื้อหา ม.5 ถ้านักเรียนยังไม่เคยเรียนเรื่องเมทริกซ์ ผลที่ได้เป็นการวัดพื้นฐานก่อนเรียน'};
 const MX=r=>`<table class="mx">${r.map(x=>`<tr>${x.map(v=>`<td>${typeof v==='number'?sgn(v):v}</td>`).join('')}</tr>`).join('')}</table>`;
 const rm=(r,c,lo=-4,hi=6)=>Array.from({length:r},()=>Array.from({length:c},()=>R(lo,hi)));
