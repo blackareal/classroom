@@ -1,0 +1,449 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MathEQ — ประตูความพร้อม</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:#070b16;color:#dce8f5;font-family:'TH Sarabun New','Sarabun',system-ui,sans-serif;font-size:19px;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 14px 40px}
+h1{margin:0;font-size:26px}h2{margin:0 0 8px;font-size:22px}.sub{color:#7f93aa;font-size:15px;margin:2px 0 12px}
+.hide{display:none!important}
+.card{background:#0d1424;border:1px solid #243049;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+input,select,button{font:inherit;color:#dce8f5;background:#121a2c;border:1px solid #2a3a55;border-radius:9px;padding:8px 14px}
+input{width:100%}button{cursor:pointer}button:hover:not(:disabled){border-color:#4fa3e3}button:disabled{opacity:.5;cursor:default}
+button.pri{background:#1d5fb0;border-color:#4fa3e3;color:#fff}
+.err{color:#ff8a7a;margin-top:8px;min-height:1.3em}.muted{color:#7f93aa;font-size:16px}
+.login{max-width:420px;margin:8vh auto 0;text-align:center}.login input{text-align:center;font-size:30px;letter-spacing:8px;margin:12px 0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.demo{background:#3a2a00;color:#ffcc55;border:1px solid #7a5a00;border-radius:10px;padding:0 9px;font-size:14px;margin-left:8px}
+.deck{background:linear-gradient(#10182a,#0a0f1d);border:1px solid #243049;border-radius:14px;padding:14px}
+.lcd{font-family:'Courier New',monospace;background:#071a12;color:#4dff9a;border:1px solid #1d4a35;border-radius:6px;padding:3px 12px;font-size:24px;letter-spacing:2px;text-shadow:0 0 8px #1fd17a}.lcd small{font-size:14px;color:#2fae72;margin-left:6px}
+.eq{display:grid;grid-template-columns:repeat(9,1fr);gap:9px;align-items:end;padding:4px}
+.band{display:flex;flex-direction:column;align-items:center;min-width:0;cursor:pointer}
+.col{position:relative;display:flex;flex-direction:column-reverse;gap:3px;width:100%;max-width:64px;height:280px;padding:2px;background:#050810;border-radius:6px;border:1px solid #1a2438}
+.band:hover .col,.band.sel .col{border-color:#4fa3e3}
+.seg{flex:1;border-radius:2px;background:#111a2b;transition:background .25s}.seg.lit{box-shadow:0 0 6px currentColor}.seg.na{background:#0b101c}
+.avg{position:absolute;left:-5px;right:-5px;height:0;border-top:2px dashed #fff;opacity:.9;z-index:2}
+.lbl{margin-top:7px;font-weight:700;font-size:20px;color:#fff}.nm{font-size:14px;color:#8fa4bd;text-align:center;line-height:1.2;min-height:34px}
+.val{font-size:14px;color:#4dff9a;font-family:'Courier New',monospace;text-align:center}.val.none{color:#6b7a92}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+table.tb{width:100%;border-collapse:collapse;font-size:16px}table.tb th,table.tb td{border-bottom:1px solid #1e2a42;padding:4px 6px;text-align:center}table.tb td:first-child,table.tb th:first-child,table.tb td:nth-child(3),table.tb th:nth-child(3){text-align:left}
+table.tb th{color:#8fa4bd;position:sticky;top:0;background:#0d1424}
+.cell{display:inline-block;min-width:34px;border-radius:5px;padding:0 4px;font-family:'Courier New',monospace}
+.sc0{background:#1a2438;color:#6b7a92}.sc1{background:#5a2a20;color:#ffb09a}.sc2{background:#5a4a14;color:#ffe08a}.sc3{background:#14502f;color:#7dffb4}
+@media(max-width:700px){.eq{gap:3px}.col{height:200px}.nm{font-size:11px}}
+.tcard{background:#f3f6fb;color:#1a2233;border-radius:16px;padding:18px 20px;margin-bottom:14px;font-size:21px;line-height:1.45}
+.tcard .muted{color:#5b6b82}
+.tcard button{background:#0d47a1;color:#fff;border:0;border-radius:12px;padding:10px 18px}.tcard button.skip{background:#fff;color:#7a869a;border:1px solid #c9d6ea}
+.tcard input[type=text]{background:#fff;color:#1a2233;border:2px solid #c9d6ea;border-radius:10px;width:auto}
+.q{font-size:25px;margin:6px 0 14px}
+.ch{display:block;width:100%;text-align:left;background:#f5f8fe!important;color:#1a2233!important;border:2px solid #d3def2!important;margin:8px 0;padding:11px 14px!important}
+.ch:hover:not(:disabled){border-color:#0d47a1!important}.ch.ok{background:#c9efd5!important;border-color:#2e9b55!important}.ch.no{background:#ffd9d6!important;border-color:#d65a50!important}
+.tcard .row input{flex:1;min-width:140px}
+.fb{margin-top:12px;padding:10px 14px;border-radius:12px}.fb.ok{background:#e4f6ea}.fb.no{background:#fdeceb}
+.big{font-size:32px;font-weight:700;color:#0d47a1}
+.fr{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;line-height:1.1;margin:0 2px}.fr span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+table.mx{display:inline-table;border-left:2px solid #1a2233;border-right:2px solid #1a2233;border-radius:6px;margin:0 6px;vertical-align:middle;border-collapse:collapse}table.mx td{padding:1px 8px;text-align:center}
+table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px solid #aab;padding:2px 12px;text-align:center}
+.ladder{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{min-width:44px;text-align:center;padding:3px 9px;border-radius:9px;background:#e4e9f2;color:#6b7a92;font-size:16px;border:2px solid transparent}.chip.pass{background:#c9efd5;color:#12692f}.chip.fail{background:#ffd9d6;color:#a3261d}
+</style></head><body><div class="wrap">
+ <div class="row" style="margin-bottom:10px"><button id="btnQuit">← กลับ MathEQ</button><span class="muted" id="tTitle">ประตูความพร้อม · จำนวนเชิงซ้อน</span></div>
+ <div id="gIntro" class="tcard">
+  <h2 style="color:#0d47a1;margin:0 0 6px">ประตูความพร้อมก่อนเข้าจำนวนเชิงซ้อน</h2>
+  <p>แบบเช็ก <b>18 ข้อ</b> สั้น ๆ ว่าพื้นฐานที่ต้องใช้ในบทนี้พร้อมหรือยัง (รากที่สอง พหุนาม สมการกำลังสอง ระนาบพิกัด พีทาโกรัส และตรีโกณมิติ) <b>ไม่ใช่การตัดเกรด</b> ไม่มีการหยุดกลางคัน ทุกข้อจะถูกถามครบ ผลจะบอกว่าควรทบทวนขั้นไหน</p>
+  <p>ใช้กระดาษทดได้ แต่<b>ห้ามใช้เครื่องคิดเลข</b> ถ้าไม่รู้กด "ไม่รู้" ได้ ตอบตามที่ทำได้จริง</p>
+  <button id="btnGo">เริ่มทำ</button>
+ </div>
+ <div id="gQ" class="hide"><div class="tcard"><div class="muted" id="gProg"></div><div class="q" id="q"></div><div id="ans"></div></div></div>
+ <div id="gR" class="hide">
+  <div class="tcard"><div class="muted">ผลประตูความพร้อม</div><div class="big" id="rTitle"></div><p id="rDesc"></p><div id="rTbl"></div><div class="muted" id="saveSt"></div></div>
+  <div class="row"><button class="pri" id="btnHome">กลับ MathEQ</button></div>
+ </div>
+</div>
+<script>
+const SID="GCX";
+let API_URL="";try{API_URL=sessionStorage.getItem("matheq_api")||""}catch(e){}
+const DEMO=!API_URL;
+let TOKEN=null;try{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token}catch(e){}
+if(!TOKEN){location.replace("MathEQ.html")}
+// ===== คลังข้อสอบสาย N (สร้างข้อจากเลขสุ่ม) =====
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+const SUP={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'};
+const sup=n=>String(n).split('').map(c=>SUP[c]).join('');
+const sgn=n=>n<0?'−'+(-n):''+n;                       // แสดงเครื่องหมายลบแบบ −
+const par=n=>n<0?'(−'+(-n)+')':''+n;                  // ใส่วงเล็บถ้าติดลบ
+const frac=(n,d)=>{const g=gcd(n,d);n/=g;d/=g;return d===1?String(n):n+'/'+d};
+const fh=(n,d)=>`<span class="fr"><span>${n}</span><span>${d}</span></span>`;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=R(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
+// mc: correct + wrongs [{t,tag}]
+function MC(q,ans,wrongs,exp){
+  const seen=new Set([String(ans)]);const w=[];
+  for(const x of wrongs){const k=String(x.t);if(!seen.has(k)){seen.add(k);w.push(x)}}
+  const fill=[];let i=1;while(w.length+fill.length<3){const t=typeof ans==='number'?ans+i*(i%2?1:-1)*R(1,3):ans+'?'.repeat(i);const k=String(t);if(!seen.has(k)){seen.add(k);fill.push({t,tag:'คำนวณคลาดเคลื่อน'})}i++}
+  const ch=shuffle([{t:ans,ok:1},...w.slice(0,3).concat(fill).slice(0,3)]);
+  return {type:'mc',q,ans,choices:ch,exp};
+}
+// num: ตอบพิมพ์ — hints [{v,tag}] เฉพาะคำตอบผิดที่พบบ่อย
+function NUM(q,ans,hints,exp){return {type:'num',q,ans:String(ans),hints:hints||[],exp}}
+
+
+const TB=(head,rows)=>`<table class="t"><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</table>`;
+const TFL=['จริง','เท็จ','ไม่สามารถบอกได้','ไม่เป็นทั้งจริงและเท็จ'];
+function TF(q,v,exp,tag){const ok=v?'จริง':'เท็จ';return MC(q,ok,TFL.filter(x=>x!==ok).map(x=>({t:x,tag:x===(v?'เท็จ':'จริง')?(tag||'ประเมินค่าความจริงผิด'):'ทุกประพจน์มีค่าความจริงแน่นอน'})),exp)}
+const sgx=n=>n<0?`− ${-n}`:`+ ${n}`;
+const pt=(a,b)=>`(${sgn(a)}, ${sgn(b)})`;
+const sg=n=>n<0?`− ${-n}`:`+ ${n}`;
+
+
+const BANKS={};
+BANKS['N']=(function(){
+const META={sid:'N',name:'จำนวน',base:'ตอนนี้ควรเริ่มซ่อมฐานการคิดเลขจากขั้น N1 ก่อน (ทศนิยม เศษส่วน คิดเลขให้คล่อง) ไม่ต้องกังวล ทุกคนเริ่มจากจุดของตัวเองได้',note:p=>p.some(k=>k>=8)?'N9–N10 เป็นขั้นต่อยอดของ ม.2':''};
+const STEPS=[
+{id:'N1',name:'คิดเลขประถม (ทศนิยม เศษส่วน)',gen:[
+ ()=>{const a=R(12,95)/10,b=R(11,89)/10;const s=Math.round((a+b)*10)/10;return NUM(`${a.toFixed(1)} + ${b.toFixed(1)} = ?`,s,[],`ตั้งหลักให้ตรงจุดทศนิยมแล้วบวก ได้ ${s}`)},
+ ()=>{const a=R(2,9),b=R(2,9),c=pick([2,3,4,5,6,8,10,12]);let d=pick([2,3,4,5,6,8,10,12]);if(d===c)d=c*2;
+   const n=a*d+b*c,dd=b*d;/* a/c + b/d wrong */ const A=R(1,5),Cc=pick([2,3,4]),B=R(1,5),Dd=pick([5,6,7]);
+   const n2=A*Dd+B*Cc,d2=Cc*Dd;return NUM(`${A}/${Cc} + ${B}/${Dd} = ?  (ตอบเป็นเศษส่วนอย่างต่ำ เช่น 7/12)`,frac(n2,d2),[{v:frac(A+B,Cc+Dd),tag:'บวกเศษกับเศษ ส่วนกับส่วน'}],`ทำส่วนให้เท่ากัน (${d2}) แล้วบวกเศษ ได้ ${frac(n2,d2)}`)},
+ ()=>{const a=R(2,9),b=R(2,9);const x=(a*b)/100*10;/* a.?×0.b */ const p=R(12,98)/10,q=pick([0.2,0.4,0.5,0.6,0.8]);const r=Math.round(p*q*100)/100;return NUM(`${p.toFixed(1)} × ${q} = ?`,r,[],`คูณแบบจำนวนเต็มแล้วนับตำแหน่งทศนิยมรวมกัน ได้ ${r}`)},
+ ()=>{const d=pick([0.2,0.4,0.5,0.6,0.8,0.25]);const k=R(4,40);const v=Math.round(k*d*100)/100;return NUM(`${v} ÷ ${d} = ?`,k,[],`ทำตัวหารให้เป็นจำนวนเต็มด้วยการคูณ 10 หรือ 100 ทั้งตัวตั้งและตัวหาร ได้ ${k}`)}]},
+{id:'N2',name:'จำนวนเต็ม: เส้นจำนวน เปรียบเทียบ ค่าสัมบูรณ์',gen:[
+ ()=>{const s=new Set();while(s.size<4)s.add(R(-9,9));const a=[...s];const m=Math.min(...a);return MC('ข้อใดมีค่า<b>น้อยที่สุด</b>',sgn(m),a.filter(x=>x!==m).map(x=>({t:sgn(x),tag:Math.abs(x)===Math.abs(m)?'':'ตัดสินจากตัวเลขโดยไม่ดูเครื่องหมายลบ'})),'จำนวนลบที่ตัวเลขใหญ่ จะอยู่ซ้ายสุดบนเส้นจำนวน')},
+ ()=>{const a=R(2,9),b=R(2,9);return NUM(`|−${a}| + |${b}| = ?`,a+b,[{v:b-a,tag:'ค่าสัมบูรณ์ต้องไม่เป็นลบ'}],`ค่าสัมบูรณ์คือระยะจาก 0 ดังนั้น |−${a}| = ${a}`)},
+ ()=>{const s=-R(2,6),k=R(3,9);return NUM(`เริ่มที่ ${sgn(s)} บนเส้นจำนวน แล้วเลื่อนไปทางขวา ${k} หน่วย จะอยู่ที่จำนวนใด`,s+k,[{v:s-k,tag:'เลื่อนผิดทิศทาง'}],`เลื่อนขวา = บวก: ${sgn(s)} + ${k} = ${s+k}`)},
+ ()=>{const a=R(2,12);const o=pick([a,-a]);return MC(`จำนวนตรงข้ามของ ${sgn(o)} คือข้อใด`,sgn(-o),[{t:sgn(o),tag:'ไม่เข้าใจจำนวนตรงข้าม'},{t:'0',tag:''},{t:'1/'+Math.abs(o),tag:'สับสนกับส่วนกลับ'}],'จำนวนตรงข้ามคือจำนวนที่อยู่ห่างจาก 0 เท่ากัน แต่คนละฝั่ง')}]},
+{id:'N3',name:'บวก-ลบจำนวนเต็ม',gen:[
+ ()=>{const a=R(2,12),b=R(2,12);return NUM(`(−${a}) + (−${b}) = ?`,-(a+b),[{v:a+b,tag:'ลืมเครื่อง���มายลบ'},{v:b-a,tag:'หักลบแทนที่จะบวกกัน'}],`ลบ+ลบ = ลบ ที่ขนาดบวกกัน: −${a+b}`)},
+ ()=>{const a=R(2,12),b=R(2,12);return NUM(`${a} − (−${b}) = ?`,a+b,[{v:a-b,tag:'ไม่เปลี่ยน −(−) เป็น +'}],`การลบด้วยจำนวนลบ = บวกด้วยจำนวนตรงข้าม: ${a} + ${b} = ${a+b}`)},
+ ()=>{let a=R(3,15),b=R(3,15);if(a===b)b++;return NUM(`(−${a}) + ${b} = ?`,b-a,[{v:-(a+b),tag:'บวกขนาดเข้าด้วยกันทั้งที่เครื่องหมายต่างกัน'}],`เครื่องหมายต่างกัน ให้เอาขนาดลบกัน แล้วใช้เครื่องหมายของตัวที่ขนาดมากกว่า`)},
+ ()=>{const a=R(2,9),b=R(2,9),c=R(2,9);const v=-a-(-b)-c;return NUM(`−${a} − (−${b}) − ${c} = ?`,v,[{v:-a-b-c,tag:'เครื่องหมายซ้อน −(−b) ไม่ได้เปลี่ยนเป็นบวก'}],`−${a} + ${b} − ${c} = ${v}`)}]},
+{id:'N4',name:'คูณ-หารจำนวนเต็ม และลำดับการดำเนินการ',gen:[
+ ()=>{const a=R(2,9),b=R(2,9);return NUM(`(−${a}) × (−${b}) = ?`,a*b,[{v:-a*b,tag:'ลบ×ลบ ต้องได้บวก'}],'เครื่องหมายเหมือนกัน คูณแล้วได้บวก')},
+ ()=>{const b=R(2,9),k=R(2,9);return NUM(`(−${b*k}) ÷ ${b} = ?`,-k,[{v:k,tag:'ลบ÷บวก ต้องได้ลบ'}],'เครื่องหมายต่างกัน หารแล้วได้ลบ')},
+ ()=>{const a=R(2,9),b=R(2,6),c=R(2,6);return NUM(`${a} + ${b} × (−${c}) = ?`,a-b*c,[{v:(a+b)*-c,tag:'บวกก่อนคูณ (ผิดลำดับการดำเนินการ)'}],`คูณก่อนบวก: ${a} + (−${b*c}) = ${a-b*c}`)},
+ ()=>{const a=R(2,5),b=R(6,12),c=R(2,5);return NUM(`−${a} × (${b} − ${b+c}) = ?`,a*c,[{v:-a*b-(b+c),tag:'ไม่ได้ทำในวงเล็บก่อน'},{v:-a*c,tag:'ลบ×ลบ ต้องได้บวก'}],`ในวงเล็บก่อน: ${b}−${b+c} = −${c} แล้ว −${a}×(−${c}) = ${a*c}`)}]},
+{id:'N5',name:'ทศนิยมและเศษส่วน: คูณ หาร เปรียบเทียบ',gen:[
+ ()=>{const a=pick([0.3,0.4,0.5,0.6,0.7]),b=pick([0.02,0.03,0.04,0.05,0.06]);const v=Math.round(a*b*1000)/1000;return NUM(`${a} × ${b} = ?`,v,[{v:Math.round(v*10*1000)/1000,tag:'นับตำแหน่งทศนิยมไม่ครบ'},{v:Math.round(v/10*10000)/10000,tag:'นับตำแหน่งทศนิยมเกิน'}],`คูณแบบจำนวนเต็มแล้วนับตำแหน่งทศนิยมรวมกัน = ${v}`)},
+ ()=>{const a=pick([1,2,3]),b=pick([2,3,4,5]),c=pick([3,5,7]),d=pick([2,4,9]);const n=a*c,dd=b*d;return NUM(`${a}/${b} × ${c}/${d} = ?  (ตอบเป็นเศษส่วนอย่างต่ำ)`,frac(n,dd),[],`คูณเศษกับเศษ ส่วนกับส่วน แล้วทอนให้เป็นอย่างต่ำ = ${frac(n,dd)}`)},
+ ()=>{const a=R(1,4),b=pick([3,5,7]),c=R(1,4),d=pick([2,3,4]);const n=a*d,dd=b*c;return NUM(`${a}/${b} ÷ ${c}/${d} = ?  (ตอบเป็นเศษส่วนอย่างต่ำ)`,frac(n,dd),[{v:frac(a*c,b*d),tag:'ไม่กลับเศษส่วนตัวหาร'}],`หาร = คูณส่วนกลับ: ${a}/${b} × ${d}/${c} = ${frac(n,dd)}`)},
+ ()=>{const x=[0.5,0.45,0.405,0.54];const m=Math.max(...x);return MC('ข้อใดมีค่า<b>มากที่สุด</b>',String(m),x.filter(v=>v!==m).map(v=>({t:String(v),tag:'เทียบจำนวนหลักหลังจุดแทนการเทียบค่า'})),'เทียบทีละหลักหลังจุดทศนิยม: 0.54 > 0.5 > 0.45 > 0.405')}]},
+{id:'N6',name:'จำนวนตรรกยะ: เศษส่วน ↔ ทศนิยม',gen:[
+ ()=>{const d=pick([4,5,8,20,25]);const n=R(1,d-1);const v=n/d;return NUM(`เขียน ${n}/${d} ให้เป็นทศนิยม`,String(v),[],`หาร ${n} ÷ ${d} = ${v}`)},
+ ()=>{const p=pick([0.25,0.75,0.6,0.35,0.125,0.4,0.8]);const num=Math.round(p*1000),den=1000;return NUM(`เขียน ${p} ให้เป็นเศษส่วนอย่างต่ำ`,frac(num,den),[],`ทศนิยมตำแหน่งสุดท้ายเป็นส่วนในสิบ/ร้อย/พัน แล้วทอน = ${frac(num,den)}`)},
+ ()=>{const d=pick([3,6,9]);const m={3:['0.333… (3 ซ้ำ)','1/3'],6:['0.666… (6 ซ้ำ)','2/3'],9:['0.999… (9 ซ้ำ)','1']};return MC(`${m[d][0]} มีค่าเท่ากับข้อใด`,m[d][1],[{t:'3/10',tag:'เข้าใจว่าทศนิยมซ้ำเป็น 0.3 พอดี'},{t:'6/10',tag:'เข้าใจว่าทศนิยมซ้ำเป็น 0.6 พอดี'},{t:'1/9',tag:'ใช้ 9 เป็นส่วนผิดวิธี'}],'ทศนิยมซ้ำเขียนเป็นเศษส่วนได้ เช่น 0.333… = 1/3')},
+ ()=>{const d=pick([[0.2,'1/5','2/5','1/2','1/20'],[0.4,'2/5','4/5','1/4','4/100'],[0.75,'3/4','3/5','7/5','1/75']]);return MC(`ข้อใดมีค่าเท่ากับ ${d[0]}`,d[1],[{t:d[2],tag:'แปลงทศนิยมเป็นเศษส่วนไม่ถูก'},{t:d[3],tag:'แปลงทศนิยมเป็นเศษส่วนไม่ถูก'},{t:d[4],tag:'ใช้ส่วนผิดหลัก'}],'หารเศษด้วยส่วนเพื่อตรวจ หรือเขียนทศนิยมเป็นส่วนในสิบ/ร้อยแล้วทอน')}]},
+{id:'N7',name:'เลขยกกำลังและสมบัติ',gen:[
+ ()=>{const a=pick([2,3,4,5]);return MC(`ค่าของ −${a}${sup(2)} เท่ากับข้อใด`,'−'+a*a,[{t:String(a*a),tag:'คิดว่า −a² = (−a)²'},{t:'−'+2*a,tag:'คูณเลขชี้กำลังกับฐาน'},{t:String(2*a),tag:''}],`−${a}² = −(${a}×${a}) = −${a*a} (ต่างจาก (−${a})² = ${a*a})`)},
+ ()=>{const a=pick([2,3,5]),m=R(2,5),n=R(2,5);return NUM(`${a}${sup(m)} × ${a}${sup(n)} = ${a}^? ตอบเฉพาะเลขชี้กำลัง`,m+n,[{v:m*n,tag:'คูณเลขชี้กำลัง แทนที่จะบวก'}],`ฐานเดียวกันคูณกัน บวกเลขชี้กำลัง: ${m}+${n}=${m+n}`)},
+ ()=>{const a=pick([2,3,5]),m=R(2,4),n=R(2,4);return NUM(`(${a}${sup(m)})${sup(n)} = ${a}^? ตอบเฉพาะเลขชี้กำลัง`,m*n,[{v:m+n,tag:'บวกเลขชี้กำลัง แทนที่จะคูณ'}],`ยกกำลังซ้อน คูณเลขชี้กำลัง: ${m}×${n}=${m*n}`)},
+ ()=>{const a=pick([2,3,5]);const n=pick([2,3]);return MC(`${a}${sup(-n)} เท่ากับข้อใด`,`1/${Math.pow(a,n)}`,[{t:'−'+Math.pow(a,n),tag:'คิดว่าเลขชี้กำลังลบทำให้ค่าเป็นลบ'},{t:String(Math.pow(a,n)),tag:'ไม่กลับเป็นส่วน'},{t:'−'+a*n,tag:''}],`a⁻ⁿ = 1/aⁿ ดังนั้น ${a}${sup(-n)} = 1/${Math.pow(a,n)}`)}]},
+{id:'N8',name:'สัญกรณ์วิทยาศาสตร์',gen:[
+ ()=>{const k=pick([3,4,5,6,7]);const m=pick([12,24,31,45,56,72]);const v=m/10;const big=Math.round(v*Math.pow(10,k));return MC(`${big.toLocaleString('en-US')} เขียนในรูปสัญกรณ์วิทยาศาสตร์ได้ตรงกับข้อใด`,`${v} × 10${sup(k)}`,[{t:`${m} × 10${sup(k-1)}`,tag:'ตัวคูณหน้าไม่อยู่ระหว่าง 1 ถึง 10'},{t:`${v} × 10${sup(k+1)}`,tag:'นับตำแหน่งจุดทศนิยมเกิน'},{t:`${v} × 10${sup(-k)}`,tag:'ใช้เลขชี้กำลังลบกับจำนวนมาก'}],`ย้ายจุดทศนิยมให้เหลือหลักหน่วย 1 หลัก นับการย้ายเป็นเลขชี้กำลัง = ${k}`)},
+ ()=>{const k=pick([3,4,5]);const d=pick([12,25,56,73]);const v=d/10;const small=v/Math.pow(10,k);return MC(`${small.toFixed(k+1)} เขียนในรูปสัญกรณ์วิทยาศาสตร์ได้ตรงกับข้อใด`,`${v} × 10${sup(-k)}`,[{t:`${v} × 10${sup(k)}`,tag:'ลืมเครื่องหมายลบของเลขชี้กำลัง'},{t:`${v} × 10${sup(-(k+1))}`,tag:'นับตำแหน่งจุดทศนิยมเกิน'},{t:`${v} × 10${sup(-(k-1))}`,tag:'นับตำแหน่งจุดทศนิยมไม่ครบ'}],`ย้ายจุดทศนิยมไปทางขวา ${k} ตำแหน่ง ได้เลขชี้กำลัง −${k}`)},
+ ()=>{const a=pick([2.5,3.4,6.1,7.2]),k=pick([2,3,4]);const v=Math.round(a*Math.pow(10,k));return NUM(`${a} × 10${sup(k)} = ?`,v,[{v:Math.round(a*Math.pow(10,k+1)),tag:'เลื่อนจุดเกิน'},{v:Math.round(a*Math.pow(10,k-1)),tag:'เลื่อนจุดไม่ครบ'}],`เลื่อนจุดทศนิยมไปทางขวา ${k} ตำแหน่ง = ${v}`)}]},
+{id:'N9',name:'จำนวนจริง: รากที่สอง รากที่สาม (ต่อยอด)',gen:[
+ ()=>{const k=R(5,15);return NUM(`√${k*k} = ?`,k,[{v:k*k/2,tag:'หารสองแทนการถอดรากที่สอง'}],`${k}×${k}=${k*k}`)},
+ ()=>{const k=pick([2,3,4,5]);return NUM(`∛${k*k*k} = ?`,k,[{v:k*k,tag:'สับสนรากที่สามกับรากที่สอง'}],`${k}×${k}×${k}=${k*k*k}`)},
+ ()=>{const k=pick([3,4,5,6,7,8,9]);return MC(`√${k*k+R(1,k*2)} อยู่ระหว่างจำนวนเต็มคู่ใด`,`${k} กับ ${k+1}`,[{t:`${k-1} กับ ${k}`,tag:'ประมาณค่าราก'},{t:`${k+1} กับ ${k+2}`,tag:'ประมาณค่าราก'},{t:`${k*2} กับ ${k*2+1}`,tag:'หารสองแทนการถอดราก'}],'หากำลังสองสมบูรณ์ที่อยู่ใกล้ที่สุดทั้งสองด้าน')}]},
+{id:'N10',name:'การดำเนินการของราก (ต่อยอด)',gen:[
+ ()=>{const a=pick([2,3,5]),k=pick([2,3,4]);return MC(`√${k*k*a} เขียนในรูปอย่างง่ายได้เท่ากับข้อใด`,`${k}√${a}`,[{t:`${k*k}√${a}`,tag:'ดึงรากออกโดยไม่ถอดรากของ k²'},{t:`${a}√${k}`,tag:'สลับตัวที่ดึงออก'},{t:`√${k+a}`,tag:'บวกแทนการคูณ'}],`√${k*k*a} = √${k*k}×√${a} = ${k}√${a}`)},
+ ()=>{const a=pick([2,3]),p=R(1,3),q=R(1,3);return MC(`√${4*a} + √${9*a} = ?`,`${2+3}√${a}`,[{t:`√${13*a}`,tag:'บวกรากโดยไม่ทำให้เป็นอย่างง่ายก่อน'},{t:`${6}√${a}`,tag:'ดึงรากผิด'},{t:`${2*3}√${a}`,tag:'คูณแทนการบวก'}],`√${4*a}=2√${a}, √${9*a}=3√${a} บวกกันได้ 5√${a}`)},
+ ()=>{const a=pick([2,3,5]),b=pick([2,3,5]);const g=a===b?a:a*b;return a===b?NUM(`√${a} × √${a} = ?`,a,[],`√a×√a = a`):MC(`√${a} × √${b} = ?`,`√${a*b}`,[{t:`√${a+b}`,tag:'บวกจำนวนใต้ราก แทนการคูณ'},{t:`${a*b}`,tag:'ลืมเครื่องหมายราก'},{t:`${a}√${b}`,tag:'คูณไม่ถูกต้อง'}],'√a×√b = √(ab)')}]},
+];
+
+return {META,STEPS};})();
+BANKS['A']=(function(){
+const META={sid:'A',name:'พีชคณิตและสมการ',base:'ตอนนี้ควรเริ่มซ่อมจากขั้น A1 (การแทนค่าและเครื่องหมายในนิพจน์) ก่อน แล้วค่อยไล่ขึ้นไปทีละขั้น',note:p=>p.some(k=>k>=7)?'A8 ขึ้นไปเป็นขั้นต่อยอดของ ม.3–ม.5':''};
+// ---- helpers พีชคณิต ----
+const X=(p)=>p===0?'':p===1?'x':'x'+sup(p);
+function term(c,p,first){ // c สัมประสิทธิ์ p กำลังของ x
+  if(c===0)return '';const a=Math.abs(c);const v=X(p);const body=(a===1&&p>0)?v:a+v;
+  return first?(c<0?'−':'')+body:(c<0?' − ':' + ')+body}
+function poly(arr){ // arr: [[c,p],...]
+  let s='',first=true;for(const [c,p] of arr){const t=term(c,p,first);if(t){s+=t;first=false}}return s||'0'}
+const fac=(p)=>p===0?'x':(p<0?`x − ${-p}`:`x + ${p}`);
+const STEPS=[
+{id:'A1',name:'นิพจน์พีชคณิต: แทนค่า สัมประสิทธิ์ ดีกรี',gen:[
+ ()=>{const a=R(2,6),b=R(1,9),x=-R(1,5);const v=a*x+b;return NUM(`ถ้า x = ${sgn(x)} แล้ว ${a}x + ${b} มีค่าเท่ากับเท่าใด`,v,[{v:a*(-x)+b,tag:'แทนค่าติดลบแล้วทิ้งเครื่องหมาย'}],`${a}×(${sgn(x)}) + ${b} = ${v}`)},
+ ()=>{const k=R(2,6);return NUM(`ถ้า x = −${k} แล้ว x${sup(2)} − 2x มีค่าเท่ากับเท่าใด`,k*k+2*k,[{v:-k*k+2*k,tag:'คิดว่า x² ของ −k เป็นลบ (ลืมวงเล็บ)'},{v:k*k-2*k,tag:'เครื่องหมายของ −2x เมื่อ x เป็นลบ'}],`(−${k})² − 2(−${k}) = ${k*k} + ${2*k} = ${k*k+2*k}`)},
+ ()=>{const a=pick([-5,-3,-2,2,3,4,6]),b=pick([-7,-4,-1,1,5,8]),c=pick([-6,-2,3,9]);const w=pick(['x'+sup(2),'x']);const ans=w==='x'?b:a;return MC(`สัมประสิทธิ์ของ ${w} ในพหุนาม ${poly([[a,2],[b,1],[c,0]])} คือข้อใด`,String(ans),[{t:String(w==='x'?a:b),tag:'สับสนสัมประสิทธิ์ของแต่ละพจน์'},{t:String(c),tag:'เลือกพจน์คงที่แทนสัมประสิทธิ์'},{t:String(-ans),tag:'ผิดเครื่องหมายของสัมประสิทธิ์'}],'สัมประสิทธิ์คือตัวเลขที่คูณหน้าตัวแปร รวมเครื่องหมายด้วย')},
+ ()=>{const a=R(2,7),m=R(1,3),n=R(1,3);return MC(`ดีกรีของพจน์ ${a}x${m>1?sup(m):''}y${n>1?sup(n):''} คือข้อใด`,String(m+n),[{t:String(m*n),tag:'คูณกำลังแทนการบวก'},{t:String(a+m+n),tag:'รวมสัมประสิทธิ์เข้าไปด้วย'},{t:String(Math.max(m,n)),tag:'เลือกกำลังมากสุดของตัวแปรเดียว'}],'ดีกรีของพจน์ = ผลบวกของเลขชี้กำลังของตัวแปรทั้งหมด')}]},
+{id:'A2',name:'สมการเชิงเส้นตัวแปรเดียว',gen:[
+ ()=>{const x=R(-6,9),a=R(2,7),b=R(1,12);const c=a*x+b;return NUM(`แก้สมการ ${a}x + ${b} = ${c}`,x,[{v:frac(c+b,a),tag:'ย้ายค่าคงที่แล้วไม่เปลี่ยนเครื่องหมาย'}],`${a}x = ${c} − ${b} = ${c-b} ดังนั้น x = ${x}`)},
+ ()=>{let x,a,c,d,b;do{x=R(-5,8);a=R(3,9);c=R(2,a-1);d=R(1,9);b=(a-c)*x-d}while(b===0||x===0);return NUM(`แก้สมการ ${a}x ${sg(-b)} = ${c}x + ${d}`,x,[{v:frac(d+b,a+c),tag:'ย้าย cx ไปรวมผิดเครื่องหมาย'}],`${a}x − ${c}x = ${d} ${sg(b)} → ${a-c}x = ${d+b} → x = ${x}`)},
+ ()=>{const k=pick([2,3,4,5]),x=R(1,9)*k,m=R(1,9),n=x/k+m;return NUM(`แก้สมการ x/${k} + ${m} = ${n}`,x,[{v:n-m,tag:'ลืมคูณตัวหารกลับ'}],`x/${k} = ${n-m} → x = ${n-m}×${k} = ${x}`)},
+ ()=>{const x=R(-4,7),a=R(2,5),b=R(1,6);const c=a*(x+b);return NUM(`แก้สมการ ${a}(x + ${b}) = ${c}`,x,[{v:frac(c-b,a),tag:'แจกแจงไม่ครบทุกพจน์'}],`${a}x + ${a*b} = ${c} → x = ${x}`)}]},
+{id:'A3',name:'อัตราส่วน สัดส่วน ร้อยละ',gen:[
+ ()=>{const P=pick([200,400,500,800,1000,1200]),r=pick([10,20,25,30,40]);return NUM(`สินค้าราคา ${P} บาท ลดราคา ${r}% ราคาหลังลดเป็นกี่บาท`,P-P*r/100,[{v:P*r/100,tag:'ตอบส่วนลดแทนราคาหลังลด'}],`ส่วนลด = ${P*r/100} บาท ราคาหลังลด = ${P-P*r/100} บาท`)},
+ ()=>{const a=pick([2,3,4]),b=pick([5,7,9]);const k=R(3,9);return NUM(`${a} : ${b} = x : ${b*k} ค่าของ x คือเท่าใด`,a*k,[{v:a+(b*k-b),tag:'ใช้การบวกแทนการคูณในสัดส่วน'}],`ส่วนหลังคูณ ${k} ส่วนหน้าต้องคูณ ${k} ด้วย: ${a}×${k} = ${a*k}`)},
+ ()=>{let p,q;do{p=R(1,4);q=R(2,5)}while(p===q);const T=(p+q)*R(20,60);return NUM(`แบ่งเงิน ${T} บาท ให้ ก : ข = ${p} : ${q} ก ได้กี่บาท`,T/(p+q)*p,[{v:T/(p+q)*q,tag:'สลับส่วนแบ่งของ ก กับ ข'}],`ทั้งหมด ${p+q} ส่วน ส่วนละ ${T/(p+q)} บาท`)},
+ ()=>{const c=pick([50,80,200,40]);const pr=pick([10,20,25,30]);const s=c+c*pr/100;return NUM(`ซื้อมา ${c} บาท ขายไป ${s} บาท ได้กำไรกี่เปอร์เซ็นต์`,pr,[{v:frac((s-c)*100,s),tag:'คิดกำไรจากราคาขายแทนต้นทุน'}],`กำไร ${s-c} บาท ÷ ต้นทุน ${c} × 100 = ${pr}%`)}]},
+{id:'A4',name:'พหุนาม: บวก ลบ คูณ',gen:[
+ ()=>{const a=R(2,6),b=R(-6,6)||3,c=R(-5,5)||2,d=R(1,4),e=R(1,7),f=R(1,6);const ok=poly([[a-d,2],[b-e,1],[c-f,0]]);return MC(`(${poly([[a,2],[b,1],[c,0]])}) − (${poly([[d,2],[e,1],[f,0]])}) เท่ากับข้อใด`,ok,[{t:poly([[a-d,2],[b+e,1],[c+f,0]]),tag:'ลบแล้วไม่เปลี่ยนเครื่องหมายทุกพจน์ในวงเล็บหลัง'},{t:poly([[a-d,2],[b-e,1],[c+f,0]]),tag:'ลืมเปลี่ยนเครื่องหมายพจน์สุดท้าย'},{t:poly([[a+d,2],[b-e,1],[c-f,0]]),tag:'บวกแทนการลบพจน์ x²'}],'ลบพหุนาม = บวกด้วยจำนวนตรงข้ามของทุกพจน์ในวงเล็บหลัง')},
+ ()=>{let p=pick([-5,-3,-2,2,3,4,6]),q=pick([-4,-1,1,3,5,7]);return MC(`(${fac(p)})(${fac(q)}) เท่ากับข้อใด`,poly([[1,2],[p+q,1],[p*q,0]]),[{t:poly([[1,2],[p*q,0]]),tag:'ลืมพจน์กลางเมื่อกระจาย'},{t:poly([[1,2],[p*q,1],[p+q,0]]),tag:'สลับตำแหน่งผลบวกกับผลคูณ'},{t:poly([[1,2],[p+q,1],[-p*q,0]]),tag:'ผิดเครื่องหมายของพจน์คงที่'}],`x² + (${p}+${q})x + (${p})(${q})`)},
+ ()=>{const a=R(2,5),b=R(2,5),m=R(1,3),n=R(1,3);const t=(c,p)=>`${c}x${p>1?sup(p):''}`;return MC(`(${t(a,m)})(${t(b,n)}) เท่ากับข้อใด`,t(a*b,m+n),[{t:t(a*b,m*n),tag:'คูณเลขชี้กำลังแทนการบวก'},{t:t(a+b,m+n),tag:'บวกสัมประสิทธิ์แทนการคูณ'},{t:t(a*b,Math.max(m,n)),tag:'ใช้เลขชี้กำลังที่มากกว่า'}],'คูณสัมประสิทธิ์กัน บวกเลขชี้กำลังของ x')},
+ ()=>{const a=R(2,7),s=pick([1,-1]);const w=s*a;return MC(`(${fac(w)})${sup(2)} เท่ากับข้อใด`,poly([[1,2],[2*w,1],[a*a,0]]),[{t:poly([[1,2],[a*a,0]]),tag:'ยกกำลังสองแต่ละพจน์ ไม่คิดพจน์กลาง'},{t:poly([[1,2],[w,1],[a*a,0]]),tag:'พจน์กลางต้องเป็น 2 เท่า'},{t:poly([[1,2],[2*w,1],[-a*a,0]]),tag:'ผิดเครื่องหมายพจน์สุดท้าย'}],`(x+a)² = x² + 2ax + a²`)}]},
+{id:'A5',name:'แยกตัวประกอบพหุนาม',gen:[
+ ()=>{const g=R(2,5);let a,b;do{a=R(1,4);b=R(1,5)}while(gcd(a,b)!==1);return MC(`แยกตัวประกอบ ${g*a}x${sup(2)} + ${g*b}x`,`${g}x(${a===1?'x':a+'x'} + ${b})`,[{t:`${g*a}x(x + ${g*b})`,tag:'ดึงตัวร่วมไม่หมด'},{t:`x(${g*a}x + ${g*b})`,tag:'ดึงตัวร่วมไม่หมด'},{t:`${g}x(${a===1?'x':a+'x'} − ${b})`,tag:'ผิดเครื่องหมายหลังดึงตัวร่วม'}],'ดึงตัวร่วมมากที่สุด (ทั้งตัวเลขและตัวแปร)')},
+ ()=>{const k=R(2,9);return MC(`แยกตัวประกอบ x${sup(2)} − ${k*k}`,`(x − ${k})(x + ${k})`,[{t:`(x − ${k})${sup(2)}`,tag:'สับสนผลต่างกำลังสองกับกำลังสองสมบูรณ์'},{t:`(x + ${k})${sup(2)}`,tag:'สับสนผลต่างกำลังสองกับกำลังสองสมบูรณ์'},{t:`(x − ${k*k})(x + 1)`,tag:'ไม่ถอดรากของจำนวน'}],'a² − b² = (a − b)(a + b)')},
+ ()=>{let p=pick([-6,-4,-3,-2,1,2,3,5]),q=pick([-5,-2,-1,2,4,6]);if(p===q)q+=1;if(p+q===0)q+=2;return MC(`แยกตัวประกอบ ${poly([[1,2],[p+q,1],[p*q,0]])}`,`(${fac(p)})(${fac(q)})`,[{t:`(${fac(-p)})(${fac(-q)})`,tag:'กลับเครื่องหมายของตัวประกอบ'},{t:`(${fac(p)})(${fac(-q)})`,tag:'เครื่องหมายตัวประกอบตัวใดตัวหนึ่งผิด'},{t:`(${fac(p+q)})(${fac(p*q)})`,tag:'ใช้ผลบวกและผลคูณเป็นตัวประกอบโดยตรง'}],`หาสองจำนวนที่คูณได้ ${p*q} และบวกได้ ${p+q}`)},
+ ()=>{const k=R(2,8);return MC(`แยกตัวประกอบ x${sup(2)} + ${2*k}x + ${k*k}`,`(x + ${k})${sup(2)}`,[{t:`(x + ${k})(x − ${k})`,tag:'สับสนกำลังสองสมบูรณ์กับผลต่างกำลังสอง'},{t:`(x + ${2*k})(x + ${k*k})`,tag:'ใช้สัมประสิทธิ์เป็นตัวประกอบโดยตรง'},{t:`(x − ${k})${sup(2)}`,tag:'ผิดเครื่องหมาย'}],'a² + 2ab + b² = (a + b)²')}]},
+{id:'A6',name:'ระบบสมการเชิงเส้นสองตัวแปร',gen:[
+ ()=>{const x=R(2,9),y=R(1,x-1);return NUM(`ถ้า x + y = ${x+y} และ x − y = ${x-y} แล้ว x มีค่าเท่าใด`,x,[{v:y,tag:'ตอบค่าของ y แทน x'}],`บวกสองสมการ: 2x = ${2*x} → x = ${x}`)},
+ ()=>{const x=R(1,7),a=R(2,4),b=R(1,5);const y=a*x+b;return NUM(`ถ้า y = ${a}x + ${b} และ x + y = ${x+y} แล้ว x มีค่าเท่าใด`,x,[{v:frac(x+y-b,a),tag:'แทนค่า y แล้วลืมรวมพจน์ x'}],`x + ${a}x + ${b} = ${x+y} → ${a+1}x = ${x+y-b} → x = ${x}`)},
+ ()=>{let x,y;do{x=R(1,7);y=R(-4,6)}while(x===y);return NUM(`ถ้า 2x + y = ${2*x+y} และ x − y = ${x-y} แล้ว y มีค่าเท่าใด`,y,[{v:x,tag:'ตอบค่าของ x แทน y'}],`บวกสองสมการ: 3x = ${3*x} → x = ${x} แล้วแทนค่าหา y = ${y}`)},
+ ()=>{let x,y;do{x=R(1,6);y=R(1,6)}while(x===y);return NUM(`ถ้า 2x + 3y = ${2*x+3*y} และ 3x − y = ${3*x-y} แล้ว x มีค่าเท่าใด`,x,[{v:y,tag:'ตอบค่าของ y แทน x'}],`คูณสมการที่สองด้วย 3 แล้วบวกกับสมการแรก: 11x = ${11*x} → x = ${x}`)}]},
+{id:'A7',name:'โจทย์ปัญหาระบบสมการ',gen:[
+ ()=>{const big=R(12,30),small=R(3,10);return NUM(`ผลบวกของสองจำนวนเท่ากับ ${big+small} และผลต่างเท่ากับ ${big-small} จำนวนที่มากกว่าคือเท่าใด`,big,[{v:small,tag:'ตอบจำนวนที่น้อยกว่า'}],`x + y = ${big+small}, x − y = ${big-small} → x = ${big}`)},
+ ()=>{let p,q;do{p=R(3,10);q=R(5,15)}while(p===q);return NUM(`ดินสอ 3 แท่ง กับปากกา 2 ด้าม ราคา ${3*p+2*q} บาท ดินสอ 1 แท่ง กับปากกา 1 ด้าม ราคา ${p+q} บาท ปากกา 1 ด้ามราคากี่บาท`,q,[{v:p,tag:'ตอบราคาดินสอแทนปากกา'}],`ให้ดินสอ x ปากกา y: 3x+2y=${3*p+2*q}, x+y=${p+q} → y = ${q}`)},
+ ()=>{let ad,kd;do{ad=R(3,12);kd=R(3,12)}while(ad===kd);return NUM(`ตั๋วผู้ใหญ่ใบละ 60 บาท เด็กใบละ 30 บาท ขายได้ ${ad+kd} ใบ ได้เงิน ${60*ad+30*kd} บาท ขายตั๋วผู้ใหญ่ได้กี่ใบ`,ad,[{v:kd,tag:'ตอบจำนวนตั๋วเด็กแทนผู้ใหญ่'}],`x + y = ${ad+kd}, 60x + 30y = ${60*ad+30*kd} → x = ${ad}`)},
+ ()=>{const x=R(5,15),k=pick([2,3,4]);return NUM(`พ่อมีอายุเป็น ${k} เท่าของลูก อายุรวมกัน ${(k+1)*x} ปี พ่ออายุกี่ปี`,k*x,[{v:x,tag:'ตอบอายุลูกแทนพ่อ'}],`ลูก x ปี พ่อ ${k}x ปี → ${k+1}x = ${(k+1)*x}`)}]},
+{id:'A8',name:'สมการกำลังสองตัวแปรเดียว (ต่อยอด)',gen:[
+ ()=>{let p,q;do{p=R(-6,6);q=R(-6,6)}while(p===q||p===0||q===0);const hi=Math.max(p,q);return NUM(`ถ้า (x ${sg(-p)})(x ${sg(-q)}) = 0 แล้วคำตอบที่<b>มากที่สุด</b>ของสมการคือเท่าใด`,hi,[{v:-hi,tag:'ผิดเครื่องหมายเมื่อให้ตัวประกอบเป็นศูนย์'}],`x = ${p} หรือ x = ${q}`)},
+ ()=>{const k=R(2,9);return MC(`คำตอบของสมการ x${sup(2)} = ${k*k} คือข้อใด`,`x = ${k} หรือ x = −${k}`,[{t:`x = ${k} เท่านั้น`,tag:'ลืมกรณีติดลบ'},{t:`x = ${k*k}`,tag:'ไม่ถอดรากที่สอง'},{t:`x = −${k} เท่านั้น`,tag:'ลืมกรณีบวก'}],`x = ±${k}`)},
+ ()=>{const k=R(2,9);return NUM(`ผลบวกของคำตอบทั้งหมดของ x${sup(2)} + ${k}x = 0 เท่ากับเท่าใด`,-k,[{v:k,tag:'ผิดเครื่องหมายของคำตอบ x + k = 0'},{v:0,tag:'ลืมคำตอบที่ไม่ใช่ศูนย์'}],`x(x + ${k}) = 0 → x = 0 หรือ x = −${k}`)},
+ ()=>{let a,b,c;do{a=R(1,3);b=R(-6,6);c=R(-4,3)}while(c===0||b===0);return NUM(`ค่า b${sup(2)} − 4ac ของสมการ ${poly([[a,2],[b,1],[c,0]])} = 0 เท่ากับเท่าใด`,b*b-4*a*c,[{v:b*b+4*a*c,tag:'ใช้เครื่องหมายผิดใน −4ac'},{v:-b*b-4*a*c,tag:'ยกกำลังสองของ b ที่ติดลบแล้วได้ลบ'}],`(${sgn(b)})² − 4(${a})(${sgn(c)}) = ${b*b-4*a*c}`)}]},
+{id:'A9',name:'อสมการและค่าสัมบูรณ์ (ต่อยอด)',gen:[
+ ()=>{const k=R(2,5),x0=R(-4,6),b=R(1,9);const c=b-(-k)*x0*0;/* −kx + b > c  → x < (b−c)/k */const cc=b-k*x0;return MC(`แก้อสมการ −${k}x + ${b} > ${sgn(cc)}`,`x < ${sgn(x0)}`,[{t:`x > ${sgn(x0)}`,tag:'หารด้วยจำนวนลบแล้วไม่กลับเครื่องหมายอสมการ'},{t:`x < ${sgn(-x0)}`,tag:'ผิดเครื่องหมายของคำตอบ'},{t:`x > ${sgn(-x0)}`,tag:'ผิดทั้งเครื่องหมายและทิศ'}],`−${k}x > ${cc-b} → หารด้วย −${k} ต้องกลับเครื่องหมาย: x < ${sgn(x0)}`)},
+ ()=>{const a=R(-5,5),k=R(1,6);return MC(`คำตอบของ |x ${sg(-a)}| = ${k} คือข้อใด`,`x = ${sgn(a+k)} หรือ x = ${sgn(a-k)}`,[{t:`x = ${sgn(a+k)} เท่านั้น`,tag:'ลืมกรณีด้านลบของค่าสัมบูรณ์'},{t:`x = ${sgn(k-a)} หรือ x = ${sgn(-k-a)}`,tag:'ผิดเครื่องหมายเมื่อย้าย a'},{t:`x = ${k}`,tag:'ไม่คิดค่าคงที่ในค่าสัมบูรณ์'}],'|u| = k แปลว่า u = k หรือ u = −k')},
+ ()=>{const k=R(2,9);return MC(`คำตอบของ |x| < ${k} คือข้อใด`,`−${k} < x < ${k}`,[{t:`x < ${k}`,tag:'ลืมขอบเขตด้านลบ'},{t:`x < −${k} หรือ x > ${k}`,tag:'สลับกับกรณี |x| > k'},{t:`x > ${k}`,tag:'อ่านทิศอสมการผิด'}],'|x| < k แปลว่า x อยู่ห่างจาก 0 น้อยกว่า k')},
+ ()=>{const a=R(2,4),b=R(1,6),c=R(8,20);return NUM(`จำนวนเต็ม x ที่<b>มากที่สุด</b>ที่ทำให้ ${a}x − ${b} ≤ ${c} เป็นจริง คือเท่าใด`,Math.floor((c+b)/a),[{v:Math.floor((c+b)/a)+1,tag:'ปัดขึ้นแทนที่จะปัดลง (เกินขอบเขต)'}],`${a}x ≤ ${c+b} → x ≤ ${(c+b)/a}`)}]},
+{id:'A10',name:'ลำดับและอนุกรม (ต่อยอด)',gen:[
+ ()=>{const a=R(-5,10),d=R(2,6),n=R(8,20);return NUM(`ลำดับเลขคณิต มีพจน์แรก ${sgn(a)} ผลต่างร่วม ${d} พจน์ที่ ${n} มีค่าเท่าใด`,a+(n-1)*d,[{v:a+n*d,tag:'ใช้ n แทน n − 1'}],`aₙ = a₁ + (n−1)d = ${a+(n-1)*d}`)},
+ ()=>{const a=R(1,4),r=pick([2,3]),n=R(4,6);return NUM(`ลำดับเรขาคณิต มีพจน์แรก ${a} อัตราส่วนร่วม ${r} พจน์ที่ ${n} มีค่าเท่าใด`,a*Math.pow(r,n-1),[{v:a*Math.pow(r,n),tag:'ใช้ n แทน n − 1 ในเลขชี้กำลัง'},{v:a*r*(n-1),tag:'คูณแทนการยกกำลัง'}],`aₙ = a₁rⁿ⁻¹ = ${a*Math.pow(r,n-1)}`)},
+ ()=>{const a=R(1,6),d=R(2,5),n=R(6,14);return NUM(`ผลบวก ${n} พจน์แรกของอนุกรมเลขคณิต ที่มีพจน์แรก ${a} ผลต่างร่วม ${d} เท่ากับเท่าใด`,n*(2*a+(n-1)*d)/2,[{v:a+(n-1)*d,tag:'ตอบค่าพจน์ที่ n แทนผลบวก'}],`Sₙ = n[2a₁+(n−1)d]/2 = ${n*(2*a+(n-1)*d)/2}`)},
+ ()=>{const a=R(1,8),d=R(2,6),n=R(8,25);return NUM(`ลำดับ ${a}, ${a+d}, ${a+2*d}, … พจน์ใดมีค่า ${a+(n-1)*d} (ตอบเป็นลำดับที่ของพจน์)`,n,[{v:n-1,tag:'นับลำดับผิดไป 1'},{v:n+1,tag:'นับลำดับผิดไป 1'}],`${a}+(n−1)${d} = ${a+(n-1)*d} → n = ${n}`)}]},
+{id:'A11',name:'ดอกเบี้ยและมูลค่าของเงิน (ต่อยอด)',gen:[
+ ()=>{const P=R(1,10)*1000,r=R(2,6),t=R(2,5);return NUM(`ฝากเงิน ${P} บาท ดอกเบี้ยคงต้น ${r}% ต่อปี นาน ${t} ปี ได้ดอกเบี้ยกี่บาท`,P*r*t/100,[{v:P+P*r*t/100,tag:'ตอบเงินรวมแทนดอกเบี้ย'}],`I = Prt = ${P}×${r/100}×${t} = ${P*r*t/100}`)},
+ ()=>{const [P,r]=pick([[10000,5],[10000,10],[10000,20],[20000,10]]);const v=Math.round(P*Math.pow(1+r/100,2));return NUM(`ฝากเงิน ${P} บาท ดอกเบี้ยทบต้นปีละ ${r}% นาน 2 ปี เงินรวมทั้งหมดกี่บาท`,v,[{v:P+2*P*r/100,tag:'คิดดอกเบี้ยคงต้นแทนทบต้น'}],`P(1+r)ⁿ = ${P}(${1+r/100})² = ${v}`)},
+ ()=>{const P=R(2,9)*1000,r=pick([2,4,5]),t=R(2,4);return NUM(`กู้เงิน ${P} บาท ดอกเบี้ยคงต้น ${r}% ต่อปี นาน ${t} ปี ต้องชำระเงินรวมเท่าใด`,P+P*r*t/100,[{v:P*r*t/100,tag:'ตอบเฉพาะดอกเบี้ย ลืมบวกเงินต้น'}],`${P} + ${P*r*t/100} = ${P+P*r*t/100}`)},
+ ()=>{const [P,r]=pick([[10000,10],[20000,5],[5000,20]]);return NUM(`ฝากเงิน ${P} บาท นาน 2 ปี ดอกเบี้ยทบต้นปีละ ${r}% ได้เงินมากกว่าดอกเบี้ยคงต้นอัตราเดียวกันกี่บาท`,Math.round(P*r*r/10000),[{v:Math.round(P*r/100),tag:'ตอบดอกเบี้ยปีแรก'}],`ต่างกัน = P·r² = ${Math.round(P*r*r/10000)}`)}]},
+];
+
+return {META,STEPS};})();
+BANKS['F']=(function(){
+const META={sid:'F',name:'กราฟและฟังก์ชัน',base:'ตอนนี้ควรเริ่มซ่อมจากขั้น F1 (การอ่านพิกัดและจุดบนระนาบ) ก่อน แล้วค่อยไล่ขึ้นไปทีละขั้น',note:p=>p.some(k=>k>=3)?'F4 ขึ้นไปเป็นขั้นต่อยอดของ ม.3–ม.5':''};
+const lineEq=(m,c)=>{const mm=m===1?'x':m===-1?'−x':sgn(m)+'x';const cc=c===0?'':(c<0?` − ${-c}`:` + ${c}`);return `y = ${mm}${cc}`};
+var STEPS=[
+{id:'F1',name:'ระบบพิกัดฉาก: อ่านและระบุตำแหน่งจุด',gen:[
+ ()=>{const a=pick([-1,1])*R(1,8),b=pick([-1,1])*R(1,8);const q=a>0&&b>0?'จตุภาคที่ 1':a<0&&b>0?'จตุภาคที่ 2':a<0&&b<0?'จตุภาคที่ 3':'จตุภาคที่ 4';const all=['จตุภาคที่ 1','จตุภาคที่ 2','จตุภาคที่ 3','จตุภาคที่ 4'];return MC(`จุด ${pt(a,b)} อยู่ในจตุภาคใด`,q,all.filter(x=>x!==q).map(x=>({t:x,tag:'จำแนกจตุภาคจากเครื่องหมายของ x และ y ไม่ถูก'})),'ดูเครื่องหมาย x (ซ้าย/ขวา) และ y (ล่าง/บน): (+,+)=1, (−,+)=2, (−,−)=3, (+,−)=4')},
+ ()=>{const a=R(1,8)*pick([-1,1]),b=R(1,8)*pick([-1,1]);const ok=`(${sgn(a)}, 0)`;return MC('จุดใดอยู่บน<b>แกน X</b>',ok,[{t:`(0, ${sgn(b)})`,tag:'สลับแกน X กับแกน Y'},{t:`(${sgn(a)}, ${sgn(b)})`,tag:'จุดไม่ได้อยู่บนแกน'},{t:`(${sgn(-a)}, ${sgn(-b)})`,tag:'จุดไม่ได้อยู่บนแกน'}],'จุดบนแกน X มีค่า y = 0')},
+ ()=>{const a=R(1,8),b=R(1,8);return MC(`จุด ${pt(a,b)} สะท้อนข้ามแกน Y จะได้จุดใด`,pt(-a,b),[{t:pt(a,-b),tag:'สะท้อนผิดแกน (สลับแกน X กับ Y)'},{t:pt(-a,-b),tag:'สะท้อนข้ามทั้งสองแกน'},{t:pt(b,a),tag:'สลับพิกัด x กับ y'}],'สะท้อนข้ามแกน Y: x เปลี่ยนเครื่องหมาย y เท่าเดิม')},
+ ()=>{let a,b;do{a=R(2,9)*pick([-1,1]);b=R(2,9)*pick([-1,1])}while(Math.abs(a)===Math.abs(b));return NUM(`จุด ${pt(a,b)} อยู่ห่างจากแกน X กี่หน่วย`,Math.abs(b),[{v:Math.abs(a),tag:'สับสนระยะจากแกน X กับแกน Y'},{v:b,tag:'ระยะต้องไม่เป็นลบ'}].filter(h=>h.v!==Math.abs(b)),'ระยะจากแกน X = ค่าสัมบูรณ์ของพิกัด y')}]},
+{id:'F2',name:'กราฟสมการเชิงเส้น: ความชัน จุดตัดแกน',gen:[
+ ()=>{let m,x1,dx,y1;do{m=R(-4,4);x1=R(-4,4);dx=R(1,4);y1=R(-5,5)}while(m===0);const x2=x1+dx,y2=y1+m*dx;return NUM(`เส้นตรงผ่านจุด ${pt(x1,y1)} และ ${pt(x2,y2)} มีความชันเท่าใด`,m,[{v:-m,tag:'ลบพิกัดสลับลำดับระหว่างตัวตั้งและตัวลบ'},{v:frac(1,m),tag:'กลับเศษกับส่วนของสูตรความชัน'}].filter(h=>String(h.v)!==String(m)&&Math.abs(m)>1||h.tag.startsWith('ลบ')),`m = (y₂−y₁)/(x₂−x₁) = ${m*dx}/${dx} = ${m}`)},
+ ()=>{let m,t;do{m=R(-4,4);t=R(-5,5)}while(Math.abs(m)<2||t===0);const c=-m*t;return NUM(`เส้นตรง ${lineEq(m,c)} ตัดแกน X ที่ x เท่าใด`,t,[{v:c,tag:'ตอบจุดตัดแกน Y แทนแกน X'},{v:-t,tag:'ผิดเครื่องหมายเมื่อแก้หา x'}],`ให้ y = 0: ${m}x ${sg(c)} = 0 → x = ${t}`)},
+ ()=>{let m,b;do{m=R(-5,5);b=pick([1,2])}while(m===0);const a=-m*b;const c=b*R(-3,4);return NUM(`เส้นตรง ${poly2(a,b,c)} มีความชันเท่าใด`,m,[{v:-m,tag:'ลืมเปลี่ยนเครื่องหมายเมื่อย้าย x ไปอีกข้าง'}],`จัดรูป y = (−${a}/${b})x ... ความชัน = −a/b = ${m}`)},
+ ()=>{const b=pick([2,3,4]),k=R(-4,5),a=R(1,5);return NUM(`เส้นตรง ${poly2(a,b,b*k)} ตัดแกน Y ที่ y เท่าใด`,k,[{v:b*k,tag:'ไม่ได้หารด้วยสัมประสิทธิ์ของ y'},{v:a,tag:'ตอบจุดตัดแกน X แทน'}].filter(h=>h.v!==k),`ให้ x = 0: ${b}y = ${b*k} → y = ${k}`)}]},
+{id:'F3',name:'เส้นขนาน เส้นตั้งฉาก และสมการเส้นตรง',gen:[
+ ()=>{let m,c1,c2;do{m=R(-5,5);c1=R(-6,6);c2=R(-6,6)}while(m===0||c1===c2||Math.abs(m)===1||m+1===0||m+2===0||m+1===-m||m+2===-m);return MC(`เส้นตรงใดขนานกับ ${lineEq(m,c1)}`,lineEq(m,c2),[{t:lineEq(-m,c2),tag:'ขนานต้องมีความชันเท่ากัน (ไม่ใช่ตรงข้าม)'},{t:lineEq(m+1,c1),tag:'ความชันไม่เท่ากันจึงไม่ขนาน'},{t:lineEq(m+2,c2),tag:'ความชันไม่เท่ากันจึงไม่ขนาน'}],'เส้นขนานมีความชันเท่ากัน')},
+ ()=>{const k=R(2,6)*pick([-1,1]);const ok=`${k>0?'−':''}1/${Math.abs(k)}`;return MC(`เส้นตรงที่มีความชัน ${sgn(k)} ตั้งฉากกับเส้นตรงที่มีความชันเท่าใด`,ok,[{t:`${k>0?'':'−'}1/${Math.abs(k)}`,tag:'กลับเศษส่วนแต่ไม่เปลี่ยนเครื่องหมาย'},{t:sgn(-k),tag:'เปลี่ยนเครื่องหมายแต่ไม่กลับเศษส่วน'},{t:sgn(k),tag:'ความชันเท่ากันคือขนาน ไม่ใช่ตั้งฉาก'}],'ตั้งฉาก: m₁·m₂ = −1')},
+ ()=>{let m,x1,y1;do{m=R(-4,4);x1=R(-4,4);y1=R(-6,6)}while(m===0||x1===0);const c=y1-m*x1;return NUM(`เส้นตรงที่มีความชัน ${m} ผ่านจุด ${pt(x1,y1)} ตัดแกน Y ที่ y เท่าใด`,c,[{v:y1+m*x1,tag:'ผิดเครื่องหมายเมื่อหา c = y − mx'}],`y = mx + c → ${y1} = ${m}(${sgn(x1)}) + c → c = ${c}`)},
+ ()=>{let m,x1,y1,dx;do{m=R(-3,4);x1=R(-3,3);dx=R(1,3);y1=R(-5,5)}while(m===0);const x2=x1+dx,y2=y1+m*dx;const c=y1-m*x1;return NUM(`เส้นตรงผ่านจุด ${pt(x1,y1)} และ ${pt(x2,y2)} ตัดแกน Y ที่ y เท่าใด`,c,[{v:y1,tag:'ใช้ค่า y ของจุดแรกเป็นจุดตัดแกน Y'}].filter(h=>h.v!==c),`หา m = ${m} แล้ว c = y₁ − mx₁ = ${c}`)}]},
+{id:'F4',name:'ความสัมพันธ์และฟังก์ชัน: โดเมน เรนจ์ (ต่อยอด)',gen:[
+ ()=>{const y=()=>R(1,9);const good=`{(1, ${y()}), (2, ${y()}), (3, ${y()})}`;const bad=()=>{const a=R(1,3),b=R(1,8),c=(a%3)+1;return `{(${a}, ${b}), (${a}, ${b+1}), (${c}, ${y()})}`};return MC('ข้อใดเป็น<b>ฟังก์ชัน</b>',good,[bad(),bad(),bad()].map(t=>({t,tag:'ค่า x ตัวเดียวกันมี y มากกว่าหนึ่งค่า (ไม่เป็นฟังก์ชัน)'})),'ฟังก์ชัน: x แต่ละค่าต้องจับคู่กับ y เพียงค่าเดียว (y ซ้ำกันได้)')},
+ ()=>{const a=R(2,5),b=R(-6,6),k=R(-4,4);return NUM(`ถ้า f(x) = ${a}x ${sg(b)} แล้ว f(${sgn(k)}) มีค่าเท่าใด`,a*k+b,[{v:a*(-k)+b,tag:'แทนค่าติดลบแล้วเครื่องหมายผิด'},{v:k+b,tag:'ลืมคูณสัมประสิทธิ์'}].filter(h=>h.v!==a*k+b),`f(${sgn(k)}) = ${a}(${sgn(k)}) ${sg(b)} = ${a*k+b}`)},
+ ()=>{const k=R(-4,5);if(Math.random()<0.5)return MC(`โดเมนของ f(x) = √(x ${sg(-k)}) คือข้อใด`,`x ≥ ${sgn(k)}`,[{t:`x > ${sgn(k)}`,tag:'ไม่รวมค่าที่ทำให้ในรากเป็นศูนย์'},{t:`x ≤ ${sgn(k)}`,tag:'อ่านทิศอสมการผิด'},{t:'x ≥ 0',tag:'ลืมค่า k ในรากที่สอง'}],'ในรากที่สองต้องไม่เป็นลบ');return MC(`โดเมนของ f(x) = 1/(x ${sg(-k)}) คือข้อใด`,`x ≠ ${sgn(k)}`,[{t:`x = ${sgn(k)}`,tag:'สับสนระหว่าง ≠ กับ ='},{t:'x ≠ 0',tag:'ลืมค่า k ในตัวส่วน'},{t:`x ≠ ${sgn(-k)}`,tag:'ผิดเครื่องหมายของจุดที่ทำให้ตัวส่วนเป็นศูนย์'}].filter(c=>c.t!==`x ≠ ${sgn(k)}`),'ตัวส่วนห้ามเป็นศูนย์')},
+ ()=>{const a=R(1,3),b=R(1,3);let A=a,B=b;if(A===B)B=A+1;const dom=[-B,-A,0,A];const f=x=>x*x;const rg=[...new Set(dom.map(f))].sort((x,y)=>x-y);return MC(`f(x) = x² มีโดเมน {${dom.map(sgn).join(', ')}} เรนจ์ของ f คือข้อใด`,`{${rg.join(', ')}}`,[{t:`{${dom.map(sgn).join(', ')}}`,tag:'ตอบโดเมนแทนเรนจ์'},{t:`{${[...new Set(dom.map(x=>-x*x))].sort((x,y)=>x-y).map(sgn).join(', ')}}`,tag:'กำลังสองแล้วได้ค่าลบ'},{t:`{${[...rg,rg[rg.length-1]+1].join(', ')}}`,tag:'เพิ่มค่าที่ไม่ได้เกิดจากโดเมน'}],'แทนค่าในโดเมนแล้วเขียนค่า y ที่ได้ (ไม่ซ้ำ)')}]},
+{id:'F5',name:'ฟังก์ชันกำลังสองและพาราโบลา (ต่อยอด)',gen:[
+ ()=>{let a,h;do{a=R(1,3);h=R(-4,5)}while(h===0);const b=-2*a*h;return NUM(`กราฟ y = ${poly2x(a,b,pick([-5,-3,-1,2,4]))} มีแกนสมมาตรที่ x เท่าใด`.replace('__',''),h,[{v:-h,tag:'ผิดเครื่องหมายของ −b/(2a)'}],`x = −b/(2a) = ${-b}/${2*a} = ${h}`)},
+ ()=>{let a,h,k;do{a=R(1,3)*pick([-1,1]);h=R(-4,4);k=R(-5,6)}while(h===0||k===0);return NUM(`ค่า${a>0?'ต่ำสุด':'สูงสุด'}ของ y = ${a===1?'':a===-1?'−':a}(x ${sg(-h)})² ${sg(k)} เท่ากับเท่าใด`,k,[{v:h,tag:'ตอบค่า x ของจุดยอดแทนค่า y'},{v:-k,tag:'ผิดเครื่องหมายของค่า k'}].filter(x=>x.v!==k),'จุดยอดของ y = a(x−h)²+k คือ (h, k)')},
+ ()=>{let h,k;do{h=R(-4,4);k=R(-5,6)}while(h===0||k===0);return MC(`จุดยอดของ y = (x ${sg(-h)})² ${sg(k)} คือข้อใด`,pt(h,k),[{t:pt(-h,k),tag:'ผิดเครื่องหมายของ h'},{t:pt(h,-k),tag:'ผิดเครื่องหมายของ k'},{t:pt(k,h),tag:'สลับ x กับ y'}],'y = a(x−h)²+k มีจุดยอด (h, k)')},
+ ()=>{let h,c0;do{h=R(1,5);c0=R(-4,5)}while(c0===0);return NUM(`ค่าสูงสุดของ y = −x² + ${2*h}x ${sg(c0)} เท่ากับเท่าใด`,c0+h*h,[{v:c0,tag:'ตอบค่าคงที่ ไม่ได้หาจุดยอด'},{v:c0-h*h,tag:'คิดว่า a<0 ทำให้ค่าสูงสุดลดลง'}].filter(x=>x.v!==c0+h*h),`จุดยอดที่ x = ${h}: y = −${h*h} + ${2*h*h} ${sg(c0)} = ${c0+h*h}`)}]},
+{id:'F6',name:'เอกซ์โพเนนเชียลและลอการิทึม (ต่อยอด)',gen:[
+ ()=>{const b=pick([2,3,5]),n=R(2,4);return NUM(`ถ้า ${b}<sup>x</sup> = ${Math.pow(b,n)} แล้ว x มีค่าเท่าใด`,n,[{v:Math.pow(b,n)/b,tag:'หารด้วยฐานครั้งเดียวแทนการหาเลขชี้กำลัง'}].filter(x=>x.v!==n),`${Math.pow(b,n)} = ${b}${sup(n)}`)},
+ ()=>{const b=pick([2,3,5,10]),n=R(2,4);return NUM(`log<sub>${b}</sub> ${Math.pow(b,n)} มีค่าเท่าใด`,n,[{v:Math.pow(b,n),tag:'ตอบค่าอาร์กิวเมนต์แทนค่าลอการิทึม'},{v:b*n,tag:'คูณฐานกับเลขชี้กำลัง'}].filter(x=>x.v!==n),`log_b N = n หมายถึง b^n = N`)},
+ ()=>{const b=pick([2,3,4]),k=R(2,4);const ok=`1/${Math.pow(b,k)}`;return MC(`ถ้า f(x) = ${b}<sup>x</sup> แล้ว f(−${k}) มีค่าเท่าใด`,ok,[{t:`−${Math.pow(b,k)}`,tag:'คิดว่าเลขชี้กำลังลบทำให้ค่าเป็นลบ'},{t:`${Math.pow(b,k)}`,tag:'ไม่กลับเป็นส่วน'},{t:`−${b*k}`,tag:'คูณฐานกับเลขชี้กำลัง'}],`${b}^(−${k}) = 1/${b}^${k}`)},
+ ()=>{const b=pick([2,3,5]),n=R(2,4);return NUM(`ถ้า log<sub>${b}</sub> x = ${n} แล้ว x มีค่าเท่าใด`,Math.pow(b,n),[{v:b*n,tag:'คูณฐานกับค่าลอการิทึมแทนการยกกำลัง'},{v:n*n,tag:''}].filter(x=>x.v!==Math.pow(b,n)),`x = ${b}${sup(n)} = ${Math.pow(b,n)}`)}]},
+];
+function poly2(a,b,c){const t=(k,v)=>k===0?'':(Math.abs(k)===1?(k<0?'−':'')+v:sgn(k)+v);const bb=b===1?'y':b+'y';return `${t(a,'x')}${a?' + ':''}${bb} = ${sgn(c)}`.replace('+ −','−').replace(/\+ −/,'−')}
+function poly2x(a,b,c){return `${a===1?'':a}x${sup(2)} ${b<0?'− '+(-b):'+ '+b}x ${c<0?'− '+(-c):'+ '+c}`}
+
+return {META,STEPS};})();
+BANKS['D']=(function(){
+const META={sid:'D',name:'เรขาคณิตและการวัด',base:'ตอนนี้ควรเริ่มซ่อมจากขั้น D1 (มุมและสมบัติของรูปเรขาคณิตสองมิติ) ก่อน แล้วค่อยไล่ขึ้นไปทีละขั้น',note:p=>p.length>=8?'ขั้นท้าย ๆ (D12–D13) เป็นขั้นต่อยอดของ ม.4–ม.5':''};
+const TRI=[[3,4,5],[5,12,13],[8,15,17],[6,8,10],[9,12,15]];
+const dg=n=>n+'°';
+var STEPS=[
+{id:'D1',name:'รูปเรขาคณิตสองมิติ: มุมและสมบัติ',gen:[
+ ()=>{let a,b;do{a=R(30,90);b=R(25,80)}while(a+b>150);return NUM(`สามเหลี่ยมมีมุมสองมุมเท่ากับ ${a}° และ ${b}° มุมที่สามเท่ากับกี่องศา`,180-a-b,[{v:360-a-b,tag:'ใช้ผลบวก 360° แทน 180° (สามเหลี่ยม)'},{v:90-a-b+90,tag:''}].filter(h=>h.tag),'ผลบวกมุมภายในสามเหลี่ยม = 180°')},
+ ()=>{const a=R(70,110),b=R(70,110),c=R(70,110);return NUM(`สี่เหลี่ยมมีมุมภายในสามมุมเท่ากับ ${a}°, ${b}°, ${c}° มุมที่สี่เท่ากับกี่องศา`,360-a-b-c,[{v:180-a-b-c<0?a+b+c-180:180-a-b-c,tag:'ใช้ผลบวก 180° แทน 360° (สี่เหลี่ยม)'}].filter(h=>h.v!==360-a-b-c),'ผลบวกมุมภายในสี่เหลี่ยม = 360°')},
+ ()=>{let a,b;do{a=R(35,80);b=R(35,80)}while(a+b===90);return NUM(`ในสามเหลี่ยม ABC มุมภายใน A = ${a}° และ B = ${b}° มุมภายนอกที่ C เท่ากับกี่องศา`,a+b,[{v:180-a-b,tag:'ตอบมุม C แทนมุมภายนอก'}],'มุมภายนอก = ผลบวกมุมภายในที่ไม่ได้อยู่ติดกัน')},
+ ()=>{const v=pick([40,50,70,80,100,110,120]);return NUM(`สามเหลี่ยมหน้าจั่วมีมุมยอด ${v}° มุมที่ฐานแต่ละมุมเท่ากับกี่องศา`,(180-v)/2,[{v:180-v,tag:'ลืมหารสองเพราะมุมฐานมี 2 มุม'}],'มุมฐานเท่ากันทั้งสอง (180° − มุมยอด) ÷ 2')}]},
+{id:'D2',name:'การสร้างทางเรขาคณิต',gen:[
+ ()=>MC('การสร้างเส้นแบ่งครึ่งส่วนของเส้นตรง AB ด้วยวงเวียน ต้องตั้งรัศมีวงเวียนอย่างไร','มากกว่าครึ่งหนึ่งของ AB',[{t:'น้อยกว่าครึ่งหนึ่งของ AB',tag:'วงกลมสองวงไม่ตัดกัน จึงหาจุดตัดไม่ได้'},{t:'เท่ากับครึ่งหนึ่งของ AB พอดี',tag:'วงกลมสองวงสัมผัสกันที่จุดเดียว หาเส้นแบ่งครึ่งไม่ได้'},{t:'ตั้งเท่าไรก็ได้ ไม่มีผล',tag:'รัศมีสำคัญต่อการเกิดจุดตัด'}],'รัศมีต้องมากกว่า AB/2 เพื่อให้วงกลมสองวงตัดกันที่สองจุด'),
+ ()=>MC('ขั้นแรกของการแบ่งครึ่งมุมด้วยวงเวียนคือข้อใด','ใช้จุดยอดมุมเป็นจุดศูนย์กลาง เขียนส่วนโค้งตัดแขนทั้งสองของมุม',[{t:'วัดมุมด้วยไม้โปรแทรกเตอร์แล้วหารสอง',tag:'การสร้างต้องใช้วงเวียนกับสันตรงเท่านั้น'},{t:'ลากเส้นตรงจากจุดยอดไปทางใดก็ได้',tag:'ไม่ได้ใช้เงื่อนไขทางเรขาคณิต'},{t:'วัดความยาวแขนทั้งสองให้เท่ากันด้วยไม้บรรทัด',tag:'ไม่ใช่ขั้นตอนของการสร้างที่ถูกต้อง'}],'เขียนส่วนโค้งจากจุดยอด ตัดแขนทั้งสอง แล้วใช้จุดตัดสร้างส่วนโค้งอีกสองส่วนตัดกัน'),
+ ()=>MC('การสร้างมุม 60° ด้วยวงเวียนและสันตรง อาศัยรูปใด','สามเหลี่ยมด้านเท่า',[{t:'สี่เหลี่ยมจัตุรัส',tag:'มุมของสี่เหลี่ยมจัตุรัสคือ 90°'},{t:'สามเหลี่ยมมุมฉาก',tag:'มีมุม 90° ไม่จำเป็นต้องมี 60°'},{t:'วงกลมเท่านั้น',tag:'ต้องสร้างสามเหลี่ยมด้านเท่า'}],'สามเหลี่ยมด้านเท่ามีมุมทุกมุมเท่ากับ 60°'),
+ ()=>{const a=pick([60,80,120,160]);return NUM(`แบ่งครึ่งมุม ${a}° สองครั้งติดกัน จะได้มุมขนาดกี่องศา`,a/4,[{v:a/2,tag:'แบ่งครึ่งเพียงครั้งเดียว'}],'แบ่งครึ่งครั้งละหนึ่งเท่า = หาร 2 สองครั้ง')}]},
+{id:'D3',name:'เส้นรอบรูปและพื้นที่',gen:[
+ ()=>{const b=R(4,14),h=pick([2,4,6,8,10]);return NUM(`สามเหลี่ยมมีฐานยาว ${b} ซม. สูง ${h} ซม. มีพื้นที่กี่ตารางเซนติเมตร`,b*h/2,[{v:b*h,tag:'ลืมคูณ ½ (สูตรพื้นที่สามเหลี่ยม)'}],`พื้นที่ = ½ × ฐาน × สูง = ${b*h/2}`)},
+ ()=>{const k=R(1,3);const r=7*k;return NUM(`วงกลมรัศมี ${r} ซม. มีเส้นรอบวงกี่เซนติเมตร (ใช้ π = 22/7)`,44*k,[{v:154*k*k,tag:'สับสนสูตรเส้นรอบวงกับพื้นที่วงกลม'}],`C = 2πr = 2×(22/7)×${r} = ${44*k}`)},
+ ()=>{const k=R(1,3);const r=7*k;return NUM(`วงกลมรัศมี ${r} ซม. มีพื้นที่กี่ตารางเซนติเมตร (ใช้ π = 22/7)`,154*k*k,[{v:44*k,tag:'สับสนสูตรพื้นที่วงกลมกับเส้นรอบวง'},{v:Math.round(22/7*r*2*r),tag:'ใช้ 2πr² แทน πr²'}],`A = πr² = (22/7)×${r}² = ${154*k*k}`)},
+ ()=>{const a=R(3,10),b=R(11,18),h=pick([2,4,6]);return NUM(`สี่เหลี่ยมคางหมูมีด้านคู่ขนานยาว ${a} และ ${b} ซม. สูง ${h} ซม. พื้นที่กี่ตารางเซนติเมตร`,(a+b)*h/2,[{v:(a+b)*h,tag:'ลืมคูณ ½'}],'พื้นที่ = ½ × (ผลบวกด้านคู่ขนาน) × สูง')}]},
+{id:'D4',name:'รูปสามมิติ: พื้นที่ผิวและปริมาตร',gen:[
+ ()=>{const b=pick([4,6,8]),h=R(3,6),H=R(5,10);return NUM(`ปริซึมฐานเป็นสามเหลี่ยมฐานยาว ${b} ซม. สูง ${h} ซม. ปริซึมสูง ${H} ซม. มีปริมาตรกี่ลูกบาศก์เซนติเมตร`,b*h/2*H,[{v:b*h*H,tag:'ลืมคูณ ½ ของพื้นที่ฐานสามเหลี่ยม'}],'ปริมาตรปริซึม = พื้นที่ฐาน × สูง')},
+ ()=>{const H=R(2,10);return NUM(`ทรงกระบอกรัศมีฐาน 7 ซม. สูง ${H} ซม. มีปริมาตรกี่ลูกบาศก์เซนติเมตร (ใช้ π = 22/7)`,154*H,[{v:44*H,tag:'สับสนปริมาตรกับพื้นที่ผิวข้าง'}],`V = πr²h = (22/7)×49×${H} = ${154*H}`)},
+ ()=>{const s=R(3,9),m=R(1,4);const h=3*m;return NUM(`พีระมิดฐานสี่เหลี่ยมจัตุรัสด้านยาว ${s} ซม. สูง ${h} ซม. มีปริมาตรกี่ลูกบาศก์เซนติเมตร`,s*s*m,[{v:s*s*h,tag:'ลืมคูณ ⅓ ของพีระมิด'}],`V = ⅓ × ${s*s} × ${h} = ${s*s*m}`)},
+ ()=>{let l,w,h;do{l=R(3,8);w=R(3,8);h=R(2,7)}while(2*(l*w+l*h+w*h)===l*w*h);return NUM(`กล่องสี่เหลี่ยมมุมฉากยาว ${l} กว้าง ${w} สูง ${h} ซม. มีพื้นที่ผิวรวมกี่ตารางเซนติเมตร`,2*(l*w+l*h+w*h),[{v:l*w*h,tag:'สับสนพื้นที่ผิวกับปริมาตร'}],'พื้นที่ผิว = 2(lw + lh + wh)')}]},
+{id:'D5',name:'ทฤษฎีบทพีทาโกรัส',gen:[
+ ()=>{const t=pick(TRI.slice(0,3)),k=pick([1,2]);const [a,b,c]=t.map(x=>x*k);return NUM(`สามเหลี่ยมมุมฉากมีด้านประกอบมุมฉากยาว ${a} และ ${b} หน่วย ด้านตรงข้ามมุมฉากยาวกี่หน่วย`,c,[{v:a+b,tag:'บวกความยาวแทนการใช้ทฤษฎีบทพีทาโกรัส'}],`c² = ${a}² + ${b}² = ${c*c}`)},
+ ()=>{const t=pick(TRI.slice(0,3)),k=pick([1,2]);const [a,b,c]=t.map(x=>x*k);return NUM(`สามเหลี่ยมมุมฉากมีด้านตรงข้ามมุมฉากยาว ${c} หน่วย และด้านหนึ่งยาว ${a} หน่วย อีกด้านยาวกี่หน่วย`,b,[{v:c-a,tag:'ลบความยาวตรง ๆ แทนการใช้ทฤษฎีบท'}],`b² = ${c}² − ${a}² = ${b*b}`)},
+ ()=>{const t=pick(TRI);const k=pick([1,2]);const [a,b,c]=t.map(x=>x*k);return MC('ข้อใดเป็นความยาวด้านของสามเหลี่ยมมุมฉาก',`${a}, ${b}, ${c}`,[{t:`${a}, ${b}, ${c+1}`,tag:'ตรวจ a² + b² = c² ไม่ถูกต้อง'},{t:`${a+1}, ${b}, ${c}`,tag:'ตรวจ a² + b² = c² ไม่ถูกต้อง'},{t:`${a}, ${b+1}, ${c}`,tag:'ตรวจ a² + b² = c² ไม่ถูกต้อง'}],`${a}²+${b}² = ${c}²`)},
+ ()=>{const t=pick(TRI.slice(0,3));const [a,b,c]=t;return NUM(`บันไดยาว ${c} เมตร พิงกำแพง ฐานบันไดห่างกำแพง ${a} เมตร ปลายบันไดสูงจากพื้นกี่เมตร`,b,[{v:c-a,tag:'ลบความยาวตรง ๆ แทนการใช้ทฤษฎีบท'}],`สูง² = ${c}² − ${a}² = ${b*b}`)}]},
+{id:'D10',name:'เส้นขนาน มุมภายใน และสมบัติของสามเหลี่ยม',gen:[
+ ()=>{let a;do{a=R(50,130)}while(a===90);return NUM(`เส้นตรงขนานสองเส้นถูกตัดด้วยเส้นตัด มุมภายในด้านเดียวกันของเส้นตัดมุมหนึ่งเท่ากับ ${a}° อีกมุมหนึ่งเท่ากับกี่องศา`,180-a,[{v:a,tag:'สับสนมุมภายในด้านเดียวกัน (รวม 180°) กับมุมแย้ง (เท่ากัน)'}],'มุมภายในด้านเดียวกันรวมกันได้ 180°')},
+ ()=>{const x=R(10,35),a=R(0,20);return NUM(`เส้นตรงสองเส้นขนานกัน มุมแย้งสองมุมเท่ากับ (2x + ${a})° และ (x + ${x+a})° มุมแย้งแต่ละมุมเท่ากับกี่องศา`,2*x+a,[{v:x,tag:'ตอบค่า x แทนขนาดของมุม'}],'มุมแย้งเท่ากัน: 2x + a = x + (x+a) ...')},
+ ()=>{let p,q;do{p=R(40,80);q=R(40,80)}while(p+q===90);return NUM(`ในสามเหลี่ยม ABC เส้น DE ขนาน BC โดย ∠ADE = ${p}° และ ∠AED = ${q}° แล้ว ∠A เท่ากับกี่องศา`,180-p-q,[{v:p+q,tag:'ตอบผลบวกของสองมุมแทนมุมที่สาม'}],'∠A = 180° − ∠ADE − ∠AED')},
+ ()=>MC('เมื่อเส้นตรงสองเส้นขนานกันถูกตัดด้วยเส้นตัด ข้อใดเป็นจริงเสมอ','มุมแย้งมีขนาดเท่ากัน',[{t:'มุมภายในด้านเดียวกันมีขนาดเท่ากัน',tag:'มุมภายในด้านเดียวกันรวมกัน 180°'},{t:'มุมแย้งรวมกันได้ 180°',tag:'มุมแย้งเท่ากัน ไม่ได้รวมกัน 180°'},{t:'มุมแย้งรวมกันได้ 90°',tag:'ไม่เป็นสมบัติของเส้นขนาน'}],'สมบัติของเส้นขนาน: มุมแย้งเท่ากัน มุมภายในด้านเดียวกันรวม 180°')]},
+{id:'D6',name:'ความเท่ากันทุกประการ',gen:[
+ ()=>{const rule=pick([['ด.ด.ด.','AB = DE, BC = EF, CA = FD'],['ด.ม.ด.','AB = DE, ∠B = ∠E, BC = EF'],['ม.ด.ม.','∠A = ∠D, AB = DE, ∠B = ∠E'],['ม.ม.ด.','∠A = ∠D, ∠B = ∠E, BC = EF']]);const all=['ด.ด.ด.','ด.ม.ด.','ม.ด.ม.','ม.ม.ด.'];return MC(`สามเหลี่ยม ABC กับ DEF มีเงื่อนไข ${rule[1]} สรุปว่าเท่ากันทุกประการด้วยเงื่อนไขใด`,rule[0],all.filter(x=>x!==rule[0]).map(x=>({t:x,tag:'เลือกเงื่อนไขของความเท่ากันทุกประการไม่ตรงกับข้อมูล'})),'ดูว่าข้อมูลเป็นด้าน (ด) หรือมุม (ม) และเรียงอย่างไร')},
+ ()=>MC('เงื่อนไขใดที่<b>ไม่เพียงพอ</b>จะสรุปว่าสามเหลี่ยมสองรูปเท่ากันทุกประการ','มุมเท่ากันสามคู่ (ม.ม.ม.)',[{t:'ด้านเท่ากันสามคู่ (ด.ด.ด.)',tag:'ด.ด.ด. ใช้สรุปได้'},{t:'ด้าน-มุม-ด้าน เท่ากัน (ด.ม.ด.)',tag:'ด.ม.ด. ใช้สรุปได้'},{t:'มุม-ด้าน-มุม เท่ากัน (ม.ด.ม.)',tag:'ม.ด.ม. ใช้สรุปได้'}],'มุมเท่ากันทั้งสามคู่ทำให้รูปคล้ายกัน แต่อาจมีขนาดต่างกัน'),
+ ()=>{const [a,b,c]=pick([[50,60,70],[40,65,75],[30,80,70],[45,55,80]]);const perm=pick([['R','P','Q'],['Q','R','P']]);/* ABC ≅ perm */const m={A:perm[0],B:perm[1],C:perm[2]};const ang={A:a,B:b,C:c};const ask=pick(['A','B','C']);return NUM(`ถ้า △ABC ≅ △${perm.join('')} และ ∠A = ${a}°, ∠B = ${b}°, ∠C = ${c}° แล้ว ∠${m[ask]} เท่ากับกี่องศา`,ang[ask],[{v:ang[ask]===a?b:a,tag:'จับคู่จุดยอดที่สมนัยกันผิดตำแหน่ง'}].filter(h=>h.v!==ang[ask]),`${ask} สมนัยกับ ${m[ask]} จึงเท่ากับ ${ang[ask]}°`)},
+ ()=>MC('รูปสามเหลี่ยมสองรูปมีมุมเท่ากันทั้งสามคู่ ข้อสรุปใดถูกต้อง','อาจไม่เท่ากันทุกประการ เพราะขนาดอาจต่างกัน',[{t:'เท่ากันทุกประการเสมอ',tag:'ม.ม.ม. ไม่พอสรุปความเท่ากันทุกประการ'},{t:'ด้านทุกด้านต้องเท่ากันเสมอ',tag:'มุมเท่ากันไม่ได้บังคับให้ด้านเท่ากัน'},{t:'พื้นที่ต้องเท่ากันเสมอ',tag:'ขนาดต่างกันได้'}],'มุมเท่ากันทั้งสามคู่ ทำให้รูปคล้ายกัน')]},
+{id:'D11',name:'การแปลงทางเรขาคณิต',gen:[
+ ()=>{const a=R(-5,5),b=R(-5,5),h=R(1,6),k=R(-4,4)||2;return MC(`เลื่อนจุด ${pt(a,b)} ไปทางขวา ${h} หน่วย และ${k>0?'ขึ้น':'ลง'} ${Math.abs(k)} หน่วย ได้จุดใด`,pt(a+h,b+k),[{t:pt(a-h,b+k),tag:'เลื่อนผิดทิศทางตามแนวนอน'},{t:pt(a+h,b-k),tag:'เลื่อนผิดทิศทางตามแนวตั้ง'},{t:pt(a+k,b+h),tag:'สลับการเลื่อนในแนว x กับ y'}],'ขวา +x, ซ้าย −x, ขึ้น +y, ลง −y')},
+ ()=>{const a=R(-6,6)||3,b=R(1,7)*pick([-1,1]);return MC(`สะท้อนจุด ${pt(a,b)} ข้ามแกน X ได้จุดใด`,pt(a,-b),[{t:pt(-a,b),tag:'สะท้อนข้ามแกน Y แทนแกน X'},{t:pt(-a,-b),tag:'สะท้อนผ่านจุดกำเนิด (หมุน 180°)'},{t:pt(b,a),tag:'สลับพิกัด x กับ y'}],'สะท้อนข้ามแกน X: y เปลี่ยนเครื่องหมาย')},
+ ()=>{const a=R(1,7)*pick([-1,1]),b=R(1,7)*pick([-1,1]);return MC(`หมุนจุด ${pt(a,b)} ทวนเข็มนาฬิกา 90° รอบจุดกำเนิด ได้จุดใด`,pt(-b,a),[{t:pt(b,-a),tag:'หมุนตามเข็มนาฬิกาแทนทวนเข็ม'},{t:pt(-a,-b),tag:'หมุน 180° แทน 90°'},{t:pt(b,a),tag:'สลับพิกัดโดยไม่เปลี่ยนเครื่องหมาย'}],'(x, y) → (−y, x)')},
+ ()=>{const a=R(1,7)*pick([-1,1]),b=R(1,7)*pick([-1,1]);return MC(`หมุนจุด ${pt(a,b)} 180° รอบจุดกำเนิด ได้จุดใด`,pt(-a,-b),[{t:pt(a,-b),tag:'สะท้อนข้ามแกน X แทนหมุน 180°'},{t:pt(-a,b),tag:'สะท้อนข้ามแกน Y แทนหมุน 180°'},{t:pt(b,a),tag:'สลับพิกัด'}],'(x, y) → (−x, −y)')}]},
+{id:'D7',name:'ความคล้ายของรูปเรขาคณิต',gen:[
+ ()=>{let a,b;do{a=R(3,8);b=R(4,9)}while(a===b);const k=R(2,4);return NUM(`△ABC ~ △DEF โดย AB = ${a}, BC = ${b}, DE = ${a*k} แล้ว EF ยาวเท่าใด`,b*k,[{v:b+(a*k-a),tag:'ใช้การบวกแทนการคูณด้วยอัตราส่วน'}],`อัตราส่วน = ${k} ดังนั้น EF = ${b}×${k}`)},
+ ()=>{const [m,n]=pick([[2,3],[3,5],[2,5],[3,4]]);return MC(`รูปสามเหลี่ยมสองรูปคล้ายกัน ด้านที่สมนัยกันยาวเป็นอัตราส่วน ${m} : ${n} พื้นที่ของสองรูปมีอัตราส่วนเท่าใด`,`${m*m} : ${n*n}`,[{t:`${m} : ${n}`,tag:'ใช้อัตราส่วนด้านเป็นอัตราส่วนพื้นที่'},{t:`${2*m} : ${2*n}`,tag:'คูณ 2 แทนการยกกำลังสอง'},{t:`${m*m*m} : ${n*n*n}`,tag:'ยกกำลังสามแทนกำลังสอง'}],'พื้นที่อัตราส่วนเป็นกำลังสองของอัตราส่วนด้าน')},
+ ()=>{let s,h;do{s=R(2,5);h=R(3,6)}while(s===h);const k=R(2,4);return NUM(`เสาสูง ${h} ม. ทอดเงายาว ${s} ม. ในเวลาเดียวกัน ต้นไม้เงายาว ${s*k} ม. ต้นไม้สูงกี่เมตร`,h*k,[{v:h+(s*k-s),tag:'ใช้การบวกแทนการคูณด้วยสัดส่วน'}],`สูง : เงา เท่ากัน → ${h}×${k}`)},
+ ()=>{const P=R(10,30),k=R(2,4);return NUM(`สามเหลี่ยมรูปหนึ่งมีเส้นรอบรูป ${P} ซม. รูปที่คล้ายกันมีด้านยาวเป็น ${k} เท่า เส้นรอบรูปของรูปใหญ่เป็นกี่เซนติเมตร`,P*k,[{v:P*k*k,tag:'ใช้อัตราส่วนพื้นที่ (กำลังสอง) กับความยาวรอบรูป'}],'ความยาวเป็น k เท่า เส้นรอบรูปเป็น k เท่า')}]},
+{id:'D8',name:'ปริมาตรและพื้นที่ผิวกรวย ทรงกลม',gen:[
+ ()=>{const m=R(1,5);return NUM(`กรวยรัศมีฐาน 7 ซม. สูง ${3*m} ซม. มีปริมาตรกี่ลูกบาศก์เซนติเมตร (ใช้ π = 22/7)`,154*m,[{v:462*m,tag:'ลืมคูณ ⅓ ของกรวย'}],`V = ⅓πr²h = ⅓(22/7)(49)(${3*m}) = ${154*m}`)},
+ ()=>{const r=pick([6,9]);return NUM(`ทรงกลมรัศมี ${r} ซม. มีปริมาตรกี่ลูกบาศก์เซนติเมตร (ตอบเป็นจำนวนเท่าของ π)`,4*r*r*r/3,[{v:4*r*r,tag:'สับสนปริมาตรกับพื้นที่ผิวของทรงกลม'}],`V = 4πr³/3 = ${4*r*r*r/3}π`)},
+ ()=>{const r=R(2,9);return NUM(`ทรงกลมรัศมี ${r} ซม. มีพื้นที่ผิวกี่ตารางเซนติเมตร (ตอบเป็นจำนวนเท่าของ π)`,4*r*r,[{v:r*r,tag:'ลืมคูณ 4 (สูตรพื้นที่ผิวทรงกลม)'}],'พื้นที่ผิวทรงกลม = 4πr²')},
+ ()=>{const [r,h,l]=pick([[3,4,5],[5,12,13],[6,8,10],[8,6,10]]);return NUM(`กรวยรัศมีฐาน ${r} ซม. สูง ${h} ซม. ความยาวเส้นสร้างกรวยยาวกี่เซนติเมตร`,l,[{v:r+h,tag:'บวกรัศมีกับความสูงแทนการใช้พีทาโกรัส'}],`l² = ${r}² + ${h}² = ${l*l}`)}]},
+{id:'D9',name:'วงกลม: มุมที่จุดศูนย์กลาง คอร์ด เส้นสัมผัส',gen:[
+ ()=>{const t=R(20,70);return NUM(`มุมในส่วนโค้งของวงกลมมุมหนึ่งเท่ากับ ${t}° มุมที่จุดศูนย์กลางที่รองรับส่วนโค้งเดียวกันเท่ากับกี่องศา`,2*t,[{v:t/2,tag:'หารสองแทนการคูณสอง'}],'มุมที่จุดศูนย์กลาง = 2 × มุมในส่วนโค้ง')},
+ ()=>{const c=2*R(20,70);return NUM(`มุมที่จุดศูนย์กลางเท่ากับ ${c}° มุมในส่วนโค้งที่รองรับส่วนโค้งเดียวกันเท่ากับกี่องศา`,c/2,[{v:2*c,tag:'คูณสองแทนการหารสอง'}],'มุมในส่วนโค้ง = ½ × มุมที่จุดศูนย์กลาง')},
+ ()=>{const t=R(20,70);return NUM(`PA เป็นเส้นสัมผัสวงกลมที่จุด A จุดศูนย์กลาง O ถ้า ∠AOP = ${t}° แล้ว ∠APO เท่ากับกี่องศา`,90-t,[{v:180-t,tag:'ลืมว่า ∠OAP = 90° จึงใช้ 180° ผิด'}],'รัศมีตั้งฉากกับเส้นสัมผัส: ∠OAP = 90°')},
+ ()=>{const a=R(20,70);return NUM(`AB เป็นเส้นผ่านศูนย์กลางของวงกลม จุด C อยู่บนวงกลม ถ้า ∠CAB = ${a}° แล้ว ∠ABC เท่ากับกี่องศา`,90-a,[{v:180-a,tag:'ลืมว่ามุมในครึ่งวงกลมเท่ากับ 90°'}],'∠ACB = 90° จึง ∠ABC = 90° − ∠CAB')}]},
+{id:'D12',name:'ภาคตัดกรวย: เรขาคณิตวิเคราะห์ (ต่อยอด)',gen:[
+ ()=>{const [p,q,r]=pick([[3,4,5],[6,8,10],[5,12,13],[8,15,17]]);const x1=R(-4,3),y1=R(-4,3);return NUM(`ระยะห่างระหว่างจุด ${pt(x1,y1)} และ ${pt(x1+p,y1+q)} เท่ากับเท่าใด`,r,[{v:p+q,tag:'บวกผลต่างพิกัดแทนการใช้สูตรระยะทาง'}],`√(${p}² + ${q}²) = ${r}`)},
+ ()=>{const x1=R(-6,2)*2,x2=R(-3,4)*2+2*0;const y1=R(-5,5),y2=R(-5,5);return NUM(`จุดกึ่งกลางของส่วนของเส้นตรงที่เชื่อมจุด ${pt(x1,y1)} กับ ${pt(x2,y2)} มีพิกัด x เท่ากับเท่าใด`,(x1+x2)/2,[{v:x1+x2,tag:'ลืมหารสองในสูตรจุดกึ่งกลาง'}].filter(h=>h.v!==(x1+x2)/2),'x = (x₁+x₂)/2')},
+ ()=>{const h=R(1,5)*pick([-1,1]),k=R(1,5)*pick([-1,1]),r=R(2,6);return MC(`สมการของวงกลมที่มีจุดศูนย์กลางที่ ${pt(h,k)} รัศมี ${r} คือข้อใด`,`(x ${sgx(-h)})² + (y ${sgx(-k)})² = ${r*r}`,[{t:`(x ${sgx(h)})² + (y ${sgx(k)})² = ${r*r}`,tag:'ผิดเครื่องหมายของ h และ k ในสมการวงกลม'},{t:`(x ${sgx(-h)})² + (y ${sgx(-k)})² = ${r}`,tag:'ลืมยกกำลังสองรัศมี'},{t:`(x ${sgx(-k)})² + (y ${sgx(-h)})² = ${r*r}`,tag:'สลับ h กับ k'}],'(x−h)² + (y−k)² = r²')},
+ ()=>{const c=R(1,5);return MC(`พาราโบลา y² = ${4*c}x มีจุดโฟกัสที่จุดใด`,`(${c}, 0)`,[{t:`(${4*c}, 0)`,tag:'ใช้ 4c เป็นพิกัดโฟกัสแทน c'},{t:`(0, ${c})`,tag:'สลับแกน x กับ y'},{t:`(${2*c}, 0)`,tag:'ใช้ 2c แทน c'}],'y² = 4cx มีโฟกัส (c, 0)')}]},
+{id:'D13',name:'เวกเตอร์ในสามมิติ (ต่อยอด)',gen:[
+ ()=>{const u=[R(-3,5),R(-3,5),R(-3,5)],v=[R(-3,5),R(-3,5),R(-3,5)];const f=a=>`(${a.map(sgn).join(', ')})`;return MC(`ให้ u = ${f(u)} และ v = ${f(v)} แล้ว u + v เท่ากับข้อใด`,f(u.map((x,i)=>x+v[i])),[{t:f(u.map((x,i)=>x-v[i])),tag:'ลบแทนการบวกเวกเตอร์'},{t:f(u.map((x,i)=>x*v[i])),tag:'คูณแทนการบวกเวกเตอร์'},{t:f([u[0]+v[0],u[1]+v[1],u[2]-v[2]]),tag:'บวกไม่ครบทุกองค์ประกอบ'}],'บวกทีละองค์ประกอบ')},
+ ()=>{const [a,b,c,n]=pick([[2,3,6,7],[1,2,2,3],[4,4,2,6],[2,6,9,11],[6,2,3,7]]);return NUM(`เวกเตอร์ (${a}, ${b}, ${c}) มีขนาดเท่ากับเท่าใด`,n,[{v:a+b+c,tag:'บวกองค์ประกอบแทนการใช้สูตรขนาด'}],`√(${a}²+${b}²+${c}²) = ${n}`)},
+ ()=>{const u=[R(1,4),R(-3,4),R(1,5)],v=[R(1,4),R(1,5),R(-3,4)];return NUM(`ให้ u = (${u.map(sgn).join(', ')}) และ v = (${v.map(sgn).join(', ')}) แล้ว u · v มีค่าเท่าใด`,u[0]*v[0]+u[1]*v[1]+u[2]*v[2],[{v:u[0]+v[0]+u[1]+v[1]+u[2]+v[2],tag:'บวกองค์ประกอบแทนการคูณทีละคู่'}],'u·v = u₁v₁ + u₂v₂ + u₃v₃')},
+ ()=>{const u=[R(1,3),R(1,3),R(1,3)],k=R(2,4);return NUM(`v = k·u โดย u = (${u.join(', ')}) และ v = (${u.map(x=>x*k).join(', ')}) ค่า k เท่ากับเท่าใด`,k,[{v:u[0]*k-u[0],tag:'ลบแทนการหารเพื่อหาสเกลาร์'}].filter(h=>h.v!==k),'v ขนานกับ u: องค์ประกอบของ v เป็น k เท่าของ u')}]},
+];
+
+return {META,STEPS};})();
+BANKS['T']=(function(){
+const META={sid:'T',name:'ตรีโกณมิติ',base:'ตอนนี้ควรเริ่มซ่อมจากขั้น T1 (อัตราส่วนตรีโกณมิติในสามเหลี่ยมมุมฉาก) ก่อน แล้วค่อยไล่ขึ้นไปทีละขั้น',note:p=>p.length>=2?'ขั้น T2 ขึ้นไปเป็นเนื้อหาของ ม.5 (รายวิชาเพิ่มเติม)':''};
+const TRI=[[3,4,5],[5,12,13],[8,15,17],[7,24,25]];
+// ค่ามุมพิเศษ: sin,cos,tan ของ 0..360 (มุมอ้างอิง 30,45,60) เป็นสตริงเทียบได้
+const BASEV={sin:{0:'0',30:'1/2',45:'√2/2',60:'√3/2',90:'1'},cos:{0:'1',30:'√3/2',45:'√2/2',60:'1/2',90:'0'},tan:{0:'0',30:'√3/3',45:'1',60:'√3'}};
+function sgnQ(fn,d){d=((d%360)+360)%360;const q=d<90?1:d<180?2:d<270?3:4;if(fn==='sin')return q<=2?1:-1;if(fn==='cos')return(q===1||q===4)?1:-1;return(q===1||q===3)?1:-1}
+function refA(d){d=((d%360)+360)%360;if(d<=90)return d;if(d<=180)return 180-d;if(d<=270)return d-180;return 360-d}
+function valS(fn,d){const r=refA(d);const b=BASEV[fn][r];if(b===undefined)return null;if(b==='0')return '0';const s=sgnQ(fn,d);return (s<0?'−':'')+b}
+var STEPS=[
+{id:'T1',name:'อัตราส่วนตรีโกณมิติในสามเหลี่ยมมุมฉาก',gen:[
+ ()=>{const [o,a,h]=pick(TRI);const ang=pick(['A','B']);const op=ang==='A'?o:a,ad=ang==='A'?a:o;const fn=pick(['sin','cos','tan']);const num=fn==='tan'?op:fn==='sin'?op:ad,den=fn==='tan'?ad:h;return NUM(`สามเหลี่ยม ABC มีมุม C เป็นมุมฉาก AC = ${ang==='A'?a:o}, BC = ${ang==='A'?o:a}, AB = ${h} แล้ว ${fn} ${ang} = ?  (ตอบเป็นเศษส่วน)`,frac(num,den),[{v:frac(fn==='sin'?ad:fn==='cos'?op:ad,fn==='tan'?op:h),tag:'ใช้ด้านผิดคู่ (ตรงข้าม/ประชิด/ด้านตรงข้ามมุมฉาก)'}],`${fn} = ${fn==='tan'?'ตรงข้าม/ประชิด':fn==='sin'?'ตรงข้าม/ด้านตรงข้ามมุมฉาก':'ประชิด/ด้านตรงข้ามมุมฉาก'}`)},
+ ()=>{const items=[['sin 30°','1/2'],['cos 60°','1/2'],['tan 45°','1'],['sin 45°','√2/2'],['cos 45°','√2/2'],['sin 60°','√3/2'],['cos 30°','√3/2'],['tan 60°','√3'],['tan 30°','√3/3']];const it=pick(items);const pool=['1/2','1','√2/2','√3/2','√3','√3/3'].filter(x=>x!==it[1]);return MC(`${it[0]} มีค่าเท่ากับข้อใด`,it[1],shuffle(pool).slice(0,3).map(x=>({t:x,tag:'จำค่ามุมพิเศษสลับ sin กับ cos'})),'ค่ามุมพิเศษ 30°, 45°, 60°')},
+ ()=>{const x=R(3,12);return NUM(`สามเหลี่ยมมุมฉากมีมุม 30° ด้านตรงข้ามมุม 30° ยาว ${x} หน่วย ด้านตรงข้ามมุมฉากยาวกี่หน่วย`,2*x,[{v:x/2,tag:'สลับว่าด้านตรงข้ามมุม 30° คือครึ่งหนึ่งของด้านตรงข้ามมุมฉาก'}],'sin 30° = ½ → ด้านตรงข้ามมุมฉาก = 2 เท่า')},
+ ()=>{let a;do{a=R(10,80)}while(a===45);return NUM(`ถ้า sin ${a}° = cos x° เมื่อ 0 < x < 90 แล้ว x เท่ากับเท่าใด`,90-a,[{v:a,tag:'ลืมว่า sin θ = cos(90° − θ)'}],'sin θ = cos(90° − θ)')}]},
+{id:'T2',name:'วงกลมหนึ่งหน่วย เรเดียน',gen:[
+ ()=>{const p=[[30,'π/6'],[45,'π/4'],[60,'π/3'],[90,'π/2'],[120,'2π/3'],[135,'3π/4'],[150,'5π/6'],[180,'π'],[270,'3π/2']];const it=pick(p);const pool=p.map(x=>x[1]).filter(x=>x!==it[1]);return MC(`${it[0]}° เท่ากับกี่เรเดียน`,it[1],shuffle(pool).slice(0,3).map(x=>({t:x,tag:'แปลงองศาเป็นเรเดียนผิด (ใช้ 180° = π)'})),`${it[0]}° = ${it[0]}π/180`)},
+ ()=>{const p=[['π/6',30],['π/4',45],['π/3',60],['π/2',90],['2π/3',120],['3π/4',135],['5π/6',150],['3π/2',270]];const it=pick(p);return NUM(`${it[0]} เรเดียน เท่ากับกี่องศา`,it[1],[{v:it[1]===90?180:it[1]*2,tag:'ใช้ตัวคูณแปลงผิด'}],'คูณด้วย 180/π')},
+ ()=>{const Q=[[1,'sin θ > 0, cos θ > 0'],[2,'sin θ > 0, cos θ < 0'],[3,'sin θ < 0, cos θ < 0'],[4,'sin θ < 0, cos θ > 0']];const q=R(1,4);return MC(`ถ้ามุม θ อยู่ในจตุภาคที่ ${q} ข้อใดถูกต้อง`,Q[q-1][1],Q.filter(x=>x[0]!==q).map(x=>({t:x[1],tag:'เครื่องหมายของ sin/cos ในแต่ละจตุภาคไม่ถูก'})),'จตุภาค 1: ทั้งคู่บวก 2: sin บวก 3: ทั้งคู่ลบ 4: cos บวก')},
+ ()=>{const fn=pick(['sin','cos']);const d=pick([120,135,150,210,225,240,300,315,330]);const v=valS(fn,d);const pool=['1/2','−1/2','√2/2','−√2/2','√3/2','−√3/2'].filter(x=>x!==v);const flip=v[0]==='−'?v.slice(1):'−'+v;return MC(`${fn} ${d}° มีค่าเท่ากับข้อใด`,v,[{t:flip,tag:'ผิดเครื่องหมายตามจตุภาค'},...shuffle(pool.filter(x=>x!==flip)).slice(0,2).map(x=>({t:x,tag:'ใช้มุมอ้างอิงผิด'}))],`มุมอ้างอิง ${refA(d)}° เครื่องหมายตามจตุภาค`)}]},
+{id:'T3',name:'ฟังก์ชันตรีโกณมิติอื่น และค่ามุมพิเศษ',gen:[
+ ()=>{const it=pick([['sec 60°','2'],['csc 30°','2'],['cot 45°','1'],['sec 45°','√2'],['csc 45°','√2'],['cot 30°','√3'],['cot 60°','√3/3']]);const pool=['1','2','√2','√3','√3/3','1/2'].filter(x=>x!==it[1]);return MC(`${it[0]} มีค่าเท่ากับข้อใด`,it[1],shuffle(pool).slice(0,3).map(x=>({t:x,tag:'ใช้ค่ากลับกันผิด (secant/cosecant/cotangent)'})),'ใช้ส่วนกลับ: sec=1/cos, csc=1/sin, cot=1/tan')},
+ ()=>{const f=pick([['sec θ','1/cos θ'],['csc θ','1/sin θ'],['cot θ','cos θ / sin θ']]);const all=['1/cos θ','1/sin θ','1/tan θ','sin θ / cos θ'];return MC(`${f[0]} เท่ากับข้อใด`,f[1],all.filter(x=>x!==f[1]&&!(f[0]==='cot θ'&&x==='1/tan θ')).slice(0,3).map(x=>({t:x,tag:'สับสนนิยามของ sec/csc/cot'})),'sec=1/cos, csc=1/sin, cot=cos/sin')},
+ ()=>{const d=pick([135,225,315,120,150]);const v=valS('tan',d);const pool=['1','−1','√3','−√3','√3/3','−√3/3'].filter(x=>x!==v);return MC(`tan ${d}° มีค่าเท่ากับข้อใด`,v,shuffle(pool).slice(0,3).map(x=>({t:x,tag:'ผิดเครื่องหมายหรือมุมอ้างอิงของ tan'})),'tan = sin/cos')},
+ ()=>{const a=pick([['sin 90°',1],['cos 0°',1],['sin 180°',0],['cos 90°',0],['cos 180°',-1],['sin 270°',-1],['cos 270°',0]]),b=pick([['sin 90°',1],['cos 0°',1],['cos 180°',-1],['sin 270°',-1],['sin 0°',0]]);const op=pick(['+','−']);const val=op==='+'?a[1]+b[1]:a[1]-b[1];return NUM(`${a[0]} ${op} ${b[0]} มีค่าเท่าใด`,val,[{v:op==='+'?a[1]-b[1]:a[1]+b[1],tag:'ใช้เครื่องหมายผิดเมื่อค่าเป็นลบ'}].filter(h=>h.v!==val),'แทนค่า sin/cos ของมุมบนแกน')}]},
+{id:'T4',name:'กราฟฟังก์ชันตรีโกณมิติ',gen:[
+ ()=>{let a,b;do{a=pick([2,3,4,5]);b=pick([2,3])}while(a===b);return NUM(`กราฟ y = ${a} sin ${b}x มีแอมพลิจูด (ค่าสูงสุดจากแกนกลาง) เท่ากับเท่าใด`,a,[{v:b,tag:'สับสนแอมพลิจูดกับสัมประสิทธิ์ภายใน x'},{v:a*b,tag:'คูณสัมประสิทธิ์ทั้งสองแทนที่จะดูตัวหน้า'}],'แอมพลิจูด = |ตัวคูณหน้า sin|')},
+ ()=>{const b=pick([2,3,4]);const per={2:'π',3:'2π/3',4:'π/2'}[b];const all=['π','2π/3','π/2','2π','4π','π/3'].filter(x=>x!==per);return MC(`กราฟ y = sin ${b}x มีคาบเท่ากับข้อใด`,per,shuffle(all).slice(0,3).map(x=>({t:x,tag:'หาคาบผิด (คาบ = 2π ÷ สัมประสิทธิ์ของ x)'})),`คาบ = 2π/${b}`)},
+ ()=>{const a=pick([2,3,4]),c=pick([-3,-2,-1,1,2,3]);return NUM(`ค่าสูงสุดของ y = ${a} sin x ${sg(c)} เท่ากับเท่าใด`,a+c,[{v:-a+c,tag:'ตอบค่าต่ำสุดแทนค่าสูงสุด'},{v:a,tag:'ลืมการเลื่อนขึ้น/ลงด้วยค่าคงที่'}].filter(h=>h.v!==a+c),'ค่าสูงสุด = |a| + c')},
+ ()=>{const a=pick([2,3,4]),c=pick([-2,-1,1,2]);const pt=pick([['π/2',a+c],['3π/2',-a+c],['0',c]]);return NUM(`ถ้า y = ${a} sin x ${sg(c)} ค่า y เมื่อ x = ${pt[0]} เท่ากับเท่าใด`,pt[1],[{v:pt[0]==='3π/2'?a+c:pt[0]==='π/2'?-a+c:a+c,tag:'ค่า sin ที่มุมบนแกนผิด'}].filter(h=>h.v!==pt[1]),'sin 0 = 0, sin π/2 = 1, sin 3π/2 = −1')}]},
+{id:'T5',name:'เอกลักษณ์ตรีโกณมิติ',gen:[
+ ()=>{const [o,a,h]=pick(TRI.slice(0,3));const fn=pick(['sin','cos']);const given=fn==='sin'?o:a,ask=fn==='sin'?a:o;return NUM(`ถ้า ${fn} θ = ${given}/${h} และ θ อยู่ในจตุภาคที่ 1 แล้ว ${fn==='sin'?'cos':'sin'} θ เท่ากับเท่าใด`,frac(ask,h),[{v:frac(h*h-given*given,h*h),tag:'ลืมถอดรากที่สองหลังใช้ sin²θ + cos²θ = 1'}],'sin²θ + cos²θ = 1')},
+ ()=>{const f=pick([['sin(A + B)','sin A cos B + cos A sin B'],['cos(A + B)','cos A cos B − sin A sin B'],['sin(A − B)','sin A cos B − cos A sin B'],['cos(A − B)','cos A cos B + sin A sin B']]);const all=['sin A cos B + cos A sin B','cos A cos B − sin A sin B','sin A cos B − cos A sin B','cos A cos B + sin A sin B','sin A + sin B'];return MC(`${f[0]} เท่ากับข้อใด`,f[1],all.filter(x=>x!==f[1]).slice(0,3).map(x=>({t:x,tag:'จำสูตรผลบวก/ผลต่างของมุมสลับกัน'})),'สูตรผลบวก/ผลต่างของมุม')},
+ ()=>{const [o,a,h]=pick(TRI.slice(0,3));return NUM(`ถ้า sin θ = ${o}/${h} และ cos θ = ${a}/${h} แล้ว sin 2θ เท่ากับเท่าใด`,frac(2*o*a,h*h),[{v:frac(2*o,h),tag:'ลืมคูณ cos θ ในสูตร sin 2θ = 2 sin θ cos θ'}],'sin 2θ = 2 sin θ cos θ')},
+ ()=>{const [o,a,h]=pick(TRI.slice(0,3));return NUM(`ถ้า sin θ = ${o}/${h} แล้ว cos 2θ = 1 − 2sin²θ เท่ากับเท่าใด`,frac(h*h-2*o*o,h*h),[{v:frac(h-2*o,h),tag:'ลืมยกกำลังสองของ sin θ'}],'cos 2θ = 1 − 2sin²θ')}]},
+{id:'T6',name:'ตัวผกผันและสมการตรีโกณมิติ',gen:[
+ ()=>{const it=pick([['sin⁻¹(1/2)',30],['cos⁻¹(1/2)',60],['tan⁻¹(1)',45],['sin⁻¹(1)',90],['cos⁻¹(0)',90],['sin⁻¹(0)',0]]);return NUM(`${it[0]} มีค่ากี่องศา`,it[1],[{v:90-it[1],tag:'สับสน sin⁻¹ กับ cos⁻¹ (มุมประกอบ)'}].filter(h=>h.v!==it[1]),'ค่าหลักของฟังก์ชันผกผัน')},
+ ()=>{const T=[['sin x = 1/2',[30,150]],['cos x = 1/2',[60,300]],['sin x = −1/2',[210,330]],['cos x = −1/2',[120,240]],['tan x = 1',[45,225]]];const t=pick(T);const [p,q]=t[1];const cand=[`x = ${p}° เท่านั้น`,`x = ${p}° หรือ x = ${(360-p)%360}°`,`x = ${p}° หรือ x = ${180-p}°`,`x = ${q}° เท่านั้น`,`x = ${p}° หรือ x = ${p+90}°`];const ok=`x = ${p}° หรือ x = ${q}°`;const w=cand.filter(x=>x!==ok&&!(x.includes(`${q}°`)&&x.includes(`${p}°`)));return MC(`คำตอบของ ${t[0]} เมื่อ 0° ≤ x < 360° คือข้อใด`,ok,shuffle(w).slice(0,3).map(x=>({t:x,tag:'ลืมคำตอบอื่นในช่วงที่กำหนด หรือใช้จตุภาคผิด'})),'ตรวจเครื่องหมายของฟังก์ชันในแต่ละจตุภาคเพื่อหาคำตอบทุกค่า')},
+ ()=>{const [o,a,h]=pick(TRI.slice(0,3));return NUM(`cos(sin⁻¹(${o}/${h})) เท่ากับเท่าใด`,frac(a,h),[{v:frac(o,h),tag:'ตอบค่า sin เดิมแทน cos'}],'สร้างสามเหลี่ยมมุมฉากจากค่า sin')},
+ ()=>{const it=pick([['sin x = 1/2',2],['sin x = 1',1],['sin x = 2',0],['cos x = −1',1],['cos x = 3/2',0],['sin x = −1',1]]);return NUM(`สมการ ${it[0]} มีกี่คำตอบ เมื่อ 0° ≤ x < 360°`,it[1],[{v:it[1]===1?2:1,tag:'นับจำนวนคำตอบในช่วงผิด'}],'ตรวจว่าค่าอยู่ในช่วง [−1, 1] แล้วนับมุมที่ได้ค่านั้น')}]},
+{id:'T7',name:'กฎไซน์และกฎโคไซน์',gen:[
+ ()=>{const it=pick([['มีด้านสองด้านและมุมระหว่างด้านทั้งสอง (ด.ม.ด.)','กฎโคไซน์'],['มีมุมสองมุมและด้านหนึ่งด้าน','กฎไซน์'],['มีด้านครบสามด้าน','กฎโคไซน์'],['มีด้านสองด้านและมุมตรงข้ามด้านหนึ่ง','กฎไซน์']]);const other=it[1]==='กฎไซน์'?'กฎโคไซน์':'กฎไซน์';return MC(`สามเหลี่ยม${it[0]} ต้องการหาองค์ประกอบที่เหลือ ควรเลือกใช้กฎใดเป็นอันดับแรก`,it[1],[{t:other,tag:'เลือกกฎไม่ถูกกับข้อมูลที่โจทย์ให้'},{t:'ทฤษฎีบทพีทาโกรัสเสมอ',tag:'พีทาโกรัสใช้ได้เฉพาะสามเหลี่ยมมุมฉาก'},{t:'ไม่มีกฎใดใช้ได้',tag:''}],'ไซน์: มีคู่มุม–ด้านตรงข้าม; โคไซน์: ด.ม.ด. หรือ ด.ด.ด.')},
+ ()=>{const a=R(2,9),b=R(2,9);const C=pick([60,90,120]);const c2=C===90?a*a+b*b:C===60?a*a+b*b-a*b:a*a+b*b+a*b;const hint=C===90?(a+b)*(a+b):C===60?a*a+b*b+a*b:a*a+b*b-a*b;return NUM(`สามเหลี่ยมมีด้าน a = ${a}, b = ${b} และมุม C = ${C}° ระหว่างด้านทั้งสอง แล้ว c² เท่ากับเท่าใด`,c2,[{v:hint,tag:'ใช้เครื่องหมายผิดในกฎโคไซน์ (cos 120° ติดลบ, cos 60° บวก)'}].filter(h=>h.v!==c2),'c² = a² + b² − 2ab cos C')},
+ ()=>{const a=R(2,8)*2;const sw=pick([[30,90],[90,30]]);const b=a*(sw[1]===90?2:1)/(sw[0]===90?2:1);/* b = a sinB / sinA */const sinv=x=>x===30?0.5:1;const bb=a*sinv(sw[1])/sinv(sw[0]);return NUM(`สามเหลี่ยม ABC มี a = ${a} ตรงข้ามมุม A = ${sw[0]}° และมุม B = ${sw[1]}° แล้ว b เท่ากับเท่าใด`,bb,[{v:a,tag:'ลืมใช้อัตราส่วน sin B / sin A'}].filter(h=>h.v!==bb),'a/sin A = b/sin B')},
+ ()=>{const R0=R(3,12);return NUM(`สามเหลี่ยม ABC มีด้านตรงข้ามมุม A ยาว ${2*R0} และ ∠A = 90° แล้วรัศมีวงกลมล้อมรอบสามเหลี่ยมยาวเท่าใด (R = a / (2 sin A))`,R0,[{v:2*R0,tag:'ลืมหารสองในสูตร R = a/(2 sin A)'}],'sin 90° = 1')}]},
+{id:'T8',name:'โจทย์ระยะทางและความสูง',gen:[
+ ()=>{const L=2*R(3,10);return NUM(`บันไดยาว ${L} เมตร พิงกำแพงทำมุม 30° กับพื้น ปลายบันไดสูงจากพื้นกี่เมตร`,L/2,[{v:L,tag:'สับสนด้านตรงข้ามมุม 30° กับด้านตรงข้ามมุมฉาก'}],'สูง = L sin 30° = L/2')},
+ ()=>{const d=R(10,40),e=R(1,2);return NUM(`ยืนห่างอาคาร ${d} เมตร มองยอดอาคารเป็นมุมเงย 45° ระดับสายตาสูง ${e} เมตร อาคารสูงกี่เมตร`,d+e,[{v:d,tag:'ลืมบวกความสูงระดับสายตา'}],'tan 45° = 1 จึงสูงจากระดับสายตา = d')},
+ ()=>{const a=pick([20,25,30,35,40,50]);return NUM(`จากยอดตึกมองรถที่จอดอยู่ด้วยมุมก้ม ${a}° มุมเงยจากรถมองยอดตึกเท่ากับกี่องศา`,a,[{v:90-a,tag:'สับสนมุมก้ม–มุมเงยกับมุมประกอบ'}],'มุมก้มเท่ากับมุมเงยสลับ (มุมแย้ง)')},
+ ()=>{const [a,b,c]=pick([[5,12,13],[8,15,17],[3,4,5]]);return NUM(`บันไดยาว ${c} เมตร ฐานบันไดห่างกำแพง ${a} เมตร ปลายบันไดสูงจากพื้นกี่เมตร`,b,[{v:c-a,tag:'ลบแทนการใช้พีทาโกรัส'}],`สูง² = ${c}² − ${a}²`)}]},
+];
+
+return {META,STEPS};})();
+
+const $=id=>document.getElementById(id);
+const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
+let MEM={};
+function demoDB(){try{return JSON.parse(localStorage.getItem('idpDemo')||'{}')}catch(e){return MEM}}
+function demoSave(d){MEM=d;try{localStorage.setItem('idpDemo',JSON.stringify(d))}catch(e){}}
+function demoAvg(cls){const d=demoDB(),s={},n={};Object.keys(DEMO_ROSTER).forEach(id=>{if(DEMO_ROSTER[id].cls!==cls||!d[id])return;for(const k in d[id]){s[k]=(s[k]||0)+d[id][k].passed.length;n[k]=(n[k]||0)+1}});const o={};for(const k in s)o[k]={avg:Math.round(s[k]/n[k]*10)/10,n:n[k]};return o}
+async function api(body){
+ if(!DEMO){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return await r.json()}
+ const d=demoDB();
+ if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347 / 12348)'};
+  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='save'){d[body.token]=d[body.token]||{};d[body.token][body.strand]={passed:body.passed,failedAt:body.failedAt,updated:new Date().toISOString()};demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
+ if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
+ if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
+ if(body.action==='adminReset'){if(d[body.id])delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+}
+async function call(body,errEl){try{const r=await api(body);if(!r.ok&&errEl)errEl.textContent=r.error||'เกิดข้อผิดพลาด';return r}catch(e){if(errEl)errEl.textContent='เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง';return{ok:false}}}
+
+
+/* ชุดขั้นที่ต้องมี: [สาย, ขั้น, จำนวนข้อ, ชุด] */
+const GATE=[['N','N4',1,1],['N','N7',1,1],['N','N9',2,1],['N','N10',2,1],['A','A4',2,1],['A','A5',2,1],['A','A8',2,1],['F','F1',1,1],['D','D5',1,1],['T','T2',1,2],['T','T3',1,2],['T','T5',2,2]];
+const WHY={N4:'เครื่องหมายในการคูณ-หาร',N7:'เลขยกกำลัง (ใช้กับ iⁿ)',N9:'รากที่สอง (ต่อยอดเป็น √(−a) = i√a)',N10:'การทำรากให้อยู่ในรูปอย่างง่าย',A4:'การคูณพหุนาม (ใช้คูณ (a+bi)(c+di))',A5:'ผลต่างกำลังสอง (ใช้หาร/สังยุค)',A8:'สมการกำลังสองและตัวแยกค่า D',F1:'ระบบพิกัดฉาก (ระนาบเชิงซ้อน)',D5:'ทฤษฎีบทพีทาโกรัส (ค่าสัมบูรณ์ |z|)',T2:'วงกลมหนึ่งหน่วย (รูปเชิงขั้ว)',T3:'ค่ามุมพิเศษ',T5:'เอกลักษณ์ตรีโกณฯ และผลบวกของมุม'};
+const NAME={};for(const k in BANKS)BANKS[k].STEPS.forEach(s=>NAME[s.id]=s.name);
+function parseNum(s){s=String(s).trim().replace(/−|–/g,'-').replace(/,/g,'').replace(/[๐-๙]/g,c=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(c)).replace(/\s+/g,'');
+ if(!s)return NaN;const m=s.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);if(m)return +m[1]/+m[2];return /^-?\d+(\.\d+)?$/.test(s)?+s:NaN}
+function same(a,b){return Math.abs(a-b)<1e-9}
+let Q=[],I=0,RES={};
+function build(){Q=[];for(const [sid,step,n,grp] of GATE){const st=BANKS[sid].STEPS.find(x=>x.id===step);const seen=new Set();
+  for(let k=0;k<n;k++){let q,t=0;do{q=pick(st.gen)();t++}while(seen.has(q.q)&&t<30);seen.add(q.q);Q.push({step,grp,q})}}
+ for(const s of GATE)RES[s[1]]={ok:0,n:s[2],grp:s[3]}}
+$('btnGo').onclick=()=>{build();I=0;$('gIntro').classList.add('hide');$('gQ').classList.remove('hide');show()};
+function show(){
+ const {q}=Q[I];$('gProg').textContent=`ข้อ ${I+1} / ${Q.length}`;$('q').innerHTML=q.q;const a=$('ans');a.innerHTML='';
+ if(q.type==='mc'){q.choices.forEach((c,ix)=>{const b=document.createElement('button');b.className='ch';b.innerHTML=String(c.t);b.onclick=()=>submit(ix);a.appendChild(b)})}
+ else{a.innerHTML='<div class="row"><input type="text" id="inp" autocomplete="off" placeholder="พิมพ์คำตอบ"><button id="sub">ตกลง</button></div>';
+  $('sub').onclick=()=>submit($('inp').value);$('inp').onkeydown=e=>{if(e.key==='Enter')submit($('inp').value)};$('inp').focus()}
+ const sk=document.createElement('div');sk.style.marginTop='10px';sk.innerHTML='<button class="skip" id="skip">ไม่รู้ / ข้าม</button>';a.appendChild(sk);$('skip').onclick=()=>submit(null)}
+function submit(v){
+ const {step,q}=Q[I];let ok=false;
+ if(v===null)ok=false;
+ else if(q.type==='mc')ok=!!q.choices[v].ok;
+ else{const n=parseNum(v);if(isNaN(n)){if(!$('bad')){const d=document.createElement('div');d.id='bad';d.className='fb no';d.textContent='พิมพ์ตัวเลขหรือเศษส่วน เช่น 12, −5, 3/4, 0.25';$('ans').appendChild(d)}return}
+  ok=same(n,parseNum(q.ans))}
+ if(ok)RES[step].ok++;
+ I++;if(I>=Q.length)return finish();show()}
+async function finish(){
+ $('gQ').classList.add('hide');$('gR').classList.remove('hide');
+ const ids=Object.keys(RES),pass=ids.filter(k=>RES[k].ok>=RES[k].n),miss=ids.filter(k=>RES[k].ok<RES[k].n);
+ const g1=miss.filter(k=>RES[k].grp===1),g2=miss.filter(k=>RES[k].grp===2);
+ $('rTitle').textContent=g1.length===0?'พร้อมเริ่มจำนวนเชิงซ้อน':g1.length<=2?'เกือบพร้อม — ทบทวนอีกเล็กน้อย':'ควรซ่อมพื้นฐานก่อน';
+ $('rDesc').innerHTML=`ผ่าน <b>${pass.length}/${ids.length}</b> ขั้น · พื้นฐานสำหรับสัปดาห์ 1–7: ${g1.length===0?'ครบ':'ขาด '+g1.length+' ขั้น'} · ตรีโกณฯ สำหรับสัปดาห์ 8–10: ${g2.length===0?'ครบ':'ขาด '+g2.length+' ขั้น'}`;
+ let h='<table class="t" style="width:100%"><tr><th>ขั้น</th><th>ใช้ทำอะไรในบทนี้</th><th>ผล</th><th></th></tr>';
+ ids.forEach(k=>{const ok=RES[k].ok>=RES[k].n;h+=`<tr><td>${k}</td><td style="text-align:left">${WHY[k]}</td><td>${ok?'✓':'ควรทบทวน'}</td><td>${ok?'':`<a href="test_${k[0]}.html">สาย ${k[0]}</a>`}</td></tr>`});
+ $('rTbl').innerHTML=h+'</table>';
+ $('saveSt').textContent='กำลังบันทึกผล…';
+ const r=await call({action:'save',token:TOKEN,strand:'GCX',passed:pass,failedAt:miss.join(',')});
+ $('saveSt').textContent=r.ok?'✓ บันทึกผลเรียบร้อยแล้ว':'⚠ บันทึกไม่สำเร็จ — ถ่ายภาพหน้าจอนี้ส่งครู'}
+$('btnHome').onclick=()=>{location.href='MathEQ.html'};
+$('btnQuit').onclick=()=>{if(Q.length&&I>0&&I<Q.length&&!confirm('ออกกลางคัน ผลจะไม่ถูกบันทึก ต้องการออกหรือไม่?'))return;location.href='MathEQ.html'};
+</script>
+</body></html>
