@@ -94,6 +94,7 @@ const sgx=n=>n<0?`− ${-n}`:`+ ${n}`;
 const pt=(a,b)=>`(${sgn(a)}, ${sgn(b)})`;
 const sg=n=>n<0?`− ${-n}`:`+ ${n}`;
 
+
 const META={sid:'C',name:'แคลคูลัสเบื้องต้น',base:'ตอนนี้ควรเริ่มซ่อมจากขั้น C0 (การแยกตัวประกอบ การแทนค่าฟังก์ชัน) ก่อน แล้วค่อยไล่ขึ้นไปทีละขั้น',note:p=>'สายนี้เป็นเนื้อหา ม.6 ถ้านักเรียนยังไม่เคยเรียนแคลคูลัส ผลที่ได้เป็นการวัดพื้นฐานก่อนเรียน (C11 อยู่นอกรายวิชาเทอม 2)'};
 const fx=(c,p)=>{if(c===0)return '';const a=Math.abs(c);const v=p===0?'':p===1?'x':'x'+sup(p);return (a===1&&p>0)?v:a+v};
 const pl=(arr)=>{let s='',f=true;for(const [c,p] of arr){if(c===0)continue;const t=fx(c,p);s+=f?(c<0?'−':'')+t:(c<0?' − ':' + ')+t;f=false}return s||'0'};
