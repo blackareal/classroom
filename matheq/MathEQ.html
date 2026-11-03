@@ -89,12 +89,12 @@ const STR=[{"id":"N","name":"จำนวน","steps":[["N1","จำนวนน
 const ACTIVITIES=[
  {id:'GCX',type:'gate',title:'ประตูความพร้อมก่อนเข้าจำนวนเชิงซ้อน',cls:'ม.5/1',date:'2026-11-03',file:'ready_complex.html',total:12},
  {id:'LS_M1W01',type:'lesson',title:'ม.1 · สัปดาห์ 1 · ปรับพื้นฐานก่อนเข้าสมการ',cls:'ม.1/1',date:'2026-11-04',file:'lesson_M1_w01.html',total:5},
- {id:'LS_M1W01_NB',type:'notebook',title:'ม.1 สัปดาห์ 1 · ทำลงสมุดแล้ว',cls:'ม.1/1',date:'2026-11-04',file:'lesson_M1_w01.html',total:1},
+ {id:'LS_M1W01_CK',type:'notebook',title:'ม.1 สัปดาห์ 1 · ครูตรวจสมุดแล้ว',cls:'ม.1/1',date:'2026-11-04',file:'lesson_M1_w01.html',total:1},
  {id:'C',type:'gate',title:'แบบประเมินตนเอง: แคลคูลัส (ทำได้ถึงขั้นไหน)',cls:'ม.6/1',date:'2026-11-04',file:'test_C.html',total:12},
  {id:'LS_M5W01',type:'lesson',title:'ม.5 · สัปดาห์ 1 · ที่มาของ i และจำนวนเชิงซ้อน',cls:'ม.5/1',date:'2026-11-03',file:'lesson_M5_w01.html',total:5},
  {id:'LS_M2W01',type:'lesson',title:'ม.2 · สัปดาห์ 1 · ทบทวนค่ากลางและเปิดบทสถิติ',cls:'ม.2/1',date:'2026-11-03',file:'lesson_M2_w01.html',total:5},
- {id:'LS_M2W01_NB',type:'notebook',title:'ม.2 สัปดาห์ 1 · ทำลงสมุดแล้ว',cls:'ม.2/1',date:'2026-11-03',file:'lesson_M2_w01.html',total:1},
- {id:'LS_M5W01_NB',type:'notebook',title:'สัปดาห์ 1 · ทำลงสมุดแล้ว',cls:'ม.5/1',date:'2026-11-03',file:'lesson_M5_w01.html',total:1}
+ {id:'LS_M2W01_CK',type:'notebook',title:'ม.2 สัปดาห์ 1 · ครูตรวจสมุดแล้ว',cls:'ม.2/1',date:'2026-11-03',file:'lesson_M2_w01.html',total:1},
+ {id:'LS_M5W01_CK',type:'notebook',title:'ม.5 สัปดาห์ 1 · ครูตรวจสมุดแล้ว',cls:'ม.5/1',date:'2026-11-03',file:'lesson_M5_w01.html',total:1}
 ];
 const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 function renderActs(){
@@ -102,9 +102,9 @@ function renderActs(){
  const el=$('acts');if(!L.length){el.classList.add('hide');return}
  el.classList.remove('hide');
  el.innerHTML='<h2>บทเรียนและกิจกรรมของห้อง</h2>'+L.map(a=>{const p=PROG[a.id],n=p?p.passed.length:0;
-  const st=a.type==='gate'?(p?`ผ่าน ${n}/${a.total} ขั้น`+(p.failedAt?` · ควรทบทวน ${p.failedAt}`:' · พร้อมแล้ว'):'ยังไม่ได้ทำ'):(p?`ทำแล้ว ${n}/${a.total} ข้อ`:'ยังไม่ได้เข้าทำ');
+  const st=a.type==='gate'?(p?`ผ่าน ${n}/${a.total} ขั้น`+(p.failedAt?` · ควรทบทวน ${p.failedAt}`:' · พร้อมแล้ว'):'ยังไม่ได้ทำ'):(p?`ทำแล้ว ${n}/${a.total} ข้อ`:'ยังไม่ได้เข้าทำ');const ck=PROG[a.id+'_CK']&&PROG[a.id+'_CK'].passed.length;
   const ok=p&&(a.type==='gate'?!p.failedAt:n>=a.total);
-  return `<div class="row" style="justify-content:space-between;border-top:1px solid #1e2a42;padding:8px 0"><div><b>${a.title}</b><div class="muted">${a.date} · ${st}</div></div><a href="${a.file}"><button class="${ok?'':'pri'}">${p?(a.type==='gate'?'ทำใหม่':'เปิดทบทวน'):'เริ่ม'}</button></a></div>`}).join('')}
+  return `<div class="row" style="justify-content:space-between;border-top:1px solid #1e2a42;padding:8px 0"><div><b>${a.title}</b><div class="muted">${a.date} · ${st}${a.type==='lesson'?(ck?' · <b style="color:#2ee66d">✓ ครูตรวจสมุดแล้ว</b>':(p&&p.passed.length>=a.total?' · รอครูตรวจสมุด':'')):''}</div></div><a href="${a.file}"><button class="${ok?'':'pri'}">${p?(a.type==='gate'?'ทำใหม่':'เปิดทบทวน'):'เริ่ม'}</button></a></div>`}).join('')}
 
 const $=id=>document.getElementById(id);
 const show=id=>{['vLogin','vAdminLogin','vHome','vAdmin'].forEach(x=>$(x).classList.toggle('hide',x!==id))};
@@ -124,6 +124,7 @@ async function api(body){
  if(body.action==='save'){d[body.token]=d[body.token]||{};d[body.token][body.strand]={passed:body.passed,failedAt:body.failedAt,updated:new Date().toISOString()};demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
  if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
  if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
+ if(body.action==='adminMark'){d[body.id]=d[body.id]||{};if(body.on)d[body.id][body.strand]={passed:['CK'],failedAt:'',updated:new Date().toISOString()};else delete d[body.id][body.strand];demoSave(d);return{ok:true}}
  if(body.action==='adminReset'){if(d[body.id])delete d[body.id][body.strand];demoSave(d);return{ok:true}}
 }
 async function call(body,errEl){try{const r=await api(body);if(!r.ok&&errEl)errEl.textContent=r.error||'เกิดข้อผิดพลาด';return r}catch(e){if(errEl)errEl.textContent='เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง';return{ok:false}}}
@@ -210,9 +211,10 @@ function renderActsAdmin(L){
  $('aActs').innerHTML=h}
 function renderLessonBtns(st){
  const L=ACTIVITIES.filter(a=>a.type==='lesson'&&a.cls===st.cls);const el=$('aLessons');
- el.innerHTML=L.length?'<b>โจทย์ + เฉลยรายคน (ใช้ตรวจสมุด)</b>'+L.map(a=>`<div class="row" style="margin-top:6px"><span>${a.title}</span><button data-l="${a.id}">เปิดชุดโจทย์ของคนนี้</button></div>`).join(''):'';
- el.querySelectorAll('button').forEach(b=>b.onclick=()=>{const a=ACTIVITIES.find(x=>x.id===b.dataset.l);const p=st.progress[a.id],nb=st.progress[a.id+'_NB'];
-  const view={student:{id:st.id,name:st.name,cls:st.cls,no:st.no},done:p?p.passed:[],nb:!!(nb&&nb.passed.length)};
+ el.innerHTML=L.length?'<b>โจทย์ + เฉลยรายคน (ใช้ตรวจสมุด)</b>'+L.map(a=>`<div class="row" style="margin-top:6px"><span>${a.title}</span><button data-l="${a.id}">เปิดชุดโจทย์ของคนนี้</button><label style="display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" data-ck="${a.id}" ${(st.progress[a.id+'_CK']&&st.progress[a.id+'_CK'].passed.length)?'checked':''} style="width:20px;height:20px"> ตรวจสมุดแล้ว</label></div>`).join(''):'';
+ el.querySelectorAll('input[data-ck]').forEach(c=>c.onchange=async()=>{const k=c.dataset.ck+'_CK',on=c.checked;const r=await call({action:'adminMark',token:ATOKEN,id:st.id,strand:k,on:on});if(!r.ok){c.checked=!on;alert(r.error||'บันทึกไม่สำเร็จ');return}if(on)st.progress[k]={passed:['CK'],failedAt:'',updated:''};else delete st.progress[k];renderAdmin()});
+ el.querySelectorAll('button').forEach(b=>b.onclick=()=>{const a=ACTIVITIES.find(x=>x.id===b.dataset.l);const p=st.progress[a.id],ck=st.progress[a.id+'_CK'];
+  const view={student:{id:st.id,name:st.name,cls:st.cls,no:st.no},done:p?p.passed:[],ck:!!(ck&&ck.passed.length),atoken:ATOKEN};
   try{sessionStorage.setItem('matheq_admin_view',JSON.stringify(view))}catch(e){}
   window.open(a.file+'?teacher=1','_blank')})}
 function adminOne(id,keep){ASEL=id;const st=ADATA.find(x=>x.id===id);if(!st)return;$('aOne').classList.remove('hide');
