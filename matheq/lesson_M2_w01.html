@@ -72,9 +72,9 @@ table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px s
  </div>
 
  <div class="tcard hide" id="nb"><h3 class="sec">แบบฝึกหัดลงสมุด</h3>
-  <div class="muted" style="margin-bottom:8px">ปลดล็อกแล้ว ทำลงสมุดให้ครบ เขียนวิธีทำทุกขั้นตอน (ไม่ต้องส่งในระบบ) ครูจะตรวจสมุดในคาบ · โจทย์ชุดนี้เป็นเลขเฉพาะของ <b id="who3"></b> เลขที่ <span id="no3"></span></div>
+  <div class="muted" style="margin-bottom:8px">ปลดล็อกแล้ว ทำลงสมุดให้ครบ เขียนวิธีทำทุกขั้นตอน (ไม่ต้องส่งในระบบ) ครูจะตรวจสมุดแล้วกดยืนยัน คุณจะเห็นสถานะด้านล่าง · โจทย์ชุดนี้เป็นเลขเฉพาะของ <b id="who3"></b> เลขที่ <span id="no3"></span></div>
   <div id="nbList"></div>
-  <div class="row" style="margin-top:10px"><label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="nbDone" style="width:22px;height:22px"> ทำลงสมุดเสร็จแล้ว พร้อมให้ครูตรวจ</label><span class="muted" id="nbSt"></span></div>
+  <div class="row" style="margin-top:10px"><span class="muted" id="ckBadge">รอครูตรวจสมุด</span></div>
   <div class="row" style="margin-top:8px"><button class="skip" id="btnPrint">พิมพ์ / บันทึกเป็น PDF</button></div>
  </div>
  <div class="row"><button class="pri" id="btnHome">กลับ MathEQ</button></div>
@@ -102,6 +102,7 @@ async function api(body){
  if(body.action==='save'){d[body.token]=d[body.token]||{};d[body.token][body.strand]={passed:body.passed,failedAt:body.failedAt,updated:new Date().toISOString()};demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
  if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
  if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
+ if(body.action==='adminMark'){d[body.id]=d[body.id]||{};if(body.on)d[body.id][body.strand]={passed:['CK'],failedAt:'',updated:new Date().toISOString()};else delete d[body.id][body.strand];demoSave(d);return{ok:true}}
  if(body.action==='adminReset'){if(d[body.id])delete d[body.id][body.strand];demoSave(d);return{ok:true}}
 }
 async function call(body,errEl){try{const r=await api(body);if(!r.ok&&errEl)errEl.textContent=r.error||'เกิดข้อผิดพลาด';return r}catch(e){if(errEl)errEl.textContent='เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง';return{ok:false}}}
@@ -139,7 +140,9 @@ const NB=[
 function renderNB(){$('nbList').innerHTML=NB.map((f,i)=>{const o=f(i);return `<div class="nbq"><b>ข้อ ${i+1}.</b> ${o.q}${TEACHER?`<div class="sol on"><b>เฉลย:</b> ${o.sol}</div>`:''}</div>`}).join('')}
 function unlockNB(){if(!$('nb').classList.contains('hide'))return;renderNB();$('nb').classList.remove('hide');$('who3').textContent=ME.name;$('no3').textContent=ME.no}
 let NBDONE=false;
-$('nbDone').onchange=async e=>{if(TEACHER)return;NBDONE=e.target.checked;$('nbSt').textContent='กำลังบันทึก…';const r=await call({action:'save',token:TOKEN,strand:LESSON+'_NB',passed:NBDONE?['NB']:[],failedAt:''});$('nbSt').textContent=r.ok?(NBDONE?'✓ แจ้งครูแล้วว่าทำลงสมุดเสร็จ':'ยกเลิกแล้ว'):'⚠ บันทึกไม่สำเร็จ'};
+function ckUI(on){const b=$('ckBadge');if(!b)return;b.className=on?'':'muted';b.style.cssText=on?'background:#e4f6ea;border:1px solid #2e9b55;border-radius:10px;padding:6px 12px;font-weight:700;color:#1b6b3a':'';b.textContent=on?'✓ ครูตรวจสมุดแล้ว':'รอครูตรวจสมุด'}
+function teacherCk(){const b=$('ckBadge');b.outerHTML='<label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="ckBox" style="width:22px;height:22px"> ตรวจสมุดแล้ว (นักเรียนจะเห็นสถานะนี้)</label><span class="muted" id="ckSt"></span>';
+ $('ckBox').checked=!!VIEW.ck;$('ckBox').onchange=async e=>{const on=e.target.checked;$('ckSt').textContent='กำลังบันทึก…';const r=await call({action:'adminMark',token:VIEW.atoken,id:ME.id,strand:LESSON+'_CK',on:on});$('ckSt').textContent=r.ok?'✓ บันทึกแล้ว':'⚠ บันทึกไม่สำเร็จ (สิทธิ์ครูอาจหมดอายุ ให้กลับไปล็อกอินครูใหม่)';if(!r.ok)e.target.checked=!on}}
 $('btnPrint').onclick=()=>window.print();
 const DONE=new Set();
 function render(){
@@ -157,11 +160,11 @@ let t=null;
 function persist(){if(TEACHER)return;clearTimeout(t);t=setTimeout(async()=>{$('saveSt').textContent='กำลังบันทึก…';const r=await call({action:'save',token:TOKEN,strand:LESSON,passed:[...DONE],failedAt:''});$('saveSt').textContent=r.ok?`✓ บันทึกแล้ว (${DONE.size}/${EX.length} ข้อ)`:'⚠ บันทึกไม่สำเร็จ'},300)}
 $('who').textContent=ME.name;$('who2').textContent=ME.name;
 (async()=>{
- if(TEACHER){(VIEW.done||[]).forEach(x=>DONE.add(x));NBDONE=!!VIEW.nb;$('nbDone').checked=NBDONE;$('nbDone').disabled=true;render();
+ if(TEACHER){(VIEW.done||[]).forEach(x=>DONE.add(x));teacherCk();render();
   DONE.size>=0&&(()=>{unlockNB();document.querySelectorAll('.sol').forEach(s=>s.classList.add('on'));document.querySelectorAll('.exq input,.exq button').forEach(x=>x.disabled=true)})();
   const b=document.createElement('div');b.className='tcard';b.style.cssText='background:#fff3c4;border:2px solid #e6c34a';b.innerHTML=`<b>โหมดครู</b> · ชุดโจทย์และเฉลยของ <b>${ME.name}</b> เลขที่ ${ME.no} ห้อง ${ME.cls} · ทำในระบบถูก ${DONE.size}/${EX.length} ข้อ · ทำลงสมุด: ${NBDONE?'ติ๊กว่าเสร็จแล้ว':'ยังไม่ติ๊ก'} · <span class="muted">ไม่มีการบันทึกใด ๆ ในโหมดนี้</span>`;
   document.querySelector('.wrap').insertBefore(b,document.querySelector('.wrap').children[1]);$('nb').querySelector('.muted').innerHTML='โจทย์ในสมุดของนักเรียนคนนี้ พร้อมเฉลยสำหรับครูตรวจ';return}
- const r=await call({action:'me',token:TOKEN});if(r.ok&&r.progress&&r.progress[LESSON])r.progress[LESSON].passed.forEach(x=>DONE.add(x));if(r.ok&&r.progress&&r.progress[LESSON+'_NB']&&r.progress[LESSON+'_NB'].passed.length){NBDONE=true;$('nbDone').checked=true}render();if(DONE.size>=EX.length)unlockNB()})();
+ const r=await call({action:'me',token:TOKEN});if(r.ok&&r.progress&&r.progress[LESSON])r.progress[LESSON].passed.forEach(x=>DONE.add(x));ckUI(!!(r.ok&&r.progress&&r.progress[LESSON+'_CK']&&r.progress[LESSON+'_CK'].passed.length));render();if(DONE.size>=EX.length)unlockNB()})();
 $('btnHome').onclick=$('btnQuit').onclick=()=>{if(TEACHER){window.close();setTimeout(()=>{location.href='MathEQ.html'},200);return}location.href='MathEQ.html'};
 </script>
 </body></html>
