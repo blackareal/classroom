@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MathEQ — ค32202 ม.5 สัปดาห์ 1</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:#070b16;color:#dce8f5;font-family:'TH Sarabun New','Sarabun',system-ui,sans-serif;font-size:19px;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 14px 40px}
+h1{margin:0;font-size:26px}h2{margin:0 0 8px;font-size:22px}.sub{color:#7f93aa;font-size:15px;margin:2px 0 12px}
+.hide{display:none!important}
+.card{background:#0d1424;border:1px solid #243049;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+input,select,button{font:inherit;color:#dce8f5;background:#121a2c;border:1px solid #2a3a55;border-radius:9px;padding:8px 14px}
+input{width:100%}button{cursor:pointer}button:hover:not(:disabled){border-color:#4fa3e3}button:disabled{opacity:.5;cursor:default}
+button.pri{background:#1d5fb0;border-color:#4fa3e3;color:#fff}
+.err{color:#ff8a7a;margin-top:8px;min-height:1.3em}.muted{color:#7f93aa;font-size:16px}
+.login{max-width:420px;margin:8vh auto 0;text-align:center}.login input{text-align:center;font-size:30px;letter-spacing:8px;margin:12px 0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.demo{background:#3a2a00;color:#ffcc55;border:1px solid #7a5a00;border-radius:10px;padding:0 9px;font-size:14px;margin-left:8px}
+.deck{background:linear-gradient(#10182a,#0a0f1d);border:1px solid #243049;border-radius:14px;padding:14px}
+.lcd{font-family:'Courier New',monospace;background:#071a12;color:#4dff9a;border:1px solid #1d4a35;border-radius:6px;padding:3px 12px;font-size:24px;letter-spacing:2px;text-shadow:0 0 8px #1fd17a}.lcd small{font-size:14px;color:#2fae72;margin-left:6px}
+.eq{display:grid;grid-template-columns:repeat(9,1fr);gap:9px;align-items:end;padding:4px}
+.band{display:flex;flex-direction:column;align-items:center;min-width:0;cursor:pointer}
+.col{position:relative;display:flex;flex-direction:column-reverse;gap:3px;width:100%;max-width:64px;height:280px;padding:2px;background:#050810;border-radius:6px;border:1px solid #1a2438}
+.band:hover .col,.band.sel .col{border-color:#4fa3e3}
+.seg{flex:1;border-radius:2px;background:#111a2b;transition:background .25s}.seg.lit{box-shadow:0 0 6px currentColor}.seg.na{background:#0b101c}
+.avg{position:absolute;left:-5px;right:-5px;height:0;border-top:2px dashed #fff;opacity:.9;z-index:2}
+.lbl{margin-top:7px;font-weight:700;font-size:20px;color:#fff}.nm{font-size:14px;color:#8fa4bd;text-align:center;line-height:1.2;min-height:34px}
+.val{font-size:14px;color:#4dff9a;font-family:'Courier New',monospace;text-align:center}.val.none{color:#6b7a92}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+table.tb{width:100%;border-collapse:collapse;font-size:16px}table.tb th,table.tb td{border-bottom:1px solid #1e2a42;padding:4px 6px;text-align:center}table.tb td:first-child,table.tb th:first-child,table.tb td:nth-child(3),table.tb th:nth-child(3){text-align:left}
+table.tb th{color:#8fa4bd;position:sticky;top:0;background:#0d1424}
+.cell{display:inline-block;min-width:34px;border-radius:5px;padding:0 4px;font-family:'Courier New',monospace}
+.sc0{background:#1a2438;color:#6b7a92}.sc1{background:#5a2a20;color:#ffb09a}.sc2{background:#5a4a14;color:#ffe08a}.sc3{background:#14502f;color:#7dffb4}
+@media(max-width:700px){.eq{gap:3px}.col{height:200px}.nm{font-size:11px}}
+.tcard{background:#f3f6fb;color:#1a2233;border-radius:16px;padding:18px 20px;margin-bottom:14px;font-size:21px;line-height:1.45}
+.tcard .muted{color:#5b6b82}
+.tcard button{background:#0d47a1;color:#fff;border:0;border-radius:12px;padding:10px 18px}.tcard button.skip{background:#fff;color:#7a869a;border:1px solid #c9d6ea}
+.tcard input[type=text]{background:#fff;color:#1a2233;border:2px solid #c9d6ea;border-radius:10px;width:auto}
+.q{font-size:25px;margin:6px 0 14px}
+.ch{display:block;width:100%;text-align:left;background:#f5f8fe!important;color:#1a2233!important;border:2px solid #d3def2!important;margin:8px 0;padding:11px 14px!important}
+.ch:hover:not(:disabled){border-color:#0d47a1!important}.ch.ok{background:#c9efd5!important;border-color:#2e9b55!important}.ch.no{background:#ffd9d6!important;border-color:#d65a50!important}
+.tcard .row input{flex:1;min-width:140px}
+.fb{margin-top:12px;padding:10px 14px;border-radius:12px}.fb.ok{background:#e4f6ea}.fb.no{background:#fdeceb}
+.big{font-size:32px;font-weight:700;color:#0d47a1}
+.fr{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;line-height:1.1;margin:0 2px}.fr span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+table.mx{display:inline-table;border-left:2px solid #1a2233;border-right:2px solid #1a2233;border-radius:6px;margin:0 6px;vertical-align:middle;border-collapse:collapse}table.mx td{padding:1px 8px;text-align:center}
+table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px solid #aab;padding:2px 12px;text-align:center}
+.ladder{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{min-width:44px;text-align:center;padding:3px 9px;border-radius:9px;background:#e4e9f2;color:#6b7a92;font-size:16px;border:2px solid transparent}.chip.pass{background:#c9efd5;color:#12692f}.chip.fail{background:#ffd9d6;color:#a3261d}
+</style></head><body><div class="wrap">
+ <div class="row" style="margin-bottom:10px"><button id="btnQuit">← กลับ MathEQ</button><span class="muted">ค32202 ม.5 · สัปดาห์ 1</span></div>
+ <div class="tcard" style="background:#0d47a1;color:#fff"><div style="font-size:30px;font-weight:700">ที่มาของ i และจำนวนเชิงซ้อน</div><div style="opacity:.9">ค32202 คณิตศาสตร์เพิ่มเติม 4 · ม.5 · สัปดาห์ที่ 1 (ปรับพื้นฐาน + ปูทาง) · <span id="who"></span></div></div>
+
+ <div class="tcard"><h3 class="sec">ทบทวน</h3>
+  <p><b>1) รากที่สอง</b> √a คือจำนวนที่ไม่ติดลบ ซึ่งยกกำลังสองแล้วได้ a เช่น √49 = 7 ใช้ได้เมื่อ a ≥ 0 เท่านั้น</p>
+  <p><b>2) สมการ x² = k</b> ถ้า k &gt; 0 ได้ x = ±√k (สองคำตอบ) แต่ถ้า k &lt; 0 เช่น x² = −4 <u>ไม่มีจำนวนจริงใดยกกำลังสองแล้วได้ −4</u></p>
+  <p><b>3) ตัวแยกค่า</b> ของ ax² + bx + c = 0 คือ D = b² − 4ac &nbsp; ถ้า D &lt; 0 สมการ<u>ไม่มีรากที่เป็นจำนวนจริง</u> วันนี้จะเห็นว่าเราจะ "สร้างจำนวนใหม่" มารองรับสมการเหล่านี้</p>
+ </div>
+
+ <div class="tcard"><h3 class="sec">ใบความรู้</h3>
+  <p><b>นิยาม</b> ให้ <b>i = √(−1)</b> จึงได้ <b>i² = −1</b> เรียก i ว่า หน่วยจินตภาพ (imaginary unit)</p>
+  <p><b>รากที่สองของจำนวนลบ</b> เมื่อ a &gt; 0: &nbsp;<b>√(−a) = i√a</b> เช่น √(−49) = 7i, &nbsp;√(−12) = 2√3 i</p><p><b>การลดรูปราก</b> √(k²·s) = k√s หาตัวประกอบที่เป็นกำลังสองสมบูรณ์ (4, 9, 16, 25, …) แล้วดึงออกนอกราก เช่น √12 = √(4·3) = 2√3, &nbsp;√18 = 3√2, &nbsp;√50 = 5√2 ให้ s ไม่มีตัวประกอบที่เป็นกำลังสองสมบูรณ์เหลืออยู่</p>
+  <p><b>จำนวนเชิงซ้อน</b> คือจำนวนในรูป <b>a + bi</b> เมื่อ a, b เป็นจำนวนจริง เรียก a ว่า <b>ส่วนจริง</b> (Re) และ b ว่า <b>ส่วนจินตภาพ</b> (Im) เช่น 3 − 5i มี Re = 3, Im = −5 และจำนวนจริงทุกจำนวนคือจำนวนเชิงซ้อนที่ b = 0</p>
+  <p><b>การเท่ากัน</b> a + bi = c + di ก็ต่อเมื่อ a = c และ b = d</p>
+  <p><b>กำลังของ i</b> วนซ้ำทุก 4 ตัว: &nbsp;i¹ = i, &nbsp;i² = −1, &nbsp;i³ = −i, &nbsp;i⁴ = 1 แล้ววนใหม่ ดังนั้น iⁿ ให้ดูที่ <u>เศษของ n หารด้วย 4</u> (เศษ 0 ให้ถือเป็น i⁴ = 1)</p>
+  <p style="background:#fff3c4;border-radius:10px;padding:8px 12px"><b>ข้อควรระวัง</b> กฎ √a·√b = √(ab) ใช้ได้เมื่อ a, b ≥ 0 เท่านั้น ดังนั้น √(−4)·√(−9) <u>ไม่เท่ากับ</u> √36 = 6 ต้องแปลงเป็น i ก่อน: (2i)(3i) = 6i² = <b>−6</b></p>
+ </div>
+
+ <div class="tcard"><h3 class="sec">ตัวอย่าง</h3>
+  <p><b>ตัวอย่างที่ 1</b> จงหาค่าของ i²³ <br>23 ÷ 4 ได้เศษ 3 ดังนั้น i²³ = i³ = <b>−i</b></p>
+  <p><b>ตัวอย่างที่ 2</b> จงหาค่าของ √(−3)·√(−12) <br>√(−3) = i√3 และ √(−12) = 2√3 i <br>ผลคูณ = (i√3)(2√3 i) = 2·3·i² = 6(−1) = <b>−6</b></p>
+ </div>
+
+ <div class="tcard"><h3 class="sec">แบบฝึกหัด</h3>
+  <div class="muted" style="margin-bottom:8px">โจทย์ชุดนี้ตัวเลขเฉพาะของ <b id="who2"></b> เปิดกี่ครั้งก็ได้ชุดเดิม · ตอบจำนวนเชิงซ้อน เช่น 7i, 2√3 i, −√6, 2+5i (ถ้ามีรากให้ลดรูปเป็นรูปอย่างง่าย · ปุ่ม √ ช่วยพิมพ์) · ตอบถูกแล้วระบบบันทึกให้อัตโนมัติ</div>
+  <div id="ex"></div>
+  <div class="muted" id="saveSt" style="margin-top:6px"></div>
+ </div>
+ <div class="row"><button class="pri" id="btnHome">กลับ MathEQ</button></div>
+</div>
+<style>.sec{margin:0 0 6px;color:#0d47a1;font-size:26px}.exq{margin:12px 0;padding:10px 12px;border:1px solid #d3def2;border-radius:12px;background:#fff}.exq.done{background:#e4f6ea;border-color:#2e9b55}.exq .row input{width:200px;flex:none}.hint{margin-top:6px}.sol{display:none;margin-top:8px;background:#f5f8fe;border-radius:10px;padding:8px 12px}.sol.on{display:block}</style>
+<script>
+const LESSON="LS_M5W01";
+let API_URL="";try{API_URL=sessionStorage.getItem("matheq_api")||""}catch(e){}
+const DEMO=!API_URL;
+let TOKEN=null,ME=null;try{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token;ME=s&&s.student}catch(e){}
+if(!TOKEN||!ME){location.replace("MathEQ.html")}
+const $=id=>document.getElementById(id);
+const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
+let MEM={};
+function demoDB(){try{return JSON.parse(localStorage.getItem('idpDemo')||'{}')}catch(e){return MEM}}
+function demoSave(d){MEM=d;try{localStorage.setItem('idpDemo',JSON.stringify(d))}catch(e){}}
+function demoAvg(cls){const d=demoDB(),s={},n={};Object.keys(DEMO_ROSTER).forEach(id=>{if(DEMO_ROSTER[id].cls!==cls||!d[id])return;for(const k in d[id]){s[k]=(s[k]||0)+d[id][k].passed.length;n[k]=(n[k]||0)+1}});const o={};for(const k in s)o[k]={avg:Math.round(s[k]/n[k]*10)/10,n:n[k]};return o}
+async function api(body){
+ if(!DEMO){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return await r.json()}
+ const d=demoDB();
+ if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347 / 12348)'};
+  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='save'){d[body.token]=d[body.token]||{};d[body.token][body.strand]={passed:body.passed,failedAt:body.failedAt,updated:new Date().toISOString()};demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
+ if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
+ if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
+ if(body.action==='adminReset'){if(d[body.id])delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+}
+async function call(body,errEl){try{const r=await api(body);if(!r.ok&&errEl)errEl.textContent=r.error||'เกิดข้อผิดพลาด';return r}catch(e){if(errEl)errEl.textContent='เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง';return{ok:false}}}
+
+
+/* ---------- ตัวสุ่มที่ผูกกับรหัสนักเรียน + รหัสบทเรียน + ข้อ ---------- */
+function hashStr(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return(h^=h>>>16)>>>0}}
+function rngFor(key){const seed=hashStr(key)();let a=seed;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function mk(i){const r=rngFor(ME.id+'|'+LESSON+'|'+i);return{R:(a,b)=>a+Math.floor(r()*(b-a+1)),pick:arr=>arr[Math.floor(r()*arr.length)]}}
+/* ---------- ตัวอ่านจำนวนเชิงซ้อนที่มีราก ---------- */
+const sqf=n=>{let k=1,s=n;for(let f=2;f*f<=s;f++){while(s%(f*f)===0){s/=f*f;k*=f}}return[k,s]}; // n = k²·s , s ไม่มีกำลังสอง
+function num(s){s=s.trim();if(!s)return NaN;const m=s.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);if(m)return +m[1]/+m[2];return /^-?\d+(\.\d+)?$/.test(s)?+s:NaN}
+/* พจน์เดียว: [สัมประสิทธิ์][√รัศมี] เช่น 2√3, √5, 7, 3/2 → {v:ค่า, simp:ลดรูปแล้วไหม} */
+function term(s){let sign=1;if(s[0]==='+')s=s.slice(1);else if(s[0]==='-'){sign=-1;s=s.slice(1)}
+ s=s.replace(/^\((.*)\)$/,'$1');
+ const m=s.match(/^(\d+(?:\.\d+)?(?:\/\d+)?)?\*?(?:r(\d+)|r\((\d+)\))?$/);if(!m||(m[1]===undefined&&m[2]===undefined&&m[3]===undefined&&s!==''))return null;
+ let c=m[1]===undefined?1:num(m[1]);if(isNaN(c))return null;const rad=m[2]||m[3];
+ if(rad===undefined)return{v:sign*c,simp:true};
+ const n=+rad;if(n<1)return null;const[k,sq]=sqf(n);return{v:sign*c*Math.sqrt(n),simp:k===1}}
+function cx(s){s=String(s).trim().replace(/−|–|—/g,'-').replace(/[๐-๙]/g,c=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(c)).replace(/\s+/g,'').replace(/I/g,'i').replace(/√|sqrt/gi,'r').replace(/[×·]/g,'*');
+ if(!s)return null;
+ // แยกพจน์ตาม + - ที่อยู่นอกวงเล็บ (ไม่นับตัวแรก)
+ const parts=[];let d=0,cur='';for(let j=0;j<s.length;j++){const ch=s[j];if(ch==='(')d++;if(ch===')')d--;if(j>0&&d===0&&(ch==='+'||ch==='-')&&s[j-1]!=='*'){parts.push(cur);cur=ch}else cur+=ch}parts.push(cur);
+ let re=0,im=0,simp=true,hasRe=false,hasIm=false;
+ for(const p of parts){if(!p)return null;if(p.includes('i')){if(hasIm)return null;hasIm=true;
+   const q=p.replace('i','');if(q.includes('i'))return null;const u=(q===''||q==='+')?{v:1,simp:true}:q==='-'?{v:-1,simp:true}:term(q);if(!u)return null;im=u.v;simp=simp&&u.simp}
+  else{if(hasRe)return null;hasRe=true;const u=term(p);if(!u)return null;re=u.v;simp=simp&&u.simp}}
+ return{re,im,simp}}
+const eq=(u,v)=>u&&v&&Math.abs(u.re-v.re)<1e-9&&Math.abs(u.im-v.im)<1e-9;
+const rd=(k,n)=>n===1?String(k):(k===1?'':k)+'√'+n;           // k√n
+const fmt=z=>{const a=z.re,b=z.im;const bs=b===1?'i':b===-1?'−i':(b<0?'−'+(-b)+'i':b+'i');if(b===0)return String(a).replace('-','−');if(a===0)return bs;return String(a).replace('-','−')+(b<0?' − '+(bs.replace('−','')):' + '+bs)};
+/* ---------- โจทย์ ---------- */
+const SQ=[4,9,16,25,36,49,64,81,100,121,144,169,196,225];
+const TS=[2,3,5,6,7,10];
+const EX=[
+ i=>{const g=mk(i);const m=g.pick(SQ),r=Math.round(Math.sqrt(m));return{q:`จงเขียน √(−${m}) ในรูป <i>bi</i>`,ans:{re:0,im:r},hint:'ใช้ √(−a) = i√a',sol:`√(−${m}) = i√${m} = <b>${r}i</b>`}},
+ i=>{const g=mk(i);const s=g.R(2,5),t=g.pick(TS),m=s*s*t;return{q:`จงเขียน √(−${m}) ในรูป <i>b</i>√<i>c</i> i เมื่อ c เป็นจำนวนเต็มที่น้อยที่สุด (ลดรูปราก)`,ans:{re:0,im:s*Math.sqrt(t)},hint:`หาตัวประกอบของ ${m} ที่เป็นกำลังสองสมบูรณ์ แล้วดึงออกนอกราก`,sol:`${m} = ${s*s}·${t} จึง √${m} = ${s}√${t}<br>√(−${m}) = i√${m} = <b>${rd(s,t)} i</b>`}},
+ i=>{const g=mk(i);let a,b,ans,sol;
+  if(g.R(0,1)===0){const t=g.pick([2,3,5,6,7]),p=g.R(1,2),q=g.R(2,3);a=p*p*t;b=q*q*t;ans={re:-p*q*t,im:0};sol=`√(−${a}) = ${rd(p,t)} i และ √(−${b}) = ${rd(q,t)} i<br>ผลคูณ = ${p*q}·(√${t})² · i² = ${p*q*t}·(−1) = <b>−${p*q*t}</b>`}
+  else{let t1=g.pick([2,3,5,6,7]),t2=g.pick([2,3,5,6,7]);if(t1===t2)t2=t1===7?2:t1+1===4?5:t1+1;a=t1;b=t2;const[k,s]=sqf(t1*t2);ans={re:-k*Math.sqrt(s),im:0};sol=`√(−${a}) = √${a} i และ √(−${b}) = √${b} i<br>ผลคูณ = √${a}·√${b}·i² = −√${a*b}${k>1?' = <b>−'+rd(k,s)+'</b>':' = <b>−√'+s+'</b>'}${k>1?' (ลดรูป '+a*b+' = '+k*k+'·'+s+')':''}`}
+  return{q:`จงหาค่าของ √(−${a}) · √(−${b}) (ตอบในรูปอย่างง่าย)`,ans,hint:'อย่าคูณใต้รากทันที ให้แปลงแต่ละตัวเป็น i ก่อน แล้วใช้ i² = −1',sol}},
+ i=>{const g=mk(i);const n=g.R(21,99);const rem=n%4||4;const ans=rem===1?{re:0,im:1}:rem===2?{re:-1,im:0}:rem===3?{re:0,im:-1}:{re:1,im:0};return{q:`จงหาค่าของ i<sup>${n}</sup>`,ans,hint:'หาเศษของ n ÷ 4 (เศษ 0 ถือเป็น i⁴ = 1)',sol:`${n} ÷ 4 ได้เศษ ${n%4} ดังนั้น i<sup>${n}</sup> = i<sup>${rem}</sup> = <b>${fmt(ans)}</b>`}},
+ i=>{const g=mk(i);const b=g.pick([-6,-4,-2,0,2,4,6]),c=Math.ceil(b*b/4)+g.R(1,8);const D=b*b-4*c;const bt=b===0?'':(b<0?` − ${-b}x`:` + ${b}x`);return{q:`สมการ x²${bt} + ${c} = 0 มีค่า D = b² − 4ac เท่าใด (และสมการนี้มีรากเป็นจำนวนจริงหรือไม่)`,num:D,hint:`D = (${b})² − 4(1)(${c})`,sol:`D = ${b}² − 4·1·${c} = ${b*b} − ${4*c} = <b>${D}</b> ซึ่ง &lt; 0 จึง<b>ไม่มีรากที่เป็นจำนวนจริง</b> (รากเป็นจำนวนเชิงซ้อน จะเรียนในสัปดาห์ 5)`}}
+];
+const DONE=new Set();
+function render(){
+ const el=$('ex');el.innerHTML='';
+ EX.forEach((f,i)=>{const p=f(i);const d=document.createElement('div');d.className='exq'+(DONE.has('Q'+(i+1))?' done':'');d.id='q'+i;
+  d.innerHTML=`<div><b>ข้อ ${i+1}.</b> ${p.q}</div><div class="row" style="margin-top:8px"><input type="text" id="a${i}" autocomplete="off" placeholder="คำตอบ"><button type="button" id="r_${i}" class="skip" title="แทรกเครื่องหมายราก">√</button><button id="b${i}">ตรวจ</button><span id="r${i}"></span></div><div class="hint muted" id="h${i}"></div><div class="sol" id="s${i}">${p.sol}</div>`;
+  el.appendChild(d);
+  if(DONE.has('Q'+(i+1))){$('r'+i).textContent='✓ ทำถูกแล้ว';$('s'+i).classList.add('on')}
+  const chk=()=>{const v=$('a'+i).value;let ok=false;
+   if(p.num!==undefined){const n=parseFloat(String(v).replace('−','-'));if(isNaN(n)){$('r'+i).textContent='พิมพ์เป็นตัวเลข';return}ok=n===p.num}
+   else{const z=cx(v);if(!z){$('r'+i).textContent='พิมพ์ในรูป เช่น 7i, 2√3 i, −√6, 2+5i (พิมพ์ √ จากปุ่ม หรือพิมพ์ sqrt3)';return}const irr=x=>Math.abs(x-Math.round(x))>1e-9;if(/\d\.\d/.test(v)&&(irr(p.ans.re)||irr(p.ans.im))){$('r'+i).textContent='ให้ตอบในรูปราก (เช่น 2√3) ไม่ใช่ทศนิยม';return}if(eq(z,p.ans)&&!z.simp){$('r'+i).textContent='ค่าถูกต้อง แต่ยังไม่ลดรูปให้อยู่ในรูปอย่างง่าย';return}ok=eq(z,p.ans)}
+   if(ok){$('r'+i).textContent='✓ ถูกต้อง';$('h'+i).textContent='';$('s'+i).classList.add('on');$('q'+i).classList.add('done');DONE.add('Q'+(i+1));persist()}
+   else{$('r'+i).textContent='✗ ยังไม่ถูก';$('h'+i).textContent='คำใบ้: '+p.hint}};
+  $('r_'+i).onclick=()=>{const inp=$('a'+i),s=inp.selectionStart??inp.value.length;inp.value=inp.value.slice(0,s)+'√'+inp.value.slice(s);inp.focus();inp.setSelectionRange(s+1,s+1)};$('b'+i).onclick=chk;$('a'+i).onkeydown=e=>{if(e.key==='Enter')chk()}});
+}
+let t=null;
+function persist(){clearTimeout(t);t=setTimeout(async()=>{$('saveSt').textContent='กำลังบันทึก…';const r=await call({action:'save',token:TOKEN,strand:LESSON,passed:[...DONE],failedAt:''});$('saveSt').textContent=r.ok?`✓ บันทึกแล้ว (${DONE.size}/${EX.length} ข้อ)`:'⚠ บันทึกไม่สำเร็จ'},300)}
+$('who').textContent=ME.name;$('who2').textContent=ME.name;
+(async()=>{const r=await call({action:'me',token:TOKEN});if(r.ok&&r.progress&&r.progress[LESSON])r.progress[LESSON].passed.forEach(x=>DONE.add(x));render()})();
+$('btnHome').onclick=$('btnQuit').onclick=()=>{location.href='MathEQ.html'};
+</script>
+</body></html>
