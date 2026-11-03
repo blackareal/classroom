@@ -73,14 +73,23 @@ table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px s
   <div id="ex"></div>
   <div class="muted" id="saveSt" style="margin-top:6px"></div>
  </div>
+
+ <div class="tcard hide" id="nb"><h3 class="sec">แบบฝึกหัดลงสมุด</h3>
+  <div class="muted" style="margin-bottom:8px">ปลดล็อกแล้ว ทำลงสมุดให้ครบ เขียนวิธีทำทุกขั้นตอน (ไม่ต้องส่งในระบบ) ครูจะตรวจสมุดในคาบ · โจทย์ชุดนี้เป็นเลขเฉพาะของ <b id="who3"></b> เลขที่ <span id="no3"></span></div>
+  <div id="nbList"></div>
+  <div class="row" style="margin-top:10px"><label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="nbDone" style="width:22px;height:22px"> ทำลงสมุดเสร็จแล้ว พร้อมให้ครูตรวจ</label><span class="muted" id="nbSt"></span></div>
+  <div class="row" style="margin-top:8px"><button class="skip" id="btnPrint">พิมพ์ / บันทึกเป็น PDF</button></div>
+ </div>
  <div class="row"><button class="pri" id="btnHome">กลับ MathEQ</button></div>
 </div>
-<style>.sec{margin:0 0 6px;color:#0d47a1;font-size:26px}.exq{margin:12px 0;padding:10px 12px;border:1px solid #d3def2;border-radius:12px;background:#fff}.exq.done{background:#e4f6ea;border-color:#2e9b55}.exq .row input{width:200px;flex:none}.hint{margin-top:6px}.sol{display:none;margin-top:8px;background:#f5f8fe;border-radius:10px;padding:8px 12px}.sol.on{display:block}</style>
+<style>.sec{margin:0 0 6px;color:#0d47a1;font-size:26px}.exq{margin:12px 0;padding:10px 12px;border:1px solid #d3def2;border-radius:12px;background:#fff}.exq.done{background:#e4f6ea;border-color:#2e9b55}.exq .row input{width:200px;flex:none}.hint{margin-top:6px}.sol{display:none;margin-top:8px;background:#f5f8fe;border-radius:10px;padding:8px 12px}.sol.on{display:block}.nbq{margin:10px 0;padding:8px 12px;border-left:4px solid #0d47a1;background:#fff;border-radius:6px}@media print{button,.row input,#btnQuit,.sol{display:none!important}body{background:#fff}.tcard{box-shadow:none}}</style>
 <script>
 const LESSON="LS_M5W01";
 let API_URL="";try{API_URL=sessionStorage.getItem("matheq_api")||""}catch(e){}
 const DEMO=!API_URL;
-let TOKEN=null,ME=null;try{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token;ME=s&&s.student}catch(e){}
+const TEACHER=new URLSearchParams(location.search).get('teacher')==='1';
+let TOKEN=null,ME=null,VIEW=null;
+try{if(TEACHER){VIEW=JSON.parse(sessionStorage.getItem("matheq_admin_view")||"null");if(VIEW){ME=VIEW.student;TOKEN='teacher'}}else{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token;ME=s&&s.student}}catch(e){}
 if(!TOKEN||!ME){location.replace("MathEQ.html")}
 const $=id=>document.getElementById(id);
 const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
@@ -141,6 +150,19 @@ const EX=[
  i=>{const g=mk(i);const n=g.R(21,99);const rem=n%4||4;const ans=rem===1?{re:0,im:1}:rem===2?{re:-1,im:0}:rem===3?{re:0,im:-1}:{re:1,im:0};return{q:`จงหาค่าของ i<sup>${n}</sup>`,ans,hint:'หาเศษของ n ÷ 4 (เศษ 0 ถือเป็น i⁴ = 1)',sol:`${n} ÷ 4 ได้เศษ ${n%4} ดังนั้น i<sup>${n}</sup> = i<sup>${rem}</sup> = <b>${fmt(ans)}</b>`}},
  i=>{const g=mk(i);const b=g.pick([-6,-4,-2,0,2,4,6]),c=Math.ceil(b*b/4)+g.R(1,8);const D=b*b-4*c;const bt=b===0?'':(b<0?` − ${-b}x`:` + ${b}x`);return{q:`สมการ x²${bt} + ${c} = 0 มีค่า D = b² − 4ac เท่าใด (และสมการนี้มีรากเป็นจำนวนจริงหรือไม่)`,num:D,hint:`D = (${b})² − 4(1)(${c})`,sol:`D = ${b}² − 4·1·${c} = ${b*b} − ${4*c} = <b>${D}</b> ซึ่ง &lt; 0 จึง<b>ไม่มีรากที่เป็นจำนวนจริง</b> (รากเป็นจำนวนเชิงซ้อน จะเรียนในสัปดาห์ 5)`}}
 ];
+
+const NB=[
+ i=>{const g=mk(100+i);const a=g.pick(SQ),b=g.pick(SQ),s=g.R(2,5),tt=g.pick(TS);return{q:`จงเขียนจำนวนต่อไปนี้ในรูป <i>bi</i> หรือ <i>b</i>√<i>c</i> i (ลดรูปราก)<br>ก) √(−${a}) &nbsp; ข) √(−${b}) &nbsp; ค) √(−${s*s*tt})`,sol:`ก) ${Math.round(Math.sqrt(a))}i &nbsp; ข) ${Math.round(Math.sqrt(b))}i &nbsp; ค) ${rd(s,tt)} i &nbsp; <span class="muted">(${s*s*tt} = ${s*s}·${tt})</span>`}},
+ i=>{const g=mk(100+i);const t1=g.pick([2,3,5,6,7]);let t2=g.pick([2,3,5,6,7]);if(t2===t1)t2=t1===7?2:t1+1===4?5:t1+1;const p=g.R(1,3);const[k,s]=sqf(t1*t2);return{q:`จงหาค่าของ (แสดงวิธีทำโดยแปลงเป็น i ก่อนคูณ)<br>ก) √(−${t1})·√(−${t2}) &nbsp; ข) √(−${p*p*t1})·√(−${t1})`,sol:`ก) −√${t1*t2}${k>1?' = −'+rd(k,s):''} &nbsp; ข) (${rd(p,t1)} i)(√${t1} i) = −${p*t1}`}},
+ i=>{const g=mk(100+i);const n1=g.R(11,39),n2=g.R(40,99),n3=g.R(100,199);const v=n=>['1','i','−1','−i'][n%4===0?0:n%4];return{q:`จงหาค่าของ<br>ก) i<sup>${n1}</sup> &nbsp; ข) i<sup>${n2}</sup> &nbsp; ค) i<sup>${n3}</sup>`,sol:`ก) ${v(n1)} &nbsp; ข) ${v(n2)} &nbsp; ค) ${v(n3)} &nbsp; <span class="muted">(เศษของ n÷4 = ${n1%4}, ${n2%4}, ${n3%4})</span>`}},
+ i=>{const g=mk(100+i);const out=[],Ds=[];for(let k=0;k<2;k++){const b=g.pick([-5,-3,-1,0,1,3,5]),c=Math.ceil(b*b/4)+g.R(1,6);out.push(`x²${b===0?'':b<0?` − ${-b}x`:` + ${b}x`} + ${c} = 0`);Ds.push(b*b-4*c)}return{q:`จงหาค่า D = b² − 4ac ของแต่ละสมการ แล้วสรุปว่ามีรากเป็นจำนวนจริงหรือไม่<br>ก) ${out[0]} &nbsp; ข) ${out[1]}`,sol:`ก) D = ${String(Ds[0]).replace("-","−")} &lt; 0 ไม่มีรากจริง &nbsp; ข) D = ${String(Ds[1]).replace("-","−")} &lt; 0 ไม่มีรากจริง`}},
+ i=>{const g=mk(100+i);const a=g.pick([4,9,16,25]),b=g.pick([4,9,16,25]);const ra=Math.round(Math.sqrt(a)),rb=Math.round(Math.sqrt(b));return{q:`นักเรียนคนหนึ่งคำนวณ √(−${a})·√(−${b}) = √(${a*b}) = ${Math.round(Math.sqrt(a*b))} จงอธิบายว่าวิธีนี้ผิดตรงไหน และหาคำตอบที่ถูกต้อง`,sol:`ผิดที่คูณใต้รากทันที (กฎ √a·√b = √(ab) ใช้ได้เมื่อ a, b ≥ 0 เท่านั้น) ที่ถูก: (${ra}i)(${rb}i) = ${ra*rb}i² = <b>−${ra*rb}</b>`}}
+];
+function renderNB(){$('nbList').innerHTML=NB.map((f,i)=>{const o=f(i);return `<div class="nbq"><b>ข้อ ${i+1}.</b> ${o.q}${TEACHER?`<div class="sol on"><b>เฉลย:</b> ${o.sol}</div>`:''}</div>`}).join('')}
+function unlockNB(){if(!$('nb').classList.contains('hide'))return;renderNB();$('nb').classList.remove('hide');$('who3').textContent=ME.name;$('no3').textContent=ME.no}
+let NBDONE=false;
+$('nbDone').onchange=async e=>{if(TEACHER)return;NBDONE=e.target.checked;$('nbSt').textContent='กำลังบันทึก…';const r=await call({action:'save',token:TOKEN,strand:LESSON+'_NB',passed:NBDONE?['NB']:[],failedAt:''});$('nbSt').textContent=r.ok?(NBDONE?'✓ แจ้งครูแล้วว่าทำลงสมุดเสร็จ':'ยกเลิกแล้ว'):'⚠ บันทึกไม่สำเร็จ'};
+$('btnPrint').onclick=()=>window.print();
 const DONE=new Set();
 function render(){
  const el=$('ex');el.innerHTML='';
@@ -151,14 +173,19 @@ function render(){
   const chk=()=>{const v=$('a'+i).value;let ok=false;
    if(p.num!==undefined){const n=parseFloat(String(v).replace('−','-'));if(isNaN(n)){$('r'+i).textContent='พิมพ์เป็นตัวเลข';return}ok=n===p.num}
    else{const z=cx(v);if(!z){$('r'+i).textContent='พิมพ์ในรูป เช่น 7i, 2√3 i, −√6, 2+5i (พิมพ์ √ จากปุ่ม หรือพิมพ์ sqrt3)';return}const irr=x=>Math.abs(x-Math.round(x))>1e-9;if(/\d\.\d/.test(v)&&(irr(p.ans.re)||irr(p.ans.im))){$('r'+i).textContent='ให้ตอบในรูปราก (เช่น 2√3) ไม่ใช่ทศนิยม';return}if(eq(z,p.ans)&&!z.simp){$('r'+i).textContent='ค่าถูกต้อง แต่ยังไม่ลดรูปให้อยู่ในรูปอย่างง่าย';return}ok=eq(z,p.ans)}
-   if(ok){$('r'+i).textContent='✓ ถูกต้อง';$('h'+i).textContent='';$('s'+i).classList.add('on');$('q'+i).classList.add('done');DONE.add('Q'+(i+1));persist()}
+   if(ok){$('r'+i).textContent='✓ ถูกต้อง';$('h'+i).textContent='';$('s'+i).classList.add('on');$('q'+i).classList.add('done');DONE.add('Q'+(i+1));persist();if(DONE.size>=EX.length)unlockNB()}
    else{$('r'+i).textContent='✗ ยังไม่ถูก';$('h'+i).textContent='คำใบ้: '+p.hint}};
   $('r_'+i).onclick=()=>{const inp=$('a'+i),s=inp.selectionStart??inp.value.length;inp.value=inp.value.slice(0,s)+'√'+inp.value.slice(s);inp.focus();inp.setSelectionRange(s+1,s+1)};$('b'+i).onclick=chk;$('a'+i).onkeydown=e=>{if(e.key==='Enter')chk()}});
 }
 let t=null;
-function persist(){clearTimeout(t);t=setTimeout(async()=>{$('saveSt').textContent='กำลังบันทึก…';const r=await call({action:'save',token:TOKEN,strand:LESSON,passed:[...DONE],failedAt:''});$('saveSt').textContent=r.ok?`✓ บันทึกแล้ว (${DONE.size}/${EX.length} ข้อ)`:'⚠ บันทึกไม่สำเร็จ'},300)}
+function persist(){if(TEACHER)return;clearTimeout(t);t=setTimeout(async()=>{$('saveSt').textContent='กำลังบันทึก…';const r=await call({action:'save',token:TOKEN,strand:LESSON,passed:[...DONE],failedAt:''});$('saveSt').textContent=r.ok?`✓ บันทึกแล้ว (${DONE.size}/${EX.length} ข้อ)`:'⚠ บันทึกไม่สำเร็จ'},300)}
 $('who').textContent=ME.name;$('who2').textContent=ME.name;
-(async()=>{const r=await call({action:'me',token:TOKEN});if(r.ok&&r.progress&&r.progress[LESSON])r.progress[LESSON].passed.forEach(x=>DONE.add(x));render()})();
-$('btnHome').onclick=$('btnQuit').onclick=()=>{location.href='MathEQ.html'};
+(async()=>{
+ if(TEACHER){(VIEW.done||[]).forEach(x=>DONE.add(x));NBDONE=!!VIEW.nb;$('nbDone').checked=NBDONE;$('nbDone').disabled=true;render();
+  DONE.size>=0&&(()=>{unlockNB();document.querySelectorAll('.sol').forEach(s=>s.classList.add('on'));document.querySelectorAll('.exq input,.exq button').forEach(x=>x.disabled=true)})();
+  const b=document.createElement('div');b.className='tcard';b.style.cssText='background:#fff3c4;border:2px solid #e6c34a';b.innerHTML=`<b>โหมดครู</b> · ชุดโจทย์และเฉลยของ <b>${ME.name}</b> เลขที่ ${ME.no} ห้อง ${ME.cls} · ทำในระบบถูก ${DONE.size}/${EX.length} ข้อ · ทำลงสมุด: ${NBDONE?'ติ๊กว่าเสร็จแล้ว':'ยังไม่ติ๊ก'} · <span class="muted">ไม่มีการบันทึกใด ๆ ในโหมดนี้</span>`;
+  document.querySelector('.wrap').insertBefore(b,document.querySelector('.wrap').children[1]);$('nb').querySelector('.muted').innerHTML='โจทย์ในสมุดของนักเรียนคนนี้ พร้อมเฉลยสำหรับครูตรวจ';return}
+ const r=await call({action:'me',token:TOKEN});if(r.ok&&r.progress&&r.progress[LESSON])r.progress[LESSON].passed.forEach(x=>DONE.add(x));if(r.ok&&r.progress&&r.progress[LESSON+'_NB']&&r.progress[LESSON+'_NB'].passed.length){NBDONE=true;$('nbDone').checked=true}render();if(DONE.size>=EX.length)unlockNB()})();
+$('btnHome').onclick=$('btnQuit').onclick=()=>{if(TEACHER){window.close();setTimeout(()=>{location.href='MathEQ.html'},200);return}location.href='MathEQ.html'};
 </script>
 </body></html>
