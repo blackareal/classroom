@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MathEQ — ใบความรู้ N3</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:#070b16;color:#dce8f5;font-family:'TH Sarabun New','Sarabun',system-ui,sans-serif;font-size:19px;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 14px 40px}
+h1{margin:0;font-size:26px}h2{margin:0 0 8px;font-size:22px}.sub{color:#7f93aa;font-size:15px;margin:2px 0 12px}
+.hide{display:none!important}
+.card{background:#0d1424;border:1px solid #243049;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+input,select,button{font:inherit;color:#dce8f5;background:#121a2c;border:1px solid #2a3a55;border-radius:9px;padding:8px 14px}
+input{width:100%}button{cursor:pointer}button:hover:not(:disabled){border-color:#4fa3e3}button:disabled{opacity:.5;cursor:default}
+button.pri{background:#1d5fb0;border-color:#4fa3e3;color:#fff}
+.err{color:#ff8a7a;margin-top:8px;min-height:1.3em}.muted{color:#7f93aa;font-size:16px}
+.login{max-width:420px;margin:8vh auto 0;text-align:center}.login input{text-align:center;font-size:30px;letter-spacing:8px;margin:12px 0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.demo{background:#3a2a00;color:#ffcc55;border:1px solid #7a5a00;border-radius:10px;padding:0 9px;font-size:14px;margin-left:8px}
+.deck{background:linear-gradient(#10182a,#0a0f1d);border:1px solid #243049;border-radius:14px;padding:14px}
+.lcd{font-family:'Courier New',monospace;background:#071a12;color:#4dff9a;border:1px solid #1d4a35;border-radius:6px;padding:3px 12px;font-size:24px;letter-spacing:2px;text-shadow:0 0 8px #1fd17a}.lcd small{font-size:14px;color:#2fae72;margin-left:6px}
+.eq{display:grid;grid-template-columns:repeat(9,1fr);gap:9px;align-items:end;padding:4px}
+.band{display:flex;flex-direction:column;align-items:center;min-width:0;cursor:pointer}
+.col{position:relative;display:flex;flex-direction:column-reverse;gap:3px;width:100%;max-width:64px;height:280px;padding:2px;background:#050810;border-radius:6px;border:1px solid #1a2438}
+.band:hover .col,.band.sel .col{border-color:#4fa3e3}
+.seg{flex:1;border-radius:2px;background:#111a2b;transition:background .25s}.seg.lit{box-shadow:0 0 6px currentColor}.seg.na{background:#0b101c}
+.avg{position:absolute;left:-5px;right:-5px;height:0;border-top:2px dashed #fff;opacity:.9;z-index:2}
+.lbl{margin-top:7px;font-weight:700;font-size:20px;color:#fff}.nm{font-size:14px;color:#8fa4bd;text-align:center;line-height:1.2;min-height:34px}
+.val{font-size:14px;color:#4dff9a;font-family:'Courier New',monospace;text-align:center}.val.none{color:#6b7a92}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+table.tb{width:100%;border-collapse:collapse;font-size:16px}table.tb th,table.tb td{border-bottom:1px solid #1e2a42;padding:4px 6px;text-align:center}table.tb td:first-child,table.tb th:first-child,table.tb td:nth-child(3),table.tb th:nth-child(3){text-align:left}
+table.tb th{color:#8fa4bd;position:sticky;top:0;background:#0d1424}
+.cell{display:inline-block;min-width:34px;border-radius:5px;padding:0 4px;font-family:'Courier New',monospace}
+.sc0{background:#1a2438;color:#6b7a92}.sc1{background:#5a2a20;color:#ffb09a}.sc2{background:#5a4a14;color:#ffe08a}.sc3{background:#14502f;color:#7dffb4}
+@media(max-width:700px){.eq{gap:3px}.col{height:200px}.nm{font-size:11px}}
+.tcard{background:#f3f6fb;color:#1a2233;border-radius:16px;padding:18px 20px;margin-bottom:14px;font-size:21px;line-height:1.45}
+.tcard .muted{color:#5b6b82}
+.tcard button{background:#0d47a1;color:#fff;border:0;border-radius:12px;padding:10px 18px}.tcard button.skip{background:#fff;color:#7a869a;border:1px solid #c9d6ea}
+.tcard input[type=text]{background:#fff;color:#1a2233;border:2px solid #c9d6ea;border-radius:10px;width:auto}
+.q{font-size:25px;margin:6px 0 14px}
+.ch{display:block;width:100%;text-align:left;background:#f5f8fe!important;color:#1a2233!important;border:2px solid #d3def2!important;margin:8px 0;padding:11px 14px!important}
+.ch:hover:not(:disabled){border-color:#0d47a1!important}.ch.sel{background:#e3edff!important;border-color:#0d47a1!important}.ch.ok{background:#c9efd5!important;border-color:#2e9b55!important}.ch.no{background:#ffd9d6!important;border-color:#d65a50!important}
+.tcard .row input{flex:1;min-width:140px}
+.fb{margin-top:12px;padding:10px 14px;border-radius:12px}.fb.ok{background:#e4f6ea}.fb.no{background:#fdeceb}
+.big{font-size:32px;font-weight:700;color:#0d47a1}
+.fr{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;line-height:1.1;margin:0 2px}.fr span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+table.mx{display:inline-table;border-left:2px solid #1a2233;border-right:2px solid #1a2233;border-radius:6px;margin:0 6px;vertical-align:middle;border-collapse:collapse}table.mx td{padding:1px 8px;text-align:center}
+table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px solid #aab;padding:2px 12px;text-align:center}
+.ladder{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{min-width:44px;text-align:center;padding:3px 9px;border-radius:9px;background:#e4e9f2;color:#6b7a92;font-size:16px;border:2px solid transparent}.chip.pass{background:#c9efd5;color:#12692f}.chip.fail{background:#ffd9d6;color:#a3261d}
+</style></head><body><style>details{margin-top:6px}summary{cursor:pointer;color:#0d47a1;font-weight:700}ol.pr li{margin:10px 0}.nav a{text-decoration:none}</style><div class="wrap"><div class="row" style="margin-bottom:10px"><a href="MathEQ.html"><button>← MathEQ</button></a><a href="kn_index.html"><button>ใบความรู้ทุกขั้น</button></a><span class="muted">ขั้น N3</span></div><div class="tcard" style="background:#0d47a1;color:#fff"><div style="font-size:30px;font-weight:700">บวก-ลบจำนวนเต็ม</div><div style="opacity:.9">ใบความรู้ขั้น N3 · สาย N จำนวน</div></div><div class="tcard"><h3 style="margin:0 0 6px;color:#0d47a1;font-size:26px">ใบความรู้</h3><p><b>บวก</b> เครื่องหมายเหมือนกัน → บวกค่าสัมบูรณ์ ใช้เครื่องหมายเดิม · เครื่องหมายต่างกัน → เอาตัวมากลบตัวน้อย ใช้เครื่องหมายของตัวที่ค่าสัมบูรณ์มากกว่า</p>
+<p><b>ลบ</b> การลบคือการบวกจำนวนตรงข้าม: a − b = a + (−b) เช่น 3 − (−6) = 3 + 6</p></div><div class="tcard"><h3 style="margin:0 0 6px;color:#0d47a1;font-size:26px">ตัวอย่าง</h3><p>(−7) + (−5) = <b>−12</b> (เครื่องหมายเหมือน)<br>4 + (−9) = −(9 − 4) = <b>−5</b> (เครื่องหมายต่าง ตัว 9 มากกว่า จึงเป็นลบ)<br>3 − (−6) = 3 + 6 = <b>9</b><br>−2 − 8 = −2 + (−8) = <b>−10</b></p></div><div class="tcard"><h3 style="margin:0 0 6px;color:#0d47a1;font-size:26px">จุดที่พลาดบ่อย</h3><p>5 − (−3) ตอบ 2 (ผิด) ที่ถูกคือ 5 + 3 = <b>8</b> · −2 − 8 ตอบ −6 (ผิด) เพราะลบทับกันผิด</p></div><div class="tcard"><h3 style="margin:0 0 6px;color:#0d47a1;font-size:26px">ลองทำเอง</h3><div class="muted">ลองคิดในกระดาษก่อน แล้วค่อยกดดูเฉลย ไม่มีการบันทึกคะแนน</div><ol class="pr"><li>−8 + 5 = ?<details><summary>ดูเฉลย</summary><div style="background:#f1f5fb;border-radius:10px;padding:6px 12px;margin-top:4px">−3</div></details></li><li>−4 − (−10) = ?<details><summary>ดูเฉลย</summary><div style="background:#f1f5fb;border-radius:10px;padding:6px 12px;margin-top:4px">−4 + 10 = 6</div></details></li></ol></div><div class="row nav" style="margin-bottom:10px"><a href="kn_N2.html"><button>← ขั้น N2</button></a><a href="kn_N4.html"><button>ขั้น N4 →</button></a></div><div class="tcard"><b>พร้อมแล้ว?</b> กลับไปทำแบบทดสอบสาย N ข้อสอบสุ่มใหม่ทุกครั้ง และขั้นที่เคยผ่านแล้วจะไม่หายไป<div class="row" style="margin-top:10px"><a href="test_N.html"><button class="pri">ไปทำแบบทดสอบสาย N</button></a><a href="MathEQ.html"><button>กลับ MathEQ</button></a></div></div></div></body></html>
