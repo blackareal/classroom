@@ -35,7 +35,7 @@ table.tb th{color:#8fa4bd;position:sticky;top:0;background:#0d1424}
 .tcard input[type=text]{background:#fff;color:#1a2233;border:2px solid #c9d6ea;border-radius:10px;width:auto}
 .q{font-size:25px;margin:6px 0 14px}
 .ch{display:block;width:100%;text-align:left;background:#f5f8fe!important;color:#1a2233!important;border:2px solid #d3def2!important;margin:8px 0;padding:11px 14px!important}
-.ch:hover:not(:disabled){border-color:#0d47a1!important}.ch.ok{background:#c9efd5!important;border-color:#2e9b55!important}.ch.no{background:#ffd9d6!important;border-color:#d65a50!important}
+.ch:hover:not(:disabled){border-color:#0d47a1!important}.ch.sel{background:#e3edff!important;border-color:#0d47a1!important}.ch.ok{background:#c9efd5!important;border-color:#2e9b55!important}.ch.no{background:#ffd9d6!important;border-color:#d65a50!important}
 .tcard .row input{flex:1;min-width:140px}
 .fb{margin-top:12px;padding:10px 14px;border-radius:12px}.fb.ok{background:#e4f6ea}.fb.no{background:#fdeceb}
 .big{font-size:32px;font-weight:700;color:#0d47a1}
@@ -52,6 +52,7 @@ table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px s
  <div id="tR" class="hide">
   <div class="tcard"><div class="muted" id="rSub"></div><div class="big" id="rTitle"></div><p id="rDesc"></p><div class="ladder" id="rLadder"></div><div class="muted" id="saveSt"></div></div>
   <div class="tcard"><b>จุดที่ควรทบทวน</b><div id="rWrong"></div></div>
+  <div id="rKn" style="margin-bottom:10px"></div>
   <div class="row"><button class="pri" id="btnHome">กลับ MathEQ</button></div>
  </div>
 </div>
@@ -151,7 +152,7 @@ const STEPS=[
 const STR=[{"id":"N","name":"จำนวน","steps":[["N1","จำนวนนับ ทศนิยม เศษส่วนระดับประถม (คิดเลข 4 ประการให้คล่อง)"],["N2","จำนวนเต็ม: ความหมาย เส้นจำนวน การเปรียบเทียบ"],["N3","บวก-ลบจำนวนเต็ม"],["N4","คูณ-หารจำนวนเต็ม (กฎเครื่องหมาย) และลำดับการดำเนินการ"],["N5","ทศนิยมและเศษส่วน: เปรียบเทียบ + บวก ลบ คูณ หาร"],["N6","จำนวนตรรกยะ (เศษส่วน ทศนิยมซ้ำ ทศนิยมจำกัด)"],["N7","เลขยกกำลัง (เลขชี้กำลังจำนวนเต็ม) และสมบัติ aᵐ·aⁿ, aᵐ÷aⁿ, (aᵐ)ⁿ"],["N8","สัญกรณ์วิทยาศาสตร์"],["N9","จำนวนจริง: รากที่สอง รากที่สาม จำนวนอตรรกยะ"],["N10","การดำเนินการของราก (ทำให้เป็นรูปอย่างง่าย บวก ลบ คูณ)"],["N11","เลขชี้กำลังตรรกยะ / รากที่ n"],["N12","จำนวนเชิงซ้อน กราฟ ค่าสัมบูรณ์ และรูปเชิงขั้ว (ค32202)"]]},{"id":"A","name":"พีชคณิต","steps":[["A1","นิพจน์พีชคณิต: ตัวแปร สัมประสิทธิ์ การแทนค่า"],["A2","สมการเชิงเส้นตัวแปรเดียว"],["A3","อัตราส่วน สัดส่วน ร้อยละ"],["A4","พหุนาม: บวก ลบ คูณ"],["A5","แยกตัวประกอบ: ตัวร่วม ผลต่างกำลังสอง กำลังสองสมบูรณ์"],["A6","ระบบสมการเชิงเส้นสองตัวแปร (กราฟ แทนที่ กำจัด)"],["A7","โจทย์ปัญหาระบบสมการ (ตั้งสมการจากข้อความ)"],["A8","สมการกำลังสองตัวแปรเดียว"],["A9","อสมการและค่าสัมบูรณ์"],["A10","ลำดับและอนุกรม (เลขคณิต เรขาคณิต)"],["A11","ดอกเบี้ยและมูลค่าของเงิน"]]},{"id":"F","name":"กราฟ/ฟังก์ชัน","steps":[["F1","ระบบพิกัดฉาก (อ่านและพล็อตจุด)"],["F2","กราฟสมการเชิงเส้น: ความชัน จุดตัดแกน"],["F3","เส้นขนาน เส้นตั้งฉาก และการเขียนสมการเส้นตรง"],["F4","ความสัมพันธ์และฟังก์ชัน: โดเมน เรนจ์ กราฟ"],["F5","ฟังก์ชันกำลังสองและกราฟพาราโบลา (จุดยอด ค่าสูงสุด/ต่ำสุด)"],["F6","ฟังก์ชันเอกซ์โพเนนเชียลและลอการิทึม (รายวิชาเพิ่มเติม)"]]},{"id":"D","name":"เรขาคณิต","steps":[["D1","รูปเรขาคณิตสองมิติ: มุม สามเหลี่ยม สี่เหลี่ยม"],["D2","การสร้างทางเรขาคณิต (ส่วนของเส้นตรง มุม สามเหลี่ยม)"],["D3","เส้นรอบรูปและพื้นที่: สามเหลี่ยม สี่เหลี่ยม วงกลม"],["D4","รูปสามมิติ: ปริซึม พีระมิด ทรงกระบอก — พื้นที่ผิวและปริมาตร"],["D5","ทฤษฎีบทพีทาโกรัสและบทกลับ"],["D6","ความเท่ากันทุกประการและการให้เหตุผลทางเรขาคณิต"],["D7","ความคล้ายของรูปเรขาคณิต"],["D8","พื้นที่ผิวและปริมาตรกรวย ทรงกลม"],["D9","วงกลม (มุมที่จุดศูนย์กลาง คอร์ด เส้นสัมผัส)"],["D10","เส้นขนาน มุมภายใน และสมบัติของสามเหลี่ยม"],["D11","การแปลงทางเรขาคณิต (เลื่อน สะท้อน หมุน)"],["D12","ภาคตัดกรวย: จุด เส้นตรง วงกลม พาราโบลา วงรี ไฮเพอร์โบลา"],["D13","เวกเตอร์ในสามมิติ (บวก ลบ สเกลาร์ dot/cross)"]]},{"id":"T","name":"ตรีโกณ","steps":[["T1","อัตราส่วนตรีโกณมิติของมุมแหลม (sin cos tan ในสามเหลี่ยมมุมฉาก)"],["T2","วงกลมหนึ่งหน่วย เรเดียน ฟังก์ชันไซน์-โคไซน์ของมุมใด ๆ"],["T3","ฟังก์ชันอื่น (tan cot sec csc) และค่ามุมพิเศษ"],["T4","กราฟฟังก์ชันตรีโกณมิติ (คาบ แอมพลิจูด)"],["T5","เอกลักษณ์ตรีโกณมิติ และผลบวก/ผลต่างของมุม"],["T6","ตัวผกผันของฟังก์ชันตรีโกณมิติ และสมการตรีโกณมิติ"],["T7","กฎไซน์และกฎโคไซน์"],["T8","โจทย์ระยะทางและความสูง"]]},{"id":"S","name":"สถิติ","steps":[["S0","อ่านตารางและแผนภาพง่าย ๆ + อัตราส่วน"],["S1","ความหมายสถิติศาสตร์ ประเภทข้อมูล ประชากร/ตัวอย่าง/ตัวแปร"],["S2","การนำเสนอ: ตาราง แผนภาพแท่ง วงกลม เส้น และการเลือกกราฟ"],["S3","ตารางแจกแจงความถี่ ฮิสโทแกรม ฟรีเควนซีโพลิกอน โอไจฟ์"],["S4","ค่ากลาง: ค่าเฉลี่ย มัธยฐาน ฐานนิยม (รวมถ่วงน้ำหนัก ∑fx/∑f)"],["S5","การกระจาย: พิสัย ส่วนเบี่ยงเบนมาตรฐาน (σ และ s)"],["S6","การแปลความหมายและวิจารณ์ผลสรุปทางสถิติ"],["S7","ความน่าจะเป็นเบื้องต้น (การนับ ปริภูมิตัวอย่าง เหตุการณ์)"],["S8","ตัวแปรสุ่มและการแจกแจงความน่าจะเป็น (ไม่ต่อเนื่อง/ต่อเนื่อง) — ค33202"]]},{"id":"L","name":"เซต/ตรรกะ","steps":[["L1","เซต: สมาชิก เซตจำกัด/อนันต์ การเท่ากัน เอกภพสัมพัทธ์"],["L2","สับเซต เพาเวอร์เซต แผนภาพเวนน์-ออยเลอร์"],["L3","การดำเนินการของเซต (∪ ∩ คอมพลีเมนต์) และจำนวนสมาชิก"],["L4","ประพจน์ ตัวเชื่อม ค่าความจริง ตารางค่าความจริง"],["L5","ประพจน์สมมูล เดอมอร์แกน สัจนิรันดร์"],["L6","การอ้างเหตุผล (Modus Ponens / Modus Tollens / Disjunctive Syllogism)"],["L7","ประโยคเปิดและตัวบ่งปริมาณ"]]},{"id":"M","name":"เมทริกซ์","steps":[["M0","ซ่อมฐาน: บวก-ลบ-คูณ-หารจำนวนเต็ม (ขั้น 2.5 ที่เพิ่มกลางเทอม)"],["M1","นิยามและประเภทเมทริกซ์ (ขนาด สมาชิก ทรานสโพส)"],["M2","การบวก-ลบเมทริกซ์"],["M3","การคูณด้วยสเกลาร์"],["M4","การคูณเมทริกซ์"],["M5","ดีเทอร์มิแนนต์ 2×2 และ 3×3 (Sarrus)"],["M6","สมบัติของดีเทอร์มิแนนต์"],["M7","เมทริกซ์ผกผัน 2×2"],["M8","เมทริกซ์ผกผัน 3×3 (Minor, Cofactor, adj)"],["M9","แก้ระบบสมการด้วยเมทริกซ์ (X = A⁻¹B, Cramer)"],["M10","เส้นชัย (ขั้น 10) และขั้นต่อยอด"]]},{"id":"C","name":"แคลคูลัส","steps":[["C0","ซ่อมฐาน: การแยกตัวประกอบ ฟังก์ชัน และกราฟ"],["C1","ลิมิต: ความหมายและการหาจากตาราง/กราฟ (lim⁻ = lim⁺)"],["C2","กฎลิมิต และกรณี 0/0 (ตัดตัวประกอบ)"],["C3","ความต่อเนื่องของฟังก์ชัน (เงื่อนไข 3 ข้อ)"],["C4","อนุพันธ์จากนิยาม"],["C5","กฎอนุพันธ์: กำลัง ผลคูณ ผลหาร"],["C6","กฎลูกโซ่ และอนุพันธ์ฟังก์ชันตรีโกณมิติ"],["C7","อนุพันธ์อันดับสูง และเส้นสัมผัส"],["C8","จุดวิกฤต ค่าสูงสุด-ต่ำสุดสัมพัทธ์ (y′ และ y″)"],["C9","โจทย์ปัญหาค่าสูงสุด-ต่ำสุด (Optimization)"],["C10","ปริพันธ์ไม่จำกัดเขต (สูตรกำลัง + C)"],["C11","ปริพันธ์จำกัดเขตและพื้นที่ใต้เส้นโค้ง"]]}];
 const $=id=>document.getElementById(id);
 const show=()=>{};
-let PROG={},AVG={},CUR=SID,STEPS_,META_;
+let PROG={},AVG={},CUR=SID,STEPS_,META_;const KN=["A1", "A10", "A11", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "C0", "C1", "C10", "C11", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "D1", "D10", "D11", "D12", "D13", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "F1", "F2", "F3", "F4", "F5", "F6", "L1", "L2", "L3", "L4", "L5", "L6", "L7", "M0", "M1", "M10", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "N1", "N10", "N2", "N3", "N4", "N5", "N6", "N7", "N8", "N9", "S0", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8"];
 const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1}};
 let MEM={};
 function demoDB(){try{return JSON.parse(localStorage.getItem('idpDemo')||'{}')}catch(e){return MEM}}
@@ -163,7 +164,7 @@ async function api(body){
  if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347)'};
   return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls)}}
  if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls)}}
- if(body.action==='save'){d[body.token]=d[body.token]||{};d[body.token][body.strand]={passed:body.passed,failedAt:body.failedAt,updated:new Date().toISOString()};demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
+ if(body.action==='save'){d[body.token]=d[body.token]||{};{const o=d[body.token][body.strand],m=o?o.passed.slice():[];body.passed.forEach(x=>{if(m.indexOf(x)<0)m.push(x)});let fl=(body.failedAt?String(body.failedAt).split(','):[]).filter(x=>m.indexOf(x)<0);if(!fl.length&&o&&o.failedAt&&body.failedAt&&body.strand!=='GCX')fl=String(o.failedAt).split(',').filter(x=>m.indexOf(x)<0);d[body.token][body.strand]={passed:m,failedAt:fl.join(','),updated:new Date().toISOString()}}demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
  if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
  if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
  if(body.action==='adminReset'){if(d[body.id])delete d[body.id][body.strand];demoSave(d);return{ok:true}}
@@ -180,18 +181,20 @@ function openTest(id){
  $('tTitle').textContent=`สาย ${id} ${s.name}`;
  ['tQ','tR'].forEach(x=>$(x).classList.add('hide'));$('tIntro').classList.remove('hide');
  $('tIntro').innerHTML=`<h2 style="color:#0d47a1;margin:0 0 6px">ทดสอบระดับตนเอง — สาย ${id} ${s.name}</h2><p>ข้อสอบจะไล่จากขั้นง่ายไปยาก แต่ละขั้นต้องตอบ<b>ถูก 2 ข้อ</b>จึงขึ้นขั้นถัดไป ถ้า<b>ผิด 2 ข้อในขั้นเดียวกัน</b> ระบบจะหยุดและบอกว่าตอนนี้คุณอยู่ที่ขั้นไหน ไม่ใช่การตัดเกรด ตอบตามที่ทำได้จริง ถ้าไม่รู้กด "ไม่รู้" ได้</p><p>ใช้กระดาษทดได้ แต่<b>ห้ามใช้เครื่องคิดเลข</b> · ผลจะบันทึกให้อัตโนมัติเมื่อจบ</p><button id="btnGo">เริ่มทำข้อสอบ</button>`;
+ {const pp=(PROG[CUR]&&PROG[CUR].passed)||[];const nxs=STEPS.find(s=>!pp.includes(s.id));if(pp.length&&nxs)$('tIntro').querySelector('h2').insertAdjacentHTML('afterend',`<p style="background:#e4f6ea;border-radius:10px;padding:8px 12px">ขั้นที่เคยผ่านแล้วถูกเก็บไว้ และ<b>จะไม่ลดลง</b>แม้ทำซ้ำ ครั้งนี้ระบบจะเริ่มที่ขั้น <b>${nxs.id}</b> ให้เลย</p>`)}
  $('btnGo').onclick=startTest}
-function startTest(){S={i:0,right:0,wrong:0,passed:[],failed:-1,wrongTags:[],cur:null,seen:new Set(),n:0};$('tIntro').classList.add('hide');$('tQ').classList.remove('hide');nextQ()}
+function startTest(){const dn=new Set((PROG[CUR]&&PROG[CUR].passed)||[]);let i0=0;while(i0<STEPS.length&&dn.has(STEPS[i0].id))i0++;if(i0>=STEPS.length)i0=0;S={i:i0,right:0,wrong:0,passed:[],failed:-1,wrongTags:[],cur:null,seen:new Set(),n:0};$('tIntro').classList.add('hide');$('tQ').classList.remove('hide');nextQ()}
 function nextQ(){
  const st=STEPS[S.i];let q,tries=0;do{q=pick(st.gen)();tries++}while(S.seen.has(q.q)&&tries<30);S.seen.add(q.q);S.cur=q;
  S.n++;$('stepName').textContent=`ข้อที่ ${S.n}`;$('q').innerHTML=q.q;$('fb').innerHTML='';
  const a=$('ans');a.innerHTML='';
- if(q.type==='mc'){q.choices.forEach((c,ix)=>{const b=document.createElement('button');b.className='ch';b.innerHTML=String(c.t);b.onclick=()=>answer(ix);a.appendChild(b)})}
+ if(q.type==='mc'){let sel=-1;const bs=[];q.choices.forEach((c,ix)=>{const b=document.createElement('button');b.className='ch';b.innerHTML=String(c.t);b.onclick=()=>{sel=ix;bs.forEach((x,j)=>x.classList.toggle('sel',j===ix));$('cfm').disabled=false};bs.push(b);a.appendChild(b)});
+  const cf=document.createElement('div');cf.style.marginTop='10px';cf.innerHTML='<button class="pri" id="cfm" disabled>บันทึกคำตอบ</button> <span class="muted">เลือกคำตอบแล้วกดบันทึก (เปลี่ยนใจได้จนกว่าจะกดบันทึก)</span>';a.appendChild(cf);$('cfm').onclick=()=>{if(sel>=0)answer(sel)}}
  else{a.innerHTML='<div class="row"><input type="text" id="inp" autocomplete="off" placeholder="พิมพ์คำตอบ"><button id="sub">ส่งคำตอบ</button></div>';
   $('sub').onclick=()=>answer($('inp').value);$('inp').onkeydown=e=>{if(e.key==='Enter')answer($('inp').value)};$('inp').focus()}
  const sk=document.createElement('div');sk.style.marginTop='10px';sk.innerHTML='<button class="skip" id="skip">ไม่รู้ / ข้ามข้อนี้</button>';a.appendChild(sk);$('skip').onclick=()=>answer(null)}
 function answer(v){
- const q=S.cur;let ok=false,tag='';
+ const q=S.cur;let ok=false,tag='';{const cf=$('cfm');if(cf)cf.disabled=true}
  if(v===null){tag='ไม่รู้ / ข้าม'}
  else if(q.type==='mc'){const c=q.choices[v];ok=!!c.ok;tag=ok?'':(c.tag||'เลือกคำตอบผิด');
   [...document.querySelectorAll('.ch')].forEach((b,ix)=>{b.disabled=true;if(q.choices[ix].ok)b.classList.add('ok');else if(ix===v)b.classList.add('no')})}
@@ -216,16 +219,19 @@ async function finish(){
  $('rDesc').innerHTML=d;
  $('rLadder').innerHTML=STEPS.map((s,k)=>`<span class="chip ${S.passed.includes(k)?'pass':S.failed===k?'fail':''}">${s.id}</span>`).join('');
  const g={};S.wrongTags.forEach(w=>{if(!g[w.tag])g[w.tag]={n:0,steps:new Set()};g[w.tag].n++;g[w.tag].steps.add(w.step)});
- const items=Object.entries(g).filter(([t])=>t&&t!=='ไม่รู้ / ข้าม').map(([t,x])=>`<li>${t} <span class="muted">(${[...x.steps].join(', ')})</span></li>`);
+ const items=Object.entries(g).filter(([t])=>t&&t!=='ไม่รู้ / ข้าม').map(([t,x])=>`<li>${t} <span class="muted">(${[...x.steps].map(s=>KN.includes(s)?`<a href="kn_${s}.html">${s}</a>`:s).join(', ')})</span></li>`);
  const sk=(g['ไม่รู้ / ข้าม']||{n:0}).n;
+ $('rKn').innerHTML=nx&&KN.includes(nx.id)?`<a href="kn_${nx.id}.html"><button class="pri">อ่านใบความรู้ขั้น ${nx.id} ก่อนลองใหม่</button></a>`:'';
  $('rWrong').innerHTML=(items.length?'<ul>'+items.join('')+'</ul>':'<p class="muted">ไม่มีจุดผิดที่ระบุได้</p>')+(sk?`<p class="muted">ข้ามข้อ ${sk} ข้อ</p>`:'');
  $('saveSt').textContent='กำลังบันทึกผล…';
  const r=await call({action:'save',token:TOKEN,strand:CUR,passed:ids,failedAt:nx?nx.id:''});
- if(r.ok){PROG=r.progress;AVG=r.classAvg||AVG;$('saveSt').textContent='✓ บันทึกผลเรียบร้อยแล้ว'}
+ if(r.ok){PROG=r.progress;AVG=r.classAvg||AVG;$('saveSt').textContent='✓ บันทึกผลเรียบร้อยแล้ว (ขั้นที่เคยผ่านแล้วจะไม่หายไป)';
+  const mp=(PROG[CUR]&&PROG[CUR].passed)||[],mtop=STEPS.filter(s=>mp.includes(s.id)).map(s=>s.id).pop();
+  if(mtop){$('rTitle').textContent='ผ่านสะสมถึงขั้น '+mtop;$('rLadder').innerHTML=STEPS.map((s,k)=>`<span class="chip ${mp.includes(s.id)?'pass':(nx&&nx.id===s.id)?'fail':''}">${s.id}</span>`).join('')}}
  else{PROG[CUR]={passed:ids,failedAt:nx?nx.id:'',updated:new Date().toISOString()};$('saveSt').textContent='⚠ บันทึกไม่สำเร็จ — ถ่ายภาพหน้าจอนี้ส่งครู (ผ่านถึง '+(top||'-')+')'}}
 $('btnHome').onclick=()=>{location.href='MathEQ.html?s='+CUR};
 $('btnQuit').onclick=()=>{if(S&&S.n&&!S.done&&!confirm('ออกกลางคัน ผลจะไม่ถูกบันทึก ต้องการออกหรือไม่?'))return;location.href='MathEQ.html?s='+CUR};
 
 
-if(TOKEN)openTest(SID);
+if(TOKEN){call({action:'me',token:TOKEN}).then(r=>{if(r&&r.ok){PROG=r.progress||{};AVG=r.classAvg||AVG}openTest(SID)})}
 </script></body></html>
