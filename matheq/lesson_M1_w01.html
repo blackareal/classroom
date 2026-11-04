@@ -35,7 +35,7 @@ table.tb th{color:#8fa4bd;position:sticky;top:0;background:#0d1424}
 .tcard input[type=text]{background:#fff;color:#1a2233;border:2px solid #c9d6ea;border-radius:10px;width:auto}
 .q{font-size:25px;margin:6px 0 14px}
 .ch{display:block;width:100%;text-align:left;background:#f5f8fe!important;color:#1a2233!important;border:2px solid #d3def2!important;margin:8px 0;padding:11px 14px!important}
-.ch:hover:not(:disabled){border-color:#0d47a1!important}.ch.ok{background:#c9efd5!important;border-color:#2e9b55!important}.ch.no{background:#ffd9d6!important;border-color:#d65a50!important}
+.ch:hover:not(:disabled){border-color:#0d47a1!important}.ch.sel{background:#e3edff!important;border-color:#0d47a1!important}.ch.ok{background:#c9efd5!important;border-color:#2e9b55!important}.ch.no{background:#ffd9d6!important;border-color:#d65a50!important}
 .tcard .row input{flex:1;min-width:140px}
 .fb{margin-top:12px;padding:10px 14px;border-radius:12px}.fb.ok{background:#e4f6ea}.fb.no{background:#fdeceb}
 .big{font-size:32px;font-weight:700;color:#0d47a1}
@@ -106,7 +106,7 @@ async function api(body){
  if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347 / 12348)'};
   return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls)}}
  if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls)}}
- if(body.action==='save'){d[body.token]=d[body.token]||{};d[body.token][body.strand]={passed:body.passed,failedAt:body.failedAt,updated:new Date().toISOString()};demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
+ if(body.action==='save'){d[body.token]=d[body.token]||{};{const o=d[body.token][body.strand],m=o?o.passed.slice():[];body.passed.forEach(x=>{if(m.indexOf(x)<0)m.push(x)});let fl=(body.failedAt?String(body.failedAt).split(','):[]).filter(x=>m.indexOf(x)<0);if(!fl.length&&o&&o.failedAt&&body.failedAt&&body.strand!=='GCX')fl=String(o.failedAt).split(',').filter(x=>m.indexOf(x)<0);d[body.token][body.strand]={passed:m,failedAt:fl.join(','),updated:new Date().toISOString()}}demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
  if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
  if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
  if(body.action==='adminMark'){d[body.id]=d[body.id]||{};if(body.on)d[body.id][body.strand]={passed:['CK'],failedAt:'',updated:new Date().toISOString()};else delete d[body.id][body.strand];demoSave(d);return{ok:true}}
@@ -125,13 +125,15 @@ const fs=(n,d)=>{const g=gcd(n,d);n/=g;d/=g;return d===1?`${n}`:`${n}/${d}`};
 const mixed=(n,d)=>{const g=gcd(n,d);n/=g;d/=g;if(d===1)return`${n}`;const w=Math.floor(n/d),r=n%d;return w?`${w} ${r}/${d}`:`${r}/${d}`};
 const pn=x=>x<0?`(−${-x})`:`${x}`;
 const r2=x=>Math.round(x*100)/100;
-const EX=[
+const EX0=[
  i=>{const g=mk(i);const a=g.R(10,30),b=g.R(2,9),c=g.R(2,6),d=g.R(5,20);const ans=a-b*c+d;return{q:`จงหาค่าของ ${a} + (−${b}) × ${c} − (−${d})`,num:ans,hint:'คูณก่อน แล้วค่อยบวก/ลบจากซ้ายไปขวา และจำว่า ลบ (ลบ) = บวก',sol:`(−${b}) × ${c} = −${b*c}<br>${a} + (−${b*c}) = ${a-b*c}<br>${a-b*c} − (−${d}) = ${a-b*c} + ${d} = <b>${ans}</b>`}},
  i=>{const g=mk(i+10);const q=g.R(2,9),k=g.R(2,9),r=g.R(2,9);const sa=g.pick([-1,1]),sb=g.pick([-1,1]),sc=g.pick([-1,1]);const A=sa*q*k,B=sb*q,C=sc*r;const ans=(A/B)*C;return{q:`จงหาค่าของ ${pn(A)} ÷ ${pn(B)} × ${pn(C)}`,num:ans,hint:'คูณ/หารทำจากซ้ายไปขวา ดูเครื่องหมายทีละคู่',sol:`${pn(A)} ÷ ${pn(B)} = ${A/B}<br>${A/B} × ${pn(C)} = <b>${ans}</b>`}},
  i=>{const g=mk(i+20);let b,d;do{b=g.R(2,9);d=g.R(2,9)}while(b===d);const a=g.R(1,b-1),c=g.R(1,d-1);const L=lcm(b,d),nu=a*(L/b)+c*(L/d);return{q:`จงหาค่าของ ${a}/${b} + ${c}/${d} (ตอบเป็นเศษส่วน เช่น 7/12)`,num:nu/L,hint:'ทำตัวส่วนให้เท่ากันด้วย ค.ร.น. ก่อนบวกตัวเศษ',sol:`ค.ร.น. ของ ${b} และ ${d} คือ ${L}<br>${a}/${b} + ${c}/${d} = ${a*(L/b)}/${L} + ${c*(L/d)}/${L} = ${nu}/${L} = <b>${fs(nu,L)}</b>`}},
  i=>{const g=mk(i+30);let b,d;do{b=g.R(2,9);d=g.R(2,9)}while(b===d);const a=g.R(1,b-1),c=g.R(1,d-1);return{q:`จงหาค่าของ ${a}/${b} ÷ ${c}/${d} (ตอบเป็นเศษส่วน)`,num:(a*d)/(b*c),hint:'กลับเศษส่วนตัวหลัง แล้วเปลี่ยนเป็นคูณ',sol:`${a}/${b} ÷ ${c}/${d} = ${a}/${b} × ${d}/${c} = ${a*d}/${b*c} = <b>${fs(a*d,b*c)}</b>`}},
  i=>{const g=mk(i+40);const p1=g.R(10,30)+0.5,p2=g.R(5,15)+0.5,n=g.R(2,5),m=g.R(2,5);const tot=r2(n*p1+m*p2);const pay=g.pick([300,500]);const ans=r2(pay-tot);return{q:`ซื้อสมุด ${n} เล่ม เล่มละ ${p1} บาท และปากกา ${m} ด้าม ด้ามละ ${p2} บาท จ่ายด้วยธนบัตร ${pay} บาท จะได้รับเงินทอนกี่บาท`,num:ans,hint:'หาราคารวมของทั้งสองอย่างก่อน แล้วนำไปลบจากเงินที่จ่าย',sol:`สมุด ${n} × ${p1} = ${r2(n*p1)}<br>ปากกา ${m} × ${p2} = ${r2(m*p2)}<br>รวม ${tot} บาท · เงินทอน = ${pay} − ${tot} = <b>${ans}</b> บาท`}}
 ];
+/* ลดเหลือ 3 ข้อในระบบ (4 พ.ย.): คงชุดเลขเดิมของข้อ 1, 3, 5 */
+const EXIDS=[1,3,5];const EX=EXIDS.map(k=>()=>EX0[k-1](k-1));
 const FR=[[1,2],[1,4],[3,4],[1,5],[2,5],[3,5],[4,5],[1,8],[3,8],[5,8],[7,8],[1,20],[3,20],[7,20],[1,25],[3,25]];
 const NB=[
  i=>{const g=mk(100+i);const a=g.R(3,9),b=g.R(5,15),c=g.R(1,b+3),d=g.R(2,20);const ans=a*(b-c)*(b-c)-d;return{q:`จงหาค่าของ ${a} × (${b} − ${c})² − ${d} (แสดงวิธีทำ)`,sol:`(${b} − ${c}) = ${b-c} → (${b-c})² = ${(b-c)*(b-c)}<br>${a} × ${(b-c)*(b-c)} = ${a*(b-c)*(b-c)} → ${a*(b-c)*(b-c)} − ${d} = <b>${ans}</b>`}},
@@ -150,24 +152,24 @@ $('btnPrint').onclick=()=>window.print();
 const DONE=new Set();
 function render(){
  const el=$('ex');el.innerHTML='';
- EX.forEach((f,i)=>{const p=f(i);const d=document.createElement('div');d.className='exq'+(DONE.has('Q'+(i+1))?' done':'');d.id='q'+i;
+ EX.forEach((f,i)=>{const p=f(i);const d=document.createElement('div');d.className='exq'+(DONE.has('Q'+EXIDS[i])?' done':'');d.id='q'+i;
   d.innerHTML=`<div><b>ข้อ ${i+1}.</b> ${p.q}</div><div class="row" style="margin-top:8px"><input type="text" id="a${i}" autocomplete="off" inputmode="text" placeholder="คำตอบ"><button id="b${i}">ตรวจ</button><span id="r${i}"></span></div><div class="hint muted" id="h${i}"></div><div class="sol" id="s${i}">${p.sol}</div>`;
   el.appendChild(d);
-  if(DONE.has('Q'+(i+1))){$('r'+i).textContent='✓ ทำถูกแล้ว';$('s'+i).classList.add('on')}
+  if(DONE.has('Q'+EXIDS[i])){$('r'+i).textContent='✓ ทำถูกแล้ว';$('s'+i).classList.add('on')}
   const chk=()=>{const n=numIn($('a'+i).value);if(isNaN(n)){$('r'+i).textContent='พิมพ์เป็นตัวเลข เช่น 12, −5, 7/12, 3.5';return}
-   if(Math.abs(n-p.num)<1e-6){$('r'+i).textContent='✓ ถูกต้อง';$('h'+i).textContent='';$('s'+i).classList.add('on');$('q'+i).classList.add('done');DONE.add('Q'+(i+1));persist();if(DONE.size>=EX.length)unlockNB()}
+   if(Math.abs(n-p.num)<1e-6){$('r'+i).textContent='✓ ถูกต้อง';$('h'+i).textContent='';$('s'+i).classList.add('on');$('q'+i).classList.add('done');DONE.add('Q'+EXIDS[i]);persist();if(EXIDS.every(k=>DONE.has('Q'+k)))unlockNB()}
    else{$('r'+i).textContent='✗ ยังไม่ถูก';$('h'+i).textContent='คำใบ้: '+p.hint}};
   $('b'+i).onclick=chk;$('a'+i).onkeydown=e=>{if(e.key==='Enter')chk()}});
 }
 let t=null;
-function persist(){if(TEACHER)return;clearTimeout(t);t=setTimeout(async()=>{$('saveSt').textContent='กำลังบันทึก…';const r=await call({action:'save',token:TOKEN,strand:LESSON,passed:[...DONE],failedAt:''});$('saveSt').textContent=r.ok?`✓ บันทึกแล้ว (${DONE.size}/${EX.length} ข้อ)`:'⚠ บันทึกไม่สำเร็จ'},300)}
+function persist(){if(TEACHER)return;clearTimeout(t);t=setTimeout(async()=>{$('saveSt').textContent='กำลังบันทึก…';const r=await call({action:'save',token:TOKEN,strand:LESSON,passed:[...DONE],failedAt:''});$('saveSt').textContent=r.ok?`✓ บันทึกแล้ว (${EXIDS.filter(k=>DONE.has('Q'+k)).length}/${EX.length} ข้อ)`:'⚠ บันทึกไม่สำเร็จ'},300)}
 $('who').textContent=ME.name;$('who2').textContent=ME.name;
 (async()=>{
  if(TEACHER){(VIEW.done||[]).forEach(x=>DONE.add(x));teacherCk();render();
   DONE.size>=0&&(()=>{unlockNB();document.querySelectorAll('.sol').forEach(s=>s.classList.add('on'));document.querySelectorAll('.exq input,.exq button').forEach(x=>x.disabled=true)})();
   const b=document.createElement('div');b.className='tcard';b.style.cssText='background:#fff3c4;border:2px solid #e6c34a';b.innerHTML=`<b>โหมดครู</b> · ชุดโจทย์และเฉลยของ <b>${ME.name}</b> เลขที่ ${ME.no} ห้อง ${ME.cls} · ทำในระบบถูก ${DONE.size}/${EX.length} ข้อ · ทำลงสมุด: ${NBDONE?'ติ๊กว่าเสร็จแล้ว':'ยังไม่ติ๊ก'} · <span class="muted">ไม่มีการบันทึกใด ๆ ในโหมดนี้</span>`;
   document.querySelector('.wrap').insertBefore(b,document.querySelector('.wrap').children[1]);$('nb').querySelector('.muted').innerHTML='โจทย์ในสมุดของนักเรียนคนนี้ พร้อมเฉลยสำหรับครูตรวจ';return}
- const r=await call({action:'me',token:TOKEN});if(r.ok&&r.progress&&r.progress[LESSON])r.progress[LESSON].passed.forEach(x=>DONE.add(x));ckUI(!!(r.ok&&r.progress&&r.progress[LESSON+'_CK']&&r.progress[LESSON+'_CK'].passed.length));render();if(DONE.size>=EX.length)unlockNB()})();
+ const r=await call({action:'me',token:TOKEN});if(r.ok&&r.progress&&r.progress[LESSON])r.progress[LESSON].passed.forEach(x=>DONE.add(x));ckUI(!!(r.ok&&r.progress&&r.progress[LESSON+'_CK']&&r.progress[LESSON+'_CK'].passed.length));render();if(EXIDS.every(k=>DONE.has('Q'+k)))unlockNB()})();
 $('btnHome').onclick=$('btnQuit').onclick=()=>{if(TEACHER){window.close();setTimeout(()=>{location.href='MathEQ.html'},200);return}location.href='MathEQ.html'};
 </script>
 </body></html>
