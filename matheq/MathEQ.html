@@ -78,7 +78,7 @@ table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px s
  <div class="card"><h2>รายบุคคล</h2><div class="muted">ตัวเลข = จำนวนขั้นที่ผ่าน · - = ยังไม่ทำ · ✓ = ผ่านครบทุกขั้นที่มีข้อสอบ · แตะชื่อเพื่อดู equalizer</div><div style="overflow:auto;max-height:480px;margin-top:8px"><table class="tb" id="aTb"></table></div></div>
  <div class="card hide" id="aActsCard"><h2>บทเรียนและกิจกรรม</h2><div class="muted">ประตูความพร้อม: ตัวเลข = ขั้นที่ผ่าน · บทเรียน: ตัวเลข = ข้อที่ทำถูก (- = ยังไม่เปิด) · ช่องสี่เหลี่ยม "ตรวจสมุด" = ติ๊กเมื่อรับ/ตรวจสมุดนักเรียนคนนั้นแล้ว (นักเรียนจะเห็นสถานะ)</div><div style="overflow:auto;max-height:420px;margin-top:8px"><table class="tb" id="aActs"></table></div></div>
  <div class="card"><h2>ดูบทเรียนล่วงหน้า (โหมดครู)</h2><div class="muted">เปิดดูเนื้อหา แบบฝึกหัด และเฉลยทุกบทที่สร้างไว้ แม้ยังไม่ถึงวันเปิดให้นักเรียน · ไม่มีการบันทึกผลใด ๆ · ใช้ชุดโจทย์ของนักเรียนที่เลือกไว้ (ถ้าไม่ได้เลือก ใช้เลขที่ 1 ของห้อง)</div><div id="aPrev" style="margin-top:8px"></div></div>
- <div class="card"><h2>สไลด์สรุปความรู้ (ฉายโปรเจคเตอร์)</h2><div class="muted">หน้าเดียวต่อ 1 รหัสขั้น ตัวอักษรใหญ่ พอดีจอ · ใช้สอนเนื้อหาหน้าชั้น · ในหน้าสไลด์: ลูกศรซ้าย/ขวา = ขั้นก่อน/ถัดไป · P = โจทย์ให้ลองคิด · F = เต็มจอ</div><div id="aSlides" style="margin-top:8px"></div></div>
+ <div class="card"><h2>สไลด์สรุปความรู้ (ฉายโปรเจคเตอร์)</h2><div class="muted">หน้าเดียวต่อ 1 บทเรียนที่สอนในคาบ (ทบทวน · ใบความรู้ · ตัวอย่าง) ตัวอักษรใหญ่ พอดีจอ · F = เต็มจอ · A−/A+ ปรับขนาด</div><div id="aSlides" style="margin-top:8px"></div></div>
  <div class="card hide" id="aOne"><h2 id="aOneName"></h2><div class="deck"><div class="eq" id="aOneEq"></div></div><div id="aLessons" style="margin:10px 0"></div><div class="row" style="margin-top:10px"><select id="aRsSt"></select><button id="aRs">ล้างผลสายนี้ (ให้ทำใหม่)</button></div></div>
 </div>
 </div>
@@ -93,18 +93,20 @@ const STR=[{"id":"N","name":"จำนวน","steps":[["N1","จำนวนน
 const PJ=["A1", "A10", "A11", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "C0", "C1", "C10", "C11", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "D1", "D10", "D11", "D12", "D13", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "F1", "F2", "F3", "F4", "F5", "F6", "L1", "L2", "L3", "L4", "L5", "L6", "L7", "M0", "M1", "M10", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "N1", "N10", "N2", "N3", "N4", "N5", "N6", "N7", "N8", "N9", "S0", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8"];
 const ACTIVITIES=[
  {id:'GCX',type:'gate',title:'ประตูความพร้อมก่อนเข้าจำนวนเชิงซ้อน',cls:'ม.5/1',date:'2026-11-03',file:'ready_complex.html',total:12},
- {id:'LS_M1W01',type:'lesson',title:'ม.1 · สัปดาห์ 1 · ปรับพื้นฐานก่อนเข้าสมการ',cls:'ม.1/1',date:'2026-11-04',file:'lesson_M1_w01.html',total:3},
- {id:'LS_M1W01_CK',type:'notebook',title:'ม.1 สัปดาห์ 1 · ครูตรวจสมุดแล้ว',cls:'ม.1/1',date:'2026-11-04',file:'lesson_M1_w01.html',total:1},
+ {id:'LS_M1W01',type:'lesson',title:'ม.1 · 4 พ.ย. · ปรับพื้นฐานก่อนเข้าสมการ',cls:'ม.1/1',date:'2026-11-04',file:'lesson_M1_w01.html',total:3},
+ {id:'LS_M1W01_CK',type:'notebook',title:'ม.1 4 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.1/1',date:'2026-11-04',file:'lesson_M1_w01.html',total:1},
+ {id:'LS_M1W02',type:'lesson',title:'ม.1 · 6 พ.ย. · สมการเชิงเส้นตัวแปรเดียว (1) การแก้สมการ',cls:'ม.1/1',date:'2026-11-06',file:'lesson_M1_w02.html',total:3},
+ {id:'LS_M1W02_CK',type:'notebook',title:'ม.1 6 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.1/1',date:'2026-11-06',file:'lesson_M1_w02.html',total:1},
  {id:'C',type:'gate',title:'แบบประเมินตนเอง: แคลคูลัส (ทำได้ถึงขั้นไหน)',cls:'ม.6/1',date:'2026-11-04',file:'test_C.html',total:12},
  {id:'L',type:'gate',title:'แบบประเมินตนเอง: เซตและตรรกศาสตร์ (ทบทวนจากเทอม 1)',cls:'ม.4/1',date:'2026-11-05',file:'test_L.html',total:7},
- {id:'LS_M6W01',type:'lesson',title:'ม.6 · สัปดาห์ 1 · ซ่อมฐานก่อนเรียนแคลคูลัส (C0)',cls:'ม.6/1',date:'2026-11-06',file:'lesson_M6_w01.html',total:3},
- {id:'LS_M6W01_CK',type:'notebook',title:'ม.6 สัปดาห์ 1 · ครูตรวจสมุดแล้ว',cls:'ม.6/1',date:'2026-11-06',file:'lesson_M6_w01.html',total:1},
- {id:'LS_M4W01',type:'lesson',title:'ม.4 · สัปดาห์ 1 · หลักการนับเบื้องต้น (หลักการคูณและบวก)',cls:'ม.4/1',date:'2026-11-09',file:'lesson_M4_w01.html',total:3},
- {id:'LS_M4W01_CK',type:'notebook',title:'ม.4 สัปดาห์ 1 · ครูตรวจสมุดแล้ว',cls:'ม.4/1',date:'2026-11-09',file:'lesson_M4_w01.html',total:1},
- {id:'LS_M5W01',type:'lesson',title:'ม.5 · สัปดาห์ 1 · ที่มาของ i และจำนวนเชิงซ้อน',cls:'ม.5/1',date:'2026-11-03',file:'lesson_M5_w01.html',total:5},
- {id:'LS_M2W01',type:'lesson',title:'ม.2 · สัปดาห์ 1 · ทบทวนค่ากลางและเปิดบทสถิติ',cls:'ม.2/1',date:'2026-11-03',file:'lesson_M2_w01.html',total:5},
- {id:'LS_M2W01_CK',type:'notebook',title:'ม.2 สัปดาห์ 1 · ครูตรวจสมุดแล้ว',cls:'ม.2/1',date:'2026-11-03',file:'lesson_M2_w01.html',total:1},
- {id:'LS_M5W01_CK',type:'notebook',title:'ม.5 สัปดาห์ 1 · ครูตรวจสมุดแล้ว',cls:'ม.5/1',date:'2026-11-03',file:'lesson_M5_w01.html',total:1}
+ {id:'LS_M6W01',type:'lesson',title:'ม.6 · 6 พ.ย. · ซ่อมฐานก่อนเรียนแคลคูลัส (C0)',cls:'ม.6/1',date:'2026-11-06',file:'lesson_M6_w01.html',total:3},
+ {id:'LS_M6W01_CK',type:'notebook',title:'ม.6 6 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.6/1',date:'2026-11-06',file:'lesson_M6_w01.html',total:1},
+ {id:'LS_M4W01',type:'lesson',title:'ม.4 · 9 พ.ย. · หลักการนับเบื้องต้น (หลักการคูณและบวก)',cls:'ม.4/1',date:'2026-11-09',file:'lesson_M4_w01.html',total:3},
+ {id:'LS_M4W01_CK',type:'notebook',title:'ม.4 9 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.4/1',date:'2026-11-09',file:'lesson_M4_w01.html',total:1},
+ {id:'LS_M5W01',type:'lesson',title:'ม.5 · 3 พ.ย. · ที่มาของ i และจำนวนเชิงซ้อน',cls:'ม.5/1',date:'2026-11-03',file:'lesson_M5_w01.html',total:5},
+ {id:'LS_M2W01',type:'lesson',title:'ม.2 · 3 พ.ย. · ทบทวนค่ากลางและเปิดบทสถิติ',cls:'ม.2/1',date:'2026-11-03',file:'lesson_M2_w01.html',total:5},
+ {id:'LS_M2W01_CK',type:'notebook',title:'ม.2 3 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.2/1',date:'2026-11-03',file:'lesson_M2_w01.html',total:1},
+ {id:'LS_M5W01_CK',type:'notebook',title:'ม.5 3 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.5/1',date:'2026-11-03',file:'lesson_M5_w01.html',total:1}
 ];
 const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 function renderActs(){
@@ -223,7 +225,7 @@ function renderActsAdmin(L){
  $('aActs').innerHTML=h;
  $('aActs').querySelectorAll('input[data-ckid]').forEach(c=>c.onchange=async()=>{const sid=c.dataset.ckid,k=c.dataset.ckk,on=c.checked;const r=await call({action:'adminMark',token:ATOKEN,id:sid,strand:k,on:on});if(!r.ok){c.checked=!on;alert(r.error||'บันทึกไม่สำเร็จ');return}const stu=ADATA.find(x=>x.id===sid);if(on)stu.progress[k]={passed:['CK'],failedAt:'',updated:''};else delete stu.progress[k]});
  renderPrev();renderSlides()}
-function renderSlides(){const has=new Set(PJ),el=$('aSlides');el.innerHTML=STR.map(s=>{const ids=s.steps.filter(x=>has.has(x[0]));return ids.length?`<details style="margin:6px 0"><summary style="cursor:pointer"><b>สาย ${s.id} ${s.name}</b> <span class="muted">(${ids.length} หน้า)</span></summary><div style="margin:6px 0 6px 14px">${ids.map(x=>`<div style="margin:3px 0"><a href="pj_${x[0]}.html" target="_blank" rel="noopener"><b>${x[0]}</b> · ${x[1]}</a></div>`).join('')}</div></details>`:''}).join('')}
+function renderSlides(){const has=new Set(PJ),el=$('aSlides');const LL=ACTIVITIES.filter(a=>a.type==='lesson').sort((a,b)=>a.date.localeCompare(b.date));const lhtml='<div><b>สไลด์ตามบทเรียนที่สอน</b></div><div style="margin:6px 0 12px 14px">'+LL.map(a=>`<div style="margin:4px 0"><a href="sl_${a.id}.html" target="_blank" rel="noopener">${a.title}</a> <span class="muted">· ${a.cls} · ${a.date}</span></div>`).join('')+'</div><div class="muted" style="margin-bottom:4px">สไลด์รายขั้น (เปิดเสริมได้)</div>';el.innerHTML=lhtml+STR.map(s=>{const ids=s.steps.filter(x=>has.has(x[0]));return ids.length?`<details style="margin:6px 0"><summary style="cursor:pointer"><b>สาย ${s.id} ${s.name}</b> <span class="muted">(${ids.length} หน้า)</span></summary><div style="margin:6px 0 6px 14px">${ids.map(x=>`<div style="margin:3px 0"><a href="pj_${x[0]}.html" target="_blank" rel="noopener"><b>${x[0]}</b> · ${x[1]}</a></div>`).join('')}</div></details>`:''}).join('')}
 function openLessonFor(a,st){const p=st.progress[a.id],ck=st.progress[a.id+'_CK'];
  const view={student:{id:st.id,name:st.name,cls:st.cls,no:st.no},done:p?p.passed:[],ck:!!(ck&&ck.passed.length),atoken:ATOKEN};
  try{sessionStorage.setItem('matheq_admin_view',JSON.stringify(view))}catch(e){}
