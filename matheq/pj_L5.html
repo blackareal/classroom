@@ -1,0 +1,195 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>สไลด์ L5 · ประพจน์สมมูล เดอมอร์แกน สัจนิรันดร์</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font-family:'Leelawadee UI','Sarabun','TH Sarabun New',Tahoma,sans-serif;background:#fff;color:#111;font-size:var(--fs,32px);line-height:1.32;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.hdr{background:#283593;color:#fff;padding:.3em .7em;display:flex;align-items:center;gap:.2em .6em;flex-wrap:wrap}
+.hdr .id{background:#fff;color:#283593;font-weight:800;border-radius:.35em;padding:0 .4em;font-size:1.05em}
+.hdr .t{font-size:1.2em;font-weight:800;flex:1 1 12em;line-height:1.15}
+.hdr .s{font-size:.5em;opacity:.92;white-space:nowrap}
+.tools{display:flex;gap:.35em;font-size:.42em;opacity:.45;transition:opacity .2s}.tools:hover{opacity:1}
+.tools button,.tools a{font:inherit;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.7);border-radius:.4em;padding:.15em .6em;cursor:pointer;text-decoration:none;white-space:nowrap}
+.main{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:.5em;padding:.5em .7em;min-height:0}
+.col{border:.1em solid #283593;border-radius:.45em;padding:.3em .65em;overflow:hidden;min-height:0}
+.col h2{margin:0 0 .15em;font-size:.78em;color:#283593;font-weight:800}
+.col p{margin:.22em 0}
+.miss{margin:0 .7em .5em;background:#fff4d6;border-left:.22em solid #e6a100;border-radius:.4em;padding:.2em .65em;font-size:.8em}
+.miss b{color:#8a5a00}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .06em;line-height:1.05;font-size:.95em}.fr i{font-style:normal;padding:0 .12em}.fr i:first-child{border-bottom:.06em solid currentColor}
+.eqt{border-collapse:collapse;margin:.1em 0 .15em .3em}.eqt td{padding:.02em .06em;vertical-align:middle}.eqt .el{text-align:right;white-space:nowrap;padding-right:.25em}.eqt .ee{text-align:center;width:.8em}.eqt .er{text-align:left}
+#prac{position:fixed;inset:0;background:#fff;display:none;flex-direction:column;z-index:5}#prac.on{display:flex}
+#prac .ph{background:#283593;color:#fff;padding:.3em .7em;font-size:1.1em;font-weight:800;display:flex;gap:.6em;align-items:center}#prac .ph .tools{margin-left:auto}
+#prac ol{margin:.5em .9em;padding-left:1.3em;flex:1;overflow:auto}#prac li{margin:.5em 0}
+#prac .a{display:none;margin:.2em 0 0;padding:.2em .6em;background:#e8f5e9;border-left:.22em solid #2e9b55;border-radius:.4em}#prac .a.on{display:block}
+#prac .hint{font-size:.5em;color:#666;margin:0 1.8em .4em}
+</style><script>/* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
+function mxFrText(s){
+ return s.replace(/(?:(\d+) )?(\d+)\/(\d+)/g,function(m,w,n,d,o,str){
+  var b=o>0?str.charAt(o-1):'',a=str.charAt(o+m.length);
+  if(/[\w\/.√)\]²³′π]/.test(b)||/[\d\/²³√]/.test(a))return m;
+  return (w?w:'')+'<span class="fr"><i>'+n+'</i><i>'+d+'</i></span>'});
+}
+/* รับ HTML string คืน HTML string (ไม่แตะข้างในแท็ก) */
+function mxFr(h){
+ return String(h).split(/(<\/?[a-zA-Z][^>]*>)/).map(function(x){return x.charAt(0)==='<'&&/^<\/?[a-zA-Z]/.test(x)?x:mxFrText(x)}).join('');
+}
+/* rows = [[ข้อความซ้าย, ข้อความขวา, ไม่แสดง =], ...] เฉพาะแถวสุดท้ายตัวหนา */
+function mxEq(rows){
+ var n=rows.length;
+ return '<table class="eqt">'+rows.map(function(r,i){return '<tr><td class="el">'+mxFr(r[0]||'')+'</td><td class="ee">'+(r[2]?'':'=')+'</td><td class="er">'+(i===n-1?'<b>'+mxFr(r[1])+'</b>':mxFr(r[1]))+'</td></tr>'}).join('')+'</table>';
+}
+function mxSplitEq(line){
+ var parts=[],depth=0,inTag=false,start=0,i,ch;
+ for(i=0;i<line.length;i++){
+  ch=line.charAt(i);
+  if(ch==='<'&&/[a-zA-Z\/]/.test(line.charAt(i+1)))inTag=true;
+  else if(ch==='>'&&inTag)inTag=false;
+  if(inTag)continue;
+  if('([{'.indexOf(ch)>=0)depth++;
+  else if(')]}'.indexOf(ch)>=0)depth--;
+  else if(depth===0&&ch==='='&&line.charAt(i-1)===' '&&line.charAt(i+1)===' '){parts.push(line.slice(start,i-1));start=i+2}
+ }
+ parts.push(line.slice(start));
+ return parts;
+}
+function mxTagsOk(s){
+ var o=(s.match(/<[a-zA-Z][^>]*>/g)||[]).length,c=(s.match(/<\/[a-zA-Z]+>/g)||[]).length;
+ return o===c;
+}
+function mxPlain(s){return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&')}
+function mxCommaFree(pt){
+ var d=0,j,c;
+ for(j=0;j<pt.length;j++){c=pt.charAt(j);if('([{'.indexOf(c)>=0)d++;else if(')]}'.indexOf(c)>=0)d--;else if(d===0&&c===',')return false}
+ return true;
+}
+/* ตรวจชิ้นส่วนของสายสมการ: แต่ละชิ้นต้องไม่ว่าง แท็กครบคู่ ไม่มีจุลภาคระดับนอก และชิ้นกลางไม่ใช่ "ประโยคใหม่" ติดมา */
+function mxPartsOk(p){
+ for(var i=0;i<p.length;i++){
+  var pt=mxPlain(p[i]).trim();
+  if(!pt||!mxTagsOk(p[i])||!mxCommaFree(pt))return false;
+  if(i>0&&i<p.length-1&&/[\w)\]²³′″]\s+[A-Za-zα-ωπ][A-Za-z0-9α-ωπ′″]*(\([^()]*\))?$/.test(pt))return false;
+ }
+ return true;
+}
+function mxChainTable(p){
+ return '<table class="eqt">'+p.map(function(x,i){return '<tr><td class="el"></td><td class="ee">'+(i===0?'':'=')+'</td><td class="er">'+x.trim()+'</td></tr>'}).join('')+'</table>';
+}
+function mxRowsTable(rows){
+ return '<table class="eqt">'+rows.map(function(r){return '<tr><td class="el">'+r[0].trim()+'</td><td class="ee">=</td><td class="er">'+r[1].trim()+'</td></tr>'}).join('')+'</table>';
+}
+/* segs = รายการ "ประโยคสมการ" ที่แยกกันด้วย → หรือ · (ตัวคั่นแบบเว้นกว้าง) */
+function mxStmts(segs,allowChain){
+ var allOne=true,allChain=true,parsed=[],i,p;
+ for(i=0;i<segs.length;i++){
+  p=mxSplitEq(segs[i]);
+  if(!mxPartsOk(p))return null;
+  parsed.push(p);
+  if(p.length!==2)allOne=false;
+  if(p.length<3)allChain=false;
+ }
+ if(allOne)return mxRowsTable(parsed);
+ if(allowChain&&allChain)return parsed.map(mxChainTable).join('');
+ return null;
+}
+/* คืน HTML ตาราง ถ้าบรรทัดนี้เป็นสายสมการล้วน ไม่งั้นคืน null */
+var MX_SEP=/(?:&nbsp;| ){2,}·(?:&nbsp;| ){2,}/;
+function mxChain(line){
+ var t=mxPlain(line);
+ if(/[฀-๿]/.test(t))return null;
+ if(/[⇒⇔↔;]/.test(t))return null;
+ if(t.indexOf(' = ')<0)return null;
+ var segs=line.split(MX_SEP);
+ if(segs.length>1){
+  for(var k=0;k<segs.length;k++)if(/\s→\s/.test(mxPlain(segs[k])))return null;
+  return mxStmts(segs,true);
+ }
+ if(/\s→\s/.test(t))return mxStmts(line.split(/\s+→\s+/),false);
+ var p=mxSplitEq(line);
+ if(p.length<3||!mxPartsOk(p))return null;
+ return mxChainTable(p);
+}
+var MX_BLOCK='table,p,li,div,ul,ol,details,h1,h2,h3';
+var MX_SKIP='button,.ch,#ans,#q,input,textarea,.eqt,svg,script,style,.nomfx';
+function mxFix(root){
+ var els=root.querySelectorAll('p,li,div.sol,.fb,details>div,.mfx'),k;
+ for(k=0;k<els.length;k++){
+  var el=els[k];
+  if(el.closest(MX_SKIP)||el.querySelector(MX_BLOCK))continue;
+  var html=el.innerHTML;
+  if(html.indexOf(' = ')<0)continue;
+  var lines=html.split(/<br\s*\/?>/i),out=[],raw=[],changed=false;
+  for(var i=0;i<lines.length;i++){
+   var tb=mxChain(lines[i]);
+   if(tb){if(raw.length){out.push(raw.join('<br>'));raw=[]}out.push(tb);changed=true}
+   else raw.push(lines[i]);
+  }
+  if(!changed)continue;
+  if(raw.length)out.push(raw.join('<br>'));
+  el.innerHTML=out.join('');
+ }
+ /* เศษส่วนบน-ล่าง ในข้อความทุกที่ (ยกเว้น svg/script/style/ช่องกรอก) */
+ var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),nodes=[],n;
+ while((n=w.nextNode())){
+  if(!/\d\/\d/.test(n.nodeValue))continue;
+  var pe=n.parentNode;
+  if(!pe||(pe.closest&&pe.closest('svg,script,style,textarea,.fr,.nomfx,#saveSt,#rDesc,#rTitle,#gProg,#stepName,#rSub')))continue;
+  nodes.push(n);
+ }
+ nodes.forEach(function(nd){
+  var t=nd.nodeValue.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  var h=mxFrText(t);
+  if(h===t)return;
+  var sp=document.createElement('span');sp.innerHTML=h;
+  var frag=document.createDocumentFragment();
+  while(sp.firstChild)frag.appendChild(sp.firstChild);
+  nd.parentNode.replaceChild(frag,nd);
+ });
+}
+(function(){
+ var timer=null,obs=null;
+ function run(){try{mxFix(document.body)}catch(e){if(window.console)console.error('mxFix',e)}if(obs)obs.takeRecords()}
+ function sched(){clearTimeout(timer);timer=setTimeout(run,30)}
+ function start(){
+  run();
+  if(window.MutationObserver){obs=new MutationObserver(sched);obs.observe(document.body,{childList:true,subtree:true,characterData:true})}
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script></head><body>
+<div class="hdr"><span class="id">L5</span><span class="t">ประพจน์สมมูล เดอมอร์แกน สัจนิรันดร์</span><span class="s">สาย L · เซตและตรรกศาสตร์</span>
+<div class="tools"><a id="lPrev" href="pj_L4.html">← L4</a><a id="lNext" href="pj_L6.html">L6 →</a><button id="bPrac">โจทย์ให้ลอง (P)</button><button id="bFs">เต็มจอ (F)</button><button id="bMinus">A−</button><button id="bPlus">A+</button><button id="bBack">← กลับ</button></div></div>
+<div class="main"><div class="col"><h2>ใบความรู้</h2><p><b>ประพจน์สมมูล</b> มีตารางค่าความจริงเหมือนกัน</p>
+<p>p → q ≡ ~p ∨ q ≡ ~q → ~p (สมมูลกับแย้งสลับที่) · ~(p ∧ q) ≡ ~p ∨ ~q · ~(p ∨ q) ≡ ~p ∧ ~q (กฎเดอมอร์แกน) · ~(~p) ≡ p</p>
+<p><b>สัจนิรันดร์</b> ประพจน์ที่จริงทุกกรณี เช่น p ∨ ~p</p></div><div class="col"><h2>ตัวอย่าง</h2><p><b>~(p ∧ ~q)</b> ≡ ~p ∨ ~(~q) ≡ <b>~p ∨ q</b></p>
+<p><b>p ∨ ~p</b> จริงทุกกรณี → เป็น <b>สัจนิรันดร์</b></p>
+<p><b>"ถ้าฝนตกแล้วถนนเปียก"</b> สมมูลกับ <b>"ถ้าถนนไม่เปียกแล้วฝนไม่ตก"</b></p></div></div>
+<div class="miss"><b>จุดที่พลาดบ่อย</b> เดอมอร์แกนแล้วลืมเปลี่ยน ∧ เป็น ∨ (หรือกลับกัน) · คิดว่า p → q สมมูลกับ q → p (ไม่สมมูล)</div>
+<div id="prac"><div class="ph">โจทย์ให้ลองคิด · L5 ประพจน์สมมูล เดอมอร์แกน สัจนิรันดร์<div class="tools"><button id="bPracBack">กลับสไลด์ (P)</button></div></div><div class="hint">แตะที่ข้อเพื่อแสดง/ซ่อนเฉลย</div><ol><li><div>นิเสธของ p ∨ q</div><div class="a"><b>เฉลย</b> ~p ∧ ~q</div></li><li><div>p → q สมมูลกับข้อใด (แย้งสลับที่)</div><div class="a"><b>เฉลย</b> ~q → ~p</div></li></ol></div>
+<script>
+var zoom=1;
+function fit(){
+ var root=document.documentElement,cols=[].slice.call(document.querySelectorAll('.col')),lo=12,hi=72,best=12,it,mid,ok;
+ for(it=0;it<11;it++){mid=(lo+hi)/2;root.style.setProperty('--fs',mid+'px');
+  ok=cols.every(function(c){return c.scrollHeight<=c.clientHeight+1&&c.scrollWidth<=c.clientWidth+1});
+  if(ok){best=mid;lo=mid}else hi=mid}
+ root.style.setProperty('--fs',Math.max(12,best*zoom)+'px');
+}
+function togglePrac(){var p=document.getElementById('prac');if(p)p.classList.toggle('on')}
+function fs(){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+window.addEventListener('load',function(){fit();setTimeout(fit,300)});
+window.addEventListener('resize',fit);
+document.getElementById('bFs').onclick=fs;
+document.getElementById('bPlus').onclick=function(){zoom=Math.min(1.5,zoom*1.1);fit()};
+document.getElementById('bMinus').onclick=function(){zoom=Math.max(.6,zoom/1.1);fit()};
+document.getElementById('bBack').onclick=function(){if(history.length>1)history.back();else location.href='MathEQ.html'};
+var pb=document.getElementById('bPrac');if(pb)pb.onclick=togglePrac;var pb2=document.getElementById('bPracBack');if(pb2)pb2.onclick=togglePrac;
+[].forEach.call(document.querySelectorAll('#prac li'),function(li){li.onclick=function(){var a=li.querySelector('.a');if(a)a.classList.toggle('on')}});
+document.addEventListener('keydown',function(e){
+ if(e.key==='ArrowLeft'){var a=document.getElementById('lPrev');if(a)location.href=a.href}
+ else if(e.key==='ArrowRight'){var b=document.getElementById('lNext');if(b)location.href=b.href}
+ else if(e.key==='p'||e.key==='P')togglePrac();
+ else if(e.key==='f'||e.key==='F')fs();
+ else if(e.key==='+'||e.key==='=')document.getElementById('bPlus').onclick();
+ else if(e.key==='-')document.getElementById('bMinus').onclick();
+ else if(e.key==='Escape'){var p=document.getElementById('prac');if(p&&p.classList.contains('on'))togglePrac()}
+});
+</script></body></html>

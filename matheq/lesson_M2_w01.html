@@ -271,9 +271,11 @@ const NB=[
  i=>{const g=mk(100+i);const base=[];for(let k=0;k<5;k++)base.push(g.R(55,80));const out=g.R(2,8);const a=shuf(g,base.concat([out]));const mn=mean(a),md=med(a);return{q:`คะแนนสอบ 6 คน คือ ${L(a)} จงหาค่าเฉลี่ยและมัธยฐาน แล้วอธิบายว่าค่ากลางใดเหมาะกับการเป็นตัวแทนข้อมูลชุดนี้มากกว่า เพราะอะไร`,sol:`ค่าเฉลี่ย = ${(Math.round(mn*100)/100)} มัธยฐาน = ${md}<br>มีข้อมูลที่ต่ำผิดปกติ (${out}) ทำให้ค่าเฉลี่ยถูกดึงลง มัธยฐานเหมาะกว่า`}},
  i=>{const g=mk(100+i);const m=g.R(60,80);let x=g.R(50,95);while((5*m+x)%6!==0||x===m)x++;const nw=(5*m+x)/6;return{q:`ค่าเฉลี่ยของข้อมูล 5 จำนวน เท่ากับ ${m} ถ้าเพิ่มข้อมูลอีก 1 จำนวน คือ ${x} ค่าเฉลี่ยใหม่ของข้อมูล 6 จำนวนเป็นเท่าใด`,sol:`ผลรวมเดิม = ${m}×5 = ${5*m}, ผลรวมใหม่ = ${5*m} + ${x} = ${5*m+x}, ค่าเฉลี่ยใหม่ = ${5*m+x} ÷ 6 = <b>${nw}</b>`}}
 ];
+/* ลดโจทย์ลงสมุดเหลือ 3 ข้อ (5 พ.ย. 2569): คงชุดเลขเดิมของข้อ 1, 4, 5 */
+const NBIDS=[0,3,4];
 function renderNB(){
  if(PAPER&&!TEACHER&&!CKED){$('nbList').innerHTML='<div class="nbq" style="border-left-color:#e6a100;background:#fff8e1">โจทย์ลงสมุด ครูแจกเป็นกระดาษให้แล้ว ให้ทำลงสมุดในคาบ (ไม่ต้องใช้โทรศัพท์) เขียนวิธีทำทุกขั้นตอนและให้เครื่องหมาย = ตรงกัน<br><span class="muted">เมื่อครูตรวจสมุดแล้ว โจทย์ เฉลย และวิธีทำของคุณจะแสดงที่นี่</span></div>';return}
- $('nbList').innerHTML=NB.map((f,i)=>{const o=f(i);return `<div class="nbq"><b>ข้อ ${i+1}.</b> ${o.q}${(TEACHER||CKED)?`<div class="sol on"><b>เฉลยและวิธีทำ:</b> ${o.sol}</div>`:''}</div>`}).join('')}
+ $('nbList').innerHTML=NBIDS.map((k,j)=>{const o=NB[k](k);return `<div class="nbq"><b>ข้อ ${j+1}.</b> ${o.q}${(TEACHER||CKED)?`<div class="sol on"><b>เฉลยและวิธีทำ:</b> ${o.sol}</div>`:''}</div>`}).join('')}
 function unlockNB(){if(!$('nb').classList.contains('hide'))return;renderNB();$('nb').classList.remove('hide');$('who3').textContent=ME.name;$('no3').textContent=ME.no}
 let NBDONE=false;
 let CKED=false;
