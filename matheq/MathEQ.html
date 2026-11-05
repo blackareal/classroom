@@ -94,6 +94,9 @@ const ACTIVITIES=[
  {id:'LS_M1W01',type:'lesson',title:'ม.1 · สัปดาห์ 1 · ปรับพื้นฐานก่อนเข้าสมการ',cls:'ม.1/1',date:'2026-11-04',file:'lesson_M1_w01.html',total:3},
  {id:'LS_M1W01_CK',type:'notebook',title:'ม.1 สัปดาห์ 1 · ครูตรวจสมุดแล้ว',cls:'ม.1/1',date:'2026-11-04',file:'lesson_M1_w01.html',total:1},
  {id:'C',type:'gate',title:'แบบประเมินตนเอง: แคลคูลัส (ทำได้ถึงขั้นไหน)',cls:'ม.6/1',date:'2026-11-04',file:'test_C.html',total:12},
+ {id:'L',type:'gate',title:'แบบประเมินตนเอง: เซตและตรรกศาสตร์ (ทบทวนจากเทอม 1)',cls:'ม.4/1',date:'2026-11-05',file:'test_L.html',total:7},
+ {id:'LS_M4W01',type:'lesson',title:'ม.4 · สัปดาห์ 1 · หลักการนับเบื้องต้น (หลักการคูณและบวก)',cls:'ม.4/1',date:'2026-11-09',file:'lesson_M4_w01.html',total:3},
+ {id:'LS_M4W01_CK',type:'notebook',title:'ม.4 สัปดาห์ 1 · ครูตรวจสมุดแล้ว',cls:'ม.4/1',date:'2026-11-09',file:'lesson_M4_w01.html',total:1},
  {id:'LS_M5W01',type:'lesson',title:'ม.5 · สัปดาห์ 1 · ที่มาของ i และจำนวนเชิงซ้อน',cls:'ม.5/1',date:'2026-11-03',file:'lesson_M5_w01.html',total:5},
  {id:'LS_M2W01',type:'lesson',title:'ม.2 · สัปดาห์ 1 · ทบทวนค่ากลางและเปิดบทสถิติ',cls:'ม.2/1',date:'2026-11-03',file:'lesson_M2_w01.html',total:5},
  {id:'LS_M2W01_CK',type:'notebook',title:'ม.2 สัปดาห์ 1 · ครูตรวจสมุดแล้ว',cls:'ม.2/1',date:'2026-11-03',file:'lesson_M2_w01.html',total:1},
@@ -136,12 +139,14 @@ function segColor(i,n){const p=i/(n-1||1);return p<.55?'#2ee66d':p<.8?'#ffd23f':
 function drawEq(el,vals,opt){
  opt=opt||{};el.innerHTML='';
  STR.forEach(s=>{
-  const n=s.steps.length,v=vals[s.id]||{},passed=new Set(v.passed||[]);
   const tested=BANKS[s.id].STEPS.map(x=>x.id);
+  /* เรียงช่องตามลำดับข้อสอบจริง (ขั้นที่ยังไม่มีข้อสอบไว้บนสุด) */
+  const ord=tested.map(id=>s.steps.find(x=>x[0]===id)).filter(Boolean).concat(s.steps.filter(x=>!tested.includes(x[0])));
+  const n=ord.length,v=vals[s.id]||{},passed=new Set(v.passed||[]);
   const b=document.createElement('div');b.className='band'+(opt.sel===s.id?' sel':'');
   const col=document.createElement('div');col.className='col';
   for(let i=0;i<n;i++){
-   const id=s.steps[i][0],g=document.createElement('div');g.className='seg';g.title=id+' '+s.steps[i][1];
+   const id=ord[i][0],g=document.createElement('div');g.className='seg';g.title=id+' '+ord[i][1];
    if(!tested.includes(id))g.classList.add('na');
    const lit=v.count!=null?i<Math.round(v.count):passed.has(id);
    if(lit){g.classList.add('lit');const c=segColor(i,n);g.style.color=c;setTimeout(()=>{g.style.background=c},30+i*30)}
