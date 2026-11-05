@@ -44,6 +44,139 @@ table.mx{display:inline-table;border-left:2px solid #1a2233;border-right:2px sol
 table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px solid #aab;padding:2px 12px;text-align:center}
 .ladder{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
 .chip{min-width:44px;text-align:center;padding:3px 9px;border-radius:9px;background:#e4e9f2;color:#6b7a92;font-size:16px;border:2px solid transparent}.chip.pass{background:#c9efd5;color:#12692f}.chip.fail{background:#ffd9d6;color:#a3261d}
-</style></head><body><style>details{margin-top:6px}summary{cursor:pointer;color:#0d47a1;font-weight:700}ol.pr li{margin:10px 0}.nav a{text-decoration:none}</style><div class="wrap"><div class="row" style="margin-bottom:10px"><a href="MathEQ.html"><button>← MathEQ</button></a><a href="kn_index.html"><button>ใบความรู้ทุกขั้น</button></a><span class="muted">ขั้น M0</span></div><div class="tcard" style="background:#7b3f00;color:#fff"><div style="font-size:30px;font-weight:700">ซ่อมฐาน: คำนวณจำนวนเต็ม</div><div style="opacity:.9">ใบความรู้ขั้น M0 · สาย M เมทริกซ์</div></div><div class="tcard"><h3 style="margin:0 0 6px;color:#7b3f00;font-size:26px">ใบความรู้</h3><p><b>ซ่อมฐาน การคำนวณจำนวนเต็ม</b> เมทริกซ์ใช้การคูณและบวกจำนวนเต็มบ่อยมาก ต้องไม่พลาดเครื่องหมาย</p>
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.05;font-size:.95em}.fr i{font-style:normal;padding:0 3px}.fr i:first-child{border-bottom:1.5px solid currentColor}.eqt{border-collapse:collapse;margin:3px 0 5px 10px}.eqt td{padding:2px 2px;vertical-align:middle}.eqt .el{text-align:right;white-space:nowrap;padding-right:6px}.eqt .ee{text-align:center;width:22px}.eqt .er{text-align:left}</style><script>/* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
+function mxFrText(s){
+ return s.replace(/(?:(\d+) )?(\d+)\/(\d+)/g,function(m,w,n,d,o,str){
+  var b=o>0?str.charAt(o-1):'',a=str.charAt(o+m.length);
+  if(/[\w\/.√)\]²³′π]/.test(b)||/[\d\/²³√]/.test(a))return m;
+  return (w?w:'')+'<span class="fr"><i>'+n+'</i><i>'+d+'</i></span>'});
+}
+/* รับ HTML string คืน HTML string (ไม่แตะข้างในแท็ก) */
+function mxFr(h){
+ return String(h).split(/(<\/?[a-zA-Z][^>]*>)/).map(function(x){return x.charAt(0)==='<'&&/^<\/?[a-zA-Z]/.test(x)?x:mxFrText(x)}).join('');
+}
+/* rows = [[ข้อความซ้าย, ข้อความขวา, ไม่แสดง =], ...] เฉพาะแถวสุดท้ายตัวหนา */
+function mxEq(rows){
+ var n=rows.length;
+ return '<table class="eqt">'+rows.map(function(r,i){return '<tr><td class="el">'+mxFr(r[0]||'')+'</td><td class="ee">'+(r[2]?'':'=')+'</td><td class="er">'+(i===n-1?'<b>'+mxFr(r[1])+'</b>':mxFr(r[1]))+'</td></tr>'}).join('')+'</table>';
+}
+function mxSplitEq(line){
+ var parts=[],depth=0,inTag=false,start=0,i,ch;
+ for(i=0;i<line.length;i++){
+  ch=line.charAt(i);
+  if(ch==='<'&&/[a-zA-Z\/]/.test(line.charAt(i+1)))inTag=true;
+  else if(ch==='>'&&inTag)inTag=false;
+  if(inTag)continue;
+  if('([{'.indexOf(ch)>=0)depth++;
+  else if(')]}'.indexOf(ch)>=0)depth--;
+  else if(depth===0&&ch==='='&&line.charAt(i-1)===' '&&line.charAt(i+1)===' '){parts.push(line.slice(start,i-1));start=i+2}
+ }
+ parts.push(line.slice(start));
+ return parts;
+}
+function mxTagsOk(s){
+ var o=(s.match(/<[a-zA-Z][^>]*>/g)||[]).length,c=(s.match(/<\/[a-zA-Z]+>/g)||[]).length;
+ return o===c;
+}
+function mxPlain(s){return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&')}
+function mxCommaFree(pt){
+ var d=0,j,c;
+ for(j=0;j<pt.length;j++){c=pt.charAt(j);if('([{'.indexOf(c)>=0)d++;else if(')]}'.indexOf(c)>=0)d--;else if(d===0&&c===',')return false}
+ return true;
+}
+/* ตรวจชิ้นส่วนของสายสมการ: แต่ละชิ้นต้องไม่ว่าง แท็กครบคู่ ไม่มีจุลภาคระดับนอก และชิ้นกลางไม่ใช่ "ประโยคใหม่" ติดมา */
+function mxPartsOk(p){
+ for(var i=0;i<p.length;i++){
+  var pt=mxPlain(p[i]).trim();
+  if(!pt||!mxTagsOk(p[i])||!mxCommaFree(pt))return false;
+  if(i>0&&i<p.length-1&&/[\w)\]²³′″]\s+[A-Za-zα-ωπ][A-Za-z0-9α-ωπ′″]*(\([^()]*\))?$/.test(pt))return false;
+ }
+ return true;
+}
+function mxChainTable(p){
+ return '<table class="eqt">'+p.map(function(x,i){return '<tr><td class="el"></td><td class="ee">'+(i===0?'':'=')+'</td><td class="er">'+x.trim()+'</td></tr>'}).join('')+'</table>';
+}
+function mxRowsTable(rows){
+ return '<table class="eqt">'+rows.map(function(r){return '<tr><td class="el">'+r[0].trim()+'</td><td class="ee">=</td><td class="er">'+r[1].trim()+'</td></tr>'}).join('')+'</table>';
+}
+/* segs = รายการ "ประโยคสมการ" ที่แยกกันด้วย → หรือ · (ตัวคั่นแบบเว้นกว้าง) */
+function mxStmts(segs,allowChain){
+ var allOne=true,allChain=true,parsed=[],i,p;
+ for(i=0;i<segs.length;i++){
+  p=mxSplitEq(segs[i]);
+  if(!mxPartsOk(p))return null;
+  parsed.push(p);
+  if(p.length!==2)allOne=false;
+  if(p.length<3)allChain=false;
+ }
+ if(allOne)return mxRowsTable(parsed);
+ if(allowChain&&allChain)return parsed.map(mxChainTable).join('');
+ return null;
+}
+/* คืน HTML ตาราง ถ้าบรรทัดนี้เป็นสายสมการล้วน ไม่งั้นคืน null */
+var MX_SEP=/(?:&nbsp;| ){2,}·(?:&nbsp;| ){2,}/;
+function mxChain(line){
+ var t=mxPlain(line);
+ if(/[฀-๿]/.test(t))return null;
+ if(/[⇒⇔↔;]/.test(t))return null;
+ if(t.indexOf(' = ')<0)return null;
+ var segs=line.split(MX_SEP);
+ if(segs.length>1){
+  for(var k=0;k<segs.length;k++)if(/\s→\s/.test(mxPlain(segs[k])))return null;
+  return mxStmts(segs,true);
+ }
+ if(/\s→\s/.test(t))return mxStmts(line.split(/\s+→\s+/),false);
+ var p=mxSplitEq(line);
+ if(p.length<3||!mxPartsOk(p))return null;
+ return mxChainTable(p);
+}
+var MX_BLOCK='table,p,li,div,ul,ol,details,h1,h2,h3';
+var MX_SKIP='button,.ch,#ans,#q,input,textarea,.eqt,svg,script,style,.nomfx';
+function mxFix(root){
+ var els=root.querySelectorAll('p,li,div.sol,.fb,details>div,.mfx'),k;
+ for(k=0;k<els.length;k++){
+  var el=els[k];
+  if(el.closest(MX_SKIP)||el.querySelector(MX_BLOCK))continue;
+  var html=el.innerHTML;
+  if(html.indexOf(' = ')<0)continue;
+  var lines=html.split(/<br\s*\/?>/i),out=[],raw=[],changed=false;
+  for(var i=0;i<lines.length;i++){
+   var tb=mxChain(lines[i]);
+   if(tb){if(raw.length){out.push(raw.join('<br>'));raw=[]}out.push(tb);changed=true}
+   else raw.push(lines[i]);
+  }
+  if(!changed)continue;
+  if(raw.length)out.push(raw.join('<br>'));
+  el.innerHTML=out.join('');
+ }
+ /* เศษส่วนบน-ล่าง ในข้อความทุกที่ (ยกเว้น svg/script/style/ช่องกรอก) */
+ var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),nodes=[],n;
+ while((n=w.nextNode())){
+  if(!/\d\/\d/.test(n.nodeValue))continue;
+  var pe=n.parentNode;
+  if(!pe||(pe.closest&&pe.closest('svg,script,style,textarea,.fr,.nomfx,#saveSt,#rDesc,#rTitle,#gProg,#stepName,#rSub')))continue;
+  nodes.push(n);
+ }
+ nodes.forEach(function(nd){
+  var t=nd.nodeValue.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  var h=mxFrText(t);
+  if(h===t)return;
+  var sp=document.createElement('span');sp.innerHTML=h;
+  var frag=document.createDocumentFragment();
+  while(sp.firstChild)frag.appendChild(sp.firstChild);
+  nd.parentNode.replaceChild(frag,nd);
+ });
+}
+(function(){
+ var timer=null,obs=null;
+ function run(){try{mxFix(document.body)}catch(e){if(window.console)console.error('mxFix',e)}if(obs)obs.takeRecords()}
+ function sched(){clearTimeout(timer);timer=setTimeout(run,30)}
+ function start(){
+  run();
+  if(window.MutationObserver){obs=new MutationObserver(sched);obs.observe(document.body,{childList:true,subtree:true,characterData:true})}
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script></head><body><style>details{margin-top:6px}summary{cursor:pointer;color:#0d47a1;font-weight:700}ol.pr li{margin:10px 0}.nav a{text-decoration:none}</style><div class="wrap"><div class="row" style="margin-bottom:10px"><a href="MathEQ.html"><button>← MathEQ</button></a><a href="kn_index.html"><button>ใบความรู้ทุกขั้น</button></a><span class="muted">ขั้น M0</span></div><div class="tcard" style="background:#7b3f00;color:#fff"><div style="font-size:30px;font-weight:700">ซ่อมฐาน: คำนวณจำนวนเต็ม</div><div style="opacity:.9">ใบความรู้ขั้น M0 · สาย M เมทริกซ์</div></div><div class="tcard"><h3 style="margin:0 0 6px;color:#7b3f00;font-size:26px">ใบความรู้</h3><p><b>ซ่อมฐาน การคำนวณจำนวนเต็ม</b> เมทริกซ์ใช้การคูณและบวกจำนวนเต็มบ่อยมาก ต้องไม่พลาดเครื่องหมาย</p>
 <p>เครื่องหมายเหมือนกันคูณได้บวก ต่างกันได้ลบ · a − (−b) = a + b · ใส่วงเล็บเมื่อคูณจำนวนลบ</p></div><div class="tcard"><h3 style="margin:0 0 6px;color:#7b3f00;font-size:26px">ตัวอย่าง</h3><p><b>(−3)(4) + (5)(−2)</b> = −12 + (−10) = <b>−22</b></p>
 <p><b>2(−1) − (−3)(4)</b> = −2 − (−12) = −2 + 12 = <b>10</b></p></div><div class="tcard"><h3 style="margin:0 0 6px;color:#7b3f00;font-size:26px">จุดที่พลาดบ่อย</h3><p>−(−12) ตอบ −12 (ผิด) เครื่องหมายลบสองตัวกลายเป็นบวก · ลืมวงเล็บเมื่อแทนค่าลบ</p></div><div class="tcard"><h3 style="margin:0 0 6px;color:#7b3f00;font-size:26px">ลองทำเอง</h3><div class="muted">ลองคิดในกระดาษก่อน แล้วค่อยกดดูเฉลย ไม่มีการบันทึกคะแนน</div><ol class="pr"><li>(−2)(−5) + 3(−4)<details><summary>ดูเฉลย</summary><div style="background:#f1f5fb;border-radius:10px;padding:6px 12px;margin-top:4px">10 + (−12) = −2</div></details></li><li>4(−1) − (−2)(3)<details><summary>ดูเฉลย</summary><div style="background:#f1f5fb;border-radius:10px;padding:6px 12px;margin-top:4px">−4 + 6 = 2</div></details></li></ol></div><div class="row nav" style="margin-bottom:10px"><a href="kn_M1.html"><button>ขั้น M1 →</button></a></div><div class="tcard"><b>พร้อมแล้ว?</b> กลับไปทำแบบทดสอบสาย M ข้อสอบสุ่มใหม่ทุกครั้ง และขั้นที่เคยผ่านแล้วจะไม่หายไป<div class="row" style="margin-top:10px"><a href="test_M.html"><button class="pri">ไปทำแบบทดสอบสาย M</button></a><a href="MathEQ.html"><button>กลับ MathEQ</button></a></div></div></div></body></html>
