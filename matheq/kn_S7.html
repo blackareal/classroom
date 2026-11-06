@@ -44,8 +44,16 @@ table.mx{display:inline-table;border-left:2px solid #1a2233;border-right:2px sol
 table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px solid #aab;padding:2px 12px;text-align:center}
 .ladder{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
 .chip{min-width:44px;text-align:center;padding:3px 9px;border-radius:9px;background:#e4e9f2;color:#6b7a92;font-size:16px;border:2px solid transparent}.chip.pass{background:#c9efd5;color:#12692f}.chip.fail{background:#ffd9d6;color:#a3261d}
-.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.05;font-size:.95em}.fr i{font-style:normal;padding:0 3px}.fr i:first-child{border-bottom:1.5px solid currentColor}.eqt{border-collapse:collapse;margin:3px 0 5px 10px}.eqt td{padding:2px 2px;vertical-align:middle}.eqt .el{text-align:right;white-space:nowrap;padding-right:6px}.eqt .ee{text-align:center;width:22px}.eqt .er{text-align:left}</style><script>/* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.05;font-size:.95em}.fr i{font-style:normal;padding:0 3px}.fr i:first-child{border-bottom:1.5px solid currentColor}.eqt{border-collapse:collapse;margin:3px 0 5px 10px}.eqt td{padding:2px 2px;vertical-align:middle}.eqt .el{text-align:right;white-space:nowrap;padding-right:6px}.eqt .ee{text-align:center;width:22px}.eqt .er{text-align:left}</style><script>/* รากที่สอง: √a และ √(...) แสดงเป็นเครื่องหมายรากมีขีดบน */
+(function(){try{var st=document.createElement('style');st.textContent='.rd{white-space:nowrap}.rr{border-top:.075em solid currentColor;padding:0 .1em 0 .06em;margin-left:.02em}';(document.head||document.documentElement).appendChild(st)}catch(e){}})();
+function mxRt(s){
+ if(s.indexOf('\u221a')<0)return s;
+ s=s.replace(/\u221a\(([^()]*)\)/g,function(m,x){return '<span class="rd">\u221a<span class="rr">'+x+'</span></span>'});
+ return s.replace(/\u221a(\d+(?:\.\d+)?|[A-Za-z]+)/g,function(m,x){return '<span class="rd">\u221a<span class="rr">'+x+'</span></span>'});
+}
+/* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
 function mxFrText(s){
+ s=mxRt(s);
  return s.replace(/(?:(\d+) )?(\d+)\/(\d+)/g,function(m,w,n,d,o,str){
   var b=o>0?str.charAt(o-1):'',a=str.charAt(o+m.length);
   if(/[\w\/.√)\]²³′π]/.test(b)||/[\d\/²³√]/.test(a))return m;
@@ -115,18 +123,52 @@ function mxStmts(segs,allowChain){
 }
 /* คืน HTML ตาราง ถ้าบรรทัดนี้เป็นสายสมการล้วน ไม่งั้นคืน null */
 var MX_SEP=/(?:&nbsp;| ){2,}·(?:&nbsp;| ){2,}/;
+function mxThaiLhsOnly(segs){
+ for(var i=0;i<segs.length;i++){
+  var p=mxSplitEq(segs[i]);
+  for(var j=1;j<p.length;j++)if(/[\u0e00-\u0e7f]/.test(mxPlain(p[j])))return false;
+ }
+ return true;
+}
+function mxThaiN(x){var m=mxPlain(x).match(/[\u0e00-\u0e7f]/g);return m?m.length:0}
+/* สายขั้นตอนที่คั่นด้วย → มีคำไทยสั้น ๆ ปนได้: ขั้นที่มี = ครั้งเดียวเรียงเป็นแถวให้ = ตรงกัน ขั้นอื่นเป็นแถวข้อความ */
+function mxArrowRows(line){
+ var steps=line.split(/\s+\u2192\s+/),rows=[],eq=0,i,j,p,t;
+ if(steps.length<2)return null;
+ for(i=0;i<steps.length;i++){
+  if(!mxTagsOk(steps[i]))return null;
+  p=mxSplitEq(steps[i]);
+  if(p.length===2){
+   if(!mxCommaFree(mxPlain(p[0]))||mxThaiN(p[0])>12||mxThaiN(p[1])>12||!mxPlain(p[0]).trim()||!mxPlain(p[1]).trim())return null;
+   if(/[\w)\]]\s+[A-Za-z]\w*$/.test(mxPlain(p[0]).trim())&&/[0-9]\s+[A-Za-z]/.test(mxPlain(p[0])))return null;
+   rows.push('<tr><td class="el">'+p[0].trim()+'</td><td class="ee">=</td><td class="er">'+p[1].trim()+'</td></tr>');eq++;
+  }else if(p.length===1){
+   t=mxPlain(steps[i]).trim();
+   if(!t||t.length>34)return null;
+   rows.push('<tr><td colspan="3" style="text-align:left">'+steps[i].trim()+'</td></tr>');
+  }else return null;
+ }
+ if(eq<2)return null;
+ return '<table class="eqt">'+rows.join('')+'</table>';
+}
 function mxChain(line){
- var t=mxPlain(line);
- if(/[฀-๿]/.test(t))return null;
- if(/[⇒⇔↔;]/.test(t))return null;
+ line=line.replace(/<\/?(?:b|strong)>/gi,'');
+ var t=mxPlain(line),thai=/[\u0e00-\u0e7f]/.test(t);
+ if(/[\u21d2\u21d4\u2194;]/.test(t))return null;
  if(t.indexOf(' = ')<0)return null;
  var segs=line.split(MX_SEP);
  if(segs.length>1){
-  for(var k=0;k<segs.length;k++)if(/\s→\s/.test(mxPlain(segs[k])))return null;
+  for(var k=0;k<segs.length;k++)if(/\s\u2192\s/.test(mxPlain(segs[k])))return null;
+  if(thai&&!mxThaiLhsOnly(segs))return null;
   return mxStmts(segs,true);
  }
- if(/\s→\s/.test(t))return mxStmts(line.split(/\s+→\s+/),false);
+ if(/\s\u2192\s/.test(t)){
+  var as=line.split(/\s+\u2192\s+/);
+  if(!thai||mxThaiLhsOnly(as)){var r=mxStmts(as,false);if(r)return r}
+  return mxArrowRows(line);
+ }
  var p=mxSplitEq(line);
+ if(thai&&!mxThaiLhsOnly([line]))return null;
  if(p.length<3||!mxPartsOk(p))return null;
  return mxChainTable(p);
 }
@@ -152,7 +194,7 @@ function mxFix(root){
  /* เศษส่วนบน-ล่าง ในข้อความทุกที่ (ยกเว้น svg/script/style/ช่องกรอก) */
  var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),nodes=[],n;
  while((n=w.nextNode())){
-  if(!/\d\/\d/.test(n.nodeValue))continue;
+  if(!/\d\/\d|\u221a/.test(n.nodeValue))continue;
   var pe=n.parentNode;
   if(!pe||(pe.closest&&pe.closest('svg,script,style,textarea,.fr,.nomfx,#saveSt,#rDesc,#rTitle,#gProg,#stepName,#rSub')))continue;
   nodes.push(n);
@@ -179,6 +221,4 @@ function mxFix(root){
 })();
 </script></head><body><style>details{margin-top:6px}summary{cursor:pointer;color:#0d47a1;font-weight:700}ol.pr li{margin:10px 0}.nav a{text-decoration:none}</style><div class="wrap"><div class="row" style="margin-bottom:10px"><a href="MathEQ.html"><button>← MathEQ</button></a><a href="kn_index.html"><button>ใบความรู้ทุกขั้น</button></a><span class="muted">ขั้น S7</span></div><div class="tcard" style="background:#37474f;color:#fff"><div style="font-size:30px;font-weight:700">หลักการนับและความน่าจะเป็นเบื้องต้น</div><div style="opacity:.9">ใบความรู้ขั้น S7 · สาย S สถิติและความน่าจะเป็น</div></div><div class="tcard"><h3 style="margin:0 0 6px;color:#37474f;font-size:26px">ใบความรู้</h3><p><b>หลักการนับ</b> คูณ: ทำสองขั้นตอนต่อเนื่อง m วิธี × n วิธี · บวก: เลือกขั้นตอนใดขั้นตอนหนึ่ง (ไม่ซ้อนกัน) m + n วิธี</p>
 <p>n! = n(n − 1)…1 · เรียงสับเปลี่ยน P(n, r) = n!/(n − r)! (ลำดับสำคัญ) · จัดหมู่ C(n, r) = n!/[r!(n − r)!] (ลำดับไม่สำคัญ)</p>
-<p><b>ความน่าจะเป็น</b> P(E) = n(E)/n(S) · P(A ∪ B) = P(A) + P(B) − P(A ∩ B)</p></div><div class="tcard"><h3 style="margin:0 0 6px;color:#37474f;font-size:26px">ตัวอย่าง</h3><p><b>เสื้อ 3 ตัว กางเกง 4 ตัว</b> แต่งตัวได้ 3 × 4 = <b>12</b> แบบ</p>
-<p><b>เลือกกรรมการ 3 คนจาก 6 คน</b> C(6, 3) = 6!/(3!3!) = <b>20</b></p>
-<p><b>ทอยลูกเต๋า 1 ลูก ได้แต้มคู่</b> n(E) = 3 (2, 4, 6) n(S) = 6 → <b>1/2</b></p></div><div class="tcard"><h3 style="margin:0 0 6px;color:#37474f;font-size:26px">จุดที่พลาดบ่อย</h3><p>ใช้ P(n, r) เมื่อลำดับไม่สำคัญ (ผิด) ต้องใช้ C(n, r) · ลืมลบ P(A ∩ B) เมื่อเหตุการณ์ซ้อนกัน</p></div><div class="tcard"><h3 style="margin:0 0 6px;color:#37474f;font-size:26px">ลองทำเอง</h3><div class="muted">ลองคิดในกระดาษก่อน แล้วค่อยกดดูเฉลย ไม่มีการบันทึกคะแนน</div><ol class="pr"><li>C(5, 2)<details><summary>ดูเฉลย</summary><div style="background:#f1f5fb;border-radius:10px;padding:6px 12px;margin-top:4px">5!/(2!3!) = 10</div></details></li><li>โยนเหรียญ 2 เหรียญ ได้หัว 1 เหรียญพอดี<details><summary>ดูเฉลย</summary><div style="background:#f1f5fb;border-radius:10px;padding:6px 12px;margin-top:4px">HT, TH → 2/4 = 1/2</div></details></li></ol></div><div class="row nav" style="margin-bottom:10px"><a href="kn_S0.html"><button>← ขั้น S0</button></a><a href="kn_S1.html"><button>ขั้น S1 →</button></a></div><div class="tcard"><b>พร้อมแล้ว?</b> กลับไปทำแบบทดสอบสาย S ข้อสอบสุ่มใหม่ทุกครั้ง และขั้นที่เคยผ่านแล้วจะไม่หายไป<div class="row" style="margin-top:10px"><a href="test_S.html"><button class="pri">ไปทำแบบทดสอบสาย S</button></a><a href="MathEQ.html"><button>กลับ MathEQ</button></a></div></div></div></body></html>
+<p><b>ความน่าจะเป็น</b> P(E) = n(E)/n(S) · P(A ∪ B) = P(A) + P(B) − P(A ∩ B)</p></div><div class="tcard"><h3 style="margin:0 0 6px;color:#37474f;font-size:26px">ตัวอย่าง</h3><p style="margin:12px 0 2px"><b>ทอยลูกเต๋า 1 ลูก ได้แต้มคู่ (2, 4, 6)</b></p><table class="eqt"><tr><td class="el">n(E)</td><td class="ee">=</td><td class="er">3</td></tr><tr><td class="el">n(S)</td><td class="ee">=</td><td class="er"><b>6</b></td></tr></table><table class="eqt"><tr><td class="el">P(E)</td><td class="ee">=</td><td class="er">3/6</td></tr><tr><td class="el"></td><td class="ee">=</td><td class="er"><b>1/2</b></td></tr></table></div><div class="tcard"><h3 style="margin:0 0 6px;color:#37474f;font-size:26px">จุดที่พลาดบ่อย</h3><p>ใช้ P(n, r) เมื่อลำดับไม่สำคัญ (ผิด) ต้องใช้ C(n, r) · ลืมลบ P(A ∩ B) เมื่อเหตุการณ์ซ้อนกัน</p></div><div class="tcard"><h3 style="margin:0 0 6px;color:#37474f;font-size:26px">ลองทำเอง</h3><div class="muted">ลองคิดในกระดาษก่อน แล้วค่อยกดดูเฉลย ไม่มีการบันทึกคะแนน</div><ol class="pr"><li>C(5, 2)<details><summary>ดูเฉลย</summary><div style="background:#f1f5fb;border-radius:10px;padding:6px 12px;margin-top:4px">5!/(2!3!) = 10</div></details></li><li>โยนเหรียญ 2 เหรียญ ได้หัว 1 เหรียญพอดี<details><summary>ดูเฉลย</summary><div style="background:#f1f5fb;border-radius:10px;padding:6px 12px;margin-top:4px">HT, TH → 2/4 = 1/2</div></details></li></ol></div><div class="row nav" style="margin-bottom:10px"><a href="kn_S0.html"><button>← ขั้น S0</button></a><a href="kn_S1.html"><button>ขั้น S1 →</button></a></div><div class="tcard"><b>พร้อมแล้ว?</b> กลับไปทำแบบทดสอบสาย S ข้อสอบสุ่มใหม่ทุกครั้ง และขั้นที่เคยผ่านแล้วจะไม่หายไป<div class="row" style="margin-top:10px"><a href="test_S.html"><button class="pri">ไปทำแบบทดสอบสาย S</button></a><a href="MathEQ.html"><button>กลับ MathEQ</button></a></div></div></div></body></html>

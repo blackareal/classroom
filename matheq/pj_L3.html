@@ -21,8 +21,16 @@ body{font-family:'Leelawadee UI','Sarabun','TH Sarabun New',Tahoma,sans-serif;ba
 #prac ol{margin:.5em .9em;padding-left:1.3em;flex:1;overflow:auto}#prac li{margin:.5em 0}
 #prac .a{display:none;margin:.2em 0 0;padding:.2em .6em;background:#e8f5e9;border-left:.22em solid #2e9b55;border-radius:.4em}#prac .a.on{display:block}
 #prac .hint{font-size:.5em;color:#666;margin:0 1.8em .4em}
-</style><script>/* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
+</style><script>/* รากที่สอง: √a และ √(...) แสดงเป็นเครื่องหมายรากมีขีดบน */
+(function(){try{var st=document.createElement('style');st.textContent='.rd{white-space:nowrap}.rr{border-top:.075em solid currentColor;padding:0 .1em 0 .06em;margin-left:.02em}';(document.head||document.documentElement).appendChild(st)}catch(e){}})();
+function mxRt(s){
+ if(s.indexOf('\u221a')<0)return s;
+ s=s.replace(/\u221a\(([^()]*)\)/g,function(m,x){return '<span class="rd">\u221a<span class="rr">'+x+'</span></span>'});
+ return s.replace(/\u221a(\d+(?:\.\d+)?|[A-Za-z]+)/g,function(m,x){return '<span class="rd">\u221a<span class="rr">'+x+'</span></span>'});
+}
+/* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
 function mxFrText(s){
+ s=mxRt(s);
  return s.replace(/(?:(\d+) )?(\d+)\/(\d+)/g,function(m,w,n,d,o,str){
   var b=o>0?str.charAt(o-1):'',a=str.charAt(o+m.length);
   if(/[\w\/.√)\]²³′π]/.test(b)||/[\d\/²³√]/.test(a))return m;
@@ -92,18 +100,52 @@ function mxStmts(segs,allowChain){
 }
 /* คืน HTML ตาราง ถ้าบรรทัดนี้เป็นสายสมการล้วน ไม่งั้นคืน null */
 var MX_SEP=/(?:&nbsp;| ){2,}·(?:&nbsp;| ){2,}/;
+function mxThaiLhsOnly(segs){
+ for(var i=0;i<segs.length;i++){
+  var p=mxSplitEq(segs[i]);
+  for(var j=1;j<p.length;j++)if(/[\u0e00-\u0e7f]/.test(mxPlain(p[j])))return false;
+ }
+ return true;
+}
+function mxThaiN(x){var m=mxPlain(x).match(/[\u0e00-\u0e7f]/g);return m?m.length:0}
+/* สายขั้นตอนที่คั่นด้วย → มีคำไทยสั้น ๆ ปนได้: ขั้นที่มี = ครั้งเดียวเรียงเป็นแถวให้ = ตรงกัน ขั้นอื่นเป็นแถวข้อความ */
+function mxArrowRows(line){
+ var steps=line.split(/\s+\u2192\s+/),rows=[],eq=0,i,j,p,t;
+ if(steps.length<2)return null;
+ for(i=0;i<steps.length;i++){
+  if(!mxTagsOk(steps[i]))return null;
+  p=mxSplitEq(steps[i]);
+  if(p.length===2){
+   if(!mxCommaFree(mxPlain(p[0]))||mxThaiN(p[0])>12||mxThaiN(p[1])>12||!mxPlain(p[0]).trim()||!mxPlain(p[1]).trim())return null;
+   if(/[\w)\]]\s+[A-Za-z]\w*$/.test(mxPlain(p[0]).trim())&&/[0-9]\s+[A-Za-z]/.test(mxPlain(p[0])))return null;
+   rows.push('<tr><td class="el">'+p[0].trim()+'</td><td class="ee">=</td><td class="er">'+p[1].trim()+'</td></tr>');eq++;
+  }else if(p.length===1){
+   t=mxPlain(steps[i]).trim();
+   if(!t||t.length>34)return null;
+   rows.push('<tr><td colspan="3" style="text-align:left">'+steps[i].trim()+'</td></tr>');
+  }else return null;
+ }
+ if(eq<2)return null;
+ return '<table class="eqt">'+rows.join('')+'</table>';
+}
 function mxChain(line){
- var t=mxPlain(line);
- if(/[฀-๿]/.test(t))return null;
- if(/[⇒⇔↔;]/.test(t))return null;
+ line=line.replace(/<\/?(?:b|strong)>/gi,'');
+ var t=mxPlain(line),thai=/[\u0e00-\u0e7f]/.test(t);
+ if(/[\u21d2\u21d4\u2194;]/.test(t))return null;
  if(t.indexOf(' = ')<0)return null;
  var segs=line.split(MX_SEP);
  if(segs.length>1){
-  for(var k=0;k<segs.length;k++)if(/\s→\s/.test(mxPlain(segs[k])))return null;
+  for(var k=0;k<segs.length;k++)if(/\s\u2192\s/.test(mxPlain(segs[k])))return null;
+  if(thai&&!mxThaiLhsOnly(segs))return null;
   return mxStmts(segs,true);
  }
- if(/\s→\s/.test(t))return mxStmts(line.split(/\s+→\s+/),false);
+ if(/\s\u2192\s/.test(t)){
+  var as=line.split(/\s+\u2192\s+/);
+  if(!thai||mxThaiLhsOnly(as)){var r=mxStmts(as,false);if(r)return r}
+  return mxArrowRows(line);
+ }
  var p=mxSplitEq(line);
+ if(thai&&!mxThaiLhsOnly([line]))return null;
  if(p.length<3||!mxPartsOk(p))return null;
  return mxChainTable(p);
 }
@@ -129,7 +171,7 @@ function mxFix(root){
  /* เศษส่วนบน-ล่าง ในข้อความทุกที่ (ยกเว้น svg/script/style/ช่องกรอก) */
  var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),nodes=[],n;
  while((n=w.nextNode())){
-  if(!/\d\/\d/.test(n.nodeValue))continue;
+  if(!/\d\/\d|\u221a/.test(n.nodeValue))continue;
   var pe=n.parentNode;
   if(!pe||(pe.closest&&pe.closest('svg,script,style,textarea,.fr,.nomfx,#saveSt,#rDesc,#rTitle,#gProg,#stepName,#rSub')))continue;
   nodes.push(n);
@@ -158,8 +200,7 @@ function mxFix(root){
 <div class="hdr"><span class="id">L3</span><span class="t">การดำเนินการของเซตและจำนวนสมาชิก</span><span class="s">สาย L · เซตและตรรกศาสตร์</span>
 <div class="tools"><a id="lPrev" href="pj_L2.html">← L2</a><a id="lNext" href="pj_L4.html">L4 →</a><button id="bPrac">โจทย์ให้ลอง (P)</button><button id="bFs">เต็มจอ (F)</button><button id="bMinus">A−</button><button id="bPlus">A+</button><button id="bBack">← กลับ</button></div></div>
 <div class="main"><div class="col"><h2>ใบความรู้</h2><p><b>การดำเนินการ</b> A ∪ B (ยูเนียน: อยู่ใน A หรือ B) · A ∩ B (อินเตอร์เซกชัน: อยู่ทั้งสอง) · A − B (อยู่ใน A แต่ไม่อยู่ใน B) · A′ (คอมพลีเมนต์: อยู่ใน U แต่ไม่อยู่ใน A)</p>
-<p><b>จำนวนสมาชิก</b> n(A ∪ B) = n(A) + n(B) − n(A ∩ B)</p></div><div class="col"><h2>ตัวอย่าง</h2><p><b>A = {1, 2, 3}, B = {3, 4}</b> A ∪ B = <b>{1, 2, 3, 4}</b> · A ∩ B = <b>{3}</b> · A − B = <b>{1, 2}</b></p>
-<p><b>n(A) = 20, n(B) = 15, n(A ∩ B) = 5</b> n(A ∪ B) = 20 + 15 − 5 = <b>30</b></p></div></div>
+<p><b>จำนวนสมาชิก</b> n(A ∪ B) = n(A) + n(B) − n(A ∩ B)</p></div><div class="col"><h2>ตัวอย่าง</h2><p style="margin:12px 0 2px"><b>A = {1, 2, 3}, B = {3, 4}</b></p><table class="eqt"><tr><td class="el">A ∪ B</td><td class="ee">=</td><td class="er">{1, 2, 3, 4}</td></tr><tr><td class="el">A ∩ B</td><td class="ee">=</td><td class="er">{3}</td></tr><tr><td class="el">A − B</td><td class="ee">=</td><td class="er"><b>{1, 2}</b></td></tr></table><p style="margin:12px 0 2px"><b>n(A) = 20, n(B) = 15, n(A ∩ B) = 5</b></p><table class="eqt"><tr><td class="el">n(A ∪ B)</td><td class="ee">=</td><td class="er">20 + 15 − 5</td></tr><tr><td class="el"></td><td class="ee">=</td><td class="er"><b>30</b></td></tr></table></div></div>
 <div class="miss"><b>จุดที่พลาดบ่อย</b> บวก n(A) กับ n(B) โดยไม่ลบส่วนที่ซ้ำกัน · ลืมเอกภพสัมพัทธ์ U เมื่อหา A′</div>
 <div id="prac"><div class="ph">โจทย์ให้ลองคิด · L3 การดำเนินการของเซตและจำนวนสมาชิก<div class="tools"><button id="bPracBack">กลับสไลด์ (P)</button></div></div><div class="hint">แตะที่ข้อเพื่อแสดง/ซ่อนเฉลย</div><ol><li><div>n(A) = 12, n(B) = 8, n(A ∩ B) = 3 หา n(A ∪ B)</div><div class="a"><b>เฉลย</b> 12 + 8 − 3 = 17</div></li><li><div>U = {1, 2, 3, 4, 5}, A = {1, 3} หา A′</div><div class="a"><b>เฉลย</b> {2, 4, 5}</div></li></ol></div>
 <script>

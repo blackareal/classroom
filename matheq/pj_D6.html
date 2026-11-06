@@ -21,8 +21,16 @@ body{font-family:'Leelawadee UI','Sarabun','TH Sarabun New',Tahoma,sans-serif;ba
 #prac ol{margin:.5em .9em;padding-left:1.3em;flex:1;overflow:auto}#prac li{margin:.5em 0}
 #prac .a{display:none;margin:.2em 0 0;padding:.2em .6em;background:#e8f5e9;border-left:.22em solid #2e9b55;border-radius:.4em}#prac .a.on{display:block}
 #prac .hint{font-size:.5em;color:#666;margin:0 1.8em .4em}
-</style><script>/* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
+</style><script>/* รากที่สอง: √a และ √(...) แสดงเป็นเครื่องหมายรากมีขีดบน */
+(function(){try{var st=document.createElement('style');st.textContent='.rd{white-space:nowrap}.rr{border-top:.075em solid currentColor;padding:0 .1em 0 .06em;margin-left:.02em}';(document.head||document.documentElement).appendChild(st)}catch(e){}})();
+function mxRt(s){
+ if(s.indexOf('\u221a')<0)return s;
+ s=s.replace(/\u221a\(([^()]*)\)/g,function(m,x){return '<span class="rd">\u221a<span class="rr">'+x+'</span></span>'});
+ return s.replace(/\u221a(\d+(?:\.\d+)?|[A-Za-z]+)/g,function(m,x){return '<span class="rd">\u221a<span class="rr">'+x+'</span></span>'});
+}
+/* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
 function mxFrText(s){
+ s=mxRt(s);
  return s.replace(/(?:(\d+) )?(\d+)\/(\d+)/g,function(m,w,n,d,o,str){
   var b=o>0?str.charAt(o-1):'',a=str.charAt(o+m.length);
   if(/[\w\/.√)\]²³′π]/.test(b)||/[\d\/²³√]/.test(a))return m;
@@ -92,18 +100,52 @@ function mxStmts(segs,allowChain){
 }
 /* คืน HTML ตาราง ถ้าบรรทัดนี้เป็นสายสมการล้วน ไม่งั้นคืน null */
 var MX_SEP=/(?:&nbsp;| ){2,}·(?:&nbsp;| ){2,}/;
+function mxThaiLhsOnly(segs){
+ for(var i=0;i<segs.length;i++){
+  var p=mxSplitEq(segs[i]);
+  for(var j=1;j<p.length;j++)if(/[\u0e00-\u0e7f]/.test(mxPlain(p[j])))return false;
+ }
+ return true;
+}
+function mxThaiN(x){var m=mxPlain(x).match(/[\u0e00-\u0e7f]/g);return m?m.length:0}
+/* สายขั้นตอนที่คั่นด้วย → มีคำไทยสั้น ๆ ปนได้: ขั้นที่มี = ครั้งเดียวเรียงเป็นแถวให้ = ตรงกัน ขั้นอื่นเป็นแถวข้อความ */
+function mxArrowRows(line){
+ var steps=line.split(/\s+\u2192\s+/),rows=[],eq=0,i,j,p,t;
+ if(steps.length<2)return null;
+ for(i=0;i<steps.length;i++){
+  if(!mxTagsOk(steps[i]))return null;
+  p=mxSplitEq(steps[i]);
+  if(p.length===2){
+   if(!mxCommaFree(mxPlain(p[0]))||mxThaiN(p[0])>12||mxThaiN(p[1])>12||!mxPlain(p[0]).trim()||!mxPlain(p[1]).trim())return null;
+   if(/[\w)\]]\s+[A-Za-z]\w*$/.test(mxPlain(p[0]).trim())&&/[0-9]\s+[A-Za-z]/.test(mxPlain(p[0])))return null;
+   rows.push('<tr><td class="el">'+p[0].trim()+'</td><td class="ee">=</td><td class="er">'+p[1].trim()+'</td></tr>');eq++;
+  }else if(p.length===1){
+   t=mxPlain(steps[i]).trim();
+   if(!t||t.length>34)return null;
+   rows.push('<tr><td colspan="3" style="text-align:left">'+steps[i].trim()+'</td></tr>');
+  }else return null;
+ }
+ if(eq<2)return null;
+ return '<table class="eqt">'+rows.join('')+'</table>';
+}
 function mxChain(line){
- var t=mxPlain(line);
- if(/[฀-๿]/.test(t))return null;
- if(/[⇒⇔↔;]/.test(t))return null;
+ line=line.replace(/<\/?(?:b|strong)>/gi,'');
+ var t=mxPlain(line),thai=/[\u0e00-\u0e7f]/.test(t);
+ if(/[\u21d2\u21d4\u2194;]/.test(t))return null;
  if(t.indexOf(' = ')<0)return null;
  var segs=line.split(MX_SEP);
  if(segs.length>1){
-  for(var k=0;k<segs.length;k++)if(/\s→\s/.test(mxPlain(segs[k])))return null;
+  for(var k=0;k<segs.length;k++)if(/\s\u2192\s/.test(mxPlain(segs[k])))return null;
+  if(thai&&!mxThaiLhsOnly(segs))return null;
   return mxStmts(segs,true);
  }
- if(/\s→\s/.test(t))return mxStmts(line.split(/\s+→\s+/),false);
+ if(/\s\u2192\s/.test(t)){
+  var as=line.split(/\s+\u2192\s+/);
+  if(!thai||mxThaiLhsOnly(as)){var r=mxStmts(as,false);if(r)return r}
+  return mxArrowRows(line);
+ }
  var p=mxSplitEq(line);
+ if(thai&&!mxThaiLhsOnly([line]))return null;
  if(p.length<3||!mxPartsOk(p))return null;
  return mxChainTable(p);
 }
@@ -129,7 +171,7 @@ function mxFix(root){
  /* เศษส่วนบน-ล่าง ในข้อความทุกที่ (ยกเว้น svg/script/style/ช่องกรอก) */
  var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),nodes=[],n;
  while((n=w.nextNode())){
-  if(!/\d\/\d/.test(n.nodeValue))continue;
+  if(!/\d\/\d|\u221a/.test(n.nodeValue))continue;
   var pe=n.parentNode;
   if(!pe||(pe.closest&&pe.closest('svg,script,style,textarea,.fr,.nomfx,#saveSt,#rDesc,#rTitle,#gProg,#stepName,#rSub')))continue;
   nodes.push(n);
@@ -160,8 +202,7 @@ function mxFix(root){
 <div class="main"><div class="col"><h2>ใบความรู้</h2><p><b>เงื่อนไขของสามเหลี่ยมเท่ากันทุกประการ</b></p>
 <p>SSS (ด้าน-ด้าน-ด้าน) · SAS (ด้าน-มุม-ด้าน โดยมุมอยู่ระหว่างด้านทั้งสอง) · ASA / AAS (มุม-ด้าน-มุม) · RHS (สามเหลี่ยมมุมฉาก: ด้านตรงข้ามมุมฉากและอีกหนึ่งด้านเท่ากัน)</p>
 <p style="background:#fff3c4;border-radius:10px;padding:8px 12px"><b>ใช้ไม่ได้</b> AAA (ได้แค่คล้ายกัน) และ SSA (มุมไม่อยู่ระหว่างด้าน)</p>
-<p>เมื่อเท่ากันทุกประการ ส่วนประกอบที่สมนัยกันเท่ากันทุกคู่</p></div><div class="col"><h2>ตัวอย่าง</h2><p><b>AB = DE, ∠B = ∠E, BC = EF</b> มุม B และ E อยู่ระหว่างสองด้านที่เท่ากัน → <b>SAS</b> → △ABC ≅ △DEF</p>
-<p><b>AB = DE, BC = EF, AC = DF</b> → <b>SSS</b></p></div></div>
+<p>เมื่อเท่ากันทุกประการ ส่วนประกอบที่สมนัยกันเท่ากันทุกคู่</p></div><div class="col"><h2>ตัวอย่าง</h2><p style="margin:12px 0 2px"><b>AB = DE, ∠B = ∠E, BC = EF</b></p><p style="margin:2px 0">มุม B และ E อยู่ระหว่างสองด้านที่เท่ากัน → <b>SAS</b> → △ABC ≅ △DEF</p><p style="margin:12px 0 2px"><b>AB = DE, BC = EF, AC = DF</b></p><p style="margin:2px 0">→ <b>SSS</b></p></div></div>
 <div class="miss"><b>จุดที่พลาดบ่อย</b> ใช้ AAA เป็นเหตุผล (ผิด) · ใช้ SSA โดยมุมไม่อยู่ระหว่างสองด้าน</div>
 <div id="prac"><div class="ph">โจทย์ให้ลองคิด · D6 ความเท่ากันทุกประการ<div class="tools"><button id="bPracBack">กลับสไลด์ (P)</button></div></div><div class="hint">แตะที่ข้อเพื่อแสดง/ซ่อนเฉลย</div><ol><li><div>AB = DE, BC = EF, AC = DF ใช้เหตุผลข้อใด</div><div class="a"><b>เฉลย</b> SSS</div></li><li><div>มุมสามคู่เท่ากัน (AAA) สรุปเท่ากันทุกประการได้ไหม</div><div class="a"><b>เฉลย</b> ไม่ได้ ได้เพียงคล้ายกัน</div></li></ol></div>
 <script>
