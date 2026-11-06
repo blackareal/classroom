@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MathEQ — ค21102 ม.1 6 พ.ย.</title>
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MathEQ — ค21102 ม.1 11 พ.ย.</title>
 <style>
 :root{color-scheme:dark}*{box-sizing:border-box}
 body{margin:0;background:#070b16;color:#dce8f5;font-family:'TH Sarabun New','Sarabun',system-ui,sans-serif;font-size:19px;min-height:100vh}
@@ -178,8 +178,8 @@ function mxFix(root){
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
 })();
 </script></head><body><div class="wrap">
- <div class="row" style="margin-bottom:10px"><button id="btnQuit">← กลับ MathEQ</button><span class="muted">ค21102 ม.1 · 6 พ.ย. 2569</span></div>
- <div class="tcard" style="background:#00695c;color:#fff"><div style="font-size:30px;font-weight:700">สมการเชิงเส้นตัวแปรเดียว (1) · การแก้สมการ</div><div style="opacity:.9">ค21102 คณิตศาสตร์พื้นฐาน 2 · ม.1/1 · 6 พ.ย. 2569 · <span id="who"></span></div></div>
+ <div class="row" style="margin-bottom:10px"><button id="btnQuit">← กลับ MathEQ</button><span class="muted">ค21102 ม.1 · 11 พ.ย. 2569</span></div>
+ <div class="tcard" style="background:#00695c;color:#fff"><div style="font-size:30px;font-weight:700">สมการเชิงเส้นตัวแปรเดียว (1) · การแก้สมการ</div><div style="opacity:.9">ค21102 คณิตศาสตร์พื้นฐาน 2 · ม.1/1 · 11 พ.ย. 2569 · <span id="who"></span></div></div>
 
  <div class="tcard"><h3 class="sec">ทบทวนจากคาบก่อน</h3>
   <p>สมการต้องใช้การบวก ลบ คูณ หาร จำนวนเต็ม (รวมจำนวนลบ) ให้คล่อง เช่น −7 + 2 = −5 · (−3) × 4 = −12 · 12 ÷ (−4) = −3</p>
@@ -265,7 +265,7 @@ const NB=[
  i=>{const g=mk(100+i);const a=g.R(3,15),c=g.R(-9,9);const x=c+a;return{q:`จงแก้สมการ x − ${a} = ${mn(c)} แล้วตรวจคำตอบ`,eq:[['x − '+a,mn(c)],['x − '+a+' + '+a,mn(c)+' + '+a],['x',mn(x)],['ตรวจ: '+mn(x)+' − '+a,mn(c)+' ✓']]}},
  i=>{const g=mk(100+i);const a=g.R(3,9),k=-g.R(2,9);const b=a*k;return{q:`จงแก้สมการ ${a}x = ${mn(b)} แล้วตรวจคำตอบ`,eq:[[a+'x',mn(b)],[a+'x ÷ '+a,mn(b)+' ÷ '+a],['x',mn(k)],['ตรวจ: '+a+' × ('+mn(k)+')',mn(b)+' ✓']]}},
  i=>{const g=mk(100+i);const a=g.R(2,9),k=g.pick([-1,1])*g.R(2,8),b=g.pick([-1,1])*g.R(2,15);const c=a*k+b;return{q:`จงแก้สมการ ${a}x${sg(b)} = ${mn(c)} แล้วตรวจคำตอบ`,eq:[[a+'x'+sg(b),mn(c)],[a+'x'+sg(b)+(b<0?' + ':' − ')+Math.abs(b),mn(c)+(b<0?' + ':' − ')+Math.abs(b)],[a+'x',mn(c-b)],[a+'x ÷ '+a,mn(c-b)+' ÷ '+a],['x',mn(k)],['ตรวจ: '+a+' × ('+mn(k)+')'+sg(b),mn(c)+' ✓']]}},
- i=>{const g=mk(100+i);const p=g.R(5,15),x=g.R(3,9),q=g.pick([20,25,30,35,40]);const T=p*x+q;return{q:`ซื้อปากกา x ด้าม ด้ามละ ${p} บาท กับสมุด 1 เล่ม ราคา ${q} บาท รวมเป็นเงิน ${T} บาท จงเขียนสมการและหาว่าซื้อปากกากี่ด้าม`,eq:[['สมการ',p+'x + '+q+' = '+T,1],[p+'x + '+q,String(T)],[p+'x + '+q+' − '+q,T+' − '+q],[p+'x',String(T-q)],[p+'x ÷ '+p,(T-q)+' ÷ '+p],['x',String(x)],['ตอบ',x+' ด้าม',1]]}}
+ i=>{const g=mk(100+i);const a=g.R(2,9),k=g.R(2,9),b=g.R(1,15);const c=a*k+b;return{q:`จงแก้สมการ ${a}x + ${b} = ${c} แล้วตรวจคำตอบ`,eq:[[a+'x + '+b,String(c)],[a+'x + '+b+' − '+b,c+' − '+b],[a+'x',String(c-b)],[a+'x ÷ '+a,(c-b)+' ÷ '+a],['x',String(k)],['ตรวจ: '+a+'('+k+') + '+b,(a*k)+' + '+b],['',c+' ✓']]}}
 ];
 function renderNB(){
  if(PAPER&&!TEACHER&&!CKED){$('nbList').innerHTML='<div class="nbq" style="border-left-color:#e6a100;background:#fff8e1">โจทย์ลงสมุด 5 ข้อ ครูแจกเป็นกระดาษให้แล้ว ให้ทำลงสมุดในคาบ (ไม่ต้องใช้โทรศัพท์) เขียนวิธีทำทุกขั้นตอนและให้เครื่องหมาย = ตรงกัน<br><span class="muted">เมื่อครูตรวจสมุดแล้ว โจทย์ เฉลย และวิธีทำของคุณจะแสดงที่นี่</span></div>';return}
@@ -277,7 +277,7 @@ function ckUI(on){CKED=!!on;const b=$('ckBadge');if(!b)return;b.className=on?'':
 function teacherCk(){const b=$('ckBadge');b.outerHTML='<label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="ckBox" style="width:22px;height:22px"> ตรวจสมุดแล้ว (นักเรียนจะเห็นสถานะนี้)</label><span class="muted" id="ckSt"></span>';
  $('ckBox').checked=!!VIEW.ck;$('ckBox').onchange=async e=>{const on=e.target.checked;$('ckSt').textContent='กำลังบันทึก…';const r=await call({action:'adminMark',token:VIEW.atoken,id:ME.id,strand:LESSON+'_CK',on:on});$('ckSt').textContent=r.ok?'✓ บันทึกแล้ว':'⚠ บันทึกไม่สำเร็จ (สิทธิ์ครูอาจหมดอายุ ให้กลับไปล็อกอินครูใหม่)';if(!r.ok)e.target.checked=!on}}
 $('btnPrint').onclick=()=>window.print();
-const EXS=[['ตัวอย่างที่ 1 x + 7 = 12',[['x + 7','12'],['x + 7 − 7','12 − 7'],['x','5']]],['ตัวอย่างที่ 2 x − 5 = −3',[['x − 5','−3'],['x − 5 + 5','−3 + 5'],['x','2']]],['ตัวอย่างที่ 3 4x = 28',[['4x','28'],['4x ÷ 4','28 ÷ 4'],['x','7']]],['ตัวอย่างที่ 4 3x − 5 = 16',[['3x − 5','16'],['3x − 5 + 5','16 + 5'],['3x','21'],['3x ÷ 3','21 ÷ 3'],['x','7'],['ตรวจ: 3(7) − 5','21 − 5'],['','16 ✓']]]];
+const EXS=[['ตัวอย่างที่ 1 x + 7 = 12',[['x + 7','12'],['x + 7 − 7','12 − 7'],['x','5']]],['ตัวอย่างที่ 2 x + 9 = 4 (คำตอบเป็นจำนวนลบได้)',[['x + 9','4'],['x + 9 − 9','4 − 9'],['x','−5']]],['ตัวอย่างที่ 3 x − 5 = −3',[['x − 5','−3'],['x − 5 + 5','−3 + 5'],['x','2']]],['ตัวอย่างที่ 4 4x = −28',[['4x','−28'],['4x ÷ 4','−28 ÷ 4'],['x','−7']]],['ตัวอย่างที่ 5 3x − 5 = 16',[['3x − 5','16'],['3x − 5 + 5','16 + 5'],['3x','21'],['3x ÷ 3','21 ÷ 3'],['x','7'],['ตรวจ: 3(7) − 5','21 − 5'],['','16 ✓']]],['ตัวอย่างที่ 6 2x + 3 = 11',[['2x + 3','11'],['2x + 3 − 3','11 − 3'],['2x','8'],['2x ÷ 2','8 ÷ 2'],['x','4'],['ตรวจ: 2(4) + 3','8 + 3'],['','11 ✓']]]];
 $('exs').innerHTML=EXS.map(e=>`<p style="margin:10px 0 0"><b>${e[0]}</b></p>${mxEq(e[1])}`).join('');
 
 const DONE=new Set();

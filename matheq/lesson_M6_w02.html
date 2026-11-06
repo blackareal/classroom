@@ -1,0 +1,313 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MathEQ — ค33202 ม.6 11 พ.ย.</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:#070b16;color:#dce8f5;font-family:'TH Sarabun New','Sarabun',system-ui,sans-serif;font-size:19px;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 14px 40px}
+h1{margin:0;font-size:26px}h2{margin:0 0 8px;font-size:22px}.sub{color:#7f93aa;font-size:15px;margin:2px 0 12px}
+.hide{display:none!important}
+.card{background:#0d1424;border:1px solid #243049;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+input,select,button{font:inherit;color:#dce8f5;background:#121a2c;border:1px solid #2a3a55;border-radius:9px;padding:8px 14px}
+input{width:100%}button{cursor:pointer}button:hover:not(:disabled){border-color:#4fa3e3}button:disabled{opacity:.5;cursor:default}
+button.pri{background:#1d5fb0;border-color:#4fa3e3;color:#fff}
+.err{color:#ff8a7a;margin-top:8px;min-height:1.3em}.muted{color:#7f93aa;font-size:16px}
+.login{max-width:420px;margin:8vh auto 0;text-align:center}.login input{text-align:center;font-size:30px;letter-spacing:8px;margin:12px 0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.demo{background:#3a2a00;color:#ffcc55;border:1px solid #7a5a00;border-radius:10px;padding:0 9px;font-size:14px;margin-left:8px}
+.deck{background:linear-gradient(#10182a,#0a0f1d);border:1px solid #243049;border-radius:14px;padding:14px}
+.lcd{font-family:'Courier New',monospace;background:#071a12;color:#4dff9a;border:1px solid #1d4a35;border-radius:6px;padding:3px 12px;font-size:24px;letter-spacing:2px;text-shadow:0 0 8px #1fd17a}.lcd small{font-size:14px;color:#2fae72;margin-left:6px}
+.eq{display:grid;grid-template-columns:repeat(9,1fr);gap:9px;align-items:end;padding:4px}
+.band{display:flex;flex-direction:column;align-items:center;min-width:0;cursor:pointer}
+.col{position:relative;display:flex;flex-direction:column-reverse;gap:3px;width:100%;max-width:64px;height:280px;padding:2px;background:#050810;border-radius:6px;border:1px solid #1a2438}
+.band:hover .col,.band.sel .col{border-color:#4fa3e3}
+.seg{flex:1;border-radius:2px;background:#111a2b;transition:background .25s}.seg.lit{box-shadow:0 0 6px currentColor}.seg.na{background:#0b101c}
+.avg{position:absolute;left:-5px;right:-5px;height:0;border-top:2px dashed #fff;opacity:.9;z-index:2}
+.lbl{margin-top:7px;font-weight:700;font-size:20px;color:#fff}.nm{font-size:14px;color:#8fa4bd;text-align:center;line-height:1.2;min-height:34px}
+.val{font-size:14px;color:#4dff9a;font-family:'Courier New',monospace;text-align:center}.val.none{color:#6b7a92}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+table.tb{width:100%;border-collapse:collapse;font-size:16px}table.tb th,table.tb td{border-bottom:1px solid #1e2a42;padding:4px 6px;text-align:center}table.tb td:first-child,table.tb th:first-child,table.tb td:nth-child(3),table.tb th:nth-child(3){text-align:left}
+table.tb th{color:#8fa4bd;position:sticky;top:0;background:#0d1424}
+.cell{display:inline-block;min-width:34px;border-radius:5px;padding:0 4px;font-family:'Courier New',monospace}
+.sc0{background:#1a2438;color:#6b7a92}.sc1{background:#5a2a20;color:#ffb09a}.sc2{background:#5a4a14;color:#ffe08a}.sc3{background:#14502f;color:#7dffb4}
+@media(max-width:700px){.eq{gap:3px}.col{height:200px}.nm{font-size:11px}}
+.tcard{background:#f3f6fb;color:#1a2233;border-radius:16px;padding:18px 20px;margin-bottom:14px;font-size:21px;line-height:1.45}
+.tcard .muted{color:#5b6b82}
+.tcard button{background:#0d47a1;color:#fff;border:0;border-radius:12px;padding:10px 18px}.tcard button.skip{background:#fff;color:#7a869a;border:1px solid #c9d6ea}
+.tcard input[type=text]{background:#fff;color:#1a2233;border:2px solid #c9d6ea;border-radius:10px;width:auto}
+.q{font-size:25px;margin:6px 0 14px}
+.ch{display:block;width:100%;text-align:left;background:#f5f8fe!important;color:#1a2233!important;border:2px solid #d3def2!important;margin:8px 0;padding:11px 14px!important}
+.ch:hover:not(:disabled){border-color:#0d47a1!important}.ch.sel{background:#e3edff!important;border-color:#0d47a1!important}.ch.ok{background:#c9efd5!important;border-color:#2e9b55!important}.ch.no{background:#ffd9d6!important;border-color:#d65a50!important}
+.tcard .row input{flex:1;min-width:140px}
+.fb{margin-top:12px;padding:10px 14px;border-radius:12px}.fb.ok{background:#e4f6ea}.fb.no{background:#fdeceb}
+.big{font-size:32px;font-weight:700;color:#0d47a1}
+.fr{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;line-height:1.1;margin:0 2px}.fr span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+table.mx{display:inline-table;border-left:2px solid #1a2233;border-right:2px solid #1a2233;border-radius:6px;margin:0 6px;vertical-align:middle;border-collapse:collapse}table.mx td{padding:1px 8px;text-align:center}
+table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px solid #aab;padding:2px 12px;text-align:center}
+.ladder{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{min-width:44px;text-align:center;padding:3px 9px;border-radius:9px;background:#e4e9f2;color:#6b7a92;font-size:16px;border:2px solid transparent}.chip.pass{background:#c9efd5;color:#12692f}.chip.fail{background:#ffd9d6;color:#a3261d}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.05;font-size:.95em}.fr i{font-style:normal;padding:0 3px}.fr i:first-child{border-bottom:1.5px solid currentColor}.eqt{border-collapse:collapse;margin:3px 0 5px 10px}.eqt td{padding:2px 2px;vertical-align:middle}.eqt .el{text-align:right;white-space:nowrap;padding-right:6px}.eqt .ee{text-align:center;width:22px}.eqt .er{text-align:left}</style><script>/* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
+function mxFrText(s){
+ return s.replace(/(?:(\d+) )?(\d+)\/(\d+)/g,function(m,w,n,d,o,str){
+  var b=o>0?str.charAt(o-1):'',a=str.charAt(o+m.length);
+  if(/[\w\/.√)\]²³′π]/.test(b)||/[\d\/²³√]/.test(a))return m;
+  return (w?w:'')+'<span class="fr"><i>'+n+'</i><i>'+d+'</i></span>'});
+}
+/* รับ HTML string คืน HTML string (ไม่แตะข้างในแท็ก) */
+function mxFr(h){
+ return String(h).split(/(<\/?[a-zA-Z][^>]*>)/).map(function(x){return x.charAt(0)==='<'&&/^<\/?[a-zA-Z]/.test(x)?x:mxFrText(x)}).join('');
+}
+/* rows = [[ข้อความซ้าย, ข้อความขวา, ไม่แสดง =], ...] เฉพาะแถวสุดท้ายตัวหนา */
+function mxEq(rows){
+ var n=rows.length;
+ return '<table class="eqt">'+rows.map(function(r,i){return '<tr><td class="el">'+mxFr(r[0]||'')+'</td><td class="ee">'+(r[2]?'':'=')+'</td><td class="er">'+(i===n-1?'<b>'+mxFr(r[1])+'</b>':mxFr(r[1]))+'</td></tr>'}).join('')+'</table>';
+}
+function mxSplitEq(line){
+ var parts=[],depth=0,inTag=false,start=0,i,ch;
+ for(i=0;i<line.length;i++){
+  ch=line.charAt(i);
+  if(ch==='<'&&/[a-zA-Z\/]/.test(line.charAt(i+1)))inTag=true;
+  else if(ch==='>'&&inTag)inTag=false;
+  if(inTag)continue;
+  if('([{'.indexOf(ch)>=0)depth++;
+  else if(')]}'.indexOf(ch)>=0)depth--;
+  else if(depth===0&&ch==='='&&line.charAt(i-1)===' '&&line.charAt(i+1)===' '){parts.push(line.slice(start,i-1));start=i+2}
+ }
+ parts.push(line.slice(start));
+ return parts;
+}
+function mxTagsOk(s){
+ var o=(s.match(/<[a-zA-Z][^>]*>/g)||[]).length,c=(s.match(/<\/[a-zA-Z]+>/g)||[]).length;
+ return o===c;
+}
+function mxPlain(s){return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&')}
+function mxCommaFree(pt){
+ var d=0,j,c;
+ for(j=0;j<pt.length;j++){c=pt.charAt(j);if('([{'.indexOf(c)>=0)d++;else if(')]}'.indexOf(c)>=0)d--;else if(d===0&&c===',')return false}
+ return true;
+}
+/* ตรวจชิ้นส่วนของสายสมการ: แต่ละชิ้นต้องไม่ว่าง แท็กครบคู่ ไม่มีจุลภาคระดับนอก และชิ้นกลางไม่ใช่ "ประโยคใหม่" ติดมา */
+function mxPartsOk(p){
+ for(var i=0;i<p.length;i++){
+  var pt=mxPlain(p[i]).trim();
+  if(!pt||!mxTagsOk(p[i])||!mxCommaFree(pt))return false;
+  if(i>0&&i<p.length-1&&/[\w)\]²³′″]\s+[A-Za-zα-ωπ][A-Za-z0-9α-ωπ′″]*(\([^()]*\))?$/.test(pt))return false;
+ }
+ return true;
+}
+function mxChainTable(p){
+ return '<table class="eqt">'+p.map(function(x,i){return '<tr><td class="el"></td><td class="ee">'+(i===0?'':'=')+'</td><td class="er">'+x.trim()+'</td></tr>'}).join('')+'</table>';
+}
+function mxRowsTable(rows){
+ return '<table class="eqt">'+rows.map(function(r){return '<tr><td class="el">'+r[0].trim()+'</td><td class="ee">=</td><td class="er">'+r[1].trim()+'</td></tr>'}).join('')+'</table>';
+}
+/* segs = รายการ "ประโยคสมการ" ที่แยกกันด้วย → หรือ · (ตัวคั่นแบบเว้นกว้าง) */
+function mxStmts(segs,allowChain){
+ var allOne=true,allChain=true,parsed=[],i,p;
+ for(i=0;i<segs.length;i++){
+  p=mxSplitEq(segs[i]);
+  if(!mxPartsOk(p))return null;
+  parsed.push(p);
+  if(p.length!==2)allOne=false;
+  if(p.length<3)allChain=false;
+ }
+ if(allOne)return mxRowsTable(parsed);
+ if(allowChain&&allChain)return parsed.map(mxChainTable).join('');
+ return null;
+}
+/* คืน HTML ตาราง ถ้าบรรทัดนี้เป็นสายสมการล้วน ไม่งั้นคืน null */
+var MX_SEP=/(?:&nbsp;| ){2,}·(?:&nbsp;| ){2,}/;
+function mxChain(line){
+ var t=mxPlain(line);
+ if(/[฀-๿]/.test(t))return null;
+ if(/[⇒⇔↔;]/.test(t))return null;
+ if(t.indexOf(' = ')<0)return null;
+ var segs=line.split(MX_SEP);
+ if(segs.length>1){
+  for(var k=0;k<segs.length;k++)if(/\s→\s/.test(mxPlain(segs[k])))return null;
+  return mxStmts(segs,true);
+ }
+ if(/\s→\s/.test(t))return mxStmts(line.split(/\s+→\s+/),false);
+ var p=mxSplitEq(line);
+ if(p.length<3||!mxPartsOk(p))return null;
+ return mxChainTable(p);
+}
+var MX_BLOCK='table,p,li,div,ul,ol,details,h1,h2,h3';
+var MX_SKIP='button,.ch,#ans,#q,input,textarea,.eqt,svg,script,style,.nomfx';
+function mxFix(root){
+ var els=root.querySelectorAll('p,li,div.sol,.fb,details>div,.mfx'),k;
+ for(k=0;k<els.length;k++){
+  var el=els[k];
+  if(el.closest(MX_SKIP)||el.querySelector(MX_BLOCK))continue;
+  var html=el.innerHTML;
+  if(html.indexOf(' = ')<0)continue;
+  var lines=html.split(/<br\s*\/?>/i),out=[],raw=[],changed=false;
+  for(var i=0;i<lines.length;i++){
+   var tb=mxChain(lines[i]);
+   if(tb){if(raw.length){out.push(raw.join('<br>'));raw=[]}out.push(tb);changed=true}
+   else raw.push(lines[i]);
+  }
+  if(!changed)continue;
+  if(raw.length)out.push(raw.join('<br>'));
+  el.innerHTML=out.join('');
+ }
+ /* เศษส่วนบน-ล่าง ในข้อความทุกที่ (ยกเว้น svg/script/style/ช่องกรอก) */
+ var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),nodes=[],n;
+ while((n=w.nextNode())){
+  if(!/\d\/\d/.test(n.nodeValue))continue;
+  var pe=n.parentNode;
+  if(!pe||(pe.closest&&pe.closest('svg,script,style,textarea,.fr,.nomfx,#saveSt,#rDesc,#rTitle,#gProg,#stepName,#rSub')))continue;
+  nodes.push(n);
+ }
+ nodes.forEach(function(nd){
+  var t=nd.nodeValue.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  var h=mxFrText(t);
+  if(h===t)return;
+  var sp=document.createElement('span');sp.innerHTML=h;
+  var frag=document.createDocumentFragment();
+  while(sp.firstChild)frag.appendChild(sp.firstChild);
+  nd.parentNode.replaceChild(frag,nd);
+ });
+}
+(function(){
+ var timer=null,obs=null;
+ function run(){try{mxFix(document.body)}catch(e){if(window.console)console.error('mxFix',e)}if(obs)obs.takeRecords()}
+ function sched(){clearTimeout(timer);timer=setTimeout(run,30)}
+ function start(){
+  run();
+  if(window.MutationObserver){obs=new MutationObserver(sched);obs.observe(document.body,{childList:true,subtree:true,characterData:true})}
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script></head><body><div class="wrap">
+ <div class="row" style="margin-bottom:10px"><button id="btnQuit">← กลับ MathEQ</button><span class="muted">ค33202 ม.6 · 11 พ.ย. 2569 · C0</span></div>
+ <div class="tcard" style="background:#7b3f00;color:#fff"><div style="font-size:30px;font-weight:700">ทบทวนแยกตัวประกอบและแทนค่าฟังก์ชัน (C0 ต่อ)</div><div style="opacity:.9">ค33202 คณิตศาสตร์เพิ่มเติม 6 · ม.6/1 · 11 พ.ย. 2569 · <span id="who"></span></div></div>
+
+ <div class="tcard"><h3 class="sec">ทบทวนจากคาบก่อน</h3>
+  <p>วันนี้ทำ 3 เรื่องเดิมซ้ำให้คล่อง: <b>แทนค่าฟังก์ชัน</b> · <b>แยกตัวประกอบ</b> · <b>จุดตัดแกน</b> ดูตัวอย่างก่อน แล้วทำโจทย์ในระบบ ทำชนิดเดิมหลายข้อ ไม่มีโจทย์แปลกใหม่</p>
+  <p style="background:#fff3c4;border-radius:10px;padding:8px 12px"><b>เคล็ดลับ</b> แยก x² + bx + c ให้หา "จำนวนสองจำนวนที่คูณกันได้ c และบวกกันได้ b" แล้วลองตรวจโดยคูณกลับ</p>
+ </div>
+
+ <div class="tcard"><h3 class="sec">ใบความรู้</h3>
+  <p><b>ค่าของฟังก์ชัน</b> f(a) คือแทน x ด้วย a ในสูตร f(x) บนกราฟคือความสูงของกราฟที่ x = a</p>
+  <p><b>แยกตัวประกอบ</b> ดึงตัวร่วมก่อน · x² − a² = (x − a)(x + a) · x² + bx + c หาจำนวนสองจำนวนที่คูณกันได้ c และบวกกันได้ b</p>
+  <p><b>จุดตัดแกน</b> จุดตัดแกน y: ให้ x = 0 · จุดตัดแกน x: ให้ y = 0</p>
+  <p class="muted">อ่านละเอียดและมีโจทย์ให้ลองเพิ่ม: <a href="kn_C0.html">ใบความรู้ขั้น C0</a></p>
+ </div>
+
+ <div class="tcard"><h3 class="sec">ตัวอย่าง</h3>
+  <div class="muted">เขียนวิธีทำทีละบรรทัด และให้เครื่องหมาย = อยู่ตรงกันทุกบรรทัด</div><div id="exs"></div>
+ </div>
+
+ <div class="tcard"><h3 class="sec">แบบฝึกหัด</h3>
+  <div class="muted" style="margin-bottom:8px">โจทย์ชุดนี้ตัวเลขเฉพาะของ <b id="who2"></b> เปิดกี่ครั้งก็ได้ชุดเดิม · ตอบเป็นจำนวนเต็ม เศษส่วน (เช่น 7/12) หรือทศนิยม · ตอบถูกแล้วระบบบันทึกให้อัตโนมัติ</div>
+  <div id="ex"></div>
+  <div class="muted" id="saveSt" style="margin-top:6px"></div>
+ </div>
+
+ <div class="tcard hide" id="nb"><h3 class="sec">แบบฝึกหัดลงสมุด</h3>
+  <div class="muted" style="margin-bottom:8px">ปลดล็อกแล้ว ทำลงสมุดให้ครบ เขียนวิธีทำทุกขั้นตอน (ไม่ต้องส่งในระบบ) ครูจะตรวจสมุดแล้วกดยืนยัน คุณจะเห็นสถานะและเฉลยด้านล่าง · โจทย์ชุดนี้เป็นเลขเฉพาะของ <b id="who3"></b> เลขที่ <span id="no3"></span></div>
+  <div id="nbList"></div>
+  <div class="row" style="margin-top:10px"><span class="muted" id="ckBadge">รอครูตรวจสมุด</span></div>
+  <div class="row" style="margin-top:8px"><button class="skip" id="btnPrint">พิมพ์ / บันทึกเป็น PDF</button></div>
+ </div>
+ <div class="row"><button class="pri" id="btnHome">กลับ MathEQ</button></div>
+</div>
+<style>.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.05;font-size:.95em}.fr i{font-style:normal;padding:0 3px}.fr i:first-child{border-bottom:1.5px solid currentColor}.eqt{border-collapse:collapse;margin:4px 0 6px 10px}.eqt td{padding:2px 2px;vertical-align:middle}.eqt .el{text-align:right;white-space:nowrap;padding-right:6px}.eqt .ee{text-align:center;width:22px}.eqt .er{text-align:left}.sec{margin:0 0 6px;color:#7b3f00;font-size:26px}.exq{margin:12px 0;padding:10px 12px;border:1px solid #e3d2c2;border-radius:12px;background:#fff}.exq.done{background:#e4f6ea;border-color:#2e9b55}.exq .row input{width:200px;flex:none}.hint{margin-top:6px}.sol{display:none;margin-top:8px;background:#f7efe7;border-radius:10px;padding:8px 12px}.sol.on{display:block}.nbq{margin:10px 0;padding:8px 12px;border-left:4px solid #7b3f00;background:#fff;border-radius:6px}@media print{button,.row input,#btnQuit,.sol{display:none!important}body{background:#fff}.tcard{box-shadow:none}}</style><script>
+const LESSON="LS_M6W02";
+const PAPER=false; /* ม.ปลายใช้กติกาเดิม: ไม่พิมพ์กระดาษ โจทย์ลงสมุดแสดงในระบบ */
+let API_URL="";try{API_URL=sessionStorage.getItem("matheq_api")||""}catch(e){}
+const DEMO=!API_URL;
+const TEACHER=new URLSearchParams(location.search).get('teacher')==='1';
+let TOKEN=null,ME=null,VIEW=null;
+try{if(TEACHER){VIEW=JSON.parse(sessionStorage.getItem("matheq_admin_view")||"null");if(VIEW){ME=VIEW.student;TOKEN='teacher'}}else{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token;ME=s&&s.student}}catch(e){}
+if(!TOKEN||!ME){location.replace("MathEQ.html")}
+const $=id=>document.getElementById(id);
+const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
+let MEM={};
+function demoDB(){try{return JSON.parse(localStorage.getItem('idpDemo')||'{}')}catch(e){return MEM}}
+function demoSave(d){MEM=d;try{localStorage.setItem('idpDemo',JSON.stringify(d))}catch(e){}}
+function demoAvg(cls){const d=demoDB(),s={},n={};Object.keys(DEMO_ROSTER).forEach(id=>{if(DEMO_ROSTER[id].cls!==cls||!d[id])return;for(const k in d[id]){s[k]=(s[k]||0)+d[id][k].passed.length;n[k]=(n[k]||0)+1}});const o={};for(const k in s)o[k]={avg:Math.round(s[k]/n[k]*10)/10,n:n[k]};return o}
+async function api(body){
+ if(!DEMO){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return await r.json()}
+ const d=demoDB();
+ if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347 / 12348)'};
+  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='save'){d[body.token]=d[body.token]||{};{const o=d[body.token][body.strand],m=o?o.passed.slice():[];body.passed.forEach(x=>{if(m.indexOf(x)<0)m.push(x)});let fl=(body.failedAt?String(body.failedAt).split(','):[]).filter(x=>m.indexOf(x)<0);if(!fl.length&&o&&o.failedAt&&body.failedAt&&body.strand!=='GCX')fl=String(o.failedAt).split(',').filter(x=>m.indexOf(x)<0);d[body.token][body.strand]={passed:m,failedAt:fl.join(','),updated:new Date().toISOString()}}demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
+ if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
+ if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
+ if(body.action==='adminMark'){d[body.id]=d[body.id]||{};if(body.on)d[body.id][body.strand]={passed:['CK'],failedAt:'',updated:new Date().toISOString()};else delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+ if(body.action==='adminReset'){if(d[body.id])delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+}
+async function call(body,errEl){try{const r=await api(body);if(!r.ok&&errEl)errEl.textContent=r.error||'เกิดข้อผิดพลาด';return r}catch(e){if(errEl)errEl.textContent='เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง';return{ok:false}}}
+
+
+function hashStr(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return(h^=h>>>16)>>>0}}
+function rngFor(key){const seed=hashStr(key)();let a=seed;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function mk(i){const r=rngFor(ME.id+'|'+LESSON+'|'+i);return{R:(a,b)=>a+Math.floor(r()*(b-a+1)),pick:arr=>arr[Math.floor(r()*arr.length)]}}
+const numIn=s=>{s=String(s).trim().replace(/−|–/g,'-').replace(/,/g,'').replace(/[๐-๙]/g,c=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(c)).replace(/\s+/g,'');if(!s)return NaN;const m=s.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);if(m)return +m[1]/+m[2];return /^-?\d+(\.\d+)?$/.test(s)?+s:NaN};
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+const lcm=(a,b)=>a/gcd(a,b)*b;
+const fs=(n,d)=>{const g=gcd(n,d);n/=g;d/=g;return d===1?`${n}`:`${n}/${d}`};
+const mixed=(n,d)=>{const g=gcd(n,d);n/=g;d/=g;if(d===1)return`${n}`;const w=Math.floor(n/d),r=n%d;return w?`${w} ${r}/${d}`:`${r}/${d}`};
+const pn=x=>x<0?`(−${-x})`:`${x}`;
+const r2=x=>Math.round(x*100)/100;
+const mn=x=>String(x).replace(/-/g,'−');
+const sg=n=>n<0?`− ${-n}`:`+ ${n}`;
+const pw=(a,b,c)=>{let t=(a===1?'':a===-1?'−':String(a).replace('-','−'))+'x²';if(b)t+=` ${b<0?'−':'+'} ${Math.abs(b)===1?'':Math.abs(b)}x`;if(c)t+=` ${c<0?'−':'+'} ${Math.abs(c)}`;return t};
+const lin=(m,k)=>{let t=(m===1?'':m===-1?'−':String(m).replace('-','−'))+'x';if(k)t+=` ${k<0?'−':'+'} ${Math.abs(k)}`;return t};
+const par=x=>x<0?`(−${-x})`:`${x}`;
+const fac=r=>r>0?`(x − ${r})`:`(x + ${-r})`;
+const sub1=(a,b,c,k)=>`${a===1?'':a}(${mn(k)})²`+(b?` ${b<0?'−':'+'} ${Math.abs(b)===1?'':Math.abs(b)}(${mn(k)})`:'')+(c?` ${c<0?'−':'+'} ${Math.abs(c)}`:'');
+const sub2=(a,b,c,k)=>`${a*k*k}`+(b?` ${sg(b*k)}`:'')+(c?` ${sg(c)}`:'');
+function roots(g){let p,q;do{p=g.R(-7,7);q=g.R(-7,7)}while(!p||!q||p===q);return [p,q]}
+const EX0=[
+ i=>{const g=mk(i);const a=g.R(1,3),b=g.R(-5,5),c=g.R(-6,6),k=g.R(-3,3);const ans=a*k*k+b*k+c;return{q:`กำหนด f(x) = ${pw(a,b,c)} จงหา f(${mn(k)})`,num:ans,hint:'แทน x ทุกตัวด้วยค่าที่กำหนด ระวังเครื่องหมายลบเมื่อยกกำลังสอง',sol:`f(${mn(k)}) = ${sub1(a,b,c,k)} = ${sub2(a,b,c,k)} = <b>${mn(ans)}</b>`}},
+ i=>{const g=mk(i+10);const [p,q]=roots(g);const B=-(p+q),C=p*q;const lo=Math.min(p,q),hi=Math.max(p,q);return{q:`สมการ ${pw(1,B,C)} = 0 มีคำตอบ 2 ค่า จงหาคำตอบที่<b>น้อยกว่า</b>`,num:lo,hint:`หาจำนวนสองจำนวนที่คูณกันได้ ${mn(C)} และบวกกันได้ ${mn(-B)}`,sol:`${pw(1,B,C)} = ${fac(p)}${fac(q)} = 0<br>x = ${mn(p)} หรือ x = ${mn(q)}<br>คำตอบที่น้อยกว่าคือ <b>${mn(lo)}</b>`}},
+ i=>{const g=mk(i+60);const m=g.R(2,9);return{q:`สมการ x² − ${m*m} = 0 มีคำตอบ 2 ค่า จงหาคำตอบที่เป็น<b>จำนวนบวก</b>`,num:m,hint:'แยก x² − '+(m*m)+' เป็น (x − '+m+')(x + '+m+')',sol:`x² − ${m*m} = (x − ${m})(x + ${m}) = 0<br>x = ${m} หรือ x = −${m}<br>คำตอบที่เป็นบวกคือ <b>${m}</b>`}},
+ i=>{const g=mk(i+30);const a=g.R(1,3),b=g.R(-5,5),c=g.R(-6,6),k=g.R(-3,3);const ans=a*k*k+b*k+c;return{q:`กำหนด f(x) = ${pw(a,b,c)} จงหา f(${mn(k)})`,num:ans,hint:'แทน x ทุกตัวด้วยค่าที่กำหนด ระวังเครื่องหมายลบเมื่อยกกำลังสอง',sol:`f(${mn(k)}) = ${sub1(a,b,c,k)} = ${sub2(a,b,c,k)} = <b>${mn(ans)}</b>`}},
+ i=>{const g=mk(i+50);const [p,q]=roots(g);const B=-(p+q),C=p*q;const lo=Math.min(p,q),hi=Math.max(p,q);return{q:`สมการ ${pw(1,B,C)} = 0 มีคำตอบ 2 ค่า จงหาคำตอบที่<b>มากกว่า</b>`,num:hi,hint:`หาจำนวนสองจำนวนที่คูณกันได้ ${mn(C)} และบวกกันได้ ${mn(-B)}`,sol:`${pw(1,B,C)} = ${fac(p)}${fac(q)} = 0<br>x = ${mn(p)} หรือ x = ${mn(q)}<br>คำตอบที่มากกว่าคือ <b>${mn(hi)}</b>`}},
+ i=>{const g=mk(i+20);const m=g.pick([2,3,4,5,-2,-3]);let r;do{r=g.R(-5,5)}while(!r);const k=-m*r;return{q:`เส้นตรง y = ${lin(m,k)} ตัดแกน x ที่จุดซึ่ง x มีค่าเท่าใด`,num:r,hint:'จุดตัดแกน x คือจุดที่ y = 0 แล้วแก้สมการหา x',sol:`ให้ y = 0<br>${lin(m,k)} = 0 → ${String(m).replace('-','−')}x = ${mn(-k)} → x = <b>${mn(r)}</b>`}}
+];
+const EXIDS=[1,2,3,4,5,6];const EX=EXIDS.map(k=>()=>EX0[k-1](k-1));
+const NB=[
+ i=>{const g=mk(100+i);const a=g.R(1,3),b=g.R(-5,5),c=g.R(-6,6),k1=g.R(-3,-1),k2=g.R(1,3);const f=k=>a*k*k+b*k+c;const e=k=>[`f(${mn(k)})`,sub1(a,b,c,k)];return{q:`กำหนด f(x) = ${pw(a,b,c)} จงหา f(${mn(k1)}) และ f(${k2}) (แสดงวิธีทำ)`,eq:[e(k1),['',sub2(a,b,c,k1)],['',mn(f(k1))],e(k2),['',sub2(a,b,c,k2)],['',mn(f(k2))]]}},
+ i=>{const g=mk(100+i);const [p,q]=roots(g);const m=g.R(2,9);const A=g.pick([2,3,4,5]),t=g.R(1,6);return{q:`จงแยกตัวประกอบ (1) ${pw(1,-(p+q),p*q)} (2) x² − ${m*m} (3) ${A}x² + ${A*t}x (แสดงวิธีทำ)`,eq:[[`(1) ${pw(1,-(p+q),p*q)}`,`${fac(p)}${fac(q)}`],['',`ตรวจ: ${par(-p)} × ${par(-q)} = ${mn(p*q)} และ ${par(-p)} + ${par(-q)} = ${mn(-(p+q))}`,1],[`(2) x² − ${m*m}`,`(x − ${m})(x + ${m})`],[`(3) ${A}x² + ${A*t}x`,`${A}x(x + ${t})`]]}},
+ i=>{const g=mk(100+i);const [p,q]=roots(g);const B=-(p+q),C=p*q;const lo=Math.min(p,q),hi=Math.max(p,q);return{q:`จงหาจุดตัดแกน y และจุดตัดแกน x ของกราฟ y = ${pw(1,B,C)} (แสดงวิธีทำ)`,eq:[['ให้ x = 0 จะได้ y',`0²${B?` ${B<0?'−':'+'} ${Math.abs(B)===1?'':Math.abs(B)}(0)`:''}${C?` ${C<0?'−':'+'} ${Math.abs(C)}`:''}`],['',`${mn(C)} → จุดตัดแกน y คือ (0, ${mn(C)})`],['ให้ y = 0 จะได้',`${pw(1,B,C)} = 0`,1],['',`${fac(p)}${fac(q)} = 0`,1],['x',`${mn(lo)} หรือ ${mn(hi)}`],['',`จุดตัดแกน x คือ (${mn(lo)}, 0) และ (${mn(hi)}, 0)`,1]]}}
+];
+function renderNB(){
+ if(PAPER&&!TEACHER&&!CKED){$('nbList').innerHTML='<div class="nbq" style="border-left-color:#e6a100;background:#fff8e1">โจทย์ลงสมุด 5 ข้อ ครูแจกเป็นกระดาษให้แล้ว ให้ทำลงสมุดในคาบ (ไม่ต้องใช้โทรศัพท์) เขียนวิธีทำทุกขั้นตอนและให้เครื่องหมาย = ตรงกัน<br><span class="muted">เมื่อครูตรวจสมุดแล้ว โจทย์ เฉลย และวิธีทำของคุณจะแสดงที่นี่</span></div>';return}
+ $('nbList').innerHTML=NB.map((f,i)=>{const o=f(i);return `<div class="nbq"><b>ข้อ ${i+1}.</b> ${mxFr(o.q)}${(TEACHER||CKED)?`<div class="sol on"><b>เฉลยและวิธีทำ:</b>${mxEq(o.eq)}</div>`:''}</div>`}).join('')}
+function unlockNB(){if(!$('nb').classList.contains('hide'))return;renderNB();$('nb').classList.remove('hide');$('who3').textContent=ME.name;$('no3').textContent=ME.no}
+let NBDONE=false;
+let CKED=false;
+function ckUI(on){CKED=!!on;const b=$('ckBadge');if(!b)return;b.className=on?'':'muted';b.style.cssText=on?'background:#e4f6ea;border:1px solid #2e9b55;border-radius:10px;padding:6px 12px;font-weight:700;color:#1b6b3a':'';b.textContent=on?'✓ ครูตรวจสมุดแล้ว':'รอครูตรวจสมุด'}
+function teacherCk(){const b=$('ckBadge');b.outerHTML='<label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="ckBox" style="width:22px;height:22px"> ตรวจสมุดแล้ว (นักเรียนจะเห็นสถานะนี้)</label><span class="muted" id="ckSt"></span>';
+ $('ckBox').checked=!!VIEW.ck;$('ckBox').onchange=async e=>{const on=e.target.checked;$('ckSt').textContent='กำลังบันทึก…';const r=await call({action:'adminMark',token:VIEW.atoken,id:ME.id,strand:LESSON+'_CK',on:on});$('ckSt').textContent=r.ok?'✓ บันทึกแล้ว':'⚠ บันทึกไม่สำเร็จ (สิทธิ์ครูอาจหมดอายุ ให้กลับไปล็อกอินครูใหม่)';if(!r.ok)e.target.checked=!on}}
+$('btnPrint').onclick=()=>window.print();
+const EXS=[['ตัวอย่างที่ 1 แทนค่าฟังก์ชัน f(x) = x² − 3x + 1',[['f(2)','2² − 3(2) + 1'],['','4 − 6 + 1'],['','−1'],['f(−1)','(−1)² − 3(−1) + 1'],['','1 + 3 + 1'],['','5']]],['ตัวอย่างที่ 2 แยกตัวประกอบ',[['x² − 5x + 6','(x − 2)(x − 3)'],['','ตรวจ: 2 × 3 = 6 และ 2 + 3 = 5',1],['x² − 9','(x − 3)(x + 3)'],['3x² + 6x','3x(x + 2)']]],['ตัวอย่างที่ 3 จุดตัดแกนของ y = x² − 5x + 6',[['ให้ x = 0 จะได้ y','0² − 5(0) + 6'],['','6 → จุดตัดแกน y คือ (0, 6)'],['ให้ y = 0 จะได้','x² − 5x + 6 = 0',1],['','(x − 2)(x − 3) = 0',1],['x','2 หรือ 3 → จุดตัดแกน x คือ (2, 0) และ (3, 0)']]]];
+$('exs').innerHTML=EXS.map(e=>`<p style="margin:10px 0 0"><b>${e[0]}</b></p>${mxEq(e[1])}`).join('');
+
+const DONE=new Set();
+function render(){
+ const el=$('ex');el.innerHTML='';
+ EX.forEach((f,i)=>{const p=f(i);const d=document.createElement('div');d.className='exq'+(DONE.has('Q'+EXIDS[i])?' done':'');d.id='q'+i;
+  d.innerHTML=`<div><b>ข้อ ${i+1}.</b> ${mxFr(p.q)}</div><div class="row" style="margin-top:8px"><input type="text" id="a${i}" autocomplete="off" inputmode="text" placeholder="คำตอบ"><button id="b${i}">ตรวจ</button><span id="r${i}"></span></div><div class="hint muted" id="h${i}"></div><div class="sol" id="s${i}">${mxFr(p.sol)}</div>`;
+  el.appendChild(d);
+  if(DONE.has('Q'+EXIDS[i])){$('r'+i).textContent='✓ ทำถูกแล้ว';$('s'+i).classList.add('on')}
+  const chk=()=>{const n=numIn($('a'+i).value);if(isNaN(n)){$('r'+i).textContent='พิมพ์เป็นตัวเลข เช่น 12, −5, 7/12, 3.5';return}
+   if(Math.abs(n-p.num)<1e-6){$('r'+i).textContent='✓ ถูกต้อง';$('h'+i).textContent='';$('s'+i).classList.add('on');$('q'+i).classList.add('done');DONE.add('Q'+EXIDS[i]);persist();if(EXIDS.every(k=>DONE.has('Q'+k)))unlockNB()}
+   else{$('r'+i).textContent='✗ ยังไม่ถูก';$('h'+i).textContent='คำใบ้: '+p.hint}};
+  $('b'+i).onclick=chk;$('a'+i).onkeydown=e=>{if(e.key==='Enter')chk()}});
+}
+let t=null;
+function persist(){if(TEACHER)return;clearTimeout(t);t=setTimeout(async()=>{$('saveSt').textContent='กำลังบันทึก…';const r=await call({action:'save',token:TOKEN,strand:LESSON,passed:[...DONE],failedAt:''});$('saveSt').textContent=r.ok?`✓ บันทึกแล้ว (${EXIDS.filter(k=>DONE.has('Q'+k)).length}/${EX.length} ข้อ)`:'⚠ บันทึกไม่สำเร็จ'},300)}
+$('who').textContent=ME.name;$('who2').textContent=ME.name;
+(async()=>{
+ if(TEACHER){(VIEW.done||[]).forEach(x=>DONE.add(x));teacherCk();render();
+  DONE.size>=0&&(()=>{unlockNB();document.querySelectorAll('.sol').forEach(s=>s.classList.add('on'));document.querySelectorAll('.exq input,.exq button').forEach(x=>x.disabled=true)})();
+  const b=document.createElement('div');b.className='tcard nomfx';b.style.cssText='background:#fff3c4;border:2px solid #e6c34a';b.innerHTML=`<b>โหมดครู</b> · ชุดโจทย์และเฉลยของ <b>${ME.name}</b> เลขที่ ${ME.no} ห้อง ${ME.cls} · ทำในระบบถูก ${DONE.size}/${EX.length} ข้อ · ทำลงสมุด: ${NBDONE?'ติ๊กว่าเสร็จแล้ว':'ยังไม่ติ๊ก'} · <span class="muted">ไม่มีการบันทึกใด ๆ ในโหมดนี้</span>`;
+  document.querySelector('.wrap').insertBefore(b,document.querySelector('.wrap').children[1]);$('nb').querySelector('.muted').innerHTML='โจทย์ในสมุดของนักเรียนคนนี้ พร้อมเฉลยสำหรับครูตรวจ';return}
+ const r=await call({action:'me',token:TOKEN});if(r.ok&&r.progress&&r.progress[LESSON])r.progress[LESSON].passed.forEach(x=>DONE.add(x));ckUI(!!(r.ok&&r.progress&&r.progress[LESSON+'_CK']&&r.progress[LESSON+'_CK'].passed.length));render();if(EXIDS.every(k=>DONE.has('Q'+k))||CKED)unlockNB()})();
+$('btnHome').onclick=$('btnQuit').onclick=()=>{if(TEACHER){window.close();setTimeout(()=>{location.href='MathEQ.html'},200);return}location.href='MathEQ.html'};
+</script>
+</body></html>

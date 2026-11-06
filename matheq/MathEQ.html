@@ -64,10 +64,16 @@ table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px s
 </div>
 
 <div id="vHome" class="hide">
- <div class="top"><div><h1 id="hName"></h1><div class="sub" id="hSub"></div></div><div class="row"><span class="lcd" id="lcd"></span><button id="btnOut">ออกจากระบบ</button></div></div>
+ <div class="top"><div><h1 id="hName"></h1><div class="sub" id="hSub"></div></div><div class="row"><button id="btnOut">ออกจากระบบ</button></div></div>
+ <div class="card" id="acts"></div>
+ <div class="card"><div class="row" style="justify-content:space-between"><div><h2 style="margin:0 0 4px">MathEQ เรียนรู้ด้วยตนเอง</h2><div class="muted">แบบทดสอบประเมินตนเองรายสาย · แท่ง EQ · ใบความรู้ · ฝึกพื้นฐาน</div></div><button class="pri" id="btnSelf">เข้า MathEQ เรียนรู้ด้วยตนเอง</button></div></div>
+</div>
+
+<div id="vSelf" class="hide">
+ <div class="top"><div><h1>MathEQ เรียนรู้ด้วยตนเอง</h1><div class="sub" id="sSub"></div></div><div class="row"><span class="lcd" id="lcd"></span><button id="btnBackHome">← บทเรียนของห้อง</button></div></div>
  <div class="deck"><div class="eq" id="eq"></div></div>
  <div class="card" style="margin-top:14px" id="panel"></div>
- <div class="card hide" id="acts"></div>
+ <div class="card"><h2 style="margin:0 0 6px">ฝึกพื้นฐาน</h2><div class="muted" id="basicSt" style="margin-bottom:8px">โจทย์เลขพื้นฐานวันละ 30 ข้อ ตอบในระบบ ทำตามจังหวะของตัวเอง</div><a href="basic.html"><button class="pri">ไปฝึกพื้นฐาน</button></a></div>
  <div class="card"><a href="kn_index.html"><button>ใบความรู้ทุกขั้น (อ่านเรียนรู้ด้วยตนเอง)</button></a> <span class="muted">เปิดอ่านได้ทุกสาย ไม่ต้องรอทำข้อสอบ</span></div>
  <div class="muted">เส้นประขาว = ค่าเฉลี่ยของห้อง · แตะแท่งเพื่อดูรายละเอียดและเริ่มทำข้อสอบสายนั้น · ช่องมืดสนิท = ขั้นที่ยังไม่มีข้อสอบ</div>
 </div>
@@ -79,6 +85,7 @@ table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px s
  <div class="card hide" id="aActsCard"><h2>บทเรียนและกิจกรรม</h2><div class="muted">ประตูความพร้อม: ตัวเลข = ขั้นที่ผ่าน · บทเรียน: ตัวเลข = ข้อที่ทำถูก (- = ยังไม่เปิด) · ช่องสี่เหลี่ยม "ตรวจสมุด" = ติ๊กเมื่อรับ/ตรวจสมุดนักเรียนคนนั้นแล้ว (นักเรียนจะเห็นสถานะ)</div><div style="overflow:auto;max-height:420px;margin-top:8px"><table class="tb" id="aActs"></table></div></div>
  <div class="card"><h2>ดูบทเรียนล่วงหน้า (โหมดครู)</h2><div class="muted">เปิดดูเนื้อหา แบบฝึกหัด และเฉลยทุกบทที่สร้างไว้ แม้ยังไม่ถึงวันเปิดให้นักเรียน · ไม่มีการบันทึกผลใด ๆ · ใช้ชุดโจทย์ของนักเรียนที่เลือกไว้ (ถ้าไม่ได้เลือก ใช้เลขที่ 1 ของห้อง)</div><div id="aPrev" style="margin-top:8px"></div></div>
  <div class="card"><h2>สไลด์สรุปความรู้ (ฉายโปรเจคเตอร์)</h2><div class="muted">หน้าเดียวต่อ 1 บทเรียนที่สอนในคาบ (ทบทวน · ใบความรู้ · ตัวอย่าง) ตัวอักษรใหญ่ พอดีจอ · F = เต็มจอ · A−/A+ ปรับขนาด</div><div id="aSlides" style="margin-top:8px"></div></div>
+ <div class="card"><h2>ฝึกพื้นฐาน (กลุ่มพิเศษ ม.1/ม.2)</h2><div class="muted">ดูว่านักเรียนทำโจทย์ฝึกพื้นฐานถึงระดับไหน และวันนี้ทำกี่ชุด (ชุดละ 10 ข้อ) · เฉพาะคนที่เคยเข้าฝึก</div><div style="overflow:auto;margin-top:8px"><table class="tb" id="aBasic"></table></div></div>
  <div class="card hide" id="aOne"><h2 id="aOneName"></h2><div class="deck"><div class="eq" id="aOneEq"></div></div><div id="aLessons" style="margin:10px 0"></div><div class="row" style="margin-top:10px"><select id="aRsSt"></select><button id="aRs">ล้างผลสายนี้ (ให้ทำใหม่)</button></div></div>
 </div>
 </div>
@@ -95,12 +102,14 @@ const ACTIVITIES=[
  {id:'GCX',type:'gate',title:'ประตูความพร้อมก่อนเข้าจำนวนเชิงซ้อน',cls:'ม.5/1',date:'2026-11-03',file:'ready_complex.html',total:12},
  {id:'LS_M1W01',type:'lesson',title:'ม.1 · 4 พ.ย. · ปรับพื้นฐานก่อนเข้าสมการ',cls:'ม.1/1',date:'2026-11-04',file:'lesson_M1_w01.html',total:3},
  {id:'LS_M1W01_CK',type:'notebook',title:'ม.1 4 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.1/1',date:'2026-11-04',file:'lesson_M1_w01.html',total:1},
- {id:'LS_M1W02',type:'lesson',title:'ม.1 · 6 พ.ย. · สมการเชิงเส้นตัวแปรเดียว (1) การแก้สมการ',cls:'ม.1/1',date:'2026-11-06',file:'lesson_M1_w02.html',total:3},
- {id:'LS_M1W02_CK',type:'notebook',title:'ม.1 6 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.1/1',date:'2026-11-06',file:'lesson_M1_w02.html',total:1},
+ {id:'LS_M1W02',type:'lesson',title:'ม.1 · 11 พ.ย. · สมการเชิงเส้นตัวแปรเดียว (1) การแก้สมการ',cls:'ม.1/1',date:'2026-11-11',file:'lesson_M1_w02.html',total:3},
+ {id:'LS_M1W02_CK',type:'notebook',title:'ม.1 11 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.1/1',date:'2026-11-11',file:'lesson_M1_w02.html',total:1},
  {id:'C',type:'gate',title:'แบบประเมินตนเอง: แคลคูลัส (ทำได้ถึงขั้นไหน)',cls:'ม.6/1',date:'2026-11-04',file:'test_C.html',total:12},
  {id:'L',type:'gate',title:'แบบประเมินตนเอง: เซตและตรรกศาสตร์ (ทบทวนจากเทอม 1)',cls:'ม.4/1',date:'2026-11-05',file:'test_L.html',total:7},
  {id:'LS_M6W01',type:'lesson',title:'ม.6 · 6 พ.ย. · ซ่อมฐานก่อนเรียนแคลคูลัส (C0)',cls:'ม.6/1',date:'2026-11-06',file:'lesson_M6_w01.html',total:3},
  {id:'LS_M6W01_CK',type:'notebook',title:'ม.6 6 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.6/1',date:'2026-11-06',file:'lesson_M6_w01.html',total:1},
+ {id:'LS_M6W02',type:'lesson',title:'ม.6 · 11 พ.ย. · ทบทวนแยกตัวประกอบและแทนค่าฟังก์ชัน (C0 ต่อ)',cls:'ม.6/1',date:'2026-11-11',file:'lesson_M6_w02.html',total:6},
+ {id:'LS_M6W02_CK',type:'notebook',title:'ม.6 11 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.6/1',date:'2026-11-11',file:'lesson_M6_w02.html',total:1},
  {id:'LS_M4W01',type:'lesson',title:'ม.4 · 9 พ.ย. · หลักการนับเบื้องต้น (หลักการคูณและบวก)',cls:'ม.4/1',date:'2026-11-09',file:'lesson_M4_w01.html',total:3},
  {id:'LS_M4W01_CK',type:'notebook',title:'ม.4 9 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.4/1',date:'2026-11-09',file:'lesson_M4_w01.html',total:1},
  {id:'LS_M5W01',type:'lesson',title:'ม.5 · 3 พ.ย. · ที่มาของ i และจำนวนเชิงซ้อน',cls:'ม.5/1',date:'2026-11-03',file:'lesson_M5_w01.html',total:5},
@@ -108,18 +117,20 @@ const ACTIVITIES=[
  {id:'LS_M2W01_CK',type:'notebook',title:'ม.2 3 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.2/1',date:'2026-11-03',file:'lesson_M2_w01.html',total:1},
  {id:'LS_M5W01_CK',type:'notebook',title:'ม.5 3 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.5/1',date:'2026-11-03',file:'lesson_M5_w01.html',total:1}
 ];
+const TH_M=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const thDate=s=>{const m=String(s).match(/^(\d{4})-(\d{2})-(\d{2})$/);return m?(+m[3])+' '+TH_M[+m[2]-1]+' '+(+m[1]+543):s};
+const dispTitle=a=>a.title.replace(/^ม\.\d(?:\/\d)?\s*·?\s*\d+ [^ ]+\s*·\s*/,'');
 const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 function renderActs(){
  const L=ACTIVITIES.filter(a=>a.type!=='notebook'&&a.cls===ME.cls&&(DEMO||a.date<=todayStr())).sort((a,b)=>b.date.localeCompare(a.date));
- const el=$('acts');if(!L.length){el.classList.add('hide');return}
- el.classList.remove('hide');
+ const el=$('acts');if(!L.length){el.innerHTML='<h2>บทเรียนและกิจกรรมของห้อง</h2><div class="muted">ยังไม่มีบทเรียนที่เปิดให้ทำ</div>';return}
  el.innerHTML='<h2>บทเรียนและกิจกรรมของห้อง</h2>'+L.map(a=>{const p=PROG[a.id],n=p?p.passed.length:0;
   const st=a.type==='gate'?(p?`ผ่าน ${n}/${a.total} ขั้น`+(p.failedAt?` · ควรทบทวน ${p.failedAt}`:' · พร้อมแล้ว'):'ยังไม่ได้ทำ'):(p?`ทำแล้ว ${n}/${a.total} ข้อ`:'ยังไม่ได้เข้าทำ');const ck=PROG[a.id+'_CK']&&PROG[a.id+'_CK'].passed.length;
   const ok=p&&(a.type==='gate'?!p.failedAt:n>=a.total);
-  return `<div class="row" style="justify-content:space-between;border-top:1px solid #1e2a42;padding:8px 0"><div><b>${a.title}</b><div class="muted">${a.date} · ${st}${a.type==='lesson'?(ck?' · <b style="color:#2ee66d">✓ ครูตรวจสมุดแล้ว</b>':(p&&p.passed.length>=a.total?' · รอครูตรวจสมุด':'')):''}</div></div><a href="${a.file}"><button class="${ok?'':'pri'}">${p?(a.type==='gate'?'ทำใหม่':'เปิดทบทวน'):'เริ่ม'}</button></a></div>`}).join('')}
+  return `<div class="row" style="justify-content:space-between;border-top:1px solid #1e2a42;padding:8px 0"><div><b>${dispTitle(a)}</b><div class="muted">${thDate(a.date)} · ${st}${a.type==='lesson'?(ck?' · <b style="color:#2ee66d">✓ ครูตรวจสมุดแล้ว</b>':(p&&p.passed.length>=a.total?' · รอครูตรวจสมุด':'')):''}</div></div><a href="${a.file}"><button class="${ok?'':'pri'}">${p?(a.type==='gate'?'ทำใหม่':'เปิดทบทวน'):'เริ่ม'}</button></a></div>`}).join('')}
 
 const $=id=>document.getElementById(id);
-const show=id=>{['vLogin','vAdminLogin','vHome','vAdmin'].forEach(x=>$(x).classList.toggle('hide',x!==id))};
+const show=id=>{['vLogin','vAdminLogin','vHome','vSelf','vAdmin'].forEach(x=>$(x).classList.toggle('hide',x!==id))};
 if(DEMO)$('demoTag').classList.remove('hide');
 
 const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
@@ -177,14 +188,21 @@ async function login(){
  if(!r.ok)return;ME=r.student;TOKEN=r.token;PROG=r.progress||{};AVG=r.classAvg||{};try{sessionStorage.setItem('matheq_sess',JSON.stringify({token:TOKEN,student:ME}))}catch(e){}home()}
 function summary(){let t=0,tot=0;STR.forEach(s=>{tot+=s.steps.length;t+=((PROG[s.id]||{}).passed||[]).length});return[t,tot]}
 function home(sel){
+ if(sel)return self(sel);
  show('vHome');$('hName').textContent=ME.name;$('hSub').textContent=`${ME.cls} · เลขที่ ${ME.no} · รหัส ${ME.id}`;
+ renderActs()}
+function self(sel){
+ show('vSelf');$('sSub').textContent=`${ME.name} · ${ME.cls} · เลขที่ ${ME.no}`;
  const[t,tot]=summary();$('lcd').innerHTML=`${t}/${tot}<small>ขั้น</small>`;
  drawEq($('eq'),PROG,{avg:AVG,sel,onClick:pickStrand});
- renderActs();
+ const bp=PROG['LS_BASIC'],td=todayKey(),n=bp?bp.passed.filter(x=>x.indexOf('S'+td+'_')===0).length:0;
+ $('basicSt').textContent=`โจทย์เลขพื้นฐานวันละ 30 ข้อ (3 ชุด ชุดละ 10 ข้อ) ตอบในระบบ ทำตามจังหวะของตัวเอง · วันนี้ทำแล้ว ${n}/3 ชุด`;
  if(sel)return pickStrand(sel);
  const todo=STR.filter(s=>!PROG[s.id]);
  $('panel').innerHTML=todo.length?`<b>ยังไม่ได้ทำ ${todo.length} สาย:</b> ${todo.map(s=>s.id+' '+s.name).join(' · ')}<br><span class="muted">แตะแท่งสายที่ต้องการเพื่อเริ่มทำข้อสอบ</span>`:'<b>ทำครบทุกสายแล้ว</b> — แตะแท่งใดก็ได้เพื่อดูผลหรือทำใหม่';
 }
+const todayKey=()=>todayStr().replace(/-/g,'');
+$('btnSelf').onclick=()=>self();$('btnBackHome').onclick=()=>home();
 function pickStrand(id){
  const s=STR.find(x=>x.id===id),p=PROG[id];drawEq($('eq'),PROG,{avg:AVG,sel:id,onClick:pickStrand});
  let h=`<h2>สาย ${s.id} · ${s.name}</h2>`;
@@ -224,8 +242,9 @@ function renderActsAdmin(L){
  L.filter(s=>A.some(a=>a.cls===s.cls)).sort((a,b)=>a.cls.localeCompare(b.cls,'th')||a.no-b.no).forEach(st=>{h+=`<tr><td>${st.cls}</td><td>${st.no}</td><td>${st.name}</td>`+A.map(a=>{if(a.cls!==st.cls)return'<td></td>';const p=st.progress[a.id];if(a.type==='notebook')return`<td><input type="checkbox" data-ckid="${st.id}" data-ckk="${a.id}" ${p&&p.passed.length?'checked':''} style="width:20px;height:20px"></td>`;if(!p)return'<td><span class="cell sc0">-</span></td>';const n=p.passed.length,f=n/a.total;return`<td><span class="cell ${f>=1?'sc3':f>=.5?'sc2':'sc1'}" title="${p.failedAt||''}">${n}/${a.total}</span></td>`}).join('')+'</tr>'});
  $('aActs').innerHTML=h;
  $('aActs').querySelectorAll('input[data-ckid]').forEach(c=>c.onchange=async()=>{const sid=c.dataset.ckid,k=c.dataset.ckk,on=c.checked;const r=await call({action:'adminMark',token:ATOKEN,id:sid,strand:k,on:on});if(!r.ok){c.checked=!on;alert(r.error||'บันทึกไม่สำเร็จ');return}const stu=ADATA.find(x=>x.id===sid);if(on)stu.progress[k]={passed:['CK'],failedAt:'',updated:''};else delete stu.progress[k]});
- renderPrev();renderSlides()}
-function renderSlides(){const has=new Set(PJ),el=$('aSlides');const LL=ACTIVITIES.filter(a=>a.type==='lesson').sort((a,b)=>a.date.localeCompare(b.date));const lhtml='<div><b>สไลด์ตามบทเรียนที่สอน</b></div><div style="margin:6px 0 12px 14px">'+LL.map(a=>`<div style="margin:4px 0"><a href="sl_${a.id}.html" target="_blank" rel="noopener">${a.title}</a> <span class="muted">· ${a.cls} · ${a.date}</span></div>`).join('')+'</div><div class="muted" style="margin-bottom:4px">สไลด์รายขั้น (เปิดเสริมได้)</div>';el.innerHTML=lhtml+STR.map(s=>{const ids=s.steps.filter(x=>has.has(x[0]));return ids.length?`<details style="margin:6px 0"><summary style="cursor:pointer"><b>สาย ${s.id} ${s.name}</b> <span class="muted">(${ids.length} หน้า)</span></summary><div style="margin:6px 0 6px 14px">${ids.map(x=>`<div style="margin:3px 0"><a href="pj_${x[0]}.html" target="_blank" rel="noopener"><b>${x[0]}</b> · ${x[1]}</a></div>`).join('')}</div></details>`:''}).join('')}
+ renderPrev();renderSlides();renderBasicAdmin(L)}
+function renderBasicAdmin(L){const tk=todayKey();let h='<tr><th>ห้อง</th><th>เลขที่</th><th>ชื่อ</th><th>ระดับที่ผ่าน (จาก 12)</th><th>ชุดวันนี้</th><th>ชุดทั้งหมด</th></tr>';let any=false;L.filter(s=>s.progress['LS_BASIC']).sort((a,b)=>a.cls.localeCompare(b.cls,'th')||a.no-b.no).forEach(st=>{any=true;const ps=st.progress['LS_BASIC'].passed;const sets=ps.filter(x=>x[0]==='S'),tdn=sets.filter(x=>x.indexOf('S'+tk+'_')===0).length,lv=ps.filter(x=>/^L\d+$/.test(x)).length;h+=`<tr><td>${st.cls}</td><td>${st.no}</td><td>${st.name}</td><td>${lv}</td><td>${tdn}</td><td>${sets.length}</td></tr>`});$('aBasic').innerHTML=any?h:'<tr><td class="muted">ยังไม่มีใครเข้าฝึกพื้นฐาน</td></tr>'}
+function renderSlides(){const has=new Set(PJ),el=$('aSlides');const LL=ACTIVITIES.filter(a=>a.type==='lesson').sort((a,b)=>a.date.localeCompare(b.date));const lhtml='<div><b>สไลด์ตามบทเรียนที่สอน</b></div><div style="margin:6px 0 12px 14px">'+LL.map(a=>`<div style="margin:4px 0"><a href="sl_${a.id}.html" target="_blank" rel="noopener">${dispTitle(a)}</a> <span class="muted">· ${a.cls} · ${thDate(a.date)}</span></div>`).join('')+'</div><div class="muted" style="margin-bottom:4px">สไลด์รายขั้น (เปิดเสริมได้)</div>';el.innerHTML=lhtml+STR.map(s=>{const ids=s.steps.filter(x=>has.has(x[0]));return ids.length?`<details style="margin:6px 0"><summary style="cursor:pointer"><b>สาย ${s.id} ${s.name}</b> <span class="muted">(${ids.length} หน้า)</span></summary><div style="margin:6px 0 6px 14px">${ids.map(x=>`<div style="margin:3px 0"><a href="pj_${x[0]}.html" target="_blank" rel="noopener"><b>${x[0]}</b> · ${x[1]}</a></div>`).join('')}</div></details>`:''}).join('')}
 function openLessonFor(a,st){const p=st.progress[a.id],ck=st.progress[a.id+'_CK'];
  const view={student:{id:st.id,name:st.name,cls:st.cls,no:st.no},done:p?p.passed:[],ck:!!(ck&&ck.passed.length),atoken:ATOKEN};
  try{sessionStorage.setItem('matheq_admin_view',JSON.stringify(view))}catch(e){}
@@ -233,7 +252,7 @@ function openLessonFor(a,st){const p=st.progress[a.id],ck=st.progress[a.id+'_CK'
 function renderPrev(){const el=$('aPrev');if(!el)return;const td=todayStr();
  const L=ACTIVITIES.filter(a=>a.type==='lesson').sort((a,b)=>b.date.localeCompare(a.date));
  el.innerHTML=L.map(a=>{const cs=ADATA.filter(s=>s.cls===a.cls).sort((x,y)=>x.no-y.no);const sel=ASEL&&cs.find(s=>s.id===ASEL)||cs[0];
-  return`<div class="row" style="justify-content:space-between;border-top:1px solid #1e2a42;padding:6px 0"><div><b>${a.title}</b><div class="muted">${a.cls} · เปิดให้นักเรียน ${a.date}${a.date>td?' (ยังไม่ถึงวัน)':''}${sel?' · โจทย์ของเลขที่ '+sel.no:''}</div></div><button data-pv="${a.id}" ${sel?'':'disabled'}>เปิดดู</button></div>`}).join('')||'<div class="muted">ยังไม่มีบทเรียน</div>';
+  return`<div class="row" style="justify-content:space-between;border-top:1px solid #1e2a42;padding:6px 0"><div><b>${dispTitle(a)}</b><div class="muted">${a.cls} · เปิดให้นักเรียน ${thDate(a.date)}${a.date>td?' (ยังไม่ถึงวัน)':''}${sel?' · โจทย์ของเลขที่ '+sel.no:''}</div></div><button data-pv="${a.id}" ${sel?'':'disabled'}>เปิดดู</button></div>`}).join('')||'<div class="muted">ยังไม่มีบทเรียน</div>';
  el.querySelectorAll('button[data-pv]').forEach(b=>b.onclick=()=>{const a=ACTIVITIES.find(x=>x.id===b.dataset.pv);const cs=ADATA.filter(s=>s.cls===a.cls).sort((x,y)=>x.no-y.no);const st=ASEL&&cs.find(s=>s.id===ASEL)||cs[0];if(st)openLessonFor(a,st)})}
 function renderLessonBtns(st){
  const L=ACTIVITIES.filter(a=>a.type==='lesson'&&a.cls===st.cls);const el=$('aLessons');
