@@ -1,0 +1,367 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MathEQ — ค32202 ม.5 10 พ.ย.</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:#070b16;color:#dce8f5;font-family:'TH Sarabun New','Sarabun',system-ui,sans-serif;font-size:19px;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 14px 40px}
+h1{margin:0;font-size:26px}h2{margin:0 0 8px;font-size:22px}.sub{color:#7f93aa;font-size:15px;margin:2px 0 12px}
+.hide{display:none!important}
+.card{background:#0d1424;border:1px solid #243049;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+input,select,button{font:inherit;color:#dce8f5;background:#121a2c;border:1px solid #2a3a55;border-radius:9px;padding:8px 14px}
+input{width:100%}button{cursor:pointer}button:hover:not(:disabled){border-color:#4fa3e3}button:disabled{opacity:.5;cursor:default}
+button.pri{background:#1d5fb0;border-color:#4fa3e3;color:#fff}
+.err{color:#ff8a7a;margin-top:8px;min-height:1.3em}.muted{color:#7f93aa;font-size:16px}
+.login{max-width:420px;margin:8vh auto 0;text-align:center}.login input{text-align:center;font-size:30px;letter-spacing:8px;margin:12px 0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.demo{background:#3a2a00;color:#ffcc55;border:1px solid #7a5a00;border-radius:10px;padding:0 9px;font-size:14px;margin-left:8px}
+.deck{background:linear-gradient(#10182a,#0a0f1d);border:1px solid #243049;border-radius:14px;padding:14px}
+.lcd{font-family:'Courier New',monospace;background:#071a12;color:#4dff9a;border:1px solid #1d4a35;border-radius:6px;padding:3px 12px;font-size:24px;letter-spacing:2px;text-shadow:0 0 8px #1fd17a}.lcd small{font-size:14px;color:#2fae72;margin-left:6px}
+.eq{display:grid;grid-template-columns:repeat(9,1fr);gap:9px;align-items:end;padding:4px}
+.band{display:flex;flex-direction:column;align-items:center;min-width:0;cursor:pointer}
+.col{position:relative;display:flex;flex-direction:column-reverse;gap:3px;width:100%;max-width:64px;height:280px;padding:2px;background:#050810;border-radius:6px;border:1px solid #1a2438}
+.band:hover .col,.band.sel .col{border-color:#4fa3e3}
+.seg{flex:1;border-radius:2px;background:#111a2b;transition:background .25s}.seg.lit{box-shadow:0 0 6px currentColor}.seg.na{background:#0b101c}
+.avg{position:absolute;left:-5px;right:-5px;height:0;border-top:2px dashed #fff;opacity:.9;z-index:2}
+.lbl{margin-top:7px;font-weight:700;font-size:20px;color:#fff}.nm{font-size:14px;color:#8fa4bd;text-align:center;line-height:1.2;min-height:34px}
+.val{font-size:14px;color:#4dff9a;font-family:'Courier New',monospace;text-align:center}.val.none{color:#6b7a92}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+table.tb{width:100%;border-collapse:collapse;font-size:16px}table.tb th,table.tb td{border-bottom:1px solid #1e2a42;padding:4px 6px;text-align:center}table.tb td:first-child,table.tb th:first-child,table.tb td:nth-child(3),table.tb th:nth-child(3){text-align:left}
+table.tb th{color:#8fa4bd;position:sticky;top:0;background:#0d1424}
+.cell{display:inline-block;min-width:34px;border-radius:5px;padding:0 4px;font-family:'Courier New',monospace}
+.sc0{background:#1a2438;color:#6b7a92}.sc1{background:#5a2a20;color:#ffb09a}.sc2{background:#5a4a14;color:#ffe08a}.sc3{background:#14502f;color:#7dffb4}
+@media(max-width:700px){.eq{gap:3px}.col{height:200px}.nm{font-size:11px}}
+.tcard{background:#f3f6fb;color:#1a2233;border-radius:16px;padding:18px 20px;margin-bottom:14px;font-size:21px;line-height:1.45}
+.tcard .muted{color:#5b6b82}
+.tcard button{background:#0d47a1;color:#fff;border:0;border-radius:12px;padding:10px 18px}.tcard button.skip{background:#fff;color:#7a869a;border:1px solid #c9d6ea}
+.tcard input[type=text]{background:#fff;color:#1a2233;border:2px solid #c9d6ea;border-radius:10px;width:auto}
+.q{font-size:25px;margin:6px 0 14px}
+.ch{display:block;width:100%;text-align:left;background:#f5f8fe!important;color:#1a2233!important;border:2px solid #d3def2!important;margin:8px 0;padding:11px 14px!important}
+.ch:hover:not(:disabled){border-color:#0d47a1!important}.ch.sel{background:#e3edff!important;border-color:#0d47a1!important}.ch.ok{background:#c9efd5!important;border-color:#2e9b55!important}.ch.no{background:#ffd9d6!important;border-color:#d65a50!important}
+.tcard .row input{flex:1;min-width:140px}
+.fb{margin-top:12px;padding:10px 14px;border-radius:12px}.fb.ok{background:#e4f6ea}.fb.no{background:#fdeceb}
+.big{font-size:32px;font-weight:700;color:#0d47a1}
+.fr{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;line-height:1.1;margin:0 2px}.fr span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+table.mx{display:inline-table;border-left:2px solid #1a2233;border-right:2px solid #1a2233;border-radius:6px;margin:0 6px;vertical-align:middle;border-collapse:collapse}table.mx td{padding:1px 8px;text-align:center}
+table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px solid #aab;padding:2px 12px;text-align:center}
+.ladder{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{min-width:44px;text-align:center;padding:3px 9px;border-radius:9px;background:#e4e9f2;color:#6b7a92;font-size:16px;border:2px solid transparent}.chip.pass{background:#c9efd5;color:#12692f}.chip.fail{background:#ffd9d6;color:#a3261d}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.05;font-size:.95em}.fr i{font-style:normal;padding:0 3px}.fr i:first-child{border-bottom:1.5px solid currentColor}.eqt{border-collapse:collapse;margin:3px 0 5px 10px}.eqt td{padding:2px 2px;vertical-align:middle}.eqt .el{text-align:right;white-space:nowrap;padding-right:6px}.eqt .ee{text-align:center;width:22px}.eqt .er{text-align:left}</style><script>/* รากที่สอง: √a และ √(...) แสดงเป็นเครื่องหมายรากมีขีดบน */
+(function(){try{var st=document.createElement('style');st.textContent='.rd{white-space:nowrap}.rr{border-top:.075em solid currentColor;padding:0 .1em 0 .06em;margin-left:.02em}';(document.head||document.documentElement).appendChild(st)}catch(e){}})();
+function mxRt(s){
+ if(s.indexOf('\u221a')<0)return s;
+ s=s.replace(/\u221a\(([^()]*)\)/g,function(m,x){return '<span class="rd">\u221a<span class="rr">'+x+'</span></span>'});
+ return s.replace(/\u221a(\d+(?:\.\d+)?|[A-Za-z]+)/g,function(m,x){return '<span class="rd">\u221a<span class="rr">'+x+'</span></span>'});
+}
+/* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
+function mxFrText(s){
+ s=mxRt(s);
+ return s.replace(/(?:(\d+) )?(\d+)\/(\d+)/g,function(m,w,n,d,o,str){
+  var b=o>0?str.charAt(o-1):'',a=str.charAt(o+m.length);
+  if(/[\w\/.√)\]²³′π]/.test(b)||/[\d\/²³√]/.test(a))return m;
+  return (w?w:'')+'<span class="fr"><i>'+n+'</i><i>'+d+'</i></span>'});
+}
+/* รับ HTML string คืน HTML string (ไม่แตะข้างในแท็ก) */
+function mxFr(h){
+ return String(h).split(/(<\/?[a-zA-Z][^>]*>)/).map(function(x){return x.charAt(0)==='<'&&/^<\/?[a-zA-Z]/.test(x)?x:mxFrText(x)}).join('');
+}
+/* rows = [[ข้อความซ้าย, ข้อความขวา, ไม่แสดง =], ...] เฉพาะแถวสุดท้ายตัวหนา */
+function mxEq(rows){
+ var n=rows.length;
+ return '<table class="eqt">'+rows.map(function(r,i){return '<tr><td class="el">'+mxFr(r[0]||'')+'</td><td class="ee">'+(r[2]?'':'=')+'</td><td class="er">'+(i===n-1?'<b>'+mxFr(r[1])+'</b>':mxFr(r[1]))+'</td></tr>'}).join('')+'</table>';
+}
+function mxSplitEq(line){
+ var parts=[],depth=0,inTag=false,start=0,i,ch;
+ for(i=0;i<line.length;i++){
+  ch=line.charAt(i);
+  if(ch==='<'&&/[a-zA-Z\/]/.test(line.charAt(i+1)))inTag=true;
+  else if(ch==='>'&&inTag)inTag=false;
+  if(inTag)continue;
+  if('([{'.indexOf(ch)>=0)depth++;
+  else if(')]}'.indexOf(ch)>=0)depth--;
+  else if(depth===0&&ch==='='&&line.charAt(i-1)===' '&&line.charAt(i+1)===' '){parts.push(line.slice(start,i-1));start=i+2}
+ }
+ parts.push(line.slice(start));
+ return parts;
+}
+function mxTagsOk(s){
+ var o=(s.match(/<[a-zA-Z][^>]*>/g)||[]).length,c=(s.match(/<\/[a-zA-Z]+>/g)||[]).length;
+ return o===c;
+}
+function mxPlain(s){return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&')}
+function mxCommaFree(pt){
+ var d=0,j,c;
+ for(j=0;j<pt.length;j++){c=pt.charAt(j);if('([{'.indexOf(c)>=0)d++;else if(')]}'.indexOf(c)>=0)d--;else if(d===0&&c===',')return false}
+ return true;
+}
+/* ตรวจชิ้นส่วนของสายสมการ: แต่ละชิ้นต้องไม่ว่าง แท็กครบคู่ ไม่มีจุลภาคระดับนอก และชิ้นกลางไม่ใช่ "ประโยคใหม่" ติดมา */
+function mxPartsOk(p){
+ for(var i=0;i<p.length;i++){
+  var pt=mxPlain(p[i]).trim();
+  if(!pt||!mxTagsOk(p[i])||!mxCommaFree(pt))return false;
+  if(i>0&&i<p.length-1&&/[\w)\]²³′″]\s+[A-Za-zα-ωπ][A-Za-z0-9α-ωπ′″]*(\([^()]*\))?$/.test(pt))return false;
+ }
+ return true;
+}
+function mxChainTable(p){
+ return '<table class="eqt">'+p.map(function(x,i){return '<tr><td class="el"></td><td class="ee">'+(i===0?'':'=')+'</td><td class="er">'+x.trim()+'</td></tr>'}).join('')+'</table>';
+}
+function mxRowsTable(rows){
+ return '<table class="eqt">'+rows.map(function(r){return '<tr><td class="el">'+r[0].trim()+'</td><td class="ee">=</td><td class="er">'+r[1].trim()+'</td></tr>'}).join('')+'</table>';
+}
+/* segs = รายการ "ประโยคสมการ" ที่แยกกันด้วย → หรือ · (ตัวคั่นแบบเว้นกว้าง) */
+function mxStmts(segs,allowChain){
+ var allOne=true,allChain=true,parsed=[],i,p;
+ for(i=0;i<segs.length;i++){
+  p=mxSplitEq(segs[i]);
+  if(!mxPartsOk(p))return null;
+  parsed.push(p);
+  if(p.length!==2)allOne=false;
+  if(p.length<3)allChain=false;
+ }
+ if(allOne)return mxRowsTable(parsed);
+ if(allowChain&&allChain)return parsed.map(mxChainTable).join('');
+ return null;
+}
+/* คืน HTML ตาราง ถ้าบรรทัดนี้เป็นสายสมการล้วน ไม่งั้นคืน null */
+var MX_SEP=/(?:&nbsp;| ){2,}·(?:&nbsp;| ){2,}/;
+function mxThaiLhsOnly(segs){
+ for(var i=0;i<segs.length;i++){
+  var p=mxSplitEq(segs[i]);
+  for(var j=1;j<p.length;j++)if(/[\u0e00-\u0e7f]/.test(mxPlain(p[j])))return false;
+ }
+ return true;
+}
+function mxThaiN(x){var m=mxPlain(x).match(/[\u0e00-\u0e7f]/g);return m?m.length:0}
+/* สายขั้นตอนที่คั่นด้วย → มีคำไทยสั้น ๆ ปนได้: ขั้นที่มี = ครั้งเดียวเรียงเป็นแถวให้ = ตรงกัน ขั้นอื่นเป็นแถวข้อความ */
+function mxArrowRows(line){
+ var steps=line.split(/\s+\u2192\s+/),rows=[],eq=0,i,j,p,t;
+ if(steps.length<2)return null;
+ for(i=0;i<steps.length;i++){
+  if(!mxTagsOk(steps[i]))return null;
+  p=mxSplitEq(steps[i]);
+  if(p.length===2){
+   if(!mxCommaFree(mxPlain(p[0]))||mxThaiN(p[0])>12||mxThaiN(p[1])>12||!mxPlain(p[0]).trim()||!mxPlain(p[1]).trim())return null;
+   if(/[\w)\]]\s+[A-Za-z]\w*$/.test(mxPlain(p[0]).trim())&&/[0-9]\s+[A-Za-z]/.test(mxPlain(p[0])))return null;
+   rows.push('<tr><td class="el">'+p[0].trim()+'</td><td class="ee">=</td><td class="er">'+p[1].trim()+'</td></tr>');eq++;
+  }else if(p.length===1){
+   t=mxPlain(steps[i]).trim();
+   if(!t||t.length>34)return null;
+   rows.push('<tr><td colspan="3" style="text-align:left">'+steps[i].trim()+'</td></tr>');
+  }else return null;
+ }
+ if(eq<2)return null;
+ return '<table class="eqt">'+rows.join('')+'</table>';
+}
+function mxChain(line){
+ line=line.replace(/<\/?(?:b|strong)>/gi,'');
+ var t=mxPlain(line),thai=/[\u0e00-\u0e7f]/.test(t);
+ if(/[\u21d2\u21d4\u2194;]/.test(t))return null;
+ if(t.indexOf(' = ')<0)return null;
+ var segs=line.split(MX_SEP);
+ if(segs.length>1){
+  for(var k=0;k<segs.length;k++)if(/\s\u2192\s/.test(mxPlain(segs[k])))return null;
+  if(thai&&!mxThaiLhsOnly(segs))return null;
+  return mxStmts(segs,true);
+ }
+ if(/\s\u2192\s/.test(t)){
+  var as=line.split(/\s+\u2192\s+/);
+  if(!thai||mxThaiLhsOnly(as)){var r=mxStmts(as,false);if(r)return r}
+  return mxArrowRows(line);
+ }
+ var p=mxSplitEq(line);
+ if(thai&&!mxThaiLhsOnly([line]))return null;
+ if(p.length<3||!mxPartsOk(p))return null;
+ return mxChainTable(p);
+}
+var MX_BLOCK='table,p,li,div,ul,ol,details,h1,h2,h3';
+var MX_SKIP='button,.ch,#ans,#q,input,textarea,.eqt,svg,script,style,.nomfx';
+function mxFix(root){
+ var els=root.querySelectorAll('p,li,div.sol,.fb,details>div,.mfx'),k;
+ for(k=0;k<els.length;k++){
+  var el=els[k];
+  if(el.closest(MX_SKIP)||el.querySelector(MX_BLOCK))continue;
+  var html=el.innerHTML;
+  if(html.indexOf(' = ')<0)continue;
+  var lines=html.split(/<br\s*\/?>/i),out=[],raw=[],changed=false;
+  for(var i=0;i<lines.length;i++){
+   var tb=mxChain(lines[i]);
+   if(tb){if(raw.length){out.push(raw.join('<br>'));raw=[]}out.push(tb);changed=true}
+   else raw.push(lines[i]);
+  }
+  if(!changed)continue;
+  if(raw.length)out.push(raw.join('<br>'));
+  el.innerHTML=out.join('');
+ }
+ /* เศษส่วนบน-ล่าง ในข้อความทุกที่ (ยกเว้น svg/script/style/ช่องกรอก) */
+ var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),nodes=[],n;
+ while((n=w.nextNode())){
+  if(!/\d\/\d|\u221a/.test(n.nodeValue))continue;
+  var pe=n.parentNode;
+  if(!pe||(pe.closest&&pe.closest('svg,script,style,textarea,.fr,.nomfx,#saveSt,#rDesc,#rTitle,#gProg,#stepName,#rSub')))continue;
+  nodes.push(n);
+ }
+ nodes.forEach(function(nd){
+  var t=nd.nodeValue.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  var h=mxFrText(t);
+  if(h===t)return;
+  var sp=document.createElement('span');sp.innerHTML=h;
+  var frag=document.createDocumentFragment();
+  while(sp.firstChild)frag.appendChild(sp.firstChild);
+  nd.parentNode.replaceChild(frag,nd);
+ });
+}
+(function(){
+ var timer=null,obs=null;
+ function run(){try{mxFix(document.body)}catch(e){if(window.console)console.error('mxFix',e)}if(obs)obs.takeRecords()}
+ function sched(){clearTimeout(timer);timer=setTimeout(run,30)}
+ function start(){
+  run();
+  if(window.MutationObserver){obs=new MutationObserver(sched);obs.observe(document.body,{childList:true,subtree:true,characterData:true})}
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script></head><body><div class="wrap">
+ <div class="row" style="margin-bottom:10px"><button id="btnQuit">← กลับ MathEQ</button><span class="muted">ค32202 ม.5 · 10 พ.ย. 2569</span></div>
+ <div class="tcard" style="background:#0d47a1;color:#fff"><div style="font-size:30px;font-weight:700">ที่มาของ D และการบวก ลบ คูณจำนวนเชิงซ้อน</div><div style="opacity:.9">ค32202 คณิตศาสตร์เพิ่มเติม 4 · ม.5 · 10 พ.ย. 2569 · <span id="who"></span></div></div>
+
+ <div class="tcard"><h3 class="sec">ทบทวน</h3>
+  <p><b>1) หน่วยจินตภาพ</b> i = √(−1) จึงได้ i² = −1 และ √(−a) = i√a เมื่อ a &gt; 0 เช่น √(−25) = 5i</p>
+  <p><b>2) ที่มาของ D = b² − 4ac</b> ทุกสมการ ax² + bx + c = 0 (a ≠ 0) แก้ได้ด้วยการทำเป็น <u>กำลังสองสมบูรณ์</u> ดังนี้</p>
+  <table class="eqt"><tr><td class="el">ax² + bx + c</td><td class="ee">=</td><td class="er">0</td></tr><tr><td class="el">x² + <span class="fr"><i>b</i><i>a</i></span>x</td><td class="ee">=</td><td class="er">−<span class="fr"><i>c</i><i>a</i></span></td></tr><tr><td class="el">x² + <span class="fr"><i>b</i><i>a</i></span>x + <span class="fr"><i>b²</i><i>4a²</i></span></td><td class="ee">=</td><td class="er"><span class="fr"><i>b²</i><i>4a²</i></span> − <span class="fr"><i>c</i><i>a</i></span></td></tr><tr><td class="el">(x + <span class="fr"><i>b</i><i>2a</i></span>)²</td><td class="ee">=</td><td class="er"><span class="fr"><i>b² − 4ac</i><i>4a²</i></span></td></tr><tr><td class="el"></td><td class="ee">=</td><td class="er"><span class="fr"><i>D</i><i>4a²</i></span></td></tr><tr><td class="el">x + <span class="fr"><i>b</i><i>2a</i></span></td><td class="ee">=</td><td class="er">±<span class="fr"><i>√D</i><i>2a</i></span></td></tr><tr><td class="el">x</td><td class="ee">=</td><td class="er"><b><span class="fr"><i>−b ± √D</i><i>2a</i></span></b></td></tr></table><div class="muted">แถว 2 ย้าย c ไปอีกข้าง · แถว 3 บวก b²/(4a²) ทั้งสองข้างให้ซ้ายเป็นกำลังสองสมบูรณ์ · แถว 4 รวมเศษส่วนทางขวา · แถว 5 เรียก b² − 4ac ว่า D · แถว 6 ถอดรากที่สอง · แถว 7 ย้าย b/(2a)</div>
+  <p style="background:#fff3c4;border-radius:10px;padding:8px 12px"><b>สรุป</b> ค่าที่อยู่ใต้รากคือ b² − 4ac เราจึงตั้งชื่อว่า <b>D</b> · D &gt; 0 ได้รากจริง 2 ค่า · D = 0 ได้รากจริง 1 ค่า · D &lt; 0 มีรากของจำนวนลบ จึง<u>ไม่เป็นจำนวนจริง</u> ซึ่งเป็นเหตุผลที่เรา "สร้าง i" ขึ้นมา</p>
+ </div>
+
+ <div class="tcard"><h3 class="sec">ใบความรู้</h3>
+  <p><b>การเท่ากัน</b> a + bi = c + di ก็ต่อเมื่อ a = c และ b = d</p>
+  <p><b>การบวก และการลบ</b> บวก/ลบ <u>ส่วนจริงกับส่วนจริง</u> และ <u>ส่วนจินตภาพกับส่วนจินตภาพ</u> (เหมือนรวมพจน์คล้าย) <br><b>(a + bi) + (c + di) = (a + c) + (b + d)i</b> &nbsp;·&nbsp; <b>(a + bi) − (c + di) = (a − c) + (b − d)i</b></p>
+  <p><b>การคูณ</b> ไม่ต้องจำสูตร ให้ <u>แจกแจงเหมือนคูณพหุนาม</u> แล้วแทน <b>i² = −1</b> จากนั้นรวมส่วนจริงกับส่วนจินตภาพ <br>(a + bi)(c + di) = ac + adi + bci + bdi² = <b>(ac − bd) + (ad + bc)i</b></p>
+  <p style="background:#fff3c4;border-radius:10px;padding:8px 12px"><b>ข้อควรระวัง</b> i² = <u>−1</u> (ไม่ใช่ +1) · เมื่อเจอ i² ให้เปลี่ยนเป็น −1 ทันที · ผลคูณของ (a + bi) กับ (a − bi) จะได้ <u>จำนวนจริง</u> เสมอ</p>
+ </div>
+
+ <div class="tcard"><h3 class="sec">ตัวอย่าง</h3>
+  <div class="muted">ดูทีละบรรทัด และให้เครื่องหมาย = อยู่ตรงกันทุกบรรทัด</div><div id="exs"></div>
+ </div>
+
+ <div class="tcard"><h3 class="sec">แบบฝึกหัด</h3>
+  <div class="muted" style="margin-bottom:8px">โจทย์ชุดนี้ตัวเลขเฉพาะของ <b id="who2"></b> เปิดกี่ครั้งก็ได้ชุดเดิม · ตอบในรูป a + bi เช่น 11+10i, 4−3i, 13, 2i (พิมพ์ i ตัวเล็ก) · ตอบถูกแล้วระบบบันทึกให้อัตโนมัติ</div>
+  <div id="ex"></div>
+  <div class="muted" id="saveSt" style="margin-top:6px"></div>
+ </div>
+
+ <div class="tcard hide" id="nb"><h3 class="sec">แบบฝึกหัดลงสมุด</h3>
+  <div class="muted" style="margin-bottom:8px">ปลดล็อกแล้ว ทำลงสมุดให้ครบ เขียนวิธีทำทุกขั้นตอน (ไม่ต้องส่งในระบบ) ครูจะตรวจสมุดแล้วกดยืนยัน คุณจะเห็นสถานะด้านล่าง · โจทย์ชุดนี้เป็นเลขเฉพาะของ <b id="who3"></b> เลขที่ <span id="no3"></span></div>
+  <div id="nbList"></div>
+  <div class="row" style="margin-top:10px"><span class="muted" id="ckBadge">รอครูตรวจสมุด</span></div>
+  <div class="row" style="margin-top:8px"><button class="skip" id="btnPrint">พิมพ์ / บันทึกเป็น PDF</button></div>
+ </div>
+ <div class="row"><button class="pri" id="btnHome">กลับ MathEQ</button></div>
+</div>
+<style>.sec{margin:0 0 6px;color:#0d47a1;font-size:26px}.exq{margin:12px 0;padding:10px 12px;border:1px solid #d3def2;border-radius:12px;background:#fff}.exq.done{background:#e4f6ea;border-color:#2e9b55}.exq .row input{width:200px;flex:none}.hint{margin-top:6px}.sol{display:none;margin-top:8px;background:#f5f8fe;border-radius:10px;padding:8px 12px}.sol.on{display:block}.nbq{margin:10px 0;padding:8px 12px;border-left:4px solid #0d47a1;background:#fff;border-radius:6px}@media print{button,.row input,#btnQuit,.sol{display:none!important}body{background:#fff}.tcard{box-shadow:none}}</style>
+<script>
+const LESSON="LS_M5W02";
+let API_URL="";try{API_URL=sessionStorage.getItem("matheq_api")||""}catch(e){}
+const DEMO=!API_URL;
+const TEACHER=new URLSearchParams(location.search).get('teacher')==='1';
+let TOKEN=null,ME=null,VIEW=null;
+try{if(TEACHER){VIEW=JSON.parse(sessionStorage.getItem("matheq_admin_view")||"null");if(VIEW){ME=VIEW.student;TOKEN='teacher'}}else{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token;ME=s&&s.student}}catch(e){}
+if(!TOKEN||!ME){location.replace("MathEQ.html")}
+const $=id=>document.getElementById(id);
+const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
+let MEM={};
+function demoDB(){try{return JSON.parse(localStorage.getItem('idpDemo')||'{}')}catch(e){return MEM}}
+function demoSave(d){MEM=d;try{localStorage.setItem('idpDemo',JSON.stringify(d))}catch(e){}}
+function demoAvg(cls){const d=demoDB(),s={},n={};Object.keys(DEMO_ROSTER).forEach(id=>{if(DEMO_ROSTER[id].cls!==cls||!d[id])return;for(const k in d[id]){s[k]=(s[k]||0)+d[id][k].passed.length;n[k]=(n[k]||0)+1}});const o={};for(const k in s)o[k]={avg:Math.round(s[k]/n[k]*10)/10,n:n[k]};return o}
+async function api(body){
+ if(!DEMO){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return await r.json()}
+ const d=demoDB();
+ if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347 / 12348)'};
+  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='save'){d[body.token]=d[body.token]||{};{const o=d[body.token][body.strand],m=o?o.passed.slice():[];body.passed.forEach(x=>{if(m.indexOf(x)<0)m.push(x)});let fl=(body.failedAt?String(body.failedAt).split(','):[]).filter(x=>m.indexOf(x)<0);if(!fl.length&&o&&o.failedAt&&body.failedAt&&body.strand!=='GCX')fl=String(o.failedAt).split(',').filter(x=>m.indexOf(x)<0);d[body.token][body.strand]={passed:m,failedAt:fl.join(','),updated:new Date().toISOString()}}demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
+ if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
+ if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
+ if(body.action==='adminMark'){d[body.id]=d[body.id]||{};if(body.on)d[body.id][body.strand]={passed:['CK'],failedAt:'',updated:new Date().toISOString()};else delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+ if(body.action==='adminReset'){if(d[body.id])delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+}
+async function call(body,errEl){try{const r=await api(body);if(!r.ok&&errEl)errEl.textContent=r.error||'เกิดข้อผิดพลาด';return r}catch(e){if(errEl)errEl.textContent='เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง';return{ok:false}}}
+
+
+/* ---------- ตัวสุ่มที่ผูกกับรหัสนักเรียน + รหัสบทเรียน + ข้อ ---------- */
+function hashStr(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return(h^=h>>>16)>>>0}}
+function rngFor(key){const seed=hashStr(key)();let a=seed;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function mk(i){const r=rngFor(ME.id+'|'+LESSON+'|'+i);return{R:(a,b)=>a+Math.floor(r()*(b-a+1)),pick:arr=>arr[Math.floor(r()*arr.length)]}}
+/* ---------- ตัวอ่านจำนวนเชิงซ้อนที่มีราก ---------- */
+const sqf=n=>{let k=1,s=n;for(let f=2;f*f<=s;f++){while(s%(f*f)===0){s/=f*f;k*=f}}return[k,s]}; // n = k²·s , s ไม่มีกำลังสอง
+function num(s){s=s.trim();if(!s)return NaN;const m=s.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);if(m)return +m[1]/+m[2];return /^-?\d+(\.\d+)?$/.test(s)?+s:NaN}
+/* พจน์เดียว: [สัมประสิทธิ์][√รัศมี] เช่น 2√3, √5, 7, 3/2 → {v:ค่า, simp:ลดรูปแล้วไหม} */
+function term(s){let sign=1;if(s[0]==='+')s=s.slice(1);else if(s[0]==='-'){sign=-1;s=s.slice(1)}
+ s=s.replace(/^\((.*)\)$/,'$1');
+ const m=s.match(/^(\d+(?:\.\d+)?(?:\/\d+)?)?\*?(?:r(\d+)|r\((\d+)\))?$/);if(!m||(m[1]===undefined&&m[2]===undefined&&m[3]===undefined&&s!==''))return null;
+ let c=m[1]===undefined?1:num(m[1]);if(isNaN(c))return null;const rad=m[2]||m[3];
+ if(rad===undefined)return{v:sign*c,simp:true};
+ const n=+rad;if(n<1)return null;const[k,sq]=sqf(n);return{v:sign*c*Math.sqrt(n),simp:k===1}}
+function cx(s){s=String(s).trim().replace(/−|–|—/g,'-').replace(/[๐-๙]/g,c=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(c)).replace(/\s+/g,'').replace(/I/g,'i').replace(/√|sqrt/gi,'r').replace(/[×·]/g,'*');
+ if(!s)return null;
+ // แยกพจน์ตาม + - ที่อยู่นอกวงเล็บ (ไม่นับตัวแรก)
+ const parts=[];let d=0,cur='';for(let j=0;j<s.length;j++){const ch=s[j];if(ch==='(')d++;if(ch===')')d--;if(j>0&&d===0&&(ch==='+'||ch==='-')&&s[j-1]!=='*'){parts.push(cur);cur=ch}else cur+=ch}parts.push(cur);
+ let re=0,im=0,simp=true,hasRe=false,hasIm=false;
+ for(const p of parts){if(!p)return null;if(p.includes('i')){if(hasIm)return null;hasIm=true;
+   const q=p.replace('i','');if(q.includes('i'))return null;const u=(q===''||q==='+')?{v:1,simp:true}:q==='-'?{v:-1,simp:true}:term(q);if(!u)return null;im=u.v;simp=simp&&u.simp}
+  else{if(hasRe)return null;hasRe=true;const u=term(p);if(!u)return null;re=u.v;simp=simp&&u.simp}}
+ return{re,im,simp}}
+const eq=(u,v)=>u&&v&&Math.abs(u.re-v.re)<1e-9&&Math.abs(u.im-v.im)<1e-9;
+const rd=(k,n)=>n===1?String(k):(k===1?'':k)+'√'+n;           // k√n
+const fmt=z=>{const a=z.re,b=z.im;const bs=b===1?'i':b===-1?'−i':(b<0?'−'+(-b)+'i':b+'i');if(b===0)return String(a).replace('-','−');if(a===0)return bs;return String(a).replace('-','−')+(b<0?' − '+(bs.replace('−','')):' + '+bs)};
+/* ---------- โจทย์ ---------- */
+const sg=x=>x<0?` − ${-x}`:` + ${x}`;          // เครื่องหมายนำหน้าพจน์
+const np=x=>x<0?`(−${-x})`:`${x}`;               // ใส่วงเล็บเมื่อติดลบ
+const Z=(a,b)=>fmt({re:a,im:b});
+const nz=(g,lo,hi)=>{let v=0;while(v===0)v=g.R(lo,hi);return v};
+const EX=[
+ i=>{const g=mk(i);const a=g.R(1,9),c=g.R(1,9),b=nz(g,-7,7);let d=nz(g,-7,7);if(b+d===0)d=d+1===0?d+2:d+1;const ans={re:a+c,im:b+d};return{q:`จงหาค่าของ (${Z(a,b)}) + (${Z(c,d)})`,ans,hint:'บวกส่วนจริงกับส่วนจริง และส่วนจินตภาพกับส่วนจินตภาพ',sol:`(${Z(a,b)}) + (${Z(c,d)}) = (${a} + ${c}) + (${b} + ${np(d)})i = ${Z(ans.re,ans.im)}`.replace('= (','= (')}},
+ i=>{const g=mk(i+10);const a=g.R(1,9),c=g.R(1,9),b=nz(g,-7,7);let d=nz(g,-7,7);if(b-d===0)d=d+1===b?d+2:d+1;const ans={re:a-c,im:b-d};return{q:`จงหาค่าของ (${Z(a,b)}) − (${Z(c,d)})`,ans,hint:'ลบส่วนจริงกับส่วนจริง และลบส่วนจินตภาพกับส่วนจินตภาพ (ระวังเครื่องหมาย)',sol:`(${Z(a,b)}) − (${Z(c,d)}) = (${a} − ${c}) + (${b} − ${np(d)})i = ${Z(ans.re,ans.im)}`}},
+ i=>{const g=mk(i+20);const a=g.R(1,5),c=g.R(1,5),b=nz(g,-4,4),d=nz(g,-4,4);const ans={re:a*c-b*d,im:a*d+b*c};return{q:`จงหาค่าของ (${Z(a,b)})(${Z(c,d)})`,ans,hint:'แจกแจงให้ครบ 4 พจน์ แล้วแทน i² = −1',sol:`(${Z(a,b)})(${Z(c,d)}) = ${a*c}${sg(a*d)}i${sg(b*c)}i${sg(b*d)}i² = ${a*c}${sg(a*d+b*c)}i${sg(-b*d)} = ${Z(ans.re,ans.im)}`}},
+ i=>{const g=mk(i+30);const a=g.R(1,7),b=g.R(1,6);const ans={re:a*a+b*b,im:0};return{q:`จงหาค่าของ (${Z(a,b)})(${Z(a,-b)})`,ans,hint:'แจกแจงแล้วพจน์ที่มี i จะหักล้างกัน',sol:`(${Z(a,b)})(${Z(a,-b)}) = ${a*a} − ${a*b}i + ${a*b}i − ${b*b}i² = ${a*a} + ${b*b} = ${ans.re}`}},
+ i=>{const g=mk(i+40);const a=g.R(1,6),b=nz(g,-5,5);const ans={re:a*a-b*b,im:2*a*b};return{q:`จงหาค่าของ (${Z(a,b)})²`,ans,hint:'(a + bi)² คือ (a + bi)(a + bi) แจกแจงแล้วแทน i² = −1',sol:`(${Z(a,b)})² = (${Z(a,b)})(${Z(a,b)}) = ${a*a}${sg(a*b)}i${sg(a*b)}i${sg(b*b)}i² = ${a*a}${sg(2*a*b)}i${sg(-b*b)} = ${Z(ans.re,ans.im)}`}}
+];
+const NB=[
+ i=>{const g=mk(100+i);const a=g.R(1,9),c=g.R(1,9),b=nz(g,-7,7),d=nz(g,-7,7);return{q:`จงหาค่าของ<br>ก) (${Z(a,b)}) + (${Z(c,d)}) &nbsp; ข) (${Z(a,b)}) − (${Z(c,d)})`,sol:`ก) ${Z(a+c,b+d)} &nbsp; ข) ${Z(a-c,b-d)}`}},
+ i=>{const g=mk(100+i);const a=g.R(1,5),c=g.R(1,5),b=nz(g,-4,4),d=nz(g,-4,4);return{q:`จงหาค่าของ (${Z(a,b)})(${Z(c,d)}) (แสดงวิธีทำ แทน i² = −1)`,sol:`${a*c}${sg(a*d)}i${sg(b*c)}i${sg(b*d)}i² = <b>${Z(a*c-b*d,a*d+b*c)}</b>`}},
+ i=>{const g=mk(100+i);const a=g.R(1,7),b=g.R(1,6);return{q:`จงหาค่าของ (${Z(a,b)})(${Z(a,-b)})`,sol:`${a*a} − ${a*b}i + ${a*b}i − ${b*b}i² = ${a*a} + ${b*b} = <b>${a*a+b*b}</b>`}},
+ i=>{const g=mk(100+i);const a=g.R(1,6),b=nz(g,-5,5);return{q:`จงหาค่าของ (${Z(a,b)})²`,sol:`${a*a}${sg(2*a*b)}i${sg(-b*b)} = <b>${Z(a*a-b*b,2*a*b)}</b>`}}
+];
+const EXS=[["ตัวอย่างที่ 1 (บวก) (3 + 2i) + (1 − 5i)",[["(3 + 2i) + (1 − 5i)","(3 + 1) + (2 − 5)i"],["","4 − 3i"]]],["ตัวอย่างที่ 2 (ลบ) (5 − 2i) − (2 − 6i)",[["(5 − 2i) − (2 − 6i)","(5 − 2) + (−2 + 6)i"],["","3 + 4i"]]],["ตัวอย่างที่ 3 (คูณ) (2 + 3i)(4 − i)",[["(2 + 3i)(4 − i)","8 − 2i + 12i − 3i²"],["","8 + 10i + 3"],["","11 + 10i"]]],["ตัวอย่างที่ 4 (คูณคอนจูเกต) (3 + 2i)(3 − 2i)",[["(3 + 2i)(3 − 2i)","9 − 6i + 6i − 4i²"],["","9 + 4"],["","13"]]],["ตัวอย่างที่ 5 (กำลังสอง) (1 + i)²",[["(1 + i)²","(1 + i)(1 + i)"],["","1 + i + i + i²"],["","1 + 2i − 1"],["","2i"]]]];
+$('exs').innerHTML=EXS.map(e=>`<p style="margin:10px 0 0"><b>${e[0]}</b></p>${mxEq(e[1])}`).join('');
+function renderNB(){$('nbList').innerHTML=NB.map((f,i)=>{const o=f(i);return `<div class="nbq"><b>ข้อ ${i+1}.</b> ${o.q}${(TEACHER||CKED)?`<div class="sol on"><b>เฉลยและวิธีทำ:</b> ${o.sol}</div>`:''}</div>`}).join('')}
+function unlockNB(){if(!$('nb').classList.contains('hide'))return;renderNB();$('nb').classList.remove('hide');$('who3').textContent=ME.name;$('no3').textContent=ME.no}
+let NBDONE=false;
+let CKED=false;
+function ckUI(on){CKED=!!on;const b=$('ckBadge');if(!b)return;b.className=on?'':'muted';b.style.cssText=on?'background:#e4f6ea;border:1px solid #2e9b55;border-radius:10px;padding:6px 12px;font-weight:700;color:#1b6b3a':'';b.textContent=on?'✓ ครูตรวจสมุดแล้ว':'รอครูตรวจสมุด'}
+function teacherCk(){const b=$('ckBadge');b.outerHTML='<label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="ckBox" style="width:22px;height:22px"> ตรวจสมุดแล้ว (นักเรียนจะเห็นสถานะนี้)</label><span class="muted" id="ckSt"></span>';
+ $('ckBox').checked=!!VIEW.ck;$('ckBox').onchange=async e=>{const on=e.target.checked;$('ckSt').textContent='กำลังบันทึก…';const r=await call({action:'adminMark',token:VIEW.atoken,id:ME.id,strand:LESSON+'_CK',on:on});$('ckSt').textContent=r.ok?'✓ บันทึกแล้ว':'⚠ บันทึกไม่สำเร็จ (สิทธิ์ครูอาจหมดอายุ ให้กลับไปล็อกอินครูใหม่)';if(!r.ok)e.target.checked=!on}}
+$('btnPrint').onclick=()=>window.print();
+const DONE=new Set();
+function render(){
+ const el=$('ex');el.innerHTML='';
+ EX.forEach((f,i)=>{const p=f(i);const d=document.createElement('div');d.className='exq'+(DONE.has('Q'+(i+1))?' done':'');d.id='q'+i;
+  d.innerHTML=`<div><b>ข้อ ${i+1}.</b> ${p.q}</div><div class="row" style="margin-top:8px"><input type="text" id="a${i}" autocomplete="off" placeholder="คำตอบ"><button type="button" id="r_${i}" class="skip" title="แทรกเครื่องหมายราก">√</button><button id="b${i}">ตรวจ</button><span id="r${i}"></span></div><div class="hint muted" id="h${i}"></div><div class="sol" id="s${i}">${p.sol}</div>`;
+  el.appendChild(d);
+  if(DONE.has('Q'+(i+1))){$('r'+i).textContent='✓ ทำถูกแล้ว';$('s'+i).classList.add('on')}
+  const chk=()=>{const v=$('a'+i).value;let ok=false;
+   if(p.num!==undefined){const n=parseFloat(String(v).replace('−','-'));if(isNaN(n)){$('r'+i).textContent='พิมพ์เป็นตัวเลข';return}ok=n===p.num}
+   else{const z=cx(v);if(!z){$('r'+i).textContent='พิมพ์ในรูป a+bi เช่น 11+10i, 4-3i, 13, 2i';return}const irr=x=>Math.abs(x-Math.round(x))>1e-9;if(/\d\.\d/.test(v)&&(irr(p.ans.re)||irr(p.ans.im))){$('r'+i).textContent='ให้ตอบในรูปราก (เช่น 2√3) ไม่ใช่ทศนิยม';return}if(eq(z,p.ans)&&!z.simp){$('r'+i).textContent='ค่าถูกต้อง แต่ยังไม่ลดรูปให้อยู่ในรูปอย่างง่าย';return}ok=eq(z,p.ans)}
+   if(ok){$('r'+i).textContent='✓ ถูกต้อง';$('h'+i).textContent='';$('s'+i).classList.add('on');$('q'+i).classList.add('done');DONE.add('Q'+(i+1));persist();if(DONE.size>=EX.length)unlockNB()}
+   else{$('r'+i).textContent='✗ ยังไม่ถูก';$('h'+i).textContent='คำใบ้: '+p.hint}};
+  $('r_'+i).onclick=()=>{const inp=$('a'+i),s=inp.selectionStart??inp.value.length;inp.value=inp.value.slice(0,s)+'√'+inp.value.slice(s);inp.focus();inp.setSelectionRange(s+1,s+1)};$('b'+i).onclick=chk;$('a'+i).onkeydown=e=>{if(e.key==='Enter')chk()}});
+}
+let t=null;
+function persist(){if(TEACHER)return;clearTimeout(t);t=setTimeout(async()=>{$('saveSt').textContent='กำลังบันทึก…';const r=await call({action:'save',token:TOKEN,strand:LESSON,passed:[...DONE],failedAt:''});$('saveSt').textContent=r.ok?`✓ บันทึกแล้ว (${DONE.size}/${EX.length} ข้อ)`:'⚠ บันทึกไม่สำเร็จ'},300)}
+$('who').textContent=ME.name;$('who2').textContent=ME.name;
+(async()=>{
+ if(TEACHER){(VIEW.done||[]).forEach(x=>DONE.add(x));teacherCk();render();
+  DONE.size>=0&&(()=>{unlockNB();document.querySelectorAll('.sol').forEach(s=>s.classList.add('on'));document.querySelectorAll('.exq input,.exq button').forEach(x=>x.disabled=true)})();
+  const b=document.createElement('div');b.className='tcard nomfx';b.style.cssText='background:#fff3c4;border:2px solid #e6c34a';b.innerHTML=`<b>โหมดครู</b> · ชุดโจทย์และเฉลยของ <b>${ME.name}</b> เลขที่ ${ME.no} ห้อง ${ME.cls} · ทำในระบบถูก ${DONE.size}/${EX.length} ข้อ · ทำลงสมุด: ${NBDONE?'ติ๊กว่าเสร็จแล้ว':'ยังไม่ติ๊ก'} · <span class="muted">ไม่มีการบันทึกใด ๆ ในโหมดนี้</span>`;
+  document.querySelector('.wrap').insertBefore(b,document.querySelector('.wrap').children[1]);$('nb').querySelector('.muted').innerHTML='โจทย์ในสมุดของนักเรียนคนนี้ พร้อมเฉลยสำหรับครูตรวจ';return}
+ const r=await call({action:'me',token:TOKEN});if(r.ok&&r.progress&&r.progress[LESSON])r.progress[LESSON].passed.forEach(x=>DONE.add(x));ckUI(!!(r.ok&&r.progress&&r.progress[LESSON+'_CK']&&r.progress[LESSON+'_CK'].passed.length));render();if(DONE.size>=EX.length||CKED)unlockNB()})();
+$('btnHome').onclick=$('btnQuit').onclick=()=>{if(TEACHER){window.close();setTimeout(()=>{location.href='MathEQ.html'},200);return}location.href='MathEQ.html'};
+</script>
+</body></html>
