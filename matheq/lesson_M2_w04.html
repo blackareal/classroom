@@ -1,0 +1,372 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MathEQ — ค22102 ม.2 13 พ.ย.</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:#070b16;color:#dce8f5;font-family:'TH Sarabun New','Sarabun',system-ui,sans-serif;font-size:19px;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 14px 40px}
+h1{margin:0;font-size:26px}h2{margin:0 0 8px;font-size:22px}.sub{color:#7f93aa;font-size:15px;margin:2px 0 12px}
+.hide{display:none!important}
+.card{background:#0d1424;border:1px solid #243049;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+input,select,button{font:inherit;color:#dce8f5;background:#121a2c;border:1px solid #2a3a55;border-radius:9px;padding:8px 14px}
+input{width:100%}button{cursor:pointer}button:hover:not(:disabled){border-color:#4fa3e3}button:disabled{opacity:.5;cursor:default}
+button.pri{background:#1d5fb0;border-color:#4fa3e3;color:#fff}
+.err{color:#ff8a7a;margin-top:8px;min-height:1.3em}.muted{color:#7f93aa;font-size:16px}
+.login{max-width:420px;margin:8vh auto 0;text-align:center}.login input{text-align:center;font-size:30px;letter-spacing:8px;margin:12px 0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.demo{background:#3a2a00;color:#ffcc55;border:1px solid #7a5a00;border-radius:10px;padding:0 9px;font-size:14px;margin-left:8px}
+.deck{background:linear-gradient(#10182a,#0a0f1d);border:1px solid #243049;border-radius:14px;padding:14px}
+.lcd{font-family:'Courier New',monospace;background:#071a12;color:#4dff9a;border:1px solid #1d4a35;border-radius:6px;padding:3px 12px;font-size:24px;letter-spacing:2px;text-shadow:0 0 8px #1fd17a}.lcd small{font-size:14px;color:#2fae72;margin-left:6px}
+.eq{display:grid;grid-template-columns:repeat(9,1fr);gap:9px;align-items:end;padding:4px}
+.band{display:flex;flex-direction:column;align-items:center;min-width:0;cursor:pointer}
+.col{position:relative;display:flex;flex-direction:column-reverse;gap:3px;width:100%;max-width:64px;height:280px;padding:2px;background:#050810;border-radius:6px;border:1px solid #1a2438}
+.band:hover .col,.band.sel .col{border-color:#4fa3e3}
+.seg{flex:1;border-radius:2px;background:#111a2b;transition:background .25s}.seg.lit{box-shadow:0 0 6px currentColor}.seg.na{background:#0b101c}
+.avg{position:absolute;left:-5px;right:-5px;height:0;border-top:2px dashed #fff;opacity:.9;z-index:2}
+.lbl{margin-top:7px;font-weight:700;font-size:20px;color:#fff}.nm{font-size:14px;color:#8fa4bd;text-align:center;line-height:1.2;min-height:34px}
+.val{font-size:14px;color:#4dff9a;font-family:'Courier New',monospace;text-align:center}.val.none{color:#6b7a92}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+table.tb{width:100%;border-collapse:collapse;font-size:16px}table.tb th,table.tb td{border-bottom:1px solid #1e2a42;padding:4px 6px;text-align:center}table.tb td:first-child,table.tb th:first-child,table.tb td:nth-child(3),table.tb th:nth-child(3){text-align:left}
+table.tb th{color:#8fa4bd;position:sticky;top:0;background:#0d1424}
+.cell{display:inline-block;min-width:34px;border-radius:5px;padding:0 4px;font-family:'Courier New',monospace}
+.sc0{background:#1a2438;color:#6b7a92}.sc1{background:#5a2a20;color:#ffb09a}.sc2{background:#5a4a14;color:#ffe08a}.sc3{background:#14502f;color:#7dffb4}
+@media(max-width:700px){.eq{gap:3px}.col{height:200px}.nm{font-size:11px}}
+.tcard{background:#f3f6fb;color:#1a2233;border-radius:16px;padding:18px 20px;margin-bottom:14px;font-size:21px;line-height:1.45}
+.tcard .muted{color:#5b6b82}
+.tcard button{background:#0d47a1;color:#fff;border:0;border-radius:12px;padding:10px 18px}.tcard button.skip{background:#fff;color:#7a869a;border:1px solid #c9d6ea}
+.tcard input[type=text]{background:#fff;color:#1a2233;border:2px solid #c9d6ea;border-radius:10px;width:auto}
+.q{font-size:25px;margin:6px 0 14px}
+.ch{display:block;width:100%;text-align:left;background:#f5f8fe!important;color:#1a2233!important;border:2px solid #d3def2!important;margin:8px 0;padding:11px 14px!important}
+.ch:hover:not(:disabled){border-color:#0d47a1!important}.ch.sel{background:#e3edff!important;border-color:#0d47a1!important}.ch.ok{background:#c9efd5!important;border-color:#2e9b55!important}.ch.no{background:#ffd9d6!important;border-color:#d65a50!important}
+.tcard .row input{flex:1;min-width:140px}
+.fb{margin-top:12px;padding:10px 14px;border-radius:12px}.fb.ok{background:#e4f6ea}.fb.no{background:#fdeceb}
+.big{font-size:32px;font-weight:700;color:#0d47a1}
+.fr{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;line-height:1.1;margin:0 2px}.fr span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+table.mx{display:inline-table;border-left:2px solid #1a2233;border-right:2px solid #1a2233;border-radius:6px;margin:0 6px;vertical-align:middle;border-collapse:collapse}table.mx td{padding:1px 8px;text-align:center}
+table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px solid #aab;padding:2px 12px;text-align:center}
+.ladder{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{min-width:44px;text-align:center;padding:3px 9px;border-radius:9px;background:#e4e9f2;color:#6b7a92;font-size:16px;border:2px solid transparent}.chip.pass{background:#c9efd5;color:#12692f}.chip.fail{background:#ffd9d6;color:#a3261d}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.05;font-size:.95em}.fr i{font-style:normal;padding:0 3px}.fr i:first-child{border-bottom:1.5px solid currentColor}.eqt{border-collapse:collapse;margin:3px 0 5px 10px}.eqt td{padding:2px 2px;vertical-align:middle}.eqt .el{text-align:right;white-space:nowrap;padding-right:6px}.eqt .ee{text-align:center;width:22px}.eqt .er{text-align:left}</style><script>/* รากที่สอง: √a และ √(...) แสดงเป็นเครื่องหมายรากมีขีดบน */
+(function(){try{var st=document.createElement('style');st.textContent='.rd{white-space:nowrap}.rr{border-top:.075em solid currentColor;padding:0 .1em 0 .06em;margin-left:.02em}';(document.head||document.documentElement).appendChild(st)}catch(e){}})();
+function mxRt(s){
+ if(s.indexOf('\u221a')<0)return s;
+ s=s.replace(/\u221a\(([^()]*)\)/g,function(m,x){return '<span class="rd">\u221a<span class="rr">'+x+'</span></span>'});
+ return s.replace(/\u221a(\d+(?:\.\d+)?|[A-Za-z]+)/g,function(m,x){return '<span class="rd">\u221a<span class="rr">'+x+'</span></span>'});
+}
+/* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
+function mxFrText(s){
+ s=mxRt(s);
+ s=s.replace(/(^|[^\w\/.])([A-Za-z])\/(\d+)(?![\d\/\u00b2\u00b3])/g,function(m,p,v,d){return p+'<span class="fr"><i>'+v+'</i><i>'+d+'</i></span>'});
+ return s.replace(/(?:(\d+) )?(\d+)\/(\d+)/g,function(m,w,n,d,o,str){
+  var b=o>0?str.charAt(o-1):'',a=str.charAt(o+m.length);
+  if(/[\w\/.√)\]²³′π]/.test(b)||/[\d\/²³√]/.test(a))return m;
+  return (w?w:'')+'<span class="fr"><i>'+n+'</i><i>'+d+'</i></span>'});
+}
+/* รับ HTML string คืน HTML string (ไม่แตะข้างในแท็ก) */
+function mxFr(h){
+ return String(h).split(/(<\/?[a-zA-Z][^>]*>)/).map(function(x){return x.charAt(0)==='<'&&/^<\/?[a-zA-Z]/.test(x)?x:mxFrText(x)}).join('');
+}
+/* rows = [[ข้อความซ้าย, ข้อความขวา, ไม่แสดง =], ...] เฉพาะแถวสุดท้ายตัวหนา */
+function mxEq(rows){
+ var n=rows.length;
+ return '<table class="eqt">'+rows.map(function(r,i){return '<tr><td class="el">'+mxFr(r[0]||'')+'</td><td class="ee">'+(r[2]?'':'=')+'</td><td class="er">'+(i===n-1?'<b>'+mxFr(r[1])+'</b>':mxFr(r[1]))+'</td></tr>'}).join('')+'</table>';
+}
+function mxSplitEq(line){
+ var parts=[],depth=0,inTag=false,start=0,i,ch;
+ for(i=0;i<line.length;i++){
+  ch=line.charAt(i);
+  if(ch==='<'&&/[a-zA-Z\/]/.test(line.charAt(i+1)))inTag=true;
+  else if(ch==='>'&&inTag)inTag=false;
+  if(inTag)continue;
+  if('([{'.indexOf(ch)>=0)depth++;
+  else if(')]}'.indexOf(ch)>=0)depth--;
+  else if(depth===0&&ch==='='&&line.charAt(i-1)===' '&&line.charAt(i+1)===' '){parts.push(line.slice(start,i-1));start=i+2}
+ }
+ parts.push(line.slice(start));
+ return parts;
+}
+function mxTagsOk(s){
+ var o=(s.match(/<[a-zA-Z][^>]*>/g)||[]).length,c=(s.match(/<\/[a-zA-Z]+>/g)||[]).length;
+ return o===c;
+}
+function mxPlain(s){return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&')}
+function mxCommaFree(pt){
+ var d=0,j,c;
+ for(j=0;j<pt.length;j++){c=pt.charAt(j);if('([{'.indexOf(c)>=0)d++;else if(')]}'.indexOf(c)>=0)d--;else if(d===0&&c===',')return false}
+ return true;
+}
+/* ตรวจชิ้นส่วนของสายสมการ: แต่ละชิ้นต้องไม่ว่าง แท็กครบคู่ ไม่มีจุลภาคระดับนอก และชิ้นกลางไม่ใช่ "ประโยคใหม่" ติดมา */
+function mxPartsOk(p){
+ for(var i=0;i<p.length;i++){
+  var pt=mxPlain(p[i]).trim();
+  if(!pt||!mxTagsOk(p[i])||!mxCommaFree(pt))return false;
+  if(i>0&&i<p.length-1&&/[\w)\]²³′″]\s+[A-Za-zα-ωπ][A-Za-z0-9α-ωπ′″]*(\([^()]*\))?$/.test(pt))return false;
+ }
+ return true;
+}
+function mxChainTable(p){
+ return '<table class="eqt">'+p.map(function(x,i){return '<tr><td class="el"></td><td class="ee">'+(i===0?'':'=')+'</td><td class="er">'+x.trim()+'</td></tr>'}).join('')+'</table>';
+}
+function mxRowsTable(rows){
+ return '<table class="eqt">'+rows.map(function(r){return '<tr><td class="el">'+r[0].trim()+'</td><td class="ee">=</td><td class="er">'+r[1].trim()+'</td></tr>'}).join('')+'</table>';
+}
+/* segs = รายการ "ประโยคสมการ" ที่แยกกันด้วย → หรือ · (ตัวคั่นแบบเว้นกว้าง) */
+function mxStmts(segs,allowChain){
+ var allOne=true,allChain=true,parsed=[],i,p;
+ for(i=0;i<segs.length;i++){
+  p=mxSplitEq(segs[i]);
+  if(!mxPartsOk(p))return null;
+  parsed.push(p);
+  if(p.length!==2)allOne=false;
+  if(p.length<3)allChain=false;
+ }
+ if(allOne)return mxRowsTable(parsed);
+ if(allowChain&&allChain)return parsed.map(mxChainTable).join('');
+ return null;
+}
+/* คืน HTML ตาราง ถ้าบรรทัดนี้เป็นสายสมการล้วน ไม่งั้นคืน null */
+var MX_SEP=/(?:&nbsp;| ){2,}·(?:&nbsp;| ){2,}/;
+function mxThaiLhsOnly(segs){
+ for(var i=0;i<segs.length;i++){
+  var p=mxSplitEq(segs[i]);
+  for(var j=1;j<p.length;j++)if(/[\u0e00-\u0e7f]/.test(mxPlain(p[j])))return false;
+ }
+ return true;
+}
+function mxThaiN(x){var m=mxPlain(x).match(/[\u0e00-\u0e7f]/g);return m?m.length:0}
+/* สายขั้นตอนที่คั่นด้วย → มีคำไทยสั้น ๆ ปนได้: ขั้นที่มี = ครั้งเดียวเรียงเป็นแถวให้ = ตรงกัน ขั้นอื่นเป็นแถวข้อความ */
+function mxArrowRows(line){
+ var steps=line.split(/\s+\u2192\s+/),rows=[],eq=0,i,j,p,t;
+ if(steps.length<2)return null;
+ for(i=0;i<steps.length;i++){
+  if(!mxTagsOk(steps[i]))return null;
+  p=mxSplitEq(steps[i]);
+  if(p.length===2){
+   if(!mxCommaFree(mxPlain(p[0]))||mxThaiN(p[0])>12||mxThaiN(p[1])>12||!mxPlain(p[0]).trim()||!mxPlain(p[1]).trim())return null;
+   if(/[\w)\]]\s+[A-Za-z]\w*$/.test(mxPlain(p[0]).trim())&&/[0-9]\s+[A-Za-z]/.test(mxPlain(p[0])))return null;
+   rows.push('<tr><td class="el">'+p[0].trim()+'</td><td class="ee">=</td><td class="er">'+p[1].trim()+'</td></tr>');eq++;
+  }else if(p.length===1){
+   t=mxPlain(steps[i]).trim();
+   if(!t||t.length>34)return null;
+   rows.push('<tr><td colspan="3" style="text-align:left">'+steps[i].trim()+'</td></tr>');
+  }else return null;
+ }
+ if(eq<2)return null;
+ return '<table class="eqt">'+rows.join('')+'</table>';
+}
+function mxChain(line){
+ line=line.replace(/<\/?(?:b|strong)>/gi,'');
+ var t=mxPlain(line),thai=/[\u0e00-\u0e7f]/.test(t);
+ if(/[\u21d2\u21d4\u2194;]/.test(t))return null;
+ if(t.indexOf(' = ')<0)return null;
+ var segs=line.split(MX_SEP);
+ if(segs.length>1){
+  for(var k=0;k<segs.length;k++)if(/\s\u2192\s/.test(mxPlain(segs[k])))return null;
+  if(thai&&!mxThaiLhsOnly(segs))return null;
+  return mxStmts(segs,true);
+ }
+ if(/\s\u2192\s/.test(t)){
+  var as=line.split(/\s+\u2192\s+/);
+  if(!thai||mxThaiLhsOnly(as)){var r=mxStmts(as,false);if(r)return r}
+  return mxArrowRows(line);
+ }
+ var p=mxSplitEq(line);
+ if(thai&&!mxThaiLhsOnly([line]))return null;
+ if(p.length<3||!mxPartsOk(p))return null;
+ return mxChainTable(p);
+}
+var MX_BLOCK='table,p,li,div,ul,ol,details,h1,h2,h3';
+var MX_SKIP='button,.ch,#ans,#q,input,textarea,.eqt,svg,script,style,.nomfx';
+function mxFix(root){
+ var els=root.querySelectorAll('p,li,div.sol,.fb,details>div,.mfx'),k;
+ for(k=0;k<els.length;k++){
+  var el=els[k];
+  if(el.closest(MX_SKIP)||el.querySelector(MX_BLOCK))continue;
+  var html=el.innerHTML;
+  if(html.indexOf(' = ')<0)continue;
+  var lines=html.split(/<br\s*\/?>/i),out=[],raw=[],changed=false;
+  for(var i=0;i<lines.length;i++){
+   var tb=mxChain(lines[i]);
+   if(tb){if(raw.length){out.push(raw.join('<br>'));raw=[]}out.push(tb);changed=true}
+   else raw.push(lines[i]);
+  }
+  if(!changed)continue;
+  if(raw.length)out.push(raw.join('<br>'));
+  el.innerHTML=out.join('');
+ }
+ /* เศษส่วนบน-ล่าง ในข้อความทุกที่ (ยกเว้น svg/script/style/ช่องกรอก) */
+ var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),nodes=[],n;
+ while((n=w.nextNode())){
+  if(!/\d\/\d|\u221a/.test(n.nodeValue))continue;
+  var pe=n.parentNode;
+  if(!pe||(pe.closest&&pe.closest('svg,script,style,textarea,.fr,.nomfx,#saveSt,#rDesc,#rTitle,#gProg,#stepName,#rSub')))continue;
+  nodes.push(n);
+ }
+ nodes.forEach(function(nd){
+  var t=nd.nodeValue.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  var h=mxFrText(t);
+  if(h===t)return;
+  var sp=document.createElement('span');sp.innerHTML=h;
+  var frag=document.createDocumentFragment();
+  while(sp.firstChild)frag.appendChild(sp.firstChild);
+  nd.parentNode.replaceChild(frag,nd);
+ });
+}
+(function(){
+ var timer=null,obs=null;
+ function run(){try{mxFix(document.body)}catch(e){if(window.console)console.error('mxFix',e)}if(obs)obs.takeRecords()}
+ function sched(){clearTimeout(timer);timer=setTimeout(run,30)}
+ function start(){
+  run();
+  if(window.MutationObserver){obs=new MutationObserver(sched);obs.observe(document.body,{childList:true,subtree:true,characterData:true})}
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script></head><body><div class="wrap">
+ <div class="row" style="margin-bottom:10px"><button id="btnQuit">← กลับ MathEQ</button><span class="muted">ค22102 ม.2 · 13 พ.ย. 2569</span></div>
+ <div class="tcard" style="background:#0d47a1;color:#fff"><div style="font-size:30px;font-weight:700">ตารางแจกแจงความถี่และฮิสโทแกรม</div><div style="opacity:.9">ค22102 คณิตศาสตร์พื้นฐาน 4 · ม.2/1 · 13 พ.ย. 2569 · <span id="who"></span></div></div>
+
+ <div class="tcard"><h3 class="sec">ทบทวน</h3>
+  <p>ค่ากลางที่เรียนแล้ว: <b>ค่าเฉลี่ย</b> (ผลรวม ÷ จำนวนข้อมูล) · <b>มัธยฐาน</b> (ตัวกลางของข้อมูลที่เรียงแล้ว) · <b>ฐานนิยม</b> (ค่าที่ซ้ำมากที่สุด)</p>
+  <p style="background:#fff3c4;border-radius:10px;padding:8px 12px"><b>วันนี้</b> เมื่อข้อมูลมีจำนวนมาก การดูทีละตัวทำให้เห็นภาพรวมยาก เราจึง <u>จัดข้อมูลเป็นกลุ่ม</u> แล้วนับว่าแต่ละกลุ่มมีกี่ตัว เรียกว่า "ตารางแจกแจงความถี่" และนำไปเขียนเป็น "ฮิสโทแกรม"</p>
+ </div>
+
+ <div class="tcard"><h3 class="sec">ใบความรู้</h3>
+  <p><b>อันตรภาคชั้น</b> คือช่วงของข้อมูลแต่ละกลุ่ม เช่น คะแนน 0–9, 10–19, 20–29, 30–39 (ชั้นละ 10 คะแนน แต่ละชั้นไม่ซ้อนกัน)</p>
+  <p><b>ความถี่</b> คือจำนวนข้อมูลที่อยู่ในชั้นนั้น · <b>ผลรวมของความถี่ทุกชั้น = จำนวนข้อมูลทั้งหมด</b></p>
+  <p><b>วิธีนับ</b> อ่านข้อมูลทีละตัว แล้วขีดรอยนับ (|) ลงในชั้นที่ข้อมูลตัวนั้นอยู่ จากนั้นนับรอยของแต่ละชั้น</p>
+  <p><b>ฮิสโทแกรม</b> คือแผนภูมิแท่งที่ติดกัน · แกนนอนเป็นอันตรภาคชั้น · แกนตั้งเป็นความถี่ · <u>ความสูงของแท่ง = ความถี่</u> ของชั้นนั้น</p>
+  <p style="text-align:center;margin:6px 0"><svg viewBox="0 0 360 200" style="max-width:420px;width:100%;background:#fff;border:1px solid #cfd8dc;border-radius:8px"><line x1="34" x2="350" y1="170.0" y2="170.0" stroke="#e0e0e0"/><text x="28" y="174.0" font-size="11" text-anchor="end">0</text><line x1="34" x2="350" y1="131.0" y2="131.0" stroke="#e0e0e0"/><text x="28" y="135.0" font-size="11" text-anchor="end">2</text><line x1="34" x2="350" y1="92.0" y2="92.0" stroke="#e0e0e0"/><text x="28" y="96.0" font-size="11" text-anchor="end">4</text><line x1="34" x2="350" y1="53.0" y2="53.0" stroke="#e0e0e0"/><text x="28" y="57.0" font-size="11" text-anchor="end">6</text><line x1="34" x2="350" y1="14.0" y2="14.0" stroke="#e0e0e0"/><text x="28" y="18.0" font-size="11" text-anchor="end">8</text><rect x="34.0" y="131.0" width="79.0" height="39.0" fill="#64b5f6" stroke="#0d47a1"/><text x="73.5" y="184" font-size="11" text-anchor="middle">0–9</text><text x="73.5" y="127.0" font-size="11" text-anchor="middle" fill="#0d47a1">2</text><rect x="113.0" y="72.5" width="79.0" height="97.5" fill="#64b5f6" stroke="#0d47a1"/><text x="152.5" y="184" font-size="11" text-anchor="middle">10–19</text><text x="152.5" y="68.5" font-size="11" text-anchor="middle" fill="#0d47a1">5</text><rect x="192.0" y="14.0" width="79.0" height="156.0" fill="#64b5f6" stroke="#0d47a1"/><text x="231.5" y="184" font-size="11" text-anchor="middle">20–29</text><text x="231.5" y="10.0" font-size="11" text-anchor="middle" fill="#0d47a1">8</text><rect x="271.0" y="72.5" width="79.0" height="97.5" fill="#64b5f6" stroke="#0d47a1"/><text x="310.5" y="184" font-size="11" text-anchor="middle">30–39</text><text x="310.5" y="68.5" font-size="11" text-anchor="middle" fill="#0d47a1">5</text><line x1="34" x2="34" y1="14" y2="170" stroke="#333"/><line x1="34" x2="350" y1="170" y2="170" stroke="#333"/><text x="197.0" y="198" font-size="11" text-anchor="middle">คะแนน</text></svg></p>
+  <p><b>การอ่านฮิสโทแกรม</b> แท่งที่สูงที่สุดคือชั้นที่มีข้อมูลมากที่สุด · รวมความสูงของทุกแท่งได้จำนวนข้อมูลทั้งหมด · "ตั้งแต่ ... ขึ้นไป" ให้นำความถี่ของหลายแท่งมาบวกกัน</p>
+ </div>
+
+ <div class="tcard"><h3 class="sec">ตัวอย่าง</h3>
+  <div class="muted">ดูทีละขั้น และให้เครื่องหมาย = อยู่ตรงกันทุกบรรทัด</div><div id="exs"></div>
+ </div>
+
+ <div class="tcard"><h3 class="sec">แบบฝึกหัด</h3>
+  <div class="muted" style="margin-bottom:8px">โจทย์ชุดนี้ตัวเลขเฉพาะของ <b id="who2"></b> เปิดกี่ครั้งก็ได้ชุดเดิม · ตอบเป็นตัวเลข เช่น 12, 7.5 · ตอบถูกแล้วระบบบันทึกให้อัตโนมัติ</div>
+  <div id="ex"></div>
+  <div class="muted" id="saveSt" style="margin-top:6px"></div>
+ </div>
+
+ <div class="tcard hide" id="nb"><h3 class="sec">แบบฝึกหัดลงสมุด</h3>
+  <div class="muted" style="margin-bottom:8px">โจทย์รายบุคคลของ <b id="who3"></b> เลขที่ <span id="no3"></span> · ทำลงสมุดในคาบ เขียนวิธีทำทุกขั้นตอน · ครูจะตรวจสมุดแล้วกดยืนยัน คุณจะเห็นสถานะด้านล่าง</div>
+  <div id="nbList"></div>
+  <div class="row" style="margin-top:10px"><span class="muted" id="ckBadge">รอครูตรวจสมุด</span></div>
+  <div class="row" style="margin-top:8px"><button class="skip" id="btnPrint">พิมพ์ / บันทึกเป็น PDF</button></div>
+ </div>
+ <div class="row"><button class="pri" id="btnHome">กลับ MathEQ</button></div>
+</div>
+<style>.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.05;font-size:.95em}.fr i{font-style:normal;padding:0 3px}.fr i:first-child{border-bottom:1.5px solid currentColor}.eqt{border-collapse:collapse;margin:4px 0 6px 10px}.eqt td{padding:2px 2px;vertical-align:middle}.eqt .el{text-align:right;white-space:nowrap;padding-right:6px}.eqt .ee{text-align:center;width:22px}.eqt .er{text-align:left}.sec{margin:0 0 6px;color:#0d47a1;font-size:26px}.exq{margin:12px 0;padding:10px 12px;border:1px solid #d3def2;border-radius:12px;background:#fff}.exq.done{background:#e4f6ea;border-color:#2e9b55}.exq .row input{width:200px;flex:none}.hint{margin-top:6px}.sol{display:none;margin-top:8px;background:#f1f8f6;border-radius:10px;padding:8px 12px}.sol.on{display:block}.nbq{margin:10px 0;padding:8px 12px;border-left:4px solid #0d47a1;background:#fff;border-radius:6px}@media print{button,.row input,#btnQuit,.sol{display:none!important}body{background:#fff}.tcard{box-shadow:none}}</style><script>
+const LESSON="LS_M2W04";
+const PAPER=false; /* ม.2 (9 พ.ย.): ให้เห็นโจทย์ลงสมุดในระบบเลย ไม่พิมพ์กระดาษ · เฉพาะ ม.1 ใช้ true */
+let API_URL="";try{API_URL=sessionStorage.getItem("matheq_api")||""}catch(e){}
+const DEMO=!API_URL;
+const TEACHER=new URLSearchParams(location.search).get('teacher')==='1';
+let TOKEN=null,ME=null,VIEW=null;
+try{if(TEACHER){VIEW=JSON.parse(sessionStorage.getItem("matheq_admin_view")||"null");if(VIEW){ME=VIEW.student;TOKEN='teacher'}}else{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token;ME=s&&s.student}}catch(e){}
+if(!TOKEN||!ME){location.replace("MathEQ.html")}
+const $=id=>document.getElementById(id);
+const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
+let MEM={};
+function demoDB(){try{return JSON.parse(localStorage.getItem('idpDemo')||'{}')}catch(e){return MEM}}
+function demoSave(d){MEM=d;try{localStorage.setItem('idpDemo',JSON.stringify(d))}catch(e){}}
+function demoAvg(cls){const d=demoDB(),s={},n={};Object.keys(DEMO_ROSTER).forEach(id=>{if(DEMO_ROSTER[id].cls!==cls||!d[id])return;for(const k in d[id]){s[k]=(s[k]||0)+d[id][k].passed.length;n[k]=(n[k]||0)+1}});const o={};for(const k in s)o[k]={avg:Math.round(s[k]/n[k]*10)/10,n:n[k]};return o}
+async function api(body){
+ if(!DEMO){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return await r.json()}
+ const d=demoDB();
+ if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347 / 12348)'};
+  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='save'){d[body.token]=d[body.token]||{};{const o=d[body.token][body.strand],m=o?o.passed.slice():[];body.passed.forEach(x=>{if(m.indexOf(x)<0)m.push(x)});let fl=(body.failedAt?String(body.failedAt).split(','):[]).filter(x=>m.indexOf(x)<0);if(!fl.length&&o&&o.failedAt&&body.failedAt&&body.strand!=='GCX')fl=String(o.failedAt).split(',').filter(x=>m.indexOf(x)<0);d[body.token][body.strand]={passed:m,failedAt:fl.join(','),updated:new Date().toISOString()}}demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
+ if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
+ if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
+ if(body.action==='adminMark'){d[body.id]=d[body.id]||{};if(body.on)d[body.id][body.strand]={passed:['CK'],failedAt:'',updated:new Date().toISOString()};else delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+ if(body.action==='adminReset'){if(d[body.id])delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+}
+async function call(body,errEl){try{const r=await api(body);if(!r.ok&&errEl)errEl.textContent=r.error||'เกิดข้อผิดพลาด';return r}catch(e){if(errEl)errEl.textContent='เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง';return{ok:false}}}
+
+
+function hashStr(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return(h^=h>>>16)>>>0}}
+function rngFor(key){const seed=hashStr(key)();let a=seed;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function mk(i){const r=rngFor(ME.id+'|'+LESSON+'|'+i);return{R:(a,b)=>a+Math.floor(r()*(b-a+1)),pick:arr=>arr[Math.floor(r()*arr.length)]}}
+const numIn=s=>{s=String(s).trim().replace(/−|–/g,'-').replace(/,/g,'').replace(/[๐-๙]/g,c=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(c)).replace(/\s+/g,'');if(!s)return NaN;const m=s.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);if(m)return +m[1]/+m[2];return /^-?\d+(\.\d+)?$/.test(s)?+s:NaN};
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+const lcm=(a,b)=>a/gcd(a,b)*b;
+const fs=(n,d)=>{const g=gcd(n,d);n/=g;d/=g;return d===1?`${n}`:`${n}/${d}`};
+const mixed=(n,d)=>{const g=gcd(n,d);n/=g;d/=g;if(d===1)return`${n}`;const w=Math.floor(n/d),r=n%d;return w?`${w} ${r}/${d}`:`${r}/${d}`};
+const pn=x=>x<0?`(−${-x})`:`${x}`;
+const r2=x=>Math.round(x*100)/100;
+const mn=x=>String(x).replace(/-/g,'−');
+const shuf=(g,arr)=>{const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=g.R(0,i);[a[i],a[j]]=[a[j],a[i]]}return a};
+const sortA=a=>a.slice().sort((x,y)=>x-y);
+const L=a=>a.join(', ');
+const PL=a=>a.join(' + ');
+const sum=a=>a.reduce((p,q)=>p+q,0);
+/* ค่าเฉลี่ยเป็นจำนวนเต็ม: สุ่ม n-1 ค่า แล้วปรับตัวสุดท้าย */
+function meanSet(g,n){for(;;){const m=g.R(6,18);const a=[];for(let i=0;i<n-1;i++)a.push(g.R(2,26));const last=m*n-sum(a);if(last>=1&&last<=30){a.push(last);return{a:shuf(g,a),m}}}}
+function distinct(g,n,lo,hi){const s=new Set();while(s.size<n)s.add(g.R(lo,hi));return shuf(g,[...s])}
+function modeSet(g,n){for(;;){const top=g.R(3,20),k=g.R(3,4);const a=[];for(let i=0;i<k;i++)a.push(top);const used=new Set([top]);while(a.length<n){const v=g.R(2,22);if(used.has(v))continue;used.add(v);a.push(v);if(a.length<n&&g.R(0,2)===0&&v!==top){a.push(v);}}
+ if(a.length!==n)continue;const c={};a.forEach(x=>c[x]=(c[x]||0)+1);const mx=Math.max(...Object.values(c));if(Object.values(c).filter(x=>x===mx).length===1)return{a:shuf(g,a),mode:+Object.keys(c).find(k=>c[k]===mx),c}}}
+const freqTxt=c=>Object.keys(c).map(Number).sort((x,y)=>x-y).map(k=>k+' ซ้ำ '+c[k]+' ครั้ง').join(' · ');
+/* ฮิสโทแกรม SVG */
+function hist(labels,fr){const W=360,H=200,l=34,b=30,t=14,r=10;const top=Math.max(2,Math.ceil(Math.max(...fr)/2)*2);const bw=(W-l-r)/fr.length;
+ let o=`<svg viewBox="0 0 ${W} ${H}" style="max-width:420px;width:100%;background:#fff;border:1px solid #cfd8dc;border-radius:8px">`;
+ for(let k=0;k<=top;k+=2){const y=H-b-(H-b-t)*k/top;o+=`<line x1="${l}" x2="${W-r}" y1="${y}" y2="${y}" stroke="#e0e0e0"/><text x="${l-6}" y="${y+4}" font-size="11" text-anchor="end">${k}</text>`}
+ fr.forEach((v,i)=>{const x=l+i*bw,h=(H-b-t)*v/top;o+=`<rect x="${x}" y="${H-b-h}" width="${bw}" height="${h}" fill="#64b5f6" stroke="#0d47a1"/><text x="${x+bw/2}" y="${H-b+14}" font-size="11" text-anchor="middle">${labels[i]}</text><text x="${x+bw/2}" y="${H-b-h-4}" font-size="11" text-anchor="middle" fill="#0d47a1">${v}</text>`});
+ return o+`<line x1="${l}" x2="${l}" y1="${t}" y2="${H-b}" stroke="#333"/><line x1="${l}" x2="${W-r}" y1="${H-b}" y2="${H-b}" stroke="#333"/><text x="${(W+l)/2}" y="${H-2}" font-size="11" text-anchor="middle">คะแนน</text></svg>`}
+/* ตารางความถี่สุ่ม: n ชั้น ชั้นละ 10 คะแนน */
+function freqSet(g,n){const base=g.R(0,4)*10;const labels=[];for(let i=0;i<n;i++)labels.push((base+i*10)+'–'+(base+i*10+9));const fr=[];for(let i=0;i<n;i++)fr.push(g.R(1,9));return{base,labels,fr,total:sum(fr)}}
+const freqLines=o=>o.labels.map((x,i)=>`ชั้น ${x} มี ${o.fr[i]} คน`).join(' · ');
+/* ข้อมูลดิบ: ทุกชั้นมีข้อมูลตามความถี่ที่กำหนด */
+function rawSet(g,n,lo,hi){const base=g.R(0,3)*10;const labels=[],fr=[],vals=[];for(let i=0;i<n;i++){labels.push((base+i*10)+'–'+(base+i*10+9));const f=g.R(lo,hi);fr.push(f);for(let k=0;k<f;k++)vals.push(base+i*10+g.R(0,9))}
+ return{base,labels,fr,vals:shuf(g,vals)}}
+const EX0=[
+ i=>{const g=mk(1000);const o=freqSet(g,4);return{q:`ตารางแจกแจงความถี่คะแนนสอบ: ${freqLines(o)} · มีนักเรียนสอบทั้งหมดกี่คน`,num:o.total,hint:'ผลรวมของความถี่ทุกชั้น = จำนวนข้อมูลทั้งหมด',sol:`${o.fr.join(' + ')} = <b>${o.total}</b> คน`}},
+ i=>{const g=mk(1010);const o=freqSet(g,4);const k=g.R(0,3);return{q:`จากฮิสโทแกรมคะแนนสอบ ชั้น ${o.labels[k]} มีนักเรียนกี่คน<div style="margin:6px 0">${hist(o.labels,o.fr)}</div>`,num:o.fr[k],hint:'ความสูงของแท่ง = ความถี่ ดูตัวเลขที่แท่งชั้นนั้น',sol:`แท่งชั้น ${o.labels[k]} สูง ${o.fr[k]} จึงมีนักเรียน <b>${o.fr[k]}</b> คน`}},
+ i=>{const g=mk(1020);const o=freqSet(g,4);const k=g.R(1,2);const ans=sum(o.fr.slice(k));return{q:`จากฮิสโทแกรมคะแนนสอบ มีนักเรียนที่ได้คะแนนตั้งแต่ ${o.base+k*10} คะแนนขึ้นไปกี่คน<div style="margin:6px 0">${hist(o.labels,o.fr)}</div>`,num:ans,hint:`นำความถี่ของชั้น ${o.labels[k]} และชั้นที่สูงกว่าทุกชั้นมาบวกกัน`,sol:`ชั้นที่ตั้งแต่ ${o.base+k*10} ขึ้นไป: ${o.labels.slice(k).join(', ')}<br>${o.fr.slice(k).join(' + ')} = <b>${ans}</b> คน`}},
+ i=>{const g=mk(1030);const o=rawSet(g,3,3,5);const k=g.R(0,2);const cnt=o.fr[k];return{q:`ข้อมูลคะแนนของนักเรียน ${o.vals.length} คน: ${L(o.vals)} · ในชั้น ${o.labels[k]} มีข้อมูลกี่ตัว`,num:cnt,hint:`อ่านข้อมูลทีละตัว นับเฉพาะตัวที่อยู่ระหว่าง ${o.labels[k].replace('–',' ถึง ')}`,sol:`ข้อมูลที่อยู่ในชั้น ${o.labels[k]}: ${L(sortA(o.vals.filter(x=>x>=o.base+k*10&&x<=o.base+k*10+9)))}<br>มีทั้งหมด <b>${cnt}</b> ตัว`}}
+];
+const EXIDS=[1,2,3,4];const EX=EXIDS.map(k=>()=>EX0[k-1](k-1));
+const NB=[
+ i=>{const g=mk(1101);const o=freqSet(g,5);const mx=Math.max(...o.fr);const mi=o.fr.indexOf(mx);return{q:`ตารางแจกแจงความถี่คะแนนสอบ: ${freqLines(o)}<br>ก) วาดฮิสโทแกรมจากตารางนี้ (แกนนอนเป็นชั้น แกนตั้งเป็นความถี่) &nbsp; ข) ชั้นใดมีความถี่สูงสุด &nbsp; ค) มีนักเรียนทั้งหมดกี่คน`,sol:`ก) ความสูงของแท่งตามลำดับ: ${o.fr.join(', ')}<div style="margin:6px 0">${hist(o.labels,o.fr)}</div>ข) ชั้น <b>${o.labels[mi]}</b> (${mx} คน) &nbsp; ค) ${o.fr.join(' + ')} = <b>${o.total}</b> คน`}},
+ i=>{const g=mk(1102);const o=rawSet(g,3,4,6);return{q:`ข้อมูลคะแนนของนักเรียน ${o.vals.length} คน: ${L(o.vals)}<br>จงสร้างตารางแจกแจงความถี่โดยใช้ชั้น ${o.labels.join(', ')} แล้วหาว่าชั้นใดมีความถี่สูงสุด`,sol:o.labels.map((x,k)=>`ชั้น ${x}: ${L(sortA(o.vals.filter(v=>v>=o.base+k*10&&v<=o.base+k*10+9)))} → <b>${o.fr[k]}</b> ตัว`).join('<br>')+`<br>รวม ${o.fr.join(' + ')} = ${sum(o.fr)} ตัว · ชั้นที่ความถี่สูงสุดคือ <b>${o.labels[o.fr.indexOf(Math.max(...o.fr))]}</b>`}},
+ i=>{const g=mk(1103);const o=freqSet(g,4);const k=g.R(1,2);return{q:`จากฮิสโทแกรมคะแนนสอบ<div style="margin:6px 0">${hist(o.labels,o.fr)}</div>ก) มีนักเรียนทั้งหมดกี่คน &nbsp; ข) ได้คะแนนตั้งแต่ ${o.base+k*10} คะแนนขึ้นไปกี่คน`,sol:`ก) ${o.fr.join(' + ')} = <b>${o.total}</b> คน &nbsp; ข) ${o.fr.slice(k).join(' + ')} = <b>${sum(o.fr.slice(k))}</b> คน`}}
+];
+function renderNB(){
+ if(PAPER&&!TEACHER&&!CKED){$('nbList').innerHTML='<div class="nbq" style="border-left-color:#e6a100;background:#fff8e1">โจทย์ลงสมุด 5 ข้อ ครูแจกเป็นกระดาษให้แล้ว ให้ทำลงสมุดในคาบ (ไม่ต้องใช้โทรศัพท์) เขียนวิธีทำทุกขั้นตอนและให้เครื่องหมาย = ตรงกัน<br><span class="muted">เมื่อครูตรวจสมุดแล้ว โจทย์ เฉลย และวิธีทำของคุณจะแสดงที่นี่</span></div>';return}
+ $('nbList').innerHTML=NB.map((f,i)=>{const o=f(i);return `<div class="nbq"><b>ข้อ ${i+1}.</b> ${mxFr(o.q)}${(TEACHER||CKED)?`<div class="sol on"><b>เฉลยและวิธีทำ:</b>${o.eq?mxEq(o.eq):o.sol}</div>`:''}</div>`}).join('')}
+function unlockNB(){if(!$('nb').classList.contains('hide'))return;renderNB();$('nb').classList.remove('hide');$('who3').textContent=ME.name;$('no3').textContent=ME.no}
+let NBDONE=false;
+let CKED=false;
+function ckUI(on){CKED=!!on;const b=$('ckBadge');if(!b)return;b.className=on?'':'muted';b.style.cssText=on?'background:#e4f6ea;border:1px solid #2e9b55;border-radius:10px;padding:6px 12px;font-weight:700;color:#1b6b3a':'';b.textContent=on?'✓ ครูตรวจสมุดแล้ว':'รอครูตรวจสมุด'}
+function teacherCk(){const b=$('ckBadge');b.outerHTML='<label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="ckBox" style="width:22px;height:22px"> ตรวจสมุดแล้ว (นักเรียนจะเห็นสถานะนี้)</label><span class="muted" id="ckSt"></span>';
+ $('ckBox').checked=!!VIEW.ck;$('ckBox').onchange=async e=>{const on=e.target.checked;$('ckSt').textContent='กำลังบันทึก…';const r=await call({action:'adminMark',token:VIEW.atoken,id:ME.id,strand:LESSON+'_CK',on:on});$('ckSt').textContent=r.ok?'✓ บันทึกแล้ว':'⚠ บันทึกไม่สำเร็จ (สิทธิ์ครูอาจหมดอายุ ให้กลับไปล็อกอินครูใหม่)';if(!r.ok)e.target.checked=!on}}
+$('btnPrint').onclick=()=>window.print();
+const EXS=[['ตัวอย่างที่ 1 นับข้อมูลคะแนน 12 คน: 4, 13, 22, 17, 8, 25, 19, 11, 27, 14, 6, 21 ใส่ชั้นละ 10 คะแนน',[['ชั้น 0–9 มี 4, 8, 6','3 คน'],['ชั้น 10–19 มี 13, 17, 19, 11, 14','5 คน'],['ชั้น 20–29 มี 22, 25, 27, 21','4 คน'],['จำนวนนักเรียนทั้งหมด','3 + 5 + 4'],['','12 คน']]],['ตัวอย่างที่ 2 อ่านฮิสโทแกรมในใบความรู้ (ความถี่ 2, 5, 8, 5)',[['จำนวนนักเรียนทั้งหมด','2 + 5 + 8 + 5'],['','20 คน'],['ชั้นที่ความถี่สูงสุด','20–29 (8 คน)'],['ตั้งแต่ 20 คะแนนขึ้นไป','8 + 5'],['','13 คน']]],['ตัวอย่างที่ 3 วิธีวาดฮิสโทแกรม (ลงสมุด)',[['ขั้นที่ 1','ขีดแกนนอนเป็นชั้น แกนตั้งเป็นความถี่',1],['ขั้นที่ 2','เลือกขีดแกนตั้งให้ครอบคลุมความถี่สูงสุด',1],['ขั้นที่ 3','วาดแท่งติดกัน สูงเท่าความถี่ของชั้นนั้น',1],['ขั้นที่ 4','เขียนตัวเลขความถี่ไว้บนแท่ง',1]]]];
+
+$('exs').innerHTML=EXS.map(e=>`<p style="margin:10px 0 0"><b>${e[0]}</b></p>${mxEq(e[1])}`).join('');
+
+const DONE=new Set();
+function render(){
+ const el=$('ex');el.innerHTML='';
+ EX.forEach((f,i)=>{const p=f(i);const d=document.createElement('div');d.className='exq'+(DONE.has('Q'+EXIDS[i])?' done':'');d.id='q'+i;
+  d.innerHTML=`<div><b>ข้อ ${i+1}.</b> ${mxFr(p.q)}</div><div class="row" style="margin-top:8px"><input type="text" id="a${i}" autocomplete="off" inputmode="text" placeholder="คำตอบ"><button id="b${i}">ตรวจ</button><span id="r${i}"></span></div><div class="hint muted" id="h${i}"></div><div class="sol" id="s${i}">${mxFr(p.sol)}</div>`;
+  el.appendChild(d);
+  if(DONE.has('Q'+EXIDS[i])){$('r'+i).textContent='✓ ทำถูกแล้ว';$('s'+i).classList.add('on')}
+  const chk=()=>{const n=numIn($('a'+i).value);if(isNaN(n)){$('r'+i).textContent='พิมพ์เป็นตัวเลข เช่น 12, −5, 7/12, 3.5';return}
+   if(Math.abs(n-p.num)<1e-6){$('r'+i).textContent='✓ ถูกต้อง';$('h'+i).textContent='';$('s'+i).classList.add('on');$('q'+i).classList.add('done');DONE.add('Q'+EXIDS[i]);persist();if(EXIDS.every(k=>DONE.has('Q'+k)))unlockNB()}
+   else{$('r'+i).textContent='✗ ยังไม่ถูก';$('h'+i).textContent='คำใบ้: '+p.hint}};
+  $('b'+i).onclick=chk;$('a'+i).onkeydown=e=>{if(e.key==='Enter')chk()}});
+}
+let t=null;
+function persist(){if(TEACHER)return;clearTimeout(t);t=setTimeout(async()=>{$('saveSt').textContent='กำลังบันทึก…';const r=await call({action:'save',token:TOKEN,strand:LESSON,passed:[...DONE],failedAt:''});$('saveSt').textContent=r.ok?`✓ บันทึกแล้ว (${EXIDS.filter(k=>DONE.has('Q'+k)).length}/${EX.length} ข้อ)`:'⚠ บันทึกไม่สำเร็จ'},300)}
+$('who').textContent=ME.name;$('who2').textContent=ME.name;
+(async()=>{
+ if(TEACHER){(VIEW.done||[]).forEach(x=>DONE.add(x));teacherCk();render();
+  DONE.size>=0&&(()=>{unlockNB();document.querySelectorAll('.sol').forEach(s=>s.classList.add('on'));document.querySelectorAll('.exq input,.exq button').forEach(x=>x.disabled=true)})();
+  const b=document.createElement('div');b.className='tcard nomfx';b.style.cssText='background:#fff3c4;border:2px solid #e6c34a';b.innerHTML=`<b>โหมดครู</b> · ชุดโจทย์และเฉลยของ <b>${ME.name}</b> เลขที่ ${ME.no} ห้อง ${ME.cls} · ทำในระบบถูก ${DONE.size}/${EX.length} ข้อ · ทำลงสมุด: ${NBDONE?'ติ๊กว่าเสร็จแล้ว':'ยังไม่ติ๊ก'} · <span class="muted">ไม่มีการบันทึกใด ๆ ในโหมดนี้</span>`;
+  document.querySelector('.wrap').insertBefore(b,document.querySelector('.wrap').children[1]);$('nb').querySelector('.muted').innerHTML='โจทย์ในสมุดของนักเรียนคนนี้ พร้อมเฉลยสำหรับครูตรวจ';return}
+ const r=await call({action:'me',token:TOKEN});if(r.ok&&r.progress&&r.progress[LESSON])r.progress[LESSON].passed.forEach(x=>DONE.add(x));ckUI(!!(r.ok&&r.progress&&r.progress[LESSON+'_CK']&&r.progress[LESSON+'_CK'].passed.length));render();if(EXIDS.every(k=>DONE.has('Q'+k))||CKED)unlockNB()})();
+$('btnHome').onclick=$('btnQuit').onclick=()=>{if(TEACHER){window.close();setTimeout(()=>{location.href='MathEQ.html'},200);return}location.href='MathEQ.html'};
+</script>
+</body></html>
