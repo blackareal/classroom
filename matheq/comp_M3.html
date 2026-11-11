@@ -1,0 +1,443 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MathEQ — ซ้อมอัจฉริยภาพ ม.3</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:#070b16;color:#dce8f5;font-family:'TH Sarabun New','Sarabun',system-ui,sans-serif;font-size:19px;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 14px 40px}
+h1{margin:0;font-size:26px}h2{margin:0 0 8px;font-size:22px}.sub{color:#7f93aa;font-size:15px;margin:2px 0 12px}
+.hide{display:none!important}
+.card{background:#0d1424;border:1px solid #243049;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+input,select,button{font:inherit;color:#dce8f5;background:#121a2c;border:1px solid #2a3a55;border-radius:9px;padding:8px 14px}
+input{width:100%}button{cursor:pointer}button:hover:not(:disabled){border-color:#4fa3e3}button:disabled{opacity:.5;cursor:default}
+button.pri{background:#1d5fb0;border-color:#4fa3e3;color:#fff}
+.err{color:#ff8a7a;margin-top:8px;min-height:1.3em}.muted{color:#7f93aa;font-size:16px}
+.login{max-width:420px;margin:8vh auto 0;text-align:center}.login input{text-align:center;font-size:30px;letter-spacing:8px;margin:12px 0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.demo{background:#3a2a00;color:#ffcc55;border:1px solid #7a5a00;border-radius:10px;padding:0 9px;font-size:14px;margin-left:8px}
+.deck{background:linear-gradient(#10182a,#0a0f1d);border:1px solid #243049;border-radius:14px;padding:14px}
+.lcd{font-family:'Courier New',monospace;background:#071a12;color:#4dff9a;border:1px solid #1d4a35;border-radius:6px;padding:3px 12px;font-size:24px;letter-spacing:2px;text-shadow:0 0 8px #1fd17a}.lcd small{font-size:14px;color:#2fae72;margin-left:6px}
+.eq{display:grid;grid-template-columns:repeat(9,1fr);gap:9px;align-items:end;padding:4px}
+.band{display:flex;flex-direction:column;align-items:center;min-width:0;cursor:pointer}
+.col{position:relative;display:flex;flex-direction:column-reverse;gap:3px;width:100%;max-width:64px;height:280px;padding:2px;background:#050810;border-radius:6px;border:1px solid #1a2438}
+.band:hover .col,.band.sel .col{border-color:#4fa3e3}
+.seg{flex:1;border-radius:2px;background:#111a2b;transition:background .25s}.seg.lit{box-shadow:0 0 6px currentColor}.seg.na{background:#0b101c}
+.avg{position:absolute;left:-5px;right:-5px;height:0;border-top:2px dashed #fff;opacity:.9;z-index:2}
+.lbl{margin-top:7px;font-weight:700;font-size:20px;color:#fff}.nm{font-size:14px;color:#8fa4bd;text-align:center;line-height:1.2;min-height:34px}
+.val{font-size:14px;color:#4dff9a;font-family:'Courier New',monospace;text-align:center}.val.none{color:#6b7a92}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+table.tb{width:100%;border-collapse:collapse;font-size:16px}table.tb th,table.tb td{border-bottom:1px solid #1e2a42;padding:4px 6px;text-align:center}table.tb td:first-child,table.tb th:first-child,table.tb td:nth-child(3),table.tb th:nth-child(3){text-align:left}
+table.tb th{color:#8fa4bd;position:sticky;top:0;background:#0d1424}
+.cell{display:inline-block;min-width:34px;border-radius:5px;padding:0 4px;font-family:'Courier New',monospace}
+.sc0{background:#1a2438;color:#6b7a92}.sc1{background:#5a2a20;color:#ffb09a}.sc2{background:#5a4a14;color:#ffe08a}.sc3{background:#14502f;color:#7dffb4}
+@media(max-width:700px){.eq{gap:3px}.col{height:200px}.nm{font-size:11px}}
+.tcard{background:#f3f6fb;color:#1a2233;border-radius:16px;padding:18px 20px;margin-bottom:14px;font-size:21px;line-height:1.45}
+.tcard .muted{color:#5b6b82}
+.tcard button{background:#0d47a1;color:#fff;border:0;border-radius:12px;padding:10px 18px}.tcard button.skip{background:#fff;color:#7a869a;border:1px solid #c9d6ea}
+.tcard input[type=text]{background:#fff;color:#1a2233;border:2px solid #c9d6ea;border-radius:10px;width:auto}
+.q{font-size:25px;margin:6px 0 14px}
+.ch{display:block;width:100%;text-align:left;background:#f5f8fe!important;color:#1a2233!important;border:2px solid #d3def2!important;margin:8px 0;padding:11px 14px!important}
+.ch:hover:not(:disabled){border-color:#0d47a1!important}.ch.sel{background:#e3edff!important;border-color:#0d47a1!important}.ch.ok{background:#c9efd5!important;border-color:#2e9b55!important}.ch.no{background:#ffd9d6!important;border-color:#d65a50!important}
+.tcard .row input{flex:1;min-width:140px}
+.fb{margin-top:12px;padding:10px 14px;border-radius:12px}.fb.ok{background:#e4f6ea}.fb.no{background:#fdeceb}
+.big{font-size:32px;font-weight:700;color:#0d47a1}
+.fr{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;line-height:1.1;margin:0 2px}.fr span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+table.mx{display:inline-table;border-left:2px solid #1a2233;border-right:2px solid #1a2233;border-radius:6px;margin:0 6px;vertical-align:middle;border-collapse:collapse}table.mx td{padding:1px 8px;text-align:center}
+table.t{border-collapse:collapse;margin:6px 0}table.t td,table.t th{border:1px solid #aab;padding:2px 12px;text-align:center}
+.ladder{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{min-width:44px;text-align:center;padding:3px 9px;border-radius:9px;background:#e4e9f2;color:#6b7a92;font-size:16px;border:2px solid transparent}.chip.pass{background:#c9efd5;color:#12692f}.chip.fail{background:#ffd9d6;color:#a3261d}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.05;font-size:.95em}.fr i{font-style:normal;padding:0 3px}.fr i:first-child{border-bottom:1.5px solid currentColor}.eqt{border-collapse:collapse;margin:3px 0 5px 10px}.eqt td{padding:2px 2px;vertical-align:middle}.eqt .el{text-align:right;white-space:nowrap;padding-right:6px}.eqt .ee{text-align:center;width:22px}.eqt .er{text-align:left}</style><script>/* รากที่สอง: √a และ √(...) แสดงเป็นเครื่องหมายรากมีขีดบน */
+(function(){try{var st=document.createElement('style');st.textContent='.rd{white-space:nowrap}.rr{border-top:.075em solid currentColor;padding:0 .1em 0 .06em;margin-left:.02em}';(document.head||document.documentElement).appendChild(st)}catch(e){}})();
+function mxRt(s){
+ if(s.indexOf('\u221a')<0)return s;
+ s=s.replace(/\u221a\(([^()]*)\)/g,function(m,x){return '<span class="rd">\u221a<span class="rr">'+x+'</span></span>'});
+ return s.replace(/\u221a(\d+(?:\.\d+)?|[A-Za-z]+)/g,function(m,x){return '<span class="rd">\u221a<span class="rr">'+x+'</span></span>'});
+}
+/* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
+function mxFrText(s){
+ s=mxRt(s);
+ s=s.replace(/(^|[^\w\/.])([A-Za-z])\/(\d+)(?![\d\/\u00b2\u00b3])/g,function(m,p,v,d){return p+'<span class="fr"><i>'+v+'</i><i>'+d+'</i></span>'});
+ return s.replace(/(?:(\d+) )?(\d+)\/(\d+)/g,function(m,w,n,d,o,str){
+  var b=o>0?str.charAt(o-1):'',a=str.charAt(o+m.length);
+  if(/[\w\/.√)\]²³′π]/.test(b)||/[\d\/²³√]/.test(a))return m;
+  return (w?w:'')+'<span class="fr"><i>'+n+'</i><i>'+d+'</i></span>'});
+}
+/* รับ HTML string คืน HTML string (ไม่แตะข้างในแท็ก) */
+function mxFr(h){
+ return String(h).split(/(<\/?[a-zA-Z][^>]*>)/).map(function(x){return x.charAt(0)==='<'&&/^<\/?[a-zA-Z]/.test(x)?x:mxFrText(x)}).join('');
+}
+/* rows = [[ข้อความซ้าย, ข้อความขวา, ไม่แสดง =], ...] เฉพาะแถวสุดท้ายตัวหนา */
+function mxEq(rows){
+ var n=rows.length;
+ return '<table class="eqt">'+rows.map(function(r,i){return '<tr><td class="el">'+mxFr(r[0]||'')+'</td><td class="ee">'+(r[2]?'':'=')+'</td><td class="er">'+(i===n-1?'<b>'+mxFr(r[1])+'</b>':mxFr(r[1]))+'</td></tr>'}).join('')+'</table>';
+}
+function mxSplitEq(line){
+ var parts=[],depth=0,inTag=false,start=0,i,ch;
+ for(i=0;i<line.length;i++){
+  ch=line.charAt(i);
+  if(ch==='<'&&/[a-zA-Z\/]/.test(line.charAt(i+1)))inTag=true;
+  else if(ch==='>'&&inTag)inTag=false;
+  if(inTag)continue;
+  if('([{'.indexOf(ch)>=0)depth++;
+  else if(')]}'.indexOf(ch)>=0)depth--;
+  else if(depth===0&&ch==='='&&line.charAt(i-1)===' '&&line.charAt(i+1)===' '){parts.push(line.slice(start,i-1));start=i+2}
+ }
+ parts.push(line.slice(start));
+ return parts;
+}
+function mxTagsOk(s){
+ var o=(s.match(/<[a-zA-Z][^>]*>/g)||[]).length,c=(s.match(/<\/[a-zA-Z]+>/g)||[]).length;
+ return o===c;
+}
+function mxPlain(s){return s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&')}
+function mxCommaFree(pt){
+ var d=0,j,c;
+ for(j=0;j<pt.length;j++){c=pt.charAt(j);if('([{'.indexOf(c)>=0)d++;else if(')]}'.indexOf(c)>=0)d--;else if(d===0&&c===',')return false}
+ return true;
+}
+/* ตรวจชิ้นส่วนของสายสมการ: แต่ละชิ้นต้องไม่ว่าง แท็กครบคู่ ไม่มีจุลภาคระดับนอก และชิ้นกลางไม่ใช่ "ประโยคใหม่" ติดมา */
+function mxPartsOk(p){
+ for(var i=0;i<p.length;i++){
+  var pt=mxPlain(p[i]).trim();
+  if(!pt||!mxTagsOk(p[i])||!mxCommaFree(pt))return false;
+  if(i>0&&i<p.length-1&&/[\w)\]²³′″]\s+[A-Za-zα-ωπ][A-Za-z0-9α-ωπ′″]*(\([^()]*\))?$/.test(pt))return false;
+ }
+ return true;
+}
+function mxChainTable(p){
+ return '<table class="eqt">'+p.map(function(x,i){return '<tr><td class="el"></td><td class="ee">'+(i===0?'':'=')+'</td><td class="er">'+x.trim()+'</td></tr>'}).join('')+'</table>';
+}
+function mxRowsTable(rows){
+ return '<table class="eqt">'+rows.map(function(r){return '<tr><td class="el">'+r[0].trim()+'</td><td class="ee">=</td><td class="er">'+r[1].trim()+'</td></tr>'}).join('')+'</table>';
+}
+/* segs = รายการ "ประโยคสมการ" ที่แยกกันด้วย → หรือ · (ตัวคั่นแบบเว้นกว้าง) */
+function mxStmts(segs,allowChain){
+ var allOne=true,allChain=true,parsed=[],i,p;
+ for(i=0;i<segs.length;i++){
+  p=mxSplitEq(segs[i]);
+  if(!mxPartsOk(p))return null;
+  parsed.push(p);
+  if(p.length!==2)allOne=false;
+  if(p.length<3)allChain=false;
+ }
+ if(allOne)return mxRowsTable(parsed);
+ if(allowChain&&allChain)return parsed.map(mxChainTable).join('');
+ return null;
+}
+/* คืน HTML ตาราง ถ้าบรรทัดนี้เป็นสายสมการล้วน ไม่งั้นคืน null */
+var MX_SEP=/(?:&nbsp;| ){2,}·(?:&nbsp;| ){2,}/;
+function mxThaiLhsOnly(segs){
+ for(var i=0;i<segs.length;i++){
+  var p=mxSplitEq(segs[i]);
+  for(var j=1;j<p.length;j++)if(/[\u0e00-\u0e7f]/.test(mxPlain(p[j])))return false;
+ }
+ return true;
+}
+function mxThaiN(x){var m=mxPlain(x).match(/[\u0e00-\u0e7f]/g);return m?m.length:0}
+/* สายขั้นตอนที่คั่นด้วย → มีคำไทยสั้น ๆ ปนได้: ขั้นที่มี = ครั้งเดียวเรียงเป็นแถวให้ = ตรงกัน ขั้นอื่นเป็นแถวข้อความ */
+function mxArrowRows(line){
+ var steps=line.split(/\s+\u2192\s+/),rows=[],eq=0,i,j,p,t;
+ if(steps.length<2)return null;
+ for(i=0;i<steps.length;i++){
+  if(!mxTagsOk(steps[i]))return null;
+  p=mxSplitEq(steps[i]);
+  if(p.length===2){
+   if(!mxCommaFree(mxPlain(p[0]))||mxThaiN(p[0])>12||mxThaiN(p[1])>12||!mxPlain(p[0]).trim()||!mxPlain(p[1]).trim())return null;
+   if(/[\w)\]]\s+[A-Za-z]\w*$/.test(mxPlain(p[0]).trim())&&/[0-9]\s+[A-Za-z]/.test(mxPlain(p[0])))return null;
+   rows.push('<tr><td class="el">'+p[0].trim()+'</td><td class="ee">=</td><td class="er">'+p[1].trim()+'</td></tr>');eq++;
+  }else if(p.length===1){
+   t=mxPlain(steps[i]).trim();
+   if(!t||t.length>34)return null;
+   rows.push('<tr><td colspan="3" style="text-align:left">'+steps[i].trim()+'</td></tr>');
+  }else return null;
+ }
+ if(eq<2)return null;
+ return '<table class="eqt">'+rows.join('')+'</table>';
+}
+function mxChain(line){
+ line=line.replace(/<\/?(?:b|strong)>/gi,'');
+ var t=mxPlain(line),thai=/[\u0e00-\u0e7f]/.test(t);
+ if(/[\u21d2\u21d4\u2194;]/.test(t))return null;
+ if(t.indexOf(' = ')<0)return null;
+ var segs=line.split(MX_SEP);
+ if(segs.length>1){
+  for(var k=0;k<segs.length;k++)if(/\s\u2192\s/.test(mxPlain(segs[k])))return null;
+  if(thai&&!mxThaiLhsOnly(segs))return null;
+  return mxStmts(segs,true);
+ }
+ if(/\s\u2192\s/.test(t)){
+  var as=line.split(/\s+\u2192\s+/);
+  if(!thai||mxThaiLhsOnly(as)){var r=mxStmts(as,false);if(r)return r}
+  return mxArrowRows(line);
+ }
+ var p=mxSplitEq(line);
+ if(thai&&!mxThaiLhsOnly([line]))return null;
+ if(p.length<3||!mxPartsOk(p))return null;
+ return mxChainTable(p);
+}
+var MX_BLOCK='table,p,li,div,ul,ol,details,h1,h2,h3';
+var MX_SKIP='button,.ch,#ans,#q,input,textarea,.eqt,svg,script,style,.nomfx';
+function mxFix(root){
+ var els=root.querySelectorAll('p,li,div.sol,.fb,details>div,.mfx'),k;
+ for(k=0;k<els.length;k++){
+  var el=els[k];
+  if(el.closest(MX_SKIP)||el.querySelector(MX_BLOCK))continue;
+  var html=el.innerHTML;
+  if(html.indexOf(' = ')<0)continue;
+  var lines=html.split(/<br\s*\/?>/i),out=[],raw=[],changed=false;
+  for(var i=0;i<lines.length;i++){
+   var tb=mxChain(lines[i]);
+   if(tb){if(raw.length){out.push(raw.join('<br>'));raw=[]}out.push(tb);changed=true}
+   else raw.push(lines[i]);
+  }
+  if(!changed)continue;
+  if(raw.length)out.push(raw.join('<br>'));
+  el.innerHTML=out.join('');
+ }
+ /* เศษส่วนบน-ล่าง ในข้อความทุกที่ (ยกเว้น svg/script/style/ช่องกรอก) */
+ var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),nodes=[],n;
+ while((n=w.nextNode())){
+  if(!/\d\/\d|\u221a/.test(n.nodeValue))continue;
+  var pe=n.parentNode;
+  if(!pe||(pe.closest&&pe.closest('svg,script,style,textarea,.fr,.nomfx,#saveSt,#rDesc,#rTitle,#gProg,#stepName,#rSub')))continue;
+  nodes.push(n);
+ }
+ nodes.forEach(function(nd){
+  var t=nd.nodeValue.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  var h=mxFrText(t);
+  if(h===t)return;
+  var sp=document.createElement('span');sp.innerHTML=h;
+  var frag=document.createDocumentFragment();
+  while(sp.firstChild)frag.appendChild(sp.firstChild);
+  nd.parentNode.replaceChild(frag,nd);
+ });
+}
+(function(){
+ var timer=null,obs=null;
+ function run(){try{mxFix(document.body)}catch(e){if(window.console)console.error('mxFix',e)}if(obs)obs.takeRecords()}
+ function sched(){clearTimeout(timer);timer=setTimeout(run,30)}
+ function start(){
+  run();
+  if(window.MutationObserver){obs=new MutationObserver(sched);obs.observe(document.body,{childList:true,subtree:true,characterData:true})}
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script></head><body><div class="wrap">
+ <div class="row" style="margin-bottom:10px"><button id="btnQuit">← กลับ MathEQ</button><span class="muted">ซ้อมอัจฉริยภาพ · <span id="who"></span></span></div>
+ <div class="tcard" style="background:#4a148c;color:#fff"><div style="font-size:30px;font-weight:700">ซ้อมแข่งอัจฉริยภาพทางคณิตศาสตร์ ม.ต้น</div><div style="opacity:.9">ข้อสอบจริง 120 นาที 100 คะแนน: ตอน 1 เลือกตอบ 10 ข้อ · ตอน 2 คิดเลขเร็ว/คิดคำนวณ 20 ข้อ · ตอน 3 โจทย์ปัญหา 10 ข้อ · ห้ามใช้เครื่องคิดเลข ใช้กระดาษทดและเขียนวิธีคิด</div></div>
+
+ <div class="tcard"><h3 class="sec">เลือกโหมดฝึก</h3>
+  <div class="row" style="gap:10px;flex-wrap:wrap">
+   <button class="pri" id="mD2">ตอน 2 · ฝึกคิดเลขเร็ว (10 ข้อ)</button>
+   <button class="pri" id="mD3">ตอน 3 · ฝึกโจทย์ปัญหา (5 ข้อ)</button>
+  </div>
+  <div class="row" style="gap:10px;flex-wrap:wrap;margin-top:10px"><span class="muted" style="align-self:center">ข้อสอบจำลองเต็มชุด (120 นาที):</span><button id="mM1">ชุดที่ 1</button><button id="mM2">ชุดที่ 2</button><button id="mM3">ชุดที่ 3</button><button id="mM4">ชุดที่ 4</button></div>
+  <div class="muted" id="stat" style="margin-top:10px"></div>
+ </div>
+ <div class="tcard nomfx" id="play"></div>
+</div>
+<style>.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.05;font-size:.95em}.fr i{font-style:normal;padding:0 3px}.fr i:first-child{border-bottom:1.5px solid currentColor}.sec{margin:0 0 6px;color:#4a148c;font-size:26px}.bq{font-size:30px;margin:14px 0;line-height:1.35}.bin{font-size:26px!important;width:200px!important}.mq{margin:12px 0;padding:10px 12px;border:1px solid #d9c8ea;border-radius:12px;background:#fff}.mq .ql{font-size:22px;line-height:1.4}.mq input[type=text]{width:180px;font-size:20px}.opt{display:block;margin:4px 0;font-size:20px}.timer{position:sticky;top:0;z-index:5;background:#4a148c;color:#fff;border-radius:10px;padding:6px 12px;font-weight:700;font-size:22px;display:inline-block}.rv.ok{background:#e4f6ea;border-color:#2e9b55}.rv.no{background:#fdecec;border-color:#d46}.sol2{margin-top:6px;color:#4a148c;font-size:18px}</style>
+<script>
+/* คลังโจทย์ซ้อมอัจฉริยภาพทางคณิตศาสตร์ ม.ต้น (ใช้ร่วมกันระหว่างหน้าเว็บ comp_M3.html และสคริปต์พิมพ์ข้อสอบจำลอง)
+   ตอน 2 = F (คิดเลขเร็ว/คิดคำนวณ)  ตอน 3 = P (โจทย์ปัญหา)  ตอน 1 = MC (เลือกตอบ ดัดแปลงจาก F/P ที่คำตอบเป็นจำนวนเต็ม)
+   ทุกข้อ: gen(g) คืน {q, ans, sol, [ansT], [int]} · g = {R(a,b), pick(arr), r()} */
+(function(root){
+const mn=x=>String(x).replace(/-/g,'−');
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+const lcm=(a,b)=>a/gcd(a,b)*b;
+const nzr=(g,a,b)=>{let v=0;while(v===0)v=g.R(a,b);return v};
+const sg=n=>n<0?` − ${-n}`:` + ${n}`;
+const dec=x=>String(Math.round(x*1000)/1000);
+const sup=(b,n)=>`${b}<sup>${n}</sup>`;
+const pw=(b,n)=>{let v=1;for(let i=0;i<n;i++)v*=b;return v};
+const F=[
+ ['คูณลัดด้วย 99',g=>{const a=g.R(12,49);return{q:`99 × ${a}`,ans:99*a,sol:`99 × ${a} = 100 × ${a} − ${a} = ${100*a} − ${a} = ${99*a}`}}],
+ ['ผลต่างกำลังสอง',g=>{const m=g.pick([20,30,40,50,60,70,80,90]),d=g.R(1,9);return{q:`${m-d} × ${m+d}`,ans:m*m-d*d,sol:`(${m} − ${d})(${m} + ${d}) = ${m}² − ${d}² = ${m*m} − ${d*d} = ${m*m-d*d}`}}],
+ ['ยกกำลังสองเลขลงท้าย 5',g=>{const t=g.R(2,9),n=t*10+5;return{q:`${n}²`,ans:n*n,sol:`${n}² = ${t} × ${t+1} แล้วต่อด้วย 25 = ${n*n}`}}],
+ ['ยกกำลังสองใกล้ 100',g=>{const a=g.pick([97,98,99,101,102,103]),d=Math.abs(a-100);return{q:`${a}²`,ans:a*a,sol:`${a}² = (100 ${a<100?'−':'+'} ${d})² = 10000 ${a<100?'−':'+'} ${200*d} + ${d*d} = ${a*a}`}}],
+ ['ลำดับการคำนวณ',g=>{const a=g.R(30,90),b=g.R(2,9),c=g.R(2,9),d=g.R(2,9),e=g.R(2,9);const ans=a-b*c+d;return{q:`${a} − ${b} × ${c} + ${d*e} ÷ ${e}`,ans,sol:`${a} − ${b*c} + ${d} = ${mn(ans)}`}}],
+ ['เศษส่วนคูณผลรวม',g=>{const d1=g.pick([2,3,4,6]),d2=g.pick([3,4,6,8,12]);const a=g.R(1,d1-1),b=g.R(1,d2-1),L=lcm(d1,d2);const ans=a*L/d1+b*L/d2;return{q:`(${a}/${d1} + ${b}/${d2}) × ${L}`,ans,sol:`${a}/${d1} × ${L} + ${b}/${d2} × ${L} = ${a*L/d1} + ${b*L/d2} = ${ans}`}}],
+ ['ทศนิยมคูณ',g=>{const k=g.R(5,40),m=g.R(5,40);return{q:`0.25 × ${4*k} + 0.5 × ${2*m}`,ans:k+m,sol:`0.25 × ${4*k} = ${k}, 0.5 × ${2*m} = ${m}, รวม ${k+m}`}}],
+ ['ร้อยละ',g=>{const base=g.pick([120,160,200,240,320,400,500,600]),p=g.pick([5,10,15,20,25,30,35,40,45,60,75]);return{q:`${p}% ของ ${base}`,ans:base*p/100,sol:`${base} × ${p}/100 = ${base*p/100}`}}],
+ ['เลขยกกำลังคูณหาร',g=>{const a=g.R(2,5),b=g.R(2,5),c=g.R(1,a+b-1);return{q:`${sup(2,a)} × ${sup(2,b)} ÷ ${sup(2,c)}`,ans:pw(2,a+b-c),sol:`2<sup>${a}+${b}−${c}</sup> = 2<sup>${a+b-c}</sup> = ${pw(2,a+b-c)}`}}],
+ ['ยกกำลังบวกลบ',g=>{const a=g.R(2,3),n=g.pick([3,5]),b=g.R(2,4),m=g.pick([4,6]),c=g.R(2,3);const ans=pw(-a,n)+pw(b,2)*1-pw(c,m)/1;return{q:`(−${a})<sup>${n}</sup> + ${b}<sup>2</sup> − ${c}<sup>${m}</sup>`,ans,sol:`${mn(pw(-a,n))} + ${b*b} − ${pw(c,m)} = ${mn(ans)}`}}],
+ ['รากที่สอง',g=>{const s1=g.R(6,20),s2=g.R(5,15),s3=g.R(3,12);return{q:`√${s1*s1} + √${s2*s2} − √${s3*s3}`,ans:s1+s2-s3,sol:`${s1} + ${s2} − ${s3} = ${s1+s2-s3}`}}],
+ ['ค.ร.น.',g=>{const [a,b]=g.pick([[12,18],[15,20],[8,12],[14,21],[18,24],[16,20],[24,36],[30,45],[21,35],[28,42]]);return{q:`ค.ร.น. ของ ${a} และ ${b}`,ans:lcm(a,b),sol:`ห.ร.ม. = ${gcd(a,b)} ค.ร.น. = ${a} × ${b} ÷ ${gcd(a,b)} = ${lcm(a,b)}`}}],
+ ['ห.ร.ม.',g=>{const k=g.pick([6,7,8,9,12,14,15]);let p,q;do{p=g.R(3,9);q=g.R(3,9)}while(p===q||gcd(p,q)!==1);return{q:`ห.ร.ม. ของ ${k*p} และ ${k*q}`,ans:k,sol:`${k*p} = ${k} × ${p}, ${k*q} = ${k} × ${q} (${p} กับ ${q} ไม่มีตัวหารร่วม) ห.ร.ม. = ${k}`}}],
+ ['x² − y² จากผลบวกและผลต่าง',g=>{const s=g.R(8,30),d=g.R(2,9);return{q:`ถ้า x + y = ${s} และ x − y = ${d} แล้ว x² − y² เท่ากับเท่าใด`,ans:s*d,sol:`x² − y² = (x + y)(x − y) = ${s} × ${d} = ${s*d}`}}],
+ ['a² + b² จาก a + b และ ab',g=>{const s=g.R(5,12),p=g.R(2,20);return{q:`ถ้า a + b = ${s} และ ab = ${p} แล้ว a² + b² เท่ากับเท่าใด`,ans:s*s-2*p,sol:`a² + b² = (a + b)² − 2ab = ${s*s} − ${2*p} = ${s*s-2*p}`}}],
+ ['ผลบวกเลขเรียง',g=>{const n=g.R(10,60);if(g.R(0,1))return{q:`1 + 2 + 3 + ... + ${n}`,ans:n*(n+1)/2,sol:`n(n + 1)/2 = ${n} × ${n+1} ÷ 2 = ${n*(n+1)/2}`};return{q:`2 + 4 + 6 + ... + ${2*n}`,ans:n*(n+1),sol:`= 2(1 + 2 + ... + ${n}) = ${n} × ${n+1} = ${n*(n+1)}`}}],
+ ['เปลี่ยนหน่วย',g=>{const a=g.R(2,19)/2;return{q:`${a} กิโลเมตร เท่ากับกี่เมตร`,ans:a*1000,sol:`${a} × 1000 = ${a*1000}`}}],
+ ['แบ่งตามอัตราส่วน',g=>{const r1=g.R(2,7),r2=g.R(r1+1,9),k=g.R(3,15),t=(r1+r2)*k;return{q:`แบ่งเงิน ${t} บาท ให้ A : B = ${r1} : ${r2} B จะได้กี่บาท`,ans:r2*k,sol:`ส่วนละ ${t} ÷ ${r1+r2} = ${k} บาท B ได้ ${r2} × ${k} = ${r2*k} บาท`}}],
+ ['ค่าเฉลี่ย',g=>{const m=g.R(10,40),d=[g.R(-6,6),g.R(-6,6),g.R(-6,6),g.R(-6,6)];d.push(-(d[0]+d[1]+d[2]+d[3]));const xs=d.map(x=>m+x);return{q:`ค่าเฉลี่ยของ ${xs.join(', ')} เท่ากับเท่าใด`,ans:m,sol:`ผลบวก = ${xs.reduce((a,b)=>a+b,0)} หารด้วย 5 = ${m}`}}],
+ ['แจกแจงเลข',g=>{const a=g.R(11,19),b=g.R(21,79);return{q:`${a} × ${b} + ${a} × ${100-b}`,ans:a*100,sol:`${a} × (${b} + ${100-b}) = ${a} × 100 = ${a*100}`}}],
+ ['แก้สมการเชิงเส้น',g=>{const x=g.R(2,15),a=g.R(2,6),b=g.R(a+1,9),d=g.R(1,20),c=(b-a)*x+d;return{q:`ถ้า ${a}x + ${c} = ${b}x + ${d} แล้ว x เท่ากับเท่าใด`,ans:x,sol:`${c} − ${d} = ${b}x − ${a}x → ${c-d} = ${b-a}x → x = ${x}`}}],
+ ['เศษส่วนหารกัน',g=>{let a,b,c,d,k;do{d=g.R(2,9);c=g.R(1,5);k=g.R(2,9);a=k*c;b=d;const t=gcd(a,b);a/=t;b/=t}while(b===1||(c===d));return{q:`(${a}/${b}) ÷ (${c}/${d})`,ans:k,sol:`${a}/${b} × ${d}/${c} = ${k}`}}],
+ ['จำนวนเต็มลบ',g=>{const a=g.R(2,9),b=g.R(2,9),c=g.R(2,9),d=g.R(2,9);return{q:`(−${a})(−${b}) + (−${c*d}) ÷ ${d}`,ans:a*b-c,sol:`${a*b} + (−${c}) = ${a*b-c}`}}],
+ ['ทศนิยมหารทศนิยม',g=>{const y=g.pick([0.02,0.04,0.05,0.2,0.25,0.5,0.08]),k=g.R(12,90);const x=Math.round(y*k*1000)/1000;return{q:`${dec(x)} ÷ ${dec(y)}`,ans:k,sol:`${dec(x)} ÷ ${dec(y)} = ${k}`}}],
+ ['เศษส่วนของเศษส่วนของจำนวน',g=>{const a=g.R(2,5),b=g.R(2,6),k=g.R(2,12);return{q:`(1/${a}) ของ (1/${b}) ของ ${a*b*k}`,ans:k,sol:`${a*b*k} ÷ ${b} = ${a*k} ; ${a*k} ÷ ${a} = ${k}`}}],
+ ['มุมของสามเหลี่ยม',g=>{const a=g.R(30,80),b=g.R(30,140-a);return{q:`สามเหลี่ยมรูปหนึ่งมีมุมสองมุมเป็น ${a}° และ ${b}° มุมที่สามมีขนาดกี่องศา`,ans:180-a-b,sol:`180 − ${a} − ${b} = ${180-a-b}`}}],
+ ['พีทาโกรัส',g=>{const [a,b,c]=g.pick([[3,4,5],[5,12,13],[8,15,17],[7,24,25],[20,21,29],[9,40,41]]);const k=(a>=20?1:g.R(1,3));if(g.R(0,1))return{q:`สามเหลี่ยมมุมฉากมีด้านประกอบมุมฉากยาว ${a*k} และ ${b*k} หน่วย ด้านตรงข้ามมุมฉากยาวกี่หน่วย`,ans:c*k,sol:`(${a*k})² + (${b*k})² = ${a*a*k*k+b*b*k*k} = (${c*k})² ดังนั้นยาว ${c*k}`};return{q:`สามเหลี่ยมมุมฉากมีด้านตรงข้ามมุมฉากยาว ${c*k} หน่วย และด้านประกอบมุมฉากหนึ่งด้านยาว ${a*k} หน่วย อีกด้านยาวกี่หน่วย`,ans:b*k,sol:`(${c*k})² − (${a*k})² = ${c*c*k*k-a*a*k*k} = (${b*k})² ดังนั้นยาว ${b*k}`}}],
+ ['พื้นที่วงกลม',g=>{const r=g.pick([7,14,21,28]);return{q:`วงกลมรัศมี ${r} หน่วย มีพื้นที่เท่าใด (ใช้ π = 22/7)`,ans:22*r*r/7,sol:`22/7 × ${r} × ${r} = ${22*r*r/7}`}}],
+ ['กำลังสองสมบูรณ์เชิงตัวเลข',g=>{const s=g.pick([50,60,70,80,100]),b=g.R(1,9),a=s-b;return{q:`${a}² + 2 × ${a} × ${b} + ${b}²`,ans:s*s,sol:`(${a} + ${b})² = ${s}² = ${s*s}`}}]
+];
+const P=[
+ ['อายุพ่อลูก',g=>{let s,k,m,n;do{s=g.R(5,14);k=g.R(4,7);m=g.R(2,k-1);n=s*(k-m)/(m-1)}while(!Number.isInteger(n)||n<1||n>20);return{q:`ปัจจุบันพ่ออายุเป็น ${k} เท่าของลูก อีก ${n} ปีข้างหน้าพ่อจะมีอายุเป็น ${m} เท่าของลูก ปัจจุบันพ่ออายุกี่ปี`,ans:k*s,sol:`ให้ลูกอายุ x ปี พ่ออายุ ${k}x ปี · ${k}x + ${n} = ${m}(x + ${n}) · ${k-m}x = ${n*(m-1)} · x = ${s} · พ่ออายุ ${k} × ${s} = ${k*s} ปี`}}],
+ ['งานร่วมกัน',g=>{const [a,b,t]=g.pick([[6,3,2],[12,6,4],[10,15,6],[12,24,8],[20,30,12],[30,45,18],[18,9,6],[24,8,6],[12,4,3],[20,5,4],[36,18,12],[8,24,6]]);return{q:`ช่าง ก ทำงานชิ้นหนึ่งเสร็จใน ${a} วัน ช่าง ข ทำงานชิ้นเดียวกันเสร็จใน ${b} วัน ถ้าทำร่วมกันจะเสร็จในกี่วัน`,ans:t,sol:`ใน 1 วัน ก ทำได้ 1/${a} ข ทำได้ 1/${b} รวมกัน (${b} + ${a})/${a*b} ของงาน ใช้เวลา ${a*b}/${a+b} = ${t} วัน`}}],
+ ['วิ่งสวนทางกัน',g=>{const v1=g.R(8,14)*5,v2=g.R(8,14)*5,t=g.R(2,6);return{q:`รถสองคันออกจากเมือง A และเมือง B พร้อมกัน วิ่งสวนทางกันด้วยความเร็ว ${v1} และ ${v2} กม./ชม. ตามลำดับ ผ่านไป ${t} ชั่วโมงก็พบกันพอดี เมือง A ถึงเมือง B ห่างกันกี่กิโลเมตร`,ans:(v1+v2)*t,sol:`ความเร็วรวม ${v1} + ${v2} = ${v1+v2} กม./ชม. ระยะทาง = ${v1+v2} × ${t} = ${(v1+v2)*t} กม.`}}],
+ ['กำไรขาดทุน',g=>{let cost,m,d,price,sell;do{cost=g.pick([400,500,800,1000,2000,2500]);m=g.pick([20,25,40,50]);d=g.pick([10,20,25]);price=cost/100*(100+m);sell=price*(100-d)/100}while(!Number.isInteger(sell));return{q:`ร้านซื้อสินค้ามาราคา ${cost} บาท ตั้งราคาขายสูงกว่าทุน ${m}% แต่ลดราคาให้ลูกค้า ${d}% ของราคาที่ตั้ง ร้านได้กำไรกี่บาท (ถ้าขาดทุนให้ตอบเป็นจำนวนลบ)`,ans:sell-cost,sol:`ราคาที่ตั้ง ${price} บาท · ลด ${d}% เหลือ ${sell} บาท · กำไร ${sell} − ${cost} = ${mn(sell-cost)} บาท`}}],
+ ['เหรียญสองชนิด',g=>{const n=g.R(15,30),x=g.R(3,n-3),V=5*n+5*x;return{q:`มีเหรียญ 5 บาทและเหรียญ 10 บาทรวม ${n} เหรียญ เป็นเงินรวม ${V} บาท มีเหรียญ 10 บาทกี่เหรียญ`,ans:x,sol:`ถ้าเป็นเหรียญ 5 บาททั้งหมดจะได้ ${5*n} บาท ขาดไป ${V-5*n} บาท เปลี่ยนเหรียญ 5 เป็น 10 ได้เพิ่มเหรียญละ 5 บาท ต้องเปลี่ยน ${(V-5*n)/5} เหรียญ`}}],
+ ['จับมือ',g=>{const n=g.R(8,20);return{q:`ในงานเลี้ยงมีคน ${n} คน ทุกคนจับมือกับคนอื่นครบทุกคนคนละหนึ่งครั้ง จะมีการจับมือทั้งหมดกี่ครั้ง`,ans:n*(n-1)/2,sol:`${n} × ${n-1} ÷ 2 = ${n*(n-1)/2} ครั้ง`}}],
+ ['จำนวนสามหลักจากเลขโดด',g=>{const m=g.R(5,8);return{q:`จากเลขโดด 1, 2, ..., ${m} สร้างจำนวนสามหลักที่ทุกหลักต่างกันได้กี่จำนวน`,ans:m*(m-1)*(m-2),sol:`หลักร้อย ${m} แบบ หลักสิบ ${m-1} แบบ หลักหน่วย ${m-2} แบบ = ${m} × ${m-1} × ${m-2} = ${m*(m-1)*(m-2)}`}}],
+ ['จำนวนสองหลักที่หารลงตัว',g=>{const k=g.pick([7,8,9,11,12,13,15]);return{q:`จำนวนสองหลักที่หารด้วย ${k} ลงตัวมีกี่จำนวน`,ans:Math.floor(99/k)-Math.floor(9/k),sol:`จำนวนที่หารด้วย ${k} ลงตัวตั้งแต่ 1 ถึง 99 มี ${Math.floor(99/k)} จำนวน ตั้งแต่ 1 ถึง 9 มี ${Math.floor(9/k)} จำนวน ต่างกัน ${Math.floor(99/k)-Math.floor(9/k)}`}}],
+ ['ลำดับเลขคณิต',g=>{const a=g.R(2,9),d=g.R(2,6),n=g.R(15,40);return{q:`ลำดับเลขคณิต ${a}, ${a+d}, ${a+2*d}, ... พจน์ที่ ${n} มีค่าเท่าใด`,ans:a+(n-1)*d,sol:`a<sub>n</sub> = a + (n − 1)d = ${a} + ${n-1} × ${d} = ${a+(n-1)*d}`}}],
+ ['พื้นที่สี่เหลี่ยมผืนผ้า',g=>{const w=g.R(3,12),k=g.R(2,4);return{q:`สี่เหลี่ยมผืนผ้ารูปหนึ่งมีความยาวเป็น ${k} เท่าของความกว้าง และมีความยาวรอบรูป ${2*w*(k+1)} เซนติเมตร จงหาพื้นที่ (ตารางเซนติเมตร)`,ans:k*w*w,sol:`กว้าง w ยาว ${k}w · 2(w + ${k}w) = ${2*w*(k+1)} · w = ${w} ยาว ${k*w} · พื้นที่ ${w} × ${k*w} = ${k*w*w}`}}],
+ ['ค่าเฉลี่ยเมื่อเพิ่มข้อมูล',g=>{const n=g.R(4,9),m=g.R(50,80),d=g.R(1,4);return{q:`คะแนนเฉลี่ยของนักเรียน ${n} คนเท่ากับ ${m} คะแนน เมื่อมีนักเรียนเพิ่มอีก 1 คน ค่าเฉลี่ยกลายเป็น ${m+d} คะแนน นักเรียนที่เพิ่มมาได้กี่คะแนน`,ans:m+d*(n+1),sol:`ผลรวมใหม่ ${n+1} × ${m+d} = ${(n+1)*(m+d)} ผลรวมเดิม ${n} × ${m} = ${n*m} ผลต่าง = ${(n+1)*(m+d)-n*m}`}}],
+ ['ร้อยละขึ้นแล้วลง',g=>{let base,p,q,fin;do{base=g.pick([200,400,500,800,1000,2000]);p=g.pick([10,20,25,50]);q=g.pick([10,20,25,50]);fin=base*(100+p)*(100-q)/10000}while(!Number.isInteger(fin));return{q:`สินค้าราคา ${base} บาท ปรับราคาขึ้น ${p}% แล้วลดลง ${q}% ของราคาใหม่ ราคาสุดท้ายกี่บาท`,ans:fin,sol:`หลังขึ้น ${base*(100+p)/100} บาท · หลังลด ${q}% เหลือ ${fin} บาท`}}],
+ ['ดอกเบี้ยแบบง่าย',g=>{const Pn=g.pick([2000,5000,8000,10000,20000]),r=g.pick([2,3,4,5,6]),t=g.R(2,6);return{q:`ฝากเงิน ${Pn} บาท ได้ดอกเบี้ยแบบง่ายร้อยละ ${r} ต่อปี ครบ ${t} ปี จะมีเงินรวมต้นและดอกเบี้ยกี่บาท`,ans:Pn*(1+r*t/100),sol:`ดอกเบี้ย ${Pn} × ${r}/100 × ${t} = ${Pn*r*t/100} บาท รวม ${Pn*(1+r*t/100)} บาท`}}],
+ ['ความน่าจะเป็น',g=>{const r=g.R(2,8),b=g.R(2,8),gr=g.R(1,8),t=r+b+gr,k=b+gr,d=gcd(k,t);return{q:`ในกล่องมีลูกบอลสีแดง ${r} ลูก สีน้ำเงิน ${b} ลูก สีเขียว ${gr} ลูก สุ่มหยิบ 1 ลูก ความน่าจะเป็นที่ได้ลูกที่ไม่ใช่สีแดงเป็นเท่าใด (ตอบเป็นเศษส่วน เช่น 3/5)`,ans:k/t,ansT:`${k/d}/${t/d}`,sol:`ลูกที่ไม่ใช่สีแดงมี ${b} + ${gr} = ${k} ลูก จากทั้งหมด ${t} ลูก ความน่าจะเป็น = ${k}/${t} = ${k/d}/${t/d}`,frac:true}}],
+ ['หลักหน่วยของเลขยกกำลัง',g=>{const b=g.pick([2,3,7,8,9]),n=g.R(20,99);let v=1;for(let i=0;i<n;i++)v=(v*b)%10;return{q:`หลักหน่วยของ ${sup(b,n)} คือเลขใด`,ans:v,sol:`หลักหน่วยของ ${b}<sup>n</sup> วนซ้ำเป็นรอบ ${n%4===0?'ครบรอบพอดี (ใช้ตัวที่ 4 ของรอบ)':'เหลือเศษ '+(n%4)+' จึงใช้ตัวที่ '+(n%4)+' ของรอบ'} ได้ ${v}`}}],
+ ['ค.ร.น. ไฟกะพริบ',g=>{const [a,b,c]=g.pick([[6,8,12],[4,6,10],[8,12,18],[10,15,20],[9,12,18],[12,15,20]]);const L=lcm(lcm(a,b),c);return{q:`ไฟสามดวงกะพริบทุก ${a}, ${b} และ ${c} วินาที ตามลำดับ ถ้าเริ่มกะพริบพร้อมกันตอนนี้ อีกกี่วินาทีจึงจะกะพริบพร้อมกันอีกครั้งแรก`,ans:L,sol:`ค.ร.น. ของ ${a}, ${b}, ${c} = ${L} วินาที`}}],
+ ['จำนวนเต็มในอสมการ',g=>{const a=g.R(-10,0),b=g.R(-5,5),c=a+g.R(12,30);let n=0;for(let x=-100;x<=100;x++)if(a<2*x+b&&2*x+b<c)n++;return{q:`จำนวนเต็ม x ที่ทำให้ ${mn(a)} < 2x${sg(b)} < ${mn(c)} มีกี่จำนวน`,ans:n,sol:`${mn(a-b)} < 2x < ${mn(c-b)} · ${mn(dec((a-b)/2))} < x < ${mn(dec((c-b)/2))} · นับจำนวนเต็มได้ ${n} จำนวน`}}],
+ ['ความเร็วเฉลี่ยไป-กลับ',g=>{const [v1,v2]=g.pick([[40,60],[30,60],[60,90],[20,30],[50,75],[45,90]]);const v=2*v1*v2/(v1+v2);return{q:`เดินทางไปด้วยความเร็ว ${v1} กม./ชม. และเดินทางกลับระยะทางเดิมด้วยความเร็ว ${v2} กม./ชม. ความเร็วเฉลี่ยตลอดการเดินทางไป-กลับเป็นกี่กม./ชม.`,ans:v,sol:`สมมติระยะทางไปทางเดียว ${v1*v2/gcd(v1,v2)} กม. ไปใช้ ${v2/gcd(v1,v2)} ชม. กลับใช้ ${v1/gcd(v1,v2)} ชม. รวมระยะ ${2*v1*v2/gcd(v1,v2)} กม. ใช้เวลา ${(v1+v2)/gcd(v1,v2)} ชม. เฉลี่ย ${v} กม./ชม.`}}],
+ ['จำนวนคี่เรียงกัน',g=>{const m=2*g.R(5,40)+1;return{q:`ผลบวกของจำนวนคี่สามจำนวนที่เรียงติดกันเท่ากับ ${3*m} จำนวนที่มากที่สุดคือเท่าใด`,ans:m+2,sol:`ตัวกลาง ${3*m} ÷ 3 = ${m} จำนวนทั้งสามคือ ${m-2}, ${m}, ${m+2} มากที่สุด ${m+2}`}}],
+ ['ท่อเติมและระบายน้ำ',g=>{const [a,b]=g.pick([[6,12],[4,12],[10,15],[12,18],[6,9],[8,24],[15,30],[20,30]]);const t=a*b/(b-a);return{q:`ท่อ ก เปิดเติมน้ำจนเต็มถังได้ใน ${a} ชั่วโมง ส่วนท่อ ข ระบายน้ำจนหมดถังเต็มได้ใน ${b} ชั่วโมง ถ้าถังว่าง แล้วเปิดทั้งสองท่อพร้อมกัน จะเต็มถังในกี่ชั่วโมง`,ans:t,sol:`ใน 1 ชั่วโมง เติม 1/${a} ระบาย 1/${b} สุทธิ 1/${a} − 1/${b} = ${b-a}/${a*b} ของถัง ใช้เวลา ${a*b}/${b-a} = ${t} ชั่วโมง`}}],
+ ['พื้นที่นอกวงกลมในจัตุรัส',g=>{const k=g.R(1,3);return{q:`สี่เหลี่ยมจัตุรัสด้านยาว ${14*k} เซนติเมตร มีวงกลมแนบในรูป (สัมผัสทั้งสี่ด้าน) จงหาพื้นที่ส่วนที่อยู่ในสี่เหลี่ยมแต่อยู่นอกวงกลม (ตารางเซนติเมตร, π = 22/7)`,ans:42*k*k,sol:`พื้นที่จัตุรัส ${196*k*k} · รัศมี ${7*k} พื้นที่วงกลม 22/7 × ${7*k} × ${7*k} = ${154*k*k} · ผลต่าง ${42*k*k}`}}],
+ ['รูปหลายเหลี่ยมด้านเท่า',g=>{const n=g.pick([6,8,9,10,12,15,18,20,24,30]);const A=180-360/n;return{q:`รูปหลายเหลี่ยมด้านเท่ามุมเท่ารูปหนึ่งมีมุมภายในแต่ละมุมขนาด ${A}° รูปนี้มีกี่ด้าน`,ans:n,sol:`มุมภายนอก 180 − ${A} = ${180-A}° ผลบวกมุมภายนอก 360° จำนวนด้าน = 360 ÷ ${180-A} = ${n}`}}],
+ ['ผสมสารละลาย',g=>{let w1,w2,p1,p2;do{w1=g.R(2,8);w2=g.R(2,8);p1=g.R(2,9)*5;p2=g.R(2,9)*5}while(p1>=p2||(w1*p1+w2*p2)%(w1+w2)!==0);const c=(w1*p1+w2*p2)/(w1+w2);return{q:`น้ำเกลือเข้มข้น ${p1}% จำนวน ${w1} ลิตร ผสมกับน้ำเกลือเข้มข้น ${p2}% จำนวน ${w2} ลิตร ได้น้ำเกลือเข้มข้นร้อยละเท่าใด`,ans:c,sol:`เนื้อเกลือ ${w1*p1}/100 + ${w2*p2}/100 = ${(w1*p1+w2*p2)/100} ลิตร จากน้ำเกลือ ${w1+w2} ลิตร ความเข้มข้น ${c}%`}}],
+ ['พจน์ที่ n ของลำดับ',g=>{const t=g.R(0,1),n=g.R(10,25);if(t===0)return{q:`ลำดับ 2, 6, 12, 20, 30, ... พจน์ที่ ${n} มีค่าเท่าใด`,ans:n*(n+1),sol:`พจน์ที่ n คือ n(n + 1) = ${n} × ${n+1} = ${n*(n+1)}`};return{q:`ลำดับ 4, 7, 12, 19, 28, ... พจน์ที่ ${n} มีค่าเท่าใด`,ans:n*n+3,sol:`พจน์ที่ n คือ n² + 3 = ${n*n} + 3 = ${n*n+3}`}}],
+ ['มุมระหว่างเข็มนาฬิกา',g=>{const h=g.R(1,11),m=2*g.R(0,29);let a=Math.abs(30*h-5.5*m);if(a>180)a=360-a;return{q:`เวลา ${h}:${String(m).padStart(2,'0')} น. เข็มสั้นและเข็มยาวของนาฬิกาทำมุมกี่องศา (ตอบมุมที่ไม่เกิน 180°)`,ans:a,sol:`เข็มสั้นอยู่ที่ 30 × ${h} + 0.5 × ${m} = ${30*h+0.5*m}° เข็มยาวอยู่ที่ 6 × ${m} = ${6*m}° ต่างกัน ${Math.abs(30*h+0.5*m-6*m)}° เลือกมุมที่ไม่เกิน 180° ได้ ${a}°`}}],
+ ['เศษเหลือจากการหาร',g=>{const m1=g.pick([3,4,5,6]),m2=g.pick([7,8,9]);let n0,r1,r2,N;do{n0=g.R(1,m1*m2-1);r1=n0%m1;r2=n0%m2}while(r1===0&&r2===0);for(N=1;N%m1!==r1||N%m2!==r2;N++);return{q:`จำนวนนับ N หารด้วย ${m1} เหลือเศษ ${r1} และหารด้วย ${m2} เหลือเศษ ${r2} จำนวนนับ N ที่น้อยที่สุดคือเท่าใด`,ans:N,sol:`จำนวนที่หารด้วย ${m2} เหลือ ${r2}: ${r2}, ${r2+m2}, ${r2+2*m2}, ... ไล่ตรวจว่าตัวไหนหารด้วย ${m1} เหลือ ${r1} ตัวแรกคือ ${N}`}}],
+ ['หนังสือและราคา',g=>{const a=g.R(3,9),b=g.R(2,8),pa=g.R(5,9)*10,pb=g.R(2,8)*10,gift=a*pa+b*pb;return{q:`ซื้อสมุด ${a} เล่ม เล่มละ ${pa} บาท และปากกา ${b} ด้าม ด้ามละ ${pb} บาท จ่ายด้วยธนบัตรใบละ ${Math.ceil((gift+1)/100)*100} บาท จะได้เงินทอนกี่บาท`,ans:Math.ceil((gift+1)/100)*100-gift,sol:`ค่าสินค้า ${a} × ${pa} + ${b} × ${pb} = ${gift} บาท ทอน ${Math.ceil((gift+1)/100)*100} − ${gift} = ${Math.ceil((gift+1)/100)*100-gift} บาท`}}],
+ ['จำนวนตัวหารของจำนวนนับ',g=>{const a=g.pick([36,48,60,72,84,90,96,120]);let n=0;for(let d=1;d<=a;d++)if(a%d===0)n++;return{q:`จำนวนเต็มบวกที่หาร ${a} ลงตัวมีกี่จำนวน`,ans:n,sol:`แยกตัวประกอบเฉพาะแล้วนำ (เลขชี้กำลัง + 1) คูณกัน ได้ ${n} จำนวน`}}]
+];
+function mkMC(item,g){
+ const d=item.gen(g);let a=d.ans;const set=[a],c=[a+1,a-1,a+2,a-2,a+10,a-10,a*2,a+5,a-5,Math.round(a/2)];
+ const cand=c.filter(x=>Number.isFinite(x)&&x!==a&&(a<0||x>=0));
+ while(set.length<4&&cand.length){const i=Math.floor(g.r()*cand.length);const v=cand.splice(i,1)[0];if(set.indexOf(v)<0)set.push(v)}
+ let k=4;while(set.length<4){set.push(a+k);k++}
+ for(let i=set.length-1;i>0;i--){const j=Math.floor(g.r()*(i+1));const t=set[i];set[i]=set[j];set[j]=t}
+ return{q:d.q,opts:set,key:set.indexOf(a),ans:a,sol:d.sol}
+}
+function mkG(r){return{r:r,R:(a,b)=>a+Math.floor(r()*(b-a+1)),pick:arr=>arr[Math.floor(r()*arr.length)]}}
+function shuf(g,arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(g.r()*(i+1));const t=a[i];a[i]=a[j];a[j]=t}return a}
+/* ประกอบข้อสอบจำลองเต็มชุด: ตอน 1 = 10 ข้อ, ตอน 2 = 20 ข้อ, ตอน 3 = 10 ข้อ ใช้ rngFor(key) เป็นตัวสุ่ม */
+function buildExam(rngFor,key){
+ const g=mkG(rngFor(key+'|pick'));
+ const fi=shuf(g,F.map((_,i)=>i)),pi=shuf(g,P.map((_,i)=>i).filter(i=>!P[i][1]||true));
+ const f2=fi.slice(0,20),fMC=fi.slice(20);
+ const pAns=i=>!(P[i][0]==='ความน่าจะเป็น');
+ const pAll=pi.filter(pAns);
+ const p3=pi.slice(0,10);
+ const mcP=pAll.filter(i=>p3.indexOf(i)<0).slice(0,6);
+ const mcF=fMC.slice(0,4);
+ const mk=(arr,tag,i,idx)=>({gen:arr[i][1],name:arr[i][0],tag:tag,seed:key+'|'+tag+'|'+idx});
+ const part1=[...mcP.map((i,n)=>mk(P,'P',i,'a'+n)),...mcF.map((i,n)=>mk(F,'F',i,'b'+n))].map(o=>{const gg=mkG(rngFor(o.seed));return Object.assign({name:o.name},mkMC({gen:o.gen},gg))});
+ const shufd=shuf(g,part1);
+ const part2=f2.map((i,n)=>{const o=mk(F,'F',i,'c'+n);return Object.assign({name:o.name},o.gen(mkG(rngFor(o.seed))))});
+ const part3=p3.map((i,n)=>{const o=mk(P,'P',i,'d'+n);return Object.assign({name:o.name},o.gen(mkG(rngFor(o.seed))))});
+ return{part1:shufd,part2:part2,part3:part3}
+}
+const API={F:F,P:P,mkMC:mkMC,mkG:mkG,buildExam:buildExam,shuf:shuf};
+if(typeof module!=='undefined'&&module.exports)module.exports=API;else root.COMP=API;
+})(typeof window!=='undefined'?window:this);
+
+const LESSON="LS_COMP";
+let API_URL="";try{API_URL=sessionStorage.getItem("matheq_api")||""}catch(e){}
+const DEMO=!API_URL;
+let TOKEN=null,ME=null;
+try{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token;ME=s&&s.student}catch(e){}
+if(!TOKEN||!ME){location.replace("MathEQ.html")}
+const $=id=>document.getElementById(id);
+const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
+let MEM={};
+function demoDB(){try{return JSON.parse(localStorage.getItem('idpDemo')||'{}')}catch(e){return MEM}}
+function demoSave(d){MEM=d;try{localStorage.setItem('idpDemo',JSON.stringify(d))}catch(e){}}
+function demoAvg(cls){const d=demoDB(),s={},n={};Object.keys(DEMO_ROSTER).forEach(id=>{if(DEMO_ROSTER[id].cls!==cls||!d[id])return;for(const k in d[id]){s[k]=(s[k]||0)+d[id][k].passed.length;n[k]=(n[k]||0)+1}});const o={};for(const k in s)o[k]={avg:Math.round(s[k]/n[k]*10)/10,n:n[k]};return o}
+async function api(body){
+ if(!DEMO){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return await r.json()}
+ const d=demoDB();
+ if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347 / 12348)'};
+  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls)}}
+ if(body.action==='save'){d[body.token]=d[body.token]||{};{const o=d[body.token][body.strand],m=o?o.passed.slice():[];body.passed.forEach(x=>{if(m.indexOf(x)<0)m.push(x)});let fl=(body.failedAt?String(body.failedAt).split(','):[]).filter(x=>m.indexOf(x)<0);if(!fl.length&&o&&o.failedAt&&body.failedAt&&body.strand!=='GCX')fl=String(o.failedAt).split(',').filter(x=>m.indexOf(x)<0);d[body.token][body.strand]={passed:m,failedAt:fl.join(','),updated:new Date().toISOString()}}demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
+ if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
+ if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
+ if(body.action==='adminMark'){d[body.id]=d[body.id]||{};if(body.on)d[body.id][body.strand]={passed:['CK'],failedAt:'',updated:new Date().toISOString()};else delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+ if(body.action==='adminReset'){if(d[body.id])delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+}
+async function call(body,errEl){try{const r=await api(body);if(!r.ok&&errEl)errEl.textContent=r.error||'เกิดข้อผิดพลาด';return r}catch(e){if(errEl)errEl.textContent='เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง';return{ok:false}}}
+
+
+function hashStr(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return(h^=h>>>16)>>>0}}
+function rngFor(key){const seed=hashStr(key)();let a=seed;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const numIn=s=>{s=String(s).trim().replace(/−|–/g,'-').replace(/,/g,'').replace(/[๐-๙]/g,c=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(c)).replace(/\s+/g,'');if(!s)return NaN;const m=s.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);if(m)return +m[1]/+m[2];return /^-?\d+(\.\d+)?$/.test(s)?+s:NaN};
+const mn=x=>String(x).replace(/-/g,'−');
+const showAns=d=>d.ansT?d.ansT:mn(Number.isInteger(d.ans)?d.ans:Math.round(d.ans*100)/100);
+const todayKey=()=>{const d=new Date();return d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')};
+const same=(v,a)=>Math.abs(v-a)<1e-6;
+let PROG={};
+async function save(strand,toks){const r=await call({action:'save',token:TOKEN,strand:strand,passed:toks,failedAt:''});return r.ok}
+function loadStat(){
+ const d2=(PROG['LS_COMPDR']||[]).filter(x=>x.indexOf('D2_')===0).length,d3=(PROG['LS_COMPDR']||[]).filter(x=>x.indexOf('D3_')===0).length;
+ const sc=(PROG['LS_COMPSC']||[]).map(x=>x.split('_')).filter(a=>a[0][0]==='M').map(a=>`ชุด ${a[0].slice(1)}: ${a[1]} คะแนน`);
+ $('stat').innerHTML=`ฝึกตอน 2 แล้ว ${d2} ชุด · ฝึกตอน 3 แล้ว ${d3} ชุด`+(sc.length?` · ผลข้อสอบจำลอง: ${sc.join(', ')}`:' · ยังไม่ได้ทำข้อสอบจำลอง')}
+/* ---------- ฝึกทีละข้อ (ตอน 2 / ตอน 3) ---------- */
+let SET=null,TIMER=null;
+function startDrill(kind){
+ const bank=kind==='D2'?COMP.F:COMP.P,n=kind==='D2'?10:5;
+ const cnt=(PROG['LS_COMPDR']||[]).filter(x=>x.indexOf(kind+'_'+todayKey()+'_')===0).length+(SET?1:0);
+ const idx=COMP.shuf(COMP.mkG(rngFor(ME.id+'|'+kind+'|'+todayKey()+'|'+Date.now())),bank.map((_,i)=>i)).slice(0,n);
+ const qs=idx.map((bi,i)=>{const gg=COMP.mkG(rngFor(ME.id+'|'+kind+'|'+todayKey()+'|'+Date.now()+'|'+i));const d=bank[bi][1](gg);d.name=bank[bi][0];return d});
+ SET={kind,qs,i:0,ok:0,t0:Date.now(),n};ask()}
+function ask(){
+ const q=SET.qs[SET.i],n=SET.n;
+ $('play').innerHTML=`<div class="muted">${SET.kind==='D2'?'ตอน 2 · คิดเลขเร็ว':'ตอน 3 · โจทย์ปัญหา'} · ข้อ ${SET.i+1}/${n} · ถูกแล้ว ${SET.ok}</div><div class="bq">${mxFr(q.q)}</div><div class="row"><input type="text" class="bin" id="ans" autocomplete="off" inputmode="text" placeholder="คำตอบ"><button class="pri" id="chk">ตรวจ</button></div><div id="fb"></div>`;
+ const go=()=>{const v=numIn($('ans').value);if(isNaN(v)){$('fb').innerHTML='<div class="fb no">พิมพ์เป็นตัวเลข เช่น 12, −5, 7/12, 3.5</div>';return}
+  const ok=same(v,q.ans);if(ok)SET.ok++;$('ans').disabled=true;$('chk').disabled=true;
+  $('fb').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?'✓ ถูกต้อง':'✗ ยังไม่ถูก คำตอบที่ถูกคือ <b>'+mxFr(showAns(q))+'</b>'}</div>${ok?'':`<div class="sol2">${mxFr(q.sol)}</div>`}<div style="margin-top:10px"><button class="pri" id="nx">${SET.i<n-1?'ข้อต่อไป':'ดูผลชุดนี้'}</button></div>`;
+  $('nx').onclick=()=>{SET.i++;if(SET.i<n)ask();else finishDrill()};$('nx').focus()};
+ $('chk').onclick=go;$('ans').onkeydown=e=>{if(e.key==='Enter')go()};$('ans').focus()}
+async function finishDrill(){
+ const secs=Math.round((Date.now()-SET.t0)/1000),per=Math.round(secs/SET.n);
+ const tok=`${SET.kind}_${todayKey()}_${Date.now().toString(36)}_${SET.ok}`;
+ (PROG['LS_COMPDR']=PROG['LS_COMPDR']||[]).push(tok);loadStat();
+ const goal=SET.kind==='D2'?'เป้าหมายตอน 2: ประมาณ 1 นาทีต่อข้อ ถูกอย่างน้อย 85%':'ตอน 3 ข้อละ 5 คะแนน ให้ฝึกเขียนวิธีคิดลงกระดาษทดทุกข้อ';
+ $('play').innerHTML=`<div class="big">${SET.ok}/${SET.n}</div><p>ใช้เวลา ${Math.floor(secs/60)} นาที ${secs%60} วินาที (เฉลี่ย ${per} วินาที/ข้อ) · ${goal}</p><div class="row"><button class="pri" id="again">ทำอีกชุด</button></div><div class="muted" id="sv" style="margin-top:6px">กำลังบันทึก…</div>`;
+ $('again').onclick=()=>startDrill(SET.kind);
+ const ok=await save('LS_COMPDR',[tok]);$('sv').textContent=ok?'✓ บันทึกแล้ว':'⚠ บันทึกไม่สำเร็จ (ผลชุดนี้อาจไม่ถูกเก็บ)'}
+/* ---------- ข้อสอบจำลองเต็มชุด ---------- */
+let EXAM=null,MK=0,TMR=null,ENDT=0;
+const LAB=['ก','ข','ค','ง'];
+function startMock(k){
+ MK=k;EXAM=COMP.buildExam(rngFor,ME.id+'|COMPMOCK|'+k);
+ let st=Date.now();try{const s=sessionStorage.getItem('comp_mock_'+ME.id+'_'+k);if(s)st=+s;else sessionStorage.setItem('comp_mock_'+ME.id+'_'+k,String(st))}catch(e){}
+ ENDT=st+120*60*1000;drawMock();tick();clearInterval(TMR);TMR=setInterval(tick,1000)}
+function drawMock(){
+ let h=`<div class="row"><span class="timer" id="tm"></span><span class="muted">ชุดที่ ${MK} · ทำบนกระดาษทดก่อนแล้วกรอกคำตอบ (เศษส่วนพิมพ์เช่น 3/5) · ปิดหน้าแล้วเปิดใหม่เวลายังเดินต่อ</span></div>`;
+ h+='<h3 class="sec" style="margin-top:12px">ตอนที่ 1 เลือกตอบ (ข้อละ 1 คะแนน)</h3>';
+ EXAM.part1.forEach((q,i)=>{h+=`<div class="mq"><div class="ql"><b>${i+1}.</b> ${mxFr(q.q)}</div>${q.opts.map((o,j)=>`<label class="opt"><input type="radio" name="m1_${i}" value="${j}"> ${LAB[j]}. ${mxFr(mn(o))}</label>`).join('')}</div>`});
+ h+='<h3 class="sec" style="margin-top:12px">ตอนที่ 2 คิดเลขเร็ว/คิดคำนวณ (ข้อละ 2 คะแนน)</h3>';
+ EXAM.part2.forEach((q,i)=>{h+=`<div class="mq"><div class="ql"><b>${i+1}.</b> ${mxFr(q.q)} = <input type="text" id="m2_${i}" autocomplete="off"></div></div>`});
+ h+='<h3 class="sec" style="margin-top:12px">ตอนที่ 3 โจทย์ปัญหา (ข้อละ 5 คะแนน)</h3>';
+ EXAM.part3.forEach((q,i)=>{h+=`<div class="mq"><div class="ql"><b>${i+1}.</b> ${mxFr(q.q)}</div><div class="row" style="margin-top:6px">คำตอบ <input type="text" id="m3_${i}" autocomplete="off"></div></div>`});
+ h+='<div class="row" style="margin-top:12px"><button class="pri" id="sub">ส่งข้อสอบและดูคะแนน</button></div><div id="res"></div>';
+ $('play').innerHTML=h;$('sub').onclick=()=>{if(confirm('ส่งข้อสอบตอนนี้ใช่ไหม?'))submitMock()}}
+function tick(){const el=$('tm');if(!el)return;const left=Math.max(0,ENDT-Date.now()),m=Math.floor(left/60000),s=Math.floor(left%60000/1000);el.textContent=`เหลือเวลา ${m}:${String(s).padStart(2,'0')} นาที`;if(left<=0&&$('sub')&&!$('sub').disabled){clearInterval(TMR);submitMock()}}
+async function submitMock(){
+ clearInterval(TMR);$('sub').disabled=true;
+ let s1=0,s2=0,s3=0,det='';
+ EXAM.part1.forEach((q,i)=>{const r=document.querySelector(`input[name=m1_${i}]:checked`);const ok=r&&+r.value===q.key;if(ok)s1++;det+=rev(`ตอน 1 ข้อ ${i+1}`,q,ok,r?LAB[+r.value]:'-',LAB[q.key]+' ('+mn(q.ans)+')')});
+ EXAM.part2.forEach((q,i)=>{const v=numIn($('m2_'+i).value);const ok=!isNaN(v)&&same(v,q.ans);if(ok)s2+=2;det+=rev(`ตอน 2 ข้อ ${i+1}`,q,ok,$('m2_'+i).value||'-',showAns(q))});
+ EXAM.part3.forEach((q,i)=>{const v=numIn($('m3_'+i).value);const ok=!isNaN(v)&&same(v,q.ans);if(ok)s3+=5;det+=rev(`ตอน 3 ข้อ ${i+1}`,q,ok,$('m3_'+i).value||'-',showAns(q))});
+ const tot=s1+s2+s3,medal=tot>=80?'เหรียญทอง':tot>=70?'เหรียญเงิน':tot>=60?'เหรียญทองแดง':'เกียรติบัตร';
+ try{sessionStorage.removeItem('comp_mock_'+ME.id+'_'+MK)}catch(e){}
+ $('res').innerHTML=`<div class="tcard" style="background:#f3e5f5;margin-top:12px"><div class="big">${tot}/100</div><p>ตอน 1: ${s1}/10 · ตอน 2: ${s2}/40 · ตอน 3: ${s3}/50 · ระดับ${medal} (เกณฑ์: ทอง ≥ 80, เงิน 70–79, ทองแดง 60–69)</p><div class="muted" id="sv">กำลังบันทึก…</div></div><h3 class="sec">เฉลยและวิธีคิด</h3>${det}`;
+ (PROG['LS_COMPSC']=PROG['LS_COMPSC']||[]).push('M'+MK+'_'+tot);loadStat();
+ const a=await save('LS_COMP',['M'+MK]);const b=await save('LS_COMPSC',['M'+MK+'_'+tot]);$('sv').textContent=a&&b?'✓ บันทึกคะแนนแล้ว':'⚠ บันทึกไม่สำเร็จ'}
+function rev(t,q,ok,mine,key){return `<div class="mq rv ${ok?'ok':'no'}"><div class="ql"><b>${t}</b> ${ok?'✓':'✗'} ตอบ ${mxFr(String(mine))} · เฉลย <b>${mxFr(String(key))}</b></div><div class="sol2">${mxFr(q.q)}</div><div class="sol2">${mxFr(q.sol)}</div></div>`}
+$('mD2').onclick=()=>startDrill('D2');$('mD3').onclick=()=>startDrill('D3');
+[1,2,3,4].forEach(k=>$('mM'+k).onclick=()=>startMock(k));
+$('who').textContent=ME.name;
+$('btnQuit').onclick=()=>location.href='MathEQ.html';
+(async()=>{const r=await call({action:'me',token:TOKEN});if(r.ok&&r.progress){['LS_COMPDR','LS_COMPSC'].forEach(s=>{if(r.progress[s])PROG[s]=r.progress[s].passed.slice()})}loadStat()})();
+</script>
+</body></html>
