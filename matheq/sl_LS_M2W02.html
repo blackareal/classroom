@@ -31,6 +31,7 @@ function mxRt(s){
 /* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
 function mxFrText(s){
  s=mxRt(s);
+ s=s.replace(/(\([^()]*\)|[A-Za-z0-9]+!)\/(\([^()]*\)!|[A-Za-z0-9]+!)/g,function(m,n,d){var nu=n.charAt(0)==='('?n.slice(1,-1):n,de=d.charAt(0)==='('?d.slice(1,-2)+'!':d;if(n.charAt(0)==='('&&n.indexOf('!')<0)return m;return '<span class="fr"><i>'+nu+'</i><i>'+(d.charAt(0)==='('?'('+d.slice(1,-2)+')!':d)+'</i></span>'});
  s=s.replace(/(^|[^\w\/.])([A-Za-z])\/(\d+)(?![\d\/\u00b2\u00b3])/g,function(m,p,v,d){return p+'<span class="fr"><i>'+v+'</i><i>'+d+'</i></span>'});
  return s.replace(/(?:(\d+) )?(\d+)\/(\d+)/g,function(m,w,n,d,o,str){
   var b=o>0?str.charAt(o-1):'',a=str.charAt(o+m.length);
@@ -208,7 +209,7 @@ function mxFix(root){
   <p><b>3) ฐานนิยม</b> คือค่าที่<b>ซ้ำมากที่สุด</b> ทำ 2 ขั้น</p>
   <p>ขั้นที่ 1 นับว่าแต่ละค่าซ้ำกี่ครั้ง · ขั้นที่ 2 เลือกค่าที่ซ้ำมากที่สุด</p></div><div class="col"><h2>ตัวอย่าง</h2>
   <div id="exs"></div><script>var $=function(i){return document.getElementById(i)};const EXS=[['ตัวอย่างที่ 1 ค่าเฉลี่ยของ 6, 8, 5, 9, 7',[['ผลรวม','6 + 8 + 5 + 9 + 7'],['','35'],['จำนวนข้อมูล','5 ตัว',1],['ค่าเฉลี่ย','35 ÷ 5'],['','7']]],['ตัวอย่างที่ 2 มัธยฐานของ 9, 3, 7, 5, 11 (ข้อมูลคี่)',[['เรียงข้อมูล','3, 5, 7, 9, 11',1],['จำนวนข้อมูล','5 ตัว (คี่) ตัวกลางคือตัวที่ 3',1],['มัธยฐาน','7']]],['ตัวอย่างที่ 3 มัธยฐานของ 12, 4, 8, 6, 10, 2 (ข้อมูลคู่)',[['เรียงข้อมูล','2, 4, 6, 8, 10, 12',1],['จำนวนข้อมูล','6 ตัว (คู่) ตัวกลางคือตัวที่ 3 และ 4 = 6 และ 8',1],['มัธยฐาน','(6 + 8) ÷ 2'],['','14 ÷ 2'],['','7']]],['ตัวอย่างที่ 4 ฐานนิยมของ 5, 3, 5, 8, 3, 5, 9',[['นับความถี่','3 ซ้ำ 2 ครั้ง · 5 ซ้ำ 3 ครั้ง · 8 ซ้ำ 1 ครั้ง · 9 ซ้ำ 1 ครั้ง',1],['ฐานนิยม','5']]]];
-$('exs').innerHTML=EXS.map(function(e){return '<p style="margin:10px 0 0"><b>'+e[0]+'</b></p>'+mxEq(e[1])}).join('');</script></div></div>
+$('exs').innerHTML=EXS.map(function(e){return '<p style="margin:10px 0 0"><b>'+mxFr(e[0])+'</b></p>'+mxEq(e[1])+(e[2]?'<p style="margin:2px 0 0 10px">'+e[2]+'</p>':'')}).join('');</script></div></div>
 <div id="prac"><div class="ph">โจทย์ให้ลองคิด · ม.2/1 · 9 พ.ย. ค่ากลางของข้อมูล: ค่าเฉลี่ย มัธยฐาน ฐานนิยม (ทำทีละขั้น)<div class="tools"><button id="bPracBack">กลับสไลด์ (P)</button></div></div><div class="hint">แตะที่ข้อเพื่อแสดง/ซ่อนเฉลย</div><ol></ol></div>
 <script>
 var zoom=1;

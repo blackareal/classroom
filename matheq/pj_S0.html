@@ -31,6 +31,7 @@ function mxRt(s){
 /* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
 function mxFrText(s){
  s=mxRt(s);
+ s=s.replace(/(\([^()]*\)|[A-Za-z0-9]+!)\/(\([^()]*\)!|[A-Za-z0-9]+!)/g,function(m,n,d){var nu=n.charAt(0)==='('?n.slice(1,-1):n,de=d.charAt(0)==='('?d.slice(1,-2)+'!':d;if(n.charAt(0)==='('&&n.indexOf('!')<0)return m;return '<span class="fr"><i>'+nu+'</i><i>'+(d.charAt(0)==='('?'('+d.slice(1,-2)+')!':d)+'</i></span>'});
  s=s.replace(/(^|[^\w\/.])([A-Za-z])\/(\d+)(?![\d\/\u00b2\u00b3])/g,function(m,p,v,d){return p+'<span class="fr"><i>'+v+'</i><i>'+d+'</i></span>'});
  return s.replace(/(?:(\d+) )?(\d+)\/(\d+)/g,function(m,w,n,d,o,str){
   var b=o>0?str.charAt(o-1):'',a=str.charAt(o+m.length);

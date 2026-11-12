@@ -31,6 +31,7 @@ function mxRt(s){
 /* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
 function mxFrText(s){
  s=mxRt(s);
+ s=s.replace(/(\([^()]*\)|[A-Za-z0-9]+!)\/(\([^()]*\)!|[A-Za-z0-9]+!)/g,function(m,n,d){var nu=n.charAt(0)==='('?n.slice(1,-1):n,de=d.charAt(0)==='('?d.slice(1,-2)+'!':d;if(n.charAt(0)==='('&&n.indexOf('!')<0)return m;return '<span class="fr"><i>'+nu+'</i><i>'+(d.charAt(0)==='('?'('+d.slice(1,-2)+')!':d)+'</i></span>'});
  s=s.replace(/(^|[^\w\/.])([A-Za-z])\/(\d+)(?![\d\/\u00b2\u00b3])/g,function(m,p,v,d){return p+'<span class="fr"><i>'+v+'</i><i>'+d+'</i></span>'});
  return s.replace(/(?:(\d+) )?(\d+)\/(\d+)/g,function(m,w,n,d,o,str){
   var b=o>0?str.charAt(o-1):'',a=str.charAt(o+m.length);
@@ -206,7 +207,7 @@ function mxFix(root){
   <p><b>จุดตัดแกน</b> จุดตัดแกน y: ให้ x = 0 · จุดตัดแกน x: ให้ y = 0</p>
   </div><div class="col"><h2>ตัวอย่าง</h2>
   <div id="exs"></div><script>var $=function(i){return document.getElementById(i)};const EXS=[['ตัวอย่างที่ 1 แทนค่าฟังก์ชัน f(x) = x² − 3x + 1',[['f(2)','2² − 3(2) + 1'],['','4 − 6 + 1'],['','−1'],['f(−1)','(−1)² − 3(−1) + 1'],['','1 + 3 + 1'],['','5']]],['ตัวอย่างที่ 2 แยกตัวประกอบ',[['x² − 5x + 6','(x − 2)(x − 3)'],['','ตรวจ: 2 × 3 = 6 และ 2 + 3 = 5',1],['x² − 9','(x − 3)(x + 3)'],['3x² + 6x','3x(x + 2)']]],['ตัวอย่างที่ 3 จุดตัดแกนของ y = x² − 5x + 6',[['ให้ x = 0 จะได้ y','0² − 5(0) + 6'],['','6 → จุดตัดแกน y คือ (0, 6)'],['ให้ y = 0 จะได้','x² − 5x + 6 = 0',1],['','(x − 2)(x − 3) = 0',1],['x','2 หรือ 3 → จุดตัดแกน x คือ (2, 0) และ (3, 0)']]]];
-$('exs').innerHTML=EXS.map(function(e){return '<p style="margin:10px 0 0"><b>'+e[0]+'</b></p>'+mxEq(e[1])}).join('');</script></div></div>
+$('exs').innerHTML=EXS.map(function(e){return '<p style="margin:10px 0 0"><b>'+mxFr(e[0])+'</b></p>'+mxEq(e[1])+(e[2]?'<p style="margin:2px 0 0 10px">'+e[2]+'</p>':'')}).join('');</script></div></div>
 <div id="prac"><div class="ph">โจทย์ให้ลองคิด · ม.6/1 · 6 พ.ย. ซ่อมฐานก่อนเรียนแคลคูลัส (C0)<div class="tools"><button id="bPracBack">กลับสไลด์ (P)</button></div></div><div class="hint">แตะที่ข้อเพื่อแสดง/ซ่อนเฉลย</div><ol></ol></div>
 <script>
 var zoom=1;
