@@ -270,7 +270,7 @@ const LV=[
  ['คูณเลขหลายหลัก',g=>{const a=g.R(12,99),b=g.R(2,9);return{q:`${a} × ${b} = ?`,ans:a*b}}],
  ['หาร (สูตรคูณ)',g=>{const m=g.R(2,9),k=g.R(2,9);return{q:`${m*k} ÷ ${m} = ?`,ans:k}}],
  ['หารเลขหลายหลัก',g=>{const m=g.R(2,9),k=g.R(11,60);return{q:`${m*k} ÷ ${m} = ?`,ans:k}}],
- ['บวก ลบ คูณ หาร ผสม',g=>{const t=g.R(0,2),a=g.R(2,9),b=g.R(2,9),c=g.R(2,9);if(t===0)return{q:`${a} + ${b} × ${c} = ?`,ans:a+b*c};if(t===1)return{q:`(${a} + ${b}) × ${c} = ?`,ans:(a+b)*c};return{q:`${a*b} ÷ ${b} + ${c} = ?`,ans:a+c}}],
+ ['บวก ลบ คูณ หาร ผสม',g=>{const t=g.R(0,2),a=g.R(2,9),b=g.R(2,9),c=g.R(2,9);if(t===0)return{q:`${a} + (${b} × ${c}) = ?`,ans:a+b*c};if(t===1)return{q:`(${a} + ${b}) × ${c} = ?`,ans:(a+b)*c};return{q:`(${a*b} ÷ ${b}) + ${c} = ?`,ans:a+c}}],
  ['เศษส่วน (ส่วนเท่ากัน)',g=>{const d=g.R(4,12),a=g.R(1,d-2),b=g.R(1,d-a-1);if(g.R(0,1))return{q:`${a}/${d} + ${b}/${d} = ? (ตอบเป็นเศษส่วน เช่น 3/7)`,ans:(a+b)/d};return{q:`${a+b}/${d} − ${b}/${d} = ? (ตอบเป็นเศษส่วน เช่น 3/7)`,ans:a/d}}],
  ['ทศนิยม',g=>{const a=g.R(11,99)/10,b=g.R(11,99)/10;if(g.R(0,1))return{q:`${a} + ${b} = ?`,ans:r1(a+b)};const hi=Math.max(a,b),lo=Math.min(a,b);return{q:`${hi} − ${lo} = ?`,ans:r1(hi-lo)}}],
  ['จำนวนเต็มลบ',g=>{const a=g.R(2,15),b=g.R(2,15),t=g.R(0,3);if(t===0)return{q:`(−${a}) + ${b} = ?`,ans:b-a};if(t===1)return{q:`${a} − ${a+b} = ?`,ans:-b};if(t===2)return{q:`(−${a}) + (−${b}) = ?`,ans:-(a+b)};return{q:`(−${a}) − (−${b}) = ?`,ans:b-a}}]

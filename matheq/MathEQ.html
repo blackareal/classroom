@@ -132,6 +132,10 @@ const ACTIVITIES=[
  {id:'LS_M1W04_CK',type:'notebook',title:'ม.1 13 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.1/1',date:'2026-11-13',file:'lesson_M1_w04.html',total:1},
  {id:'LS_M4W03',type:'lesson',title:'ม.4 · 16 พ.ย. · การเรียงสับเปลี่ยนที่มีเงื่อนไข',cls:'ม.4/1',date:'2026-11-16',file:'lesson_M4_w03.html',total:3},
  {id:'LS_M4W03_CK',type:'notebook',title:'ม.4 16 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.4/1',date:'2026-11-16',file:'lesson_M4_w03.html',total:1},
+ {id:'LS_M2W05',type:'lesson',title:'ม.2 · 16 พ.ย. · แผนภาพจุดและแผนภาพต้น-ใบ',cls:'ม.2/1',date:'2026-11-16',file:'lesson_M2_w05.html',total:4},
+ {id:'LS_M2W05_CK',type:'notebook',title:'ม.2 16 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.2/1',date:'2026-11-16',file:'lesson_M2_w05.html',total:1},
+ {id:'LS_M6W03',type:'lesson',title:'ม.6 · 18 พ.ย. · ลิมิต (1) ความหมายและการหาจากตาราง (C1)',cls:'ม.6/1',date:'2026-11-18',file:'lesson_M6_w03.html',total:6},
+ {id:'LS_M6W03_CK',type:'notebook',title:'ม.6 18 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.6/1',date:'2026-11-18',file:'lesson_M6_w03.html',total:1},
  {id:'LS_M5W03',type:'lesson',title:'ม.5 · 16 พ.ย. · คอนจูเกตและการหารจำนวนเชิงซ้อน',cls:'ม.5/1',date:'2026-11-16',file:'lesson_M5_w03.html',total:5},
  {id:'LS_M5W03_CK',type:'notebook',title:'ม.5 16 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.5/1',date:'2026-11-16',file:'lesson_M5_w03.html',total:1},
  {id:'LS_M5W01_CK',type:'notebook',title:'ม.5 9 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.5/1',date:'2026-11-09',file:'lesson_M5_w01.html',total:1}
@@ -141,12 +145,12 @@ const thDate=s=>{const m=String(s).match(/^(\d{4})-(\d{2})-(\d{2})$/);return m?(
 const dispTitle=a=>a.title.replace(/^ม\.\d(?:\/\d)?\s*·?\s*\d+ [^ ]+\s*·\s*/,'');
 const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 function renderActs(){
- const L=ACTIVITIES.filter(a=>a.type!=='notebook'&&a.cls===ME.cls&&(DEMO||a.date<=todayStr())).sort((a,b)=>b.date.localeCompare(a.date));
+ const L=ACTIVITIES.filter(a=>a.type!=='notebook'&&a.cls===ME.cls).sort((a,b)=>b.date.localeCompare(a.date));
  const el=$('acts');if(!L.length){el.innerHTML='<h2>บทเรียนและกิจกรรมของห้อง</h2><div class="muted">ยังไม่มีบทเรียนที่เปิดให้ทำ</div>';return}
  el.innerHTML='<h2>บทเรียนและกิจกรรมของห้อง</h2>'+L.map(a=>{const p=PROG[a.id],n=p?p.passed.length:0;
   const st=a.type==='gate'?(p?`ผ่าน ${n}/${a.total} ขั้น`+(p.failedAt?` · ควรทบทวน ${p.failedAt}`:' · พร้อมแล้ว'):'ยังไม่ได้ทำ'):(p?`ทำแล้ว ${n}/${a.total} ข้อ`:'ยังไม่ได้เข้าทำ');const ck=PROG[a.id+'_CK']&&PROG[a.id+'_CK'].passed.length;
   const ok=p&&(a.type==='gate'?!p.failedAt:n>=a.total);
-  return `<div class="row" style="justify-content:space-between;border-top:1px solid #1e2a42;padding:8px 0"><div><b>${dispTitle(a)}</b><div class="muted">${thDate(a.date)} · ${st}${a.type==='lesson'?(ck?' · <b style="color:#2ee66d">✓ ครูตรวจสมุดแล้ว</b>':(p&&p.passed.length>=a.total?' · รอครูตรวจสมุด':'')):''}</div></div><a href="${a.file}"><button class="${ok?'':'pri'}">${p?(a.type==='gate'?'ทำใหม่':'เปิดทบทวน'):'เริ่ม'}</button></a></div>`}).join('')}
+  return `<div class="row" style="justify-content:space-between;border-top:1px solid #1e2a42;padding:8px 0"><div><b>${dispTitle(a)}</b><div class="muted">${thDate(a.date)}${a.date>todayStr()?' <b style="color:#ffd54f">(เปิดให้เรียนล่วงหน้า)</b>':''} · ${st}${a.type==='lesson'?(ck?' · <b style="color:#2ee66d">✓ ครูตรวจสมุดแล้ว</b>':(p&&p.passed.length>=a.total?' · รอครูตรวจสมุด':'')):''}</div></div><a href="${a.file}"><button class="${ok?'':'pri'}">${p?(a.type==='gate'?'ทำใหม่':'เปิดทบทวน'):'เริ่ม'}</button></a></div>`}).join('')}
 
 const $=id=>document.getElementById(id);
 const show=id=>{['vLogin','vAdminLogin','vHome','vSelf','vAdmin'].forEach(x=>$(x).classList.toggle('hide',x!==id))};
@@ -271,7 +275,7 @@ function openLessonFor(a,st){const p=st.progress[a.id],ck=st.progress[a.id+'_CK'
 function renderPrev(){const el=$('aPrev');if(!el)return;const td=todayStr();
  const L=ACTIVITIES.filter(a=>a.type==='lesson').sort((a,b)=>b.date.localeCompare(a.date));
  el.innerHTML=L.map(a=>{const cs=ADATA.filter(s=>s.cls===a.cls).sort((x,y)=>x.no-y.no);const sel=ASEL&&cs.find(s=>s.id===ASEL)||cs[0];
-  return`<div class="row" style="justify-content:space-between;border-top:1px solid #1e2a42;padding:6px 0"><div><b>${dispTitle(a)}</b><div class="muted">${a.cls} · เปิดให้นักเรียน ${thDate(a.date)}${a.date>td?' (ยังไม่ถึงวัน)':''}${sel?' · โจทย์ของเลขที่ '+sel.no:''}</div></div><button data-pv="${a.id}" ${sel?'':'disabled'}>เปิดดู</button></div>`}).join('')||'<div class="muted">ยังไม่มีบทเรียน</div>';
+  return`<div class="row" style="justify-content:space-between;border-top:1px solid #1e2a42;padding:6px 0"><div><b>${dispTitle(a)}</b><div class="muted">${a.cls} · กำหนดสอน ${thDate(a.date)}${a.date>td?' (นักเรียนเห็นและเรียนล่วงหน้าได้)':''}${sel?' · โจทย์ของเลขที่ '+sel.no:''}</div></div><button data-pv="${a.id}" ${sel?'':'disabled'}>เปิดดู</button></div>`}).join('')||'<div class="muted">ยังไม่มีบทเรียน</div>';
  el.querySelectorAll('button[data-pv]').forEach(b=>b.onclick=()=>{const a=ACTIVITIES.find(x=>x.id===b.dataset.pv);const cs=ADATA.filter(s=>s.cls===a.cls).sort((x,y)=>x.no-y.no);const st=ASEL&&cs.find(s=>s.id===ASEL)||cs[0];if(st)openLessonFor(a,st)})}
 function renderLessonBtns(st){
  const L=ACTIVITIES.filter(a=>a.type==='lesson'&&a.cls===st.cls);const el=$('aLessons');
