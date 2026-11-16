@@ -62,8 +62,8 @@ function mxParenFr(s){
    var l=i-1,r=i+1,ls=-1,re=-1,numTxt,denTxt;
    if(s.charAt(l)!==')'){
     if(s.charAt(r)!=='(')continue;
-    var tm=s.slice(0,i).match(/(?:^|[^\w\/.\u0e00-\u0e7f²³′])([A-Za-z0-9]+(?:\.\d+)?)$/);
-    if(!tm||/!$/.test(tm[1]))continue;
+    var tm=s.slice(0,i).match(/(?:^|[^\w\/.\u0e00-\u0e7f²³′])([A-Za-z0-9]+(?:\.\d+)?!?)$/);
+    if(!tm)continue;
     var rr=0,kk,ce=-1;for(kk=r;kk<s.length;kk++){var cc=s.charAt(kk);if(cc==='(')rr++;else if(cc===')'){rr--;if(rr===0){ce=kk;break}}}
     if(ce<0)continue;
     if(/^[\/²³]/.test(s.charAt(ce+1)))continue;
