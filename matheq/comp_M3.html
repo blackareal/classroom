@@ -52,9 +52,31 @@ function mxRt(s){
  return s.replace(/\u221a(\d+(?:\.\d+)?|[A-Za-z]+)/g,function(m,x){return '<span class="rd">\u221a<span class="rr">'+x+'</span></span>'});
 }
 /* MathEQ: เศษส่วนแบบบน-ล่าง + วิธีทำที่เครื่องหมาย = ตรงกัน (ใช้ทุกหน้า) — ไม่ใช้ lookbehind เพื่อรองรับ iOS รุ่นเก่า */
+/* เศษส่วนที่ตัวเศษ/ตัวส่วนเป็นวงเล็บ เช่น (3 + 2i)/(1 − i), ((a)(b))/((c)(d)), (x + 1)/2 → บน-ล่าง (ข้ามกรณีเรียกฟังก์ชัน เช่น P(8, 3)/... และ f(x)/...) */
+function mxParenFr(s){
+ var guard=0;
+ while(guard++<40){
+  var done=true,i;
+  for(i=0;i<s.length;i++){
+   if(s.charAt(i)!=='/')continue;
+   var l=i-1,r=i+1,ls=-1,re=-1,numTxt,denTxt;
+   if(s.charAt(l)!==')')continue;
+   var d=0,k;
+   for(k=l;k>=0;k--){var c=s.charAt(k);if(c===')')d++;else if(c==='('){d--;if(d===0){ls=k;break}}}
+   if(ls<0)continue;
+   if(ls>0&&/[\w฀-๿²³′]/.test(s.charAt(ls-1)))continue;
+   if(s.charAt(r)==='('){d=0;for(k=r;k<s.length;k++){c=s.charAt(k);if(c==='(')d++;else if(c===')'){d--;if(d===0){re=k;break}}}
+    if(re<0)continue;denTxt=s.slice(r+1,re);re=re+1}
+   else{var m=s.slice(r).match(/^\d+(?:\.\d+)?/);if(!m)continue;denTxt=m[0];re=r+m[0].length;if(/^[\/²³]/.test(s.charAt(re)))continue}
+   numTxt=s.slice(ls+1,l);
+   var out='<span class="fr"><i>'+numTxt+'</i><i>'+denTxt+'</i></span>';
+   s=s.slice(0,ls)+out+s.slice(re);done=false;break}
+  if(done)break}
+ return s}
 function mxFrText(s){
  s=mxRt(s);
  s=s.replace(/(\([^()]*\)|[A-Za-z0-9]+!)\/(\([^()]*\)!|[A-Za-z0-9]+!)/g,function(m,n,d){var nu=n.charAt(0)==='('?n.slice(1,-1):n,de=d.charAt(0)==='('?d.slice(1,-2)+'!':d;if(n.charAt(0)==='('&&n.indexOf('!')<0)return m;return '<span class="fr"><i>'+nu+'</i><i>'+(d.charAt(0)==='('?'('+d.slice(1,-2)+')!':d)+'</i></span>'});
+ s=mxParenFr(s);
  s=s.replace(/(^|[^\w\/.])([A-Za-z])\/(\d+)(?![\d\/\u00b2\u00b3])/g,function(m,p,v,d){return p+'<span class="fr"><i>'+v+'</i><i>'+d+'</i></span>'});
  return s.replace(/(?:(\d+) )?(\d+)\/(\d+)/g,function(m,w,n,d,o,str){
   var b=o>0?str.charAt(o-1):'',a=str.charAt(o+m.length);
@@ -225,17 +247,21 @@ function mxFix(root){
  <div class="row" style="margin-bottom:10px"><button id="btnQuit">← กลับ MathEQ</button><span class="muted">ซ้อมอัจฉริยภาพ · <span id="who"></span></span></div>
  <div class="tcard" style="background:#4a148c;color:#fff"><div style="font-size:30px;font-weight:700">ซ้อมแข่งอัจฉริยภาพทางคณิตศาสตร์ ม.ต้น</div><div style="opacity:.9">ข้อสอบจริง 120 นาที 100 คะแนน: ตอน 1 เลือกตอบ 10 ข้อ · ตอน 2 คิดเลขเร็ว/คิดคำนวณ 20 ข้อ · ตอน 3 โจทย์ปัญหา 10 ข้อ · ห้ามใช้เครื่องคิดเลข ใช้กระดาษทดและเขียนวิธีคิด</div></div>
 
+ <div class="tcard"><h3 class="sec">เรียนก่อนฝึก</h3>
+  <div class="muted" style="margin-bottom:6px">เลือกหัวข้อเพื่ออ่านเทคนิคและดูตัวอย่าง แล้วกด "ฝึกหัวข้อนี้" ได้ทันที (แนะนำให้อ่านก่อนทำข้อสอบจำลอง)</div>
+  <div id="learnList"></div>
+ </div>
  <div class="tcard"><h3 class="sec">เลือกโหมดฝึก</h3>
   <div class="row" style="gap:10px;flex-wrap:wrap">
    <button class="pri" id="mD2">ตอน 2 · ฝึกคิดเลขเร็ว (10 ข้อ)</button>
    <button class="pri" id="mD3">ตอน 3 · ฝึกโจทย์ปัญหา (5 ข้อ)</button>
   </div>
-  <div class="row" style="gap:10px;flex-wrap:wrap;margin-top:10px"><span class="muted" style="align-self:center">ข้อสอบจำลองเต็มชุด (120 นาที):</span><button id="mM1">ชุดที่ 1</button><button id="mM2">ชุดที่ 2</button><button id="mM3">ชุดที่ 3</button><button id="mM4">ชุดที่ 4</button></div>
+  <div class="row" style="gap:10px;flex-wrap:wrap;margin-top:10px" id="mockRow"><span class="muted" style="align-self:center">ข้อสอบจำลองเต็มชุด (120 นาที):</span></div>
   <div class="muted" id="stat" style="margin-top:10px"></div>
  </div>
  <div class="tcard nomfx" id="play"></div>
 </div>
-<style>.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.05;font-size:.95em}.fr i{font-style:normal;padding:0 3px}.fr i:first-child{border-bottom:1.5px solid currentColor}.sec{margin:0 0 6px;color:#4a148c;font-size:26px}.bq{font-size:30px;margin:14px 0;line-height:1.35}.bin{font-size:26px!important;width:200px!important}.mq{margin:12px 0;padding:10px 12px;border:1px solid #d9c8ea;border-radius:12px;background:#fff}.mq .ql{font-size:22px;line-height:1.4}.mq input[type=text]{width:180px;font-size:20px}.opt{display:block;margin:4px 0;font-size:20px}.timer{position:sticky;top:0;z-index:5;background:#4a148c;color:#fff;border-radius:10px;padding:6px 12px;font-weight:700;font-size:22px;display:inline-block}.rv.ok{background:#e4f6ea;border-color:#2e9b55}.rv.no{background:#fdecec;border-color:#d46}.sol2{margin-top:6px;color:#4a148c;font-size:18px}</style>
+<style>.lex{background:#f3e5f5;border-radius:10px;padding:8px 12px;margin:8px 0;font-size:20px;line-height:1.55}.lbtn{margin:3px 4px 3px 0}.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.05;font-size:.95em}.fr i{font-style:normal;padding:0 3px}.fr i:first-child{border-bottom:1.5px solid currentColor}.sec{margin:0 0 6px;color:#4a148c;font-size:26px}.bq{font-size:30px;margin:14px 0;line-height:1.35}.bin{font-size:26px!important;width:200px!important}.mq{margin:12px 0;padding:10px 12px;border:1px solid #d9c8ea;border-radius:12px;background:#fff}.mq .ql{font-size:22px;line-height:1.4}.mq input[type=text]{width:180px;font-size:20px}.opt{display:block;margin:4px 0;font-size:20px}.timer{position:sticky;top:0;z-index:5;background:#4a148c;color:#fff;border-radius:10px;padding:6px 12px;font-weight:700;font-size:22px;display:inline-block}.rv.ok{background:#e4f6ea;border-color:#2e9b55}.rv.no{background:#fdecec;border-color:#d46}.sol2{margin-top:6px;color:#4a148c;font-size:18px}</style>
 <script>
 /* คลังโจทย์ซ้อมอัจฉริยภาพทางคณิตศาสตร์ ม.ต้น (ใช้ร่วมกันระหว่างหน้าเว็บ comp_M3.html และสคริปต์พิมพ์ข้อสอบจำลอง)
    ตอน 2 = F (คิดเลขเร็ว/คิดคำนวณ)  ตอน 3 = P (โจทย์ปัญหา)  ตอน 1 = MC (เลือกตอบ ดัดแปลงจาก F/P ที่คำตอบเป็นจำนวนเต็ม)
@@ -341,6 +367,145 @@ const API={F:F,P:P,mkMC:mkMC,mkG:mkG,buildExam:buildExam,shuf:shuf};
 if(typeof module!=='undefined'&&module.exports)module.exports=API;else root.COMP=API;
 })(typeof window!=='undefined'?window:this);
 
+/* เรียนก่อนฝึก: เทคนิค + ตัวอย่าง จัดตามกลุ่มหัวข้อของคลังโจทย์ (names ต้องตรงกับชื่อใน comp_bank.js) */
+const E=(t,s)=>`<div class="lex"><b>${t}</b><br>${s}</div>`;
+const LEARN=[
+{id:'L1',part:'ตอน 2 · คิดเลขเร็ว',title:'คูณลัดและยกกำลังสองลัด',names:['คูณลัดด้วย 99','ยกกำลังสองเลขลงท้าย 5','ยกกำลังสองใกล้ 100','กำลังสองสมบูรณ์เชิงตัวเลข','แจกแจงเลข','ผลต่างกำลังสอง'],body:`
+<p><b>1) คูณด้วย 99</b> คูณด้วย 100 แล้วลบตัวเองออก 1 ครั้ง</p>
+${E('47 × 99','47 × 99 = (47 × 100) − 47 = 4700 − 47 = <b>4653</b>')}
+<p><b>2) ยกกำลังสองเลขลงท้าย 5</b> ตัวหน้า × (ตัวหน้า + 1) แล้วต่อท้ายด้วย 25</p>
+${E('35² และ 85²','35² → 3 × 4 = 12 → <b>1225</b><br>85² → 8 × 9 = 72 → <b>7225</b>')}
+<p><b>3) ยกกำลังสองใกล้ 100</b> ใช้ (100 ± a)² = 10000 ± 200a + a²</p>
+${E('97² และ 103²','97² = (100 − 3)² = 10000 − 600 + 9 = <b>9409</b><br>103² = (100 + 3)² = 10000 + 600 + 9 = <b>10609</b>')}
+<p><b>4) ผลต่างกำลังสอง</b> a² − b² = (a − b)(a + b) เลือกคู่ที่บวกกันได้เลขกลม ๆ</p>
+${E('73² − 27²','73² − 27² = (73 − 27)(73 + 27) = 46 × 100 = <b>4600</b>')}
+<p><b>5) แจกแจงย้อนกลับ</b> ถ้ามีตัวร่วม ให้ดึงตัวร่วมออกมาแล้วรวมตัวที่เหลือให้ได้เลขกลม</p>
+${E('17 × 64 + 17 × 36','= 17 × (64 + 36) = 17 × 100 = <b>1700</b>')}
+<p><b>6) กำลังสองสมบูรณ์</b> a² + 2ab + b² = (a + b)² เช่น 50² + 2 × 50 × 3 + 3² = (50 + 3)² = <b>2809</b></p>`},
+{id:'L2',part:'ตอน 2 · คิดเลขเร็ว',title:'ลำดับการคำนวณและจำนวนเต็มลบ',names:['ลำดับการคำนวณ','จำนวนเต็มลบ'],body:`
+<p><b>ลำดับ</b> วงเล็บ → ยกกำลัง → คูณ/หาร (ซ้ายไปขวา) → บวก/ลบ (ซ้ายไปขวา) ห้ามข้ามขั้น</p>
+${E('50 − 4 × 6 + 36 ÷ 9','คูณ/หารก่อน: 4 × 6 = 24 และ 36 ÷ 9 = 4<br>50 − 24 + 4 = <b>30</b>')}
+<p><b>เครื่องหมาย</b> ลบ × ลบ = บวก · ลบ × บวก = ลบ · ลบ ÷ ลบ = บวก · a − (−b) = a + b</p>
+${E('(−3)(−4) + (−18) ÷ 6','= 12 + (−3) = <b>9</b>')}
+<p class="muted">คำเตือน: ทำจากซ้ายไปขวาทีละขั้น และเขียนผลทุกขั้นลงกระดาษทด</p>`},
+{id:'L3',part:'ตอน 2 · คิดเลขเร็ว',title:'เศษส่วนและทศนิยม',names:['เศษส่วนคูณผลรวม','ทศนิยมคูณ','เศษส่วนหารกัน','ทศนิยมหารทศนิยม','เศษส่วนของเศษส่วนของจำนวน'],body:`
+<p><b>เศษส่วนหารกัน</b> เปลี่ยนเป็นคูณ แล้วกลับเศษส่วนตัวหลัง</p>
+${E('3/4 ÷ 9/8','= 3/4 × 8/9 = 24/36 = <b>2/3</b>')}
+<p><b>เศษส่วนคูณผลรวม</b> คูณเข้าทีละตัวเพื่อตัดส่วนให้หมด</p>
+${E('(1/4 + 5/6) × 12','= (1/4 × 12) + (5/6 × 12) = 3 + 10 = <b>13</b>')}
+<p><b>เศษส่วนของเศษส่วนของจำนวน</b> "ของ" คือคูณ ทำทีละขั้น</p>
+${E('2/3 ของ 3/4 ของ 48','3/4 ของ 48 = 36 → 2/3 ของ 36 = <b>24</b>')}
+<p><b>ทศนิยมคูณ</b> จำค่าที่คุ้นเคย 0.5 = ครึ่งหนึ่ง · 0.25 = หารสี่ · 0.1 = หารสิบ</p>
+${E('0.25 × 48 + 0.5 × 36','= 12 + 18 = <b>30</b>')}
+<p><b>ทศนิยมหารทศนิยม</b> คูณทั้งตัวตั้งและตัวหารด้วย 10 (หรือ 100) ให้ตัวหารเป็นจำนวนเต็ม</p>
+${E('4.5 ÷ 0.15','= 450 ÷ 15 = <b>30</b>')}`},
+{id:'L4',part:'ตอน 2 · คิดเลขเร็ว',title:'ร้อยละ',names:['ร้อยละ'],body:`
+<p><b>p% ของ N</b> = N × p ÷ 100 · ทำทีละ 10% จะคิดเร็ว (10% = หารสิบ, 5% = ครึ่งของ 10%)</p>
+${E('35% ของ 80','10% = 8 → 30% = 24 → 5% = 4 → รวม 24 + 4 = <b>28</b>')}
+<p><b>เพิ่ม/ลด</b> เพิ่ม 20% คือคูณ 1.2 · ลด 20% คือคูณ 0.8</p>
+${E('ราคา 250 ลด 20%','250 × 0.8 = <b>200</b>')}`},
+{id:'L5',part:'ตอน 2 · คิดเลขเร็ว',title:'เลขยกกำลังและรากที่สอง',names:['เลขยกกำลังคูณหาร','ยกกำลังบวกลบ','รากที่สอง'],body:`
+<p><b>สมบัติ</b> ฐานเดียวกัน: คูณ → บวกเลขชี้กำลัง · หาร → ลบเลขชี้กำลัง</p>
+${E('2<sup>5</sup> × 2<sup>3</sup> ÷ 2<sup>4</sup>','= 2<sup>5 + 3 − 4</sup> = 2<sup>4</sup> = <b>16</b>')}
+<p><b>ยกกำลังบวกลบ</b> คำนวณค่ายกกำลังแต่ละตัวก่อน แล้วค่อยบวก/ลบ</p>
+${E('5² − 3³ + 2⁴','= 25 − 27 + 16 = <b>14</b>')}
+<p><b>รากที่สอง</b> จำกำลังสอง 11² = 121, 12² = 144, 13² = 169, 14² = 196, 15² = 225, 25² = 625 · ลงท้ายด้วย 4 → รากลงท้าย 2 หรือ 8</p>
+${E('√1764','40² = 1600, 50² = 2500 → อยู่ระหว่าง 40–50 ลงท้าย 4 → ลอง 42: 42² = 1764 → <b>42</b>')}`},
+{id:'L6',part:'ตอน 2 · คิดเลขเร็ว',title:'ค.ร.น. และ ห.ร.ม.',names:['ค.ร.น.','ห.ร.ม.'],body:`
+<p><b>วิธี</b> แยกตัวประกอบเฉพาะ · <b>ห.ร.ม.</b> = ตัวที่มีในทุกจำนวน เลือกเลขชี้กำลัง<u>น้อยสุด</u> · <b>ค.ร.น.</b> = ทุกตัวที่ปรากฏ เลือกเลขชี้กำลัง<u>มากสุด</u></p>
+${E('24 และ 36','24 = 2³ × 3 · 36 = 2² × 3²<br>ห.ร.ม. = 2² × 3 = <b>12</b> · ค.ร.น. = 2³ × 3² = <b>72</b>')}
+<p><b>ตรวจคำตอบ</b> ห.ร.ม. × ค.ร.น. = ผลคูณของสองจำนวน (12 × 72 = 864 = 24 × 36)</p>`},
+{id:'L7',part:'ตอน 2 · คิดเลขเร็ว',title:'ใช้ผลบวก ผลต่าง ผลคูณ หาค่านิพจน์',names:['x² − y² จากผลบวกและผลต่าง','a² + b² จาก a + b และ ab'],body:`
+<p><b>x² − y²</b> = (x + y)(x − y) แทนค่าผลบวกกับผลต่างที่โจทย์ให้ได้เลย</p>
+${E('x + y = 10, x − y = 4','x² − y² = 10 × 4 = <b>40</b>')}
+<p><b>a² + b²</b> = (a + b)² − 2ab</p>
+${E('a + b = 7, ab = 12','a² + b² = 49 − 24 = <b>25</b>')}`},
+{id:'L8',part:'ตอน 2 · คิดเลขเร็ว',title:'ผลบวกของเลขเรียง',names:['ผลบวกเลขเรียง'],body:`
+<p><b>สูตร</b> ผลบวก = (พจน์แรก + พจน์สุดท้าย) × จำนวนพจน์ ÷ 2 · จำนวนพจน์ = (สุดท้าย − แรก) ÷ ผลต่างร่วม + 1</p>
+${E('11 + 12 + … + 30','จำนวนพจน์ = 30 − 11 + 1 = 20<br>(11 + 30) × 20 ÷ 2 = 41 × 10 = <b>410</b>')}
+<p>1 + 2 + … + n = n(n + 1) ÷ 2 · เลขคี่ 1 + 3 + … + (2n − 1) = n²</p>`},
+{id:'L9',part:'ตอน 2 · คิดเลขเร็ว',title:'หน่วย อัตราส่วน และค่าเฉลี่ย',names:['เปลี่ยนหน่วย','แบ่งตามอัตราส่วน','ค่าเฉลี่ย'],body:`
+<p><b>เปลี่ยนหน่วย</b> 1 ชม. = 60 นาที · 1 กม. = 1000 ม. · 36 กม./ชม. = 36000 ÷ 3600 = 10 ม./วินาที · ทศนิยมของชั่วโมง × 60 = นาที</p>
+${E('3.6 ชั่วโมง','3 ชั่วโมง + 0.6 × 60 นาที = <b>3 ชั่วโมง 36 นาที</b>')}
+<p><b>แบ่งตามอัตราส่วน</b> หาจำนวนส่วนรวม แล้วหาว่า 1 ส่วนเท่าไร</p>
+${E('แบ่ง 120 ตามอัตราส่วน 3 : 5','ส่วนรวม = 8 → 1 ส่วน = 15<br>ได้ 3 × 15 = <b>45</b> และ 5 × 15 = <b>75</b>')}
+<p><b>ค่าเฉลี่ย</b> ผลรวม = ค่าเฉลี่ย × จำนวนข้อมูล</p>
+${E('ค่าเฉลี่ยของ 5 จำนวนเป็น 12','ผลรวม = 12 × 5 = <b>60</b>')}`},
+{id:'L10',part:'ตอน 2 · คิดเลขเร็ว',title:'แก้สมการเชิงเส้น',names:['แก้สมการเชิงเส้น'],body:`
+<p><b>หลักการ</b> ทำสิ่งเดียวกันทั้งสองข้าง · ย้ายตัวบวก/ลบก่อน แล้วค่อยหารด้วยสัมประสิทธิ์ · ตรวจคำตอบด้วยการแทนค่า</p>
+${E('3x − 7 = 20','3x = 27 → x = <b>9</b> · ตรวจ: 3(9) − 7 = 20 ✓')}
+${E('2(x + 3) = 18','x + 3 = 9 → x = <b>6</b>')}`},
+{id:'P1',part:'ตอน 3 · โจทย์ปัญหา',title:'เรขาคณิต: มุม พีทาโกรัส พื้นที่',names:['มุมของสามเหลี่ยม','พีทาโกรัส','พื้นที่วงกลม','พื้นที่สี่เหลี่ยมผืนผ้า','พื้นที่นอกวงกลมในจัตุรัส','รูปหลายเหลี่ยมด้านเท่า','มุมระหว่างเข็มนาฬิกา'],body:`
+<p><b>มุมสามเหลี่ยม</b> ผลรวม 180° · สามเหลี่ยมหน้าจั่ว มุมที่ฐานเท่ากัน</p>
+${E('จั่ว มุมยอด 40°','มุมฐาน = (180 − 40) ÷ 2 = <b>70°</b>')}
+<p><b>พีทาโกรัส</b> a² + b² = c² (c คือด้านตรงข้ามมุมฉาก) จำชุด 3-4-5, 5-12-13, 8-15-17, 7-24-25 และพหุคูณของมัน</p>
+${E('ด้านประกอบมุมฉาก 6 และ 8','c² = 36 + 64 = 100 → c = <b>10</b>')}
+<p><b>วงกลม</b> พื้นที่ = πr² · เส้นรอบวง = 2πr · ใช้ π = 22/7 เมื่อรัศมีเป็นพหุคูณของ 7</p>
+${E('รัศมี 7','พื้นที่ = 22/7 × 7 × 7 = <b>154</b>')}
+<p><b>พื้นที่นอกวงกลมในจัตุรัส</b> พื้นที่จัตุรัส − พื้นที่วงกลม</p>
+${E('จัตุรัสด้าน 14 มีวงกลมแนบใน','รัศมี 7 → 196 − 154 = <b>42</b>')}
+<p><b>รูปหลายเหลี่ยมด้านเท่า n ด้าน</b> ผลรวมมุมภายใน = (n − 2) × 180° · มุมภายในแต่ละมุม = ผลรวม ÷ n</p>
+${E('แปดเหลี่ยมด้านเท่า','ผลรวม = 6 × 180 = 1080 → มุมละ 1080 ÷ 8 = <b>135°</b>')}
+<p><b>เข็มนาฬิกา</b> เข็มยาวเดินนาทีละ 6° · เข็มสั้นเดินชั่วโมงละ 30° (นาทีละ 0.5°)</p>
+${E('เวลา 3:30','เข็มยาว = 30 × 6 = 180° · เข็มสั้น = 3 × 30 + 30 × 0.5 = 105°<br>ต่างกัน 180 − 105 = <b>75°</b>')}`},
+{id:'P2',part:'ตอน 3 · โจทย์ปัญหา',title:'ตั้งสมการจากโจทย์ตัวเลข',names:['อายุพ่อลูก','เหรียญสองชนิด','หนังสือและราคา','จำนวนคี่เรียงกัน','จำนวนเต็มในอสมการ'],body:`
+<p><b>อายุ</b> ผลต่างของอายุคงที่เสมอ ใช้ผลต่างอายุเป็นหลัก</p>
+${E('พ่อ 40 ปี ลูก 10 ปี อีกกี่ปีพ่ออายุเป็น 2 เท่าของลูก','ผลต่าง = 30 → ตอนที่พ่อเป็น 2 เท่า ลูกต้องอายุ 30 → อีก <b>20 ปี</b>')}
+<p><b>เหรียญสองชนิด</b> สมมติว่าเป็นเหรียญชนิดเดียวทั้งหมด แล้วดูส่วนต่างที่ขาด</p>
+${E('เหรียญ 5 บาทกับ 10 บาท รวม 20 เหรียญ เป็นเงิน 130 บาท','ถ้าเป็น 5 บาททั้งหมด = 100 ขาด 30 · เปลี่ยน 1 เหรียญเป็น 10 บาท เพิ่ม 5 → 30 ÷ 5 = <b>6</b> เหรียญเป็น 10 บาท และ 14 เหรียญเป็น 5 บาท')}
+<p><b>ตั้งสมการ</b> ให้ x แทนสิ่งที่ถาม เขียนความสัมพันธ์ แล้วแก้สมการ</p>
+${E('หนังสือ 5 เล่มเท่ากัน รวมกับค่าส่ง 40 บาท เป็น 215 บาท','5x + 40 = 215 → 5x = 175 → x = <b>35</b>')}
+<p><b>จำนวนคี่/คู่เรียงกัน</b> ผลรวม ÷ จำนวนตัว = ตัวกลาง</p>
+${E('จำนวนคี่เรียงกัน 3 จำนวน รวมกัน 75','ตัวกลาง = 75 ÷ 3 = 25 → <b>23, 25, 27</b>')}
+<p><b>อสมการ</b> แก้เหมือนสมการ (ระวังเมื่อคูณ/หารด้วยจำนวนลบ ต้องกลับเครื่องหมาย) แล้วนับจำนวนเต็ม</p>
+${E('3 < 2x − 1 ≤ 11','4 < 2x ≤ 12 → 2 < x ≤ 6 → x = 3, 4, 5, 6 มี <b>4</b> ตัว')}`},
+{id:'P3',part:'ตอน 3 · โจทย์ปัญหา',title:'งาน ความเร็ว และท่อน้ำ',names:['งานร่วมกัน','วิ่งสวนทางกัน','ความเร็วเฉลี่ยไป-กลับ','ท่อเติมและระบายน้ำ'],body:`
+<p><b>งานร่วมกัน</b> งาน 1 ชิ้น: ทำคนเดียว t วัน = ทำได้ 1/t ต่อวัน → รวมอัตราแล้วกลับเป็นจำนวนวัน</p>
+${E('A ทำ 12 วัน B ทำ 6 วัน ร่วมกันกี่วัน','1/12 + 1/6 = 1/12 + 2/12 = 3/12 = 1/4 ต่อวัน → <b>4 วัน</b>')}
+<p><b>วิ่งสวนทางกัน</b> ความเร็วรวม = v₁ + v₂ · เวลาที่พบกัน = ระยะทาง ÷ ความเร็วรวม</p>
+${E('ห่าง 120 กม. ความเร็ว 40 และ 20 กม./ชม.','เวลา = 120 ÷ (40 + 20) = <b>2 ชั่วโมง</b>')}
+<p><b>ความเร็วเฉลี่ยไป-กลับ</b> ไม่ใช่ค่าเฉลี่ยของสองความเร็ว ให้ใช้ ระยะทางรวม ÷ เวลารวม หรือสูตร 2v₁v₂ ÷ (v₁ + v₂)</p>
+${E('ไป 60 กลับ 40 กม./ชม.','2 × 60 × 40 ÷ (60 + 40) = 4800 ÷ 100 = <b>48</b> กม./ชม. (ไม่ใช่ 50)')}
+<p><b>ท่อเติมและระบาย</b> อัตราเติมเป็นบวก อัตราระบายเป็นลบ แล้วรวมกัน</p>
+${E('เติม 6 ชม. เต็ม ระบาย 12 ชม. หมด เปิดสองท่อพร้อมกัน','1/6 − 1/12 = 2/12 − 1/12 = 1/12 ต่อชม. → <b>12 ชั่วโมง</b>')}`},
+{id:'P4',part:'ตอน 3 · โจทย์ปัญหา',title:'กำไรขาดทุน ร้อยละ ดอกเบี้ย สารละลาย',names:['กำไรขาดทุน','ร้อยละขึ้นแล้วลง','ดอกเบี้ยแบบง่าย','ผสมสารละลาย'],body:`
+<p><b>กำไรขาดทุน</b> กำไร = ขาย − ทุน · ร้อยละของกำไร = กำไร ÷ ทุน × 100 (หารด้วย "ทุน" เสมอ)</p>
+${E('ซื้อ 400 ขาย 500','กำไร 100 → 100 ÷ 400 × 100 = <b>25%</b>')}
+<p><b>ขึ้นแล้วลง</b> ใช้การคูณ ไม่ใช่การลบร้อยละ</p>
+${E('ขึ้น 20% แล้วลด 20%','× 1.2 × 0.8 = 0.96 → ลดลง <b>4%</b>')}
+<p><b>ดอกเบี้ยแบบง่าย</b> I = P × r × t (r เป็นทศนิยม, t เป็นปี)</p>
+${E('5000 บาท 6% ต่อปี 3 ปี','5000 × 0.06 × 3 = <b>900</b> บาท')}
+<p><b>ผสมสารละลาย</b> หาเนื้อสารรวม ÷ ปริมาตรรวม</p>
+${E('เกลือ 20% 300 มล. ผสมน้ำ 200 มล.','เนื้อเกลือ = 60 มล. → 60 ÷ 500 × 100 = <b>12%</b>')}`},
+{id:'P5',part:'ตอน 3 · โจทย์ปัญหา',title:'การนับและความน่าจะเป็น',names:['จับมือ','จำนวนสามหลักจากเลขโดด','จำนวนสองหลักที่หารลงตัว','ความน่าจะเป็น'],body:`
+<p><b>จับมือ</b> n คน จับมือกันครบทุกคู่ = n(n − 1) ÷ 2</p>
+${E('10 คน','10 × 9 ÷ 2 = <b>45</b> ครั้ง')}
+<p><b>จำนวนจากเลขโดด</b> ใช้หลักการคูณ ช่องที่มีเงื่อนไข (เช่น หลักหน่วยเป็นเลขคู่) ให้จัด<u>ก่อน</u></p>
+${E('ใช้เลข 1–5 สร้างจำนวน 3 หลัก ห้ามซ้ำ ให้เป็นเลขคู่','หลักหน่วย 2 วิธี (2, 4) → หลักร้อย 4 วิธี → หลักสิบ 3 วิธี → 2 × 4 × 3 = <b>24</b>')}
+<p><b>จำนวนสองหลักที่หารลงตัว</b> หาตัวแรกและตัวสุดท้ายที่เป็นพหุคูณ แล้วนับด้วย (สุดท้าย − แรก) ÷ ตัวหาร + 1</p>
+${E('จำนวนสองหลักที่หารด้วย 7 ลงตัว','ตัวแรก 14 ตัวสุดท้าย 98 → (98 − 14) ÷ 7 + 1 = <b>13</b>')}
+<p><b>ความน่าจะเป็น</b> = จำนวนที่สนใจ ÷ จำนวนทั้งหมด (ตอบเป็นเศษส่วนอย่างต่ำ)</p>
+${E('ทอดลูกเต๋า 2 ลูก ผลรวมเป็น 7','ทั้งหมด 36 แบบ ได้ 7: (1,6) (2,5) (3,4) (4,3) (5,2) (6,1) = 6 แบบ → 6/36 = <b>1/6</b>')}`},
+{id:'P6',part:'ตอน 3 · โจทย์ปัญหา',title:'ลำดับ',names:['ลำดับเลขคณิต','พจน์ที่ n ของลำดับ'],body:`
+<p><b>ลำดับเลขคณิต</b> ผลต่างร่วม d คงที่ · พจน์ที่ n = พจน์แรก + (n − 1) × d · จำนวนพจน์ = (สุดท้าย − แรก) ÷ d + 1</p>
+${E('5, 9, 13, …','d = 4 → พจน์ที่ 20 = 5 + 19 × 4 = <b>81</b>')}
+${E('5, 9, …, 101 มีกี่พจน์','(101 − 5) ÷ 4 + 1 = <b>25</b> พจน์')}
+<p><b>หารูปแบบ</b> ดูผลต่างระหว่างพจน์ และลองเทียบกับ n, n², n(n + 1)</p>
+${E('2, 6, 12, 20, … พจน์ที่ 10','2 = 1×2, 6 = 2×3, 12 = 3×4, 20 = 4×5 → พจน์ที่ n = n(n + 1) → 10 × 11 = <b>110</b>')}`},
+{id:'P7',part:'ตอน 3 · โจทย์ปัญหา',title:'ทฤษฎีจำนวน',names:['หลักหน่วยของเลขยกกำลัง','ค.ร.น. ไฟกะพริบ','เศษเหลือจากการหาร','จำนวนตัวหารของจำนวนนับ'],body:`
+<p><b>หลักหน่วยของเลขยกกำลัง</b> หลักหน่วยวนเป็นรอบ ดูเศษของเลขชี้กำลังที่หารด้วยความยาวรอบ</p>
+${E('หลักหน่วยของ 7⁵⁰','7¹ → 7, 7² → 9, 7³ → 3, 7⁴ → 1 (รอบละ 4) · 50 ÷ 4 เหลือ 2 → เหมือน 7² → <b>9</b>')}
+<p><b>ไฟกะพริบ</b> พร้อมกันอีกครั้งทุก ค.ร.น. ของคาบเวลา</p>
+${E('กะพริบทุก 12 และ 18 วินาที เริ่มพร้อมกัน','ค.ร.น. ของ 12 และ 18 = <b>36</b> วินาที')}
+<p><b>เศษเหลือจากการหาร</b> ถ้าหารด้วยหลายจำนวนแล้วเหลือเศษเท่ากัน ให้ลบเศษออก แล้วใช้ ค.ร.น.</p>
+${E('จำนวนน้อยสุดที่หาร 7 เหลือ 3 และหาร 5 เหลือ 3','N − 3 หารด้วย 7 และ 5 ลงตัว → ค.ร.น. = 35 → N = 35 + 3 = <b>38</b>')}
+<p><b>จำนวนตัวหาร</b> แยกตัวประกอบเฉพาะ p<sup>a</sup> × q<sup>b</sup> → จำนวนตัวหาร = (a + 1)(b + 1)</p>
+${E('36 = 2² × 3²','(2 + 1)(2 + 1) = <b>9</b> ตัวหาร')}`},
+{id:'P8',part:'ตอน 3 · โจทย์ปัญหา',title:'ค่าเฉลี่ยเมื่อเพิ่มหรือเปลี่ยนข้อมูล',names:['ค่าเฉลี่ยเมื่อเพิ่มข้อมูล'],body:`
+<p><b>หลัก</b> หาผลรวมเดิม = ค่าเฉลี่ย × จำนวน แล้วปรับผลรวม ก่อนหารด้วยจำนวนใหม่</p>
+${E('ค่าเฉลี่ยของ 10 จำนวนเป็น 20 เพิ่มอีก 1 จำนวนคือ 31','ผลรวมเดิม = 200 → ผลรวมใหม่ = 231 → 231 ÷ 11 = <b>21</b>')}`}
+];
+
 const LESSON="LS_COMP";
 let API_URL="";try{API_URL=sessionStorage.getItem("matheq_api")||""}catch(e){}
 const DEMO=!API_URL;
@@ -380,7 +545,25 @@ async function save(strand,toks){const r=await call({action:'save',token:TOKEN,s
 function loadStat(){
  const d2=(PROG['LS_COMPDR']||[]).filter(x=>x.indexOf('D2_')===0).length,d3=(PROG['LS_COMPDR']||[]).filter(x=>x.indexOf('D3_')===0).length;
  const sc=(PROG['LS_COMPSC']||[]).map(x=>x.split('_')).filter(a=>a[0][0]==='M').map(a=>`ชุด ${a[0].slice(1)}: ${a[1]} คะแนน`);
- $('stat').innerHTML=`ฝึกตอน 2 แล้ว ${d2} ชุด · ฝึกตอน 3 แล้ว ${d3} ชุด`+(sc.length?` · ผลข้อสอบจำลอง: ${sc.join(', ')}`:' · ยังไม่ได้ทำข้อสอบจำลอง')}
+ const dt=(PROG['LS_COMPDR']||[]).filter(x=>x.indexOf('T_')===0).length;$('stat').innerHTML=`ฝึกตอน 2 แล้ว ${d2} ชุด · ฝึกตอน 3 แล้ว ${d3} ชุด · ฝึกตามหัวข้อ ${dt} ชุด`+(sc.length?` · ผลข้อสอบจำลอง: ${sc.join(', ')}`:' · ยังไม่ได้ทำข้อสอบจำลอง')}
+
+/* ---------- เรียนก่อนฝึก ---------- */
+const NMOCK=10;
+function drawLearnList(){
+ const parts=[...new Set(LEARN.map(l=>l.part))];
+ $('learnList').innerHTML=parts.map(p=>`<div style="margin:6px 0"><b>${p}</b><div>${LEARN.filter(l=>l.part===p).map(l=>`<button class="lbtn" data-l="${l.id}">${l.title}</button>`).join('')}</div></div>`).join('');
+ document.querySelectorAll('#learnList button').forEach(b=>b.onclick=()=>showLesson(b.dataset.l))}
+function showLesson(id){
+ const l=LEARN.find(x=>x.id===id);const i=LEARN.indexOf(l);
+ $('play').innerHTML=`<div class="muted">${l.part}</div><h3 class="sec" style="font-size:28px">${l.title}</h3>${mxFr(l.body)}<div class="row" style="margin-top:12px;gap:10px;flex-wrap:wrap"><button class="pri" id="lpr">ฝึกหัวข้อนี้ (5 ข้อ)</button>${i>0?'<button id="lpv">← หัวข้อก่อนหน้า</button>':''}${i<LEARN.length-1?'<button id="lnx">หัวข้อถัดไป →</button>':''}</div>`;
+ $('lpr').onclick=()=>startTopic(id);if($('lpv'))$('lpv').onclick=()=>showLesson(LEARN[i-1].id);if($('lnx'))$('lnx').onclick=()=>showLesson(LEARN[i+1].id);
+ $('play').scrollIntoView({behavior:'smooth',block:'start'})}
+function startTopic(id){
+ const l=LEARN.find(x=>x.id===id);const pool=[];
+ [COMP.F,COMP.P].forEach(bank=>bank.forEach(b=>{if(l.names.indexOf(b[0])>=0)pool.push(b)}));
+ const n=5,qs=[];const key=ME.id+'|T|'+id+'|'+todayKey()+'|'+Date.now();
+ for(let i=0;i<n;i++){const b=pool[i%pool.length];const d=b[1](COMP.mkG(rngFor(key+'|'+i)));d.name=b[0];qs.push(d)}
+ SET={kind:'T',lid:id,label:'ฝึกหัวข้อ: '+l.title,qs,i:0,ok:0,t0:Date.now(),n};ask()}
 /* ---------- ฝึกทีละข้อ (ตอน 2 / ตอน 3) ---------- */
 let SET=null,TIMER=null;
 function startDrill(kind){
@@ -391,7 +574,7 @@ function startDrill(kind){
  SET={kind,qs,i:0,ok:0,t0:Date.now(),n};ask()}
 function ask(){
  const q=SET.qs[SET.i],n=SET.n;
- $('play').innerHTML=`<div class="muted">${SET.kind==='D2'?'ตอน 2 · คิดเลขเร็ว':'ตอน 3 · โจทย์ปัญหา'} · ข้อ ${SET.i+1}/${n} · ถูกแล้ว ${SET.ok}</div><div class="bq">${mxFr(q.q)}</div><div class="row"><input type="text" class="bin" id="ans" autocomplete="off" inputmode="text" placeholder="คำตอบ"><button class="pri" id="chk">ตรวจ</button></div><div id="fb"></div>`;
+ $('play').innerHTML=`<div class="muted">${SET.label||(SET.kind==='D2'?'ตอน 2 · คิดเลขเร็ว':'ตอน 3 · โจทย์ปัญหา')} · ข้อ ${SET.i+1}/${n} · ถูกแล้ว ${SET.ok}</div><div class="bq">${mxFr(q.q)}</div><div class="row"><input type="text" class="bin" id="ans" autocomplete="off" inputmode="text" placeholder="คำตอบ"><button class="pri" id="chk">ตรวจ</button></div><div id="fb"></div>`;
  const go=()=>{const v=numIn($('ans').value);if(isNaN(v)){$('fb').innerHTML='<div class="fb no">พิมพ์เป็นตัวเลข เช่น 12, −5, 7/12, 3.5</div>';return}
   const ok=same(v,q.ans);if(ok)SET.ok++;$('ans').disabled=true;$('chk').disabled=true;
   $('fb').innerHTML=`<div class="fb ${ok?'ok':'no'}">${ok?'✓ ถูกต้อง':'✗ ยังไม่ถูก คำตอบที่ถูกคือ <b>'+mxFr(showAns(q))+'</b>'}</div>${ok?'':`<div class="sol2">${mxFr(q.sol)}</div>`}<div style="margin-top:10px"><button class="pri" id="nx">${SET.i<n-1?'ข้อต่อไป':'ดูผลชุดนี้'}</button></div>`;
@@ -401,9 +584,9 @@ async function finishDrill(){
  const secs=Math.round((Date.now()-SET.t0)/1000),per=Math.round(secs/SET.n);
  const tok=`${SET.kind}_${todayKey()}_${Date.now().toString(36)}_${SET.ok}`;
  (PROG['LS_COMPDR']=PROG['LS_COMPDR']||[]).push(tok);loadStat();
- const goal=SET.kind==='D2'?'เป้าหมายตอน 2: ประมาณ 1 นาทีต่อข้อ ถูกอย่างน้อย 85%':'ตอน 3 ข้อละ 5 คะแนน ให้ฝึกเขียนวิธีคิดลงกระดาษทดทุกข้อ';
+ const goal=SET.kind==='T'?'ทำเสร็จแล้วกลับไปอ่านเทคนิคของหัวข้อที่ยังพลาด หรือเลือกหัวข้ออื่นต่อ':SET.kind==='D2'?'เป้าหมายตอน 2: ประมาณ 1 นาทีต่อข้อ ถูกอย่างน้อย 85%':'ตอน 3 ข้อละ 5 คะแนน ให้ฝึกเขียนวิธีคิดลงกระดาษทดทุกข้อ';
  $('play').innerHTML=`<div class="big">${SET.ok}/${SET.n}</div><p>ใช้เวลา ${Math.floor(secs/60)} นาที ${secs%60} วินาที (เฉลี่ย ${per} วินาที/ข้อ) · ${goal}</p><div class="row"><button class="pri" id="again">ทำอีกชุด</button></div><div class="muted" id="sv" style="margin-top:6px">กำลังบันทึก…</div>`;
- $('again').onclick=()=>startDrill(SET.kind);
+ $('again').onclick=()=>SET.kind==='T'?startTopic(SET.lid):startDrill(SET.kind);
  const ok=await save('LS_COMPDR',[tok]);$('sv').textContent=ok?'✓ บันทึกแล้ว':'⚠ บันทึกไม่สำเร็จ (ผลชุดนี้อาจไม่ถูกเก็บ)'}
 /* ---------- ข้อสอบจำลองเต็มชุด ---------- */
 let EXAM=null,MK=0,TMR=null,ENDT=0;
@@ -436,7 +619,8 @@ async function submitMock(){
  const a=await save('LS_COMP',['M'+MK]);const b=await save('LS_COMPSC',['M'+MK+'_'+tot]);$('sv').textContent=a&&b?'✓ บันทึกคะแนนแล้ว':'⚠ บันทึกไม่สำเร็จ'}
 function rev(t,q,ok,mine,key){return `<div class="mq rv ${ok?'ok':'no'}"><div class="ql"><b>${t}</b> ${ok?'✓':'✗'} ตอบ ${mxFr(String(mine))} · เฉลย <b>${mxFr(String(key))}</b></div><div class="sol2">${mxFr(q.q)}</div><div class="sol2">${mxFr(q.sol)}</div></div>`}
 $('mD2').onclick=()=>startDrill('D2');$('mD3').onclick=()=>startDrill('D3');
-[1,2,3,4].forEach(k=>$('mM'+k).onclick=()=>startMock(k));
+for(let k=1;k<=NMOCK;k++){const b=document.createElement('button');b.id='mM'+k;b.textContent='ชุดที่ '+k;b.onclick=()=>startMock(k);$('mockRow').appendChild(b)}
+drawLearnList();
 $('who').textContent=ME.name;
 $('btnQuit').onclick=()=>location.href='MathEQ.html';
 (async()=>{const r=await call({action:'me',token:TOKEN});if(r.ok&&r.progress){['LS_COMPDR','LS_COMPSC'].forEach(s=>{if(r.progress[s])PROG[s]=r.progress[s].passed.slice()})}loadStat()})();
