@@ -277,7 +277,7 @@ function renderTrack(){
  el.innerHTML=`<div class="row" style="justify-content:space-between;align-items:baseline"><h2 style="margin:0 0 8px">เส้นทางของห้อง ${ME.cls}</h2><div class="muted">จุดเทา = เพื่อนในห้อง (ไม่แสดงชื่อ) · จุดฟ้า = คุณ</div></div>
  <div class="trk"><div class="g" style="${gs}">${f}</div><div class="g" style="${gs}">${d}</div><div class="g" style="${gs}">${n}</div></div>
  <div class="muted" style="margin-top:8px"><span style="color:#2ee66d">●</span> ครบและครูตรวจสมุดแล้ว &nbsp; <span style="color:#ffd54f">○</span> ทำในระบบแล้ว รอครูตรวจ &nbsp; ○ ยังไม่ทำ</div>
- <div class="tks"><div><div class="muted">คุณอยู่ที่</div><b>step ${me+1}</b> <span class="muted">จาก ${L.length}</span></div><div><div class="muted">ห้องส่วนใหญ่อยู่ที่</div><b>step ${mode}</b></div><div><div class="muted">ครูสอนล่าสุด</div><b>step ${teach+1}</b></div></div>
+ <div class="tks" style="grid-template-columns:1fr"><div style="display:flex;align-items:baseline;gap:10px"><span class="muted">คุณอยู่ที่</span><b>step ${me+1}</b> <span class="muted">จาก ${L.length}</span></div></div>
  ${nxt?`<div class="row" style="justify-content:space-between;margin-top:10px;background:#12304a;border-radius:10px;padding:8px 12px"><span>ถัดไปของคุณ: <b>step ${me+2}</b> · ${lab(nxt)}${nst===1?' <span class="muted">(ทำในระบบแล้ว รอครูตรวจสมุด)</span>':''}</span><a href="${nxt.file}"><button class="pri">${nst===1?'เปิดทบทวน':'เปิดบทเรียน'}</button></a></div>`:'<div style="margin-top:10px;background:#12304a;border-radius:10px;padding:8px 12px">คุณทำครบทุก step ที่เปิดไว้แล้ว</div>'}
  ${holes.length?`<div class="muted" style="margin-top:6px">ยังไม่ครบ: step ${holes.join(', ')}</div>`:''}`}
 function renderActs(){
@@ -419,7 +419,7 @@ function renderRooms(){
    n+=`<div class="tkn">${k>0?'<div class="ln"></div>':''}<div class="${full?'c ok':'c'}">${k===0?'<span style="font-size:11px">เริ่ม</span>':(full?'✓':k)}</div><div class="lb">${k===0?'':lab(L[k-1])}</div><div class="nn">${cnt[k]} คน</div></div>`;
   }
   const gs=`grid-template-columns:repeat(${N},minmax(84px,1fr))`;
-  h+=`<div style="margin:0 0 16px;padding-bottom:10px;border-bottom:1px solid #2a3652"><div class="row" style="justify-content:space-between;align-items:baseline"><h2 style="margin:0 0 6px;font-size:19px">${c}</h2><div class="muted">${S.length} คน${offN?' · ไม่ร่วม '+offN:''} · ส่วนใหญ่อยู่ step ${mode} · ครูสอนล่าสุด step ${teach+1} จาก ${L.length}</div></div><div class="trk"><div class="g" style="${gs}">${f}</div><div class="g" style="${gs}">${d}</div><div class="g" style="${gs}">${n}</div></div></div>`;
+  h+=`<div style="margin:0 0 16px;padding-bottom:10px;border-bottom:1px solid #2a3652"><div class="row" style="justify-content:space-between;align-items:baseline"><h2 style="margin:0 0 6px;font-size:19px">${c}</h2><div class="muted">${S.length} คน${offN?' · ไม่ร่วม '+offN:''}</div></div><div class="trk"><div class="g" style="${gs}">${f}</div><div class="g" style="${gs}">${d}</div><div class="g" style="${gs}">${n}</div></div></div>`;
  });
  el.innerHTML=h||'<div class="muted">ยังไม่มีบทเรียน</div>';
  el.querySelectorAll('i[data-id]').forEach(i=>i.onclick=()=>adminOne(i.dataset.id));
