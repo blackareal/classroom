@@ -37,7 +37,15 @@ function mxParenFr(s){
   for(i=0;i<s.length;i++){
    if(s.charAt(i)!=='/')continue;
    var l=i-1,r=i+1,ls=-1,re=-1,numTxt,denTxt;
-   if(s.charAt(l)!==')')continue;
+   if(s.charAt(l)!==')'){
+    if(s.charAt(r)!=='(')continue;
+    var tm=s.slice(0,i).match(/(?:^|[^\w\/.\u0e00-\u0e7f²³′])([A-Za-z0-9]+(?:\.\d+)?)$/);
+    if(!tm||/!$/.test(tm[1]))continue;
+    var rr=0,kk,ce=-1;for(kk=r;kk<s.length;kk++){var cc=s.charAt(kk);if(cc==='(')rr++;else if(cc===')'){rr--;if(rr===0){ce=kk;break}}}
+    if(ce<0)continue;
+    if(/^[\/²³]/.test(s.charAt(ce+1)))continue;
+    var st=i-tm[1].length;
+    s=s.slice(0,st)+'<span class="fr"><i>'+tm[1]+'</i><i>'+s.slice(r+1,ce)+'</i></span>'+s.slice(ce+1);done=false;break}
    var d=0,k;
    for(k=l;k>=0;k--){var c=s.charAt(k);if(c===')')d++;else if(c==='('){d--;if(d===0){ls=k;break}}}
    if(ls<0)continue;
