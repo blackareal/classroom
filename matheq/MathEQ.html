@@ -155,6 +155,7 @@ html[data-theme=dark] .tcard a{color:#7db7ff}
 <div id="vHome" class="hide">
  <div class="top"><div><h1 id="hName"></h1><div class="sub" id="hSub"></div></div><div class="row"><button id="btnOut">ออกจากระบบ</button></div></div>
  <div class="card" id="track"></div>
+ <div class="card hide" id="scoresCard"></div>
  <div class="card" id="acts"></div>
  <div class="card"><div class="row" style="justify-content:space-between"><div><h2 style="margin:0 0 4px">MathEQ เรียนรู้ด้วยตนเอง</h2><div class="muted">แบบทดสอบประเมินตนเองรายสาย · แท่ง EQ · ใบความรู้ · ฝึกพื้นฐาน</div></div><button class="pri" id="btnSelf">เข้า MathEQ เรียนรู้ด้วยตนเอง</button></div></div>
 </div>
@@ -175,6 +176,7 @@ html[data-theme=dark] .tcard a{color:#7db7ff}
  <div class="card hide" id="aActsCard"><h2>บทเรียนและกิจกรรม</h2><div class="muted">ประตูความพร้อม: ตัวเลข = ขั้นที่ผ่าน · บทเรียน: ตัวเลข = ข้อที่ทำถูก (- = ยังไม่เปิด) · ช่องสี่เหลี่ยม "ตรวจสมุด" = ติ๊กเมื่อรับ/ตรวจสมุดนักเรียนคนนั้นแล้ว (นักเรียนจะเห็นสถานะ)</div><div style="overflow:auto;max-height:420px;margin-top:8px"><table class="tb" id="aActs"></table></div></div>
  <div class="card"><h2>ดูบทเรียนล่วงหน้า (โหมดครู)</h2><div class="muted">เปิดดูเนื้อหา แบบฝึกหัด และเฉลยทุกบทที่สร้างไว้ แม้ยังไม่ถึงวันเปิดให้นักเรียน · ไม่มีการบันทึกผลใด ๆ · ใช้ชุดโจทย์ของนักเรียนที่เลือกไว้ (ถ้าไม่ได้เลือก ใช้เลขที่ 1 ของห้อง)</div><div id="aPrev" style="margin-top:8px"></div></div>
  <div class="card"><h2>สไลด์สรุปความรู้ (ฉายโปรเจคเตอร์)</h2><div class="muted">หน้าเดียวต่อ 1 บทเรียนที่สอนในคาบ (ทบทวน · ใบความรู้ · ตัวอย่าง) ตัวอักษรใหญ่ พอดีจอ · F = เต็มจอ · A−/A+ ปรับขนาด</div><div id="aSlides" style="margin-top:8px"></div></div>
+ <div class="card" id="aScCard"><h2>แจ้งคะแนนรายบุคคล</h2><div class="muted">กรอกคะแนนแล้วกด "บันทึก" · นักเรียนเห็นเฉพาะคะแนนของตัวเอง · เว้นช่องว่าง = ยังไม่แจ้ง</div><div class="row" style="margin:8px 0;flex-wrap:wrap"><select id="scCls"></select><select id="scSet"></select><input id="scTitle" placeholder="ชื่อรายการ เช่น ทดสอบย่อย 1" style="min-width:200px"><label>เต็ม <input id="scMax" type="number" min="1" value="10" style="width:70px"></label><button class="pri" id="scSave">บันทึก</button><button id="scDel">ลบรายการนี้</button></div><div class="muted" id="scInfo"></div><div style="overflow:auto;max-height:480px;margin-top:6px"><table class="tb" id="scTb"></table></div></div>
  <div class="card"><button id="aGoMeq" class="pri" style="width:100%;padding:12px">MathEQ (ค่าเฉลี่ย · รายบุคคล · ฝึกพื้นฐาน) →</button></div>
 </div>
 <div id="aMeq" class="hide">
@@ -234,6 +236,8 @@ const ACTIVITIES=[
  {id:'LS_M4W03_CK',type:'notebook',title:'ม.4 16 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.4/1',date:'2026-11-16',file:'lesson_M4_w03.html',total:1},
  {id:'LS_M4W04',type:'lesson',title:'ม.4 · 19 พ.ย. · การเรียงสับเปลี่ยนเมื่อมีสิ่งของซ้ำ',cls:'ม.4/1',date:'2026-11-19',file:'lesson_M4_w04.html',total:3},
  {id:'LS_M4W04_CK',type:'notebook',title:'ม.4 19 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.4/1',date:'2026-11-19',file:'lesson_M4_w04.html',total:1},
+ {id:'LS_M4W05',type:'lesson',title:'ม.4 · 23 พ.ย. · การเรียงสับเปลี่ยนวงกลม',cls:'ม.4/1',date:'2026-11-23',file:'lesson_M4_w05.html',total:3},
+ {id:'LS_M4W05_CK',type:'notebook',title:'ม.4 23 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.4/1',date:'2026-11-23',file:'lesson_M4_w05.html',total:1},
  {id:'LS_M5W04',type:'lesson',title:'ม.5 · 17 พ.ย. · ระนาบเชิงซ้อนและค่าสัมบูรณ์',cls:'ม.5/1',date:'2026-11-17',file:'lesson_M5_w04.html',total:5},
  {id:'LS_M5W04_CK',type:'notebook',title:'ม.5 17 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.5/1',date:'2026-11-17',file:'lesson_M5_w04.html',total:1},
  {id:'LS_M2W06',type:'lesson',title:'ม.2 · 17 พ.ย. · สรุปสถิติ: ค่ากลางจากแผนภาพ',cls:'ม.2/1',date:'2026-11-17',file:'lesson_M2_w06.html',total:4},
@@ -256,6 +260,10 @@ let POS=[];
 function lessonSteps(){return ACTIVITIES.map((a,i)=>[a,i]).filter(x=>x[0].type==='lesson'&&x[0].cls===ME.cls).sort((x,y)=>x[0].date.localeCompare(y[0].date)||x[1]-y[1]).map(x=>x[0])}
 const stState=(a,g)=>{const sys=(g(a.id)||0)>=a.total,ck=(g(a.id+'_CK')||0)>=1;return sys&&ck?2:sys?1:0};
 const stPos=(L,g)=>{let p=-1;L.forEach((a,i)=>{if(stState(a,g)===2)p=i});return p};
+function renderScores(){
+ const el=$('scoresCard');if(!SCORES.length){el.classList.add('hide');return}el.classList.remove('hide');
+ const esc=t=>String(t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+ el.innerHTML='<h2 style="margin:0 0 8px">คะแนนของฉัน</h2><table class="tb" style="width:100%"><tr><th>รายการ</th><th>คะแนน</th><th>หมายเหตุ</th></tr>'+SCORES.slice().sort((a,b)=>String(b.updated).localeCompare(String(a.updated))).map(x=>`<tr><td>${esc(x.title)}</td><td style="white-space:nowrap"><b>${x.score}</b> / ${x.max}</td><td class="muted">${esc(x.note||'')}</td></tr>`).join('')+'</table>'}
 function renderTrack(){
  const el=$('track'),L=lessonSteps();if(!L.length){el.classList.add('hide');return}el.classList.remove('hide');
  const mine=k=>{const p=PROG[k];return p?p.passed.length:0};
@@ -305,16 +313,23 @@ function demoPos(cls,selfId){const d=demoDB(),o=[];Object.keys(DEMO_ROSTER).forE
  for(let i=0;i<14;i++){const m={},up=(i*7+3)%(L.length+1);for(let k=0;k<up;k++){m[L[k].id]=L[k].total;m[L[k].id+'_CK']=1}if(up<L.length&&i%3===0)m[L[up].id]=L[up].total;o.push(m)}
  return o}
 function demoAvg(cls){const d=demoDB(),s={},n={};Object.keys(DEMO_ROSTER).forEach(id=>{if(DEMO_ROSTER[id].cls!==cls||!d[id])return;for(const k in d[id]){s[k]=(s[k]||0)+d[id][k].passed.length;n[k]=(n[k]||0)+1}});const o={};for(const k in s)o[k]={avg:Math.round(s[k]/n[k]*10)/10,n:n[k]};return o}
+let MEMSC={};
+function demoSc(){try{return JSON.parse(localStorage.getItem('idpDemoSc')||'{}')}catch(e){return MEMSC}}
+function demoScSave(d){MEMSC=d;try{localStorage.setItem('idpDemoSc',JSON.stringify(d))}catch(e){}}
+function demoScoresMap(id){return demoSc()[id]||{}}
+function demoScoresOf(id){const m=demoScoresMap(id);return Object.keys(m).map(k=>Object.assign({key:k,updated:''},m[k]))}
 async function api(body){
  if(!DEMO){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return await r.json()}
  const d=demoDB();
  if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347 / 12348)'};
-  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.id)}}
- if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.token)}}
+  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.id),scores:demoScoresOf(body.id)}}
+ if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.token),scores:demoScoresOf(body.token)}}
  if(body.action==='save'){d[body.token]=d[body.token]||{};{const o=d[body.token][body.strand],m=o?o.passed.slice():[];body.passed.forEach(x=>{if(m.indexOf(x)<0)m.push(x)});let fl=(body.failedAt?String(body.failedAt).split(','):[]).filter(x=>m.indexOf(x)<0);if(!fl.length&&o&&o.failedAt&&body.failedAt&&body.strand!=='GCX')fl=String(o.failedAt).split(',').filter(x=>m.indexOf(x)<0);d[body.token][body.strand]={passed:m,failedAt:fl.join(','),updated:new Date().toISOString()}}demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
  if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
- if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
+ if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{},scores:demoScoresMap(id)}))};
  if(body.action==='adminMark'){d[body.id]=d[body.id]||{};if(body.on)d[body.id][body.strand]={passed:['CK'],failedAt:'',updated:new Date().toISOString()};else delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+ if(body.action==='adminSetScores'){const D=demoSc();body.rows.forEach(r=>{const ok=!(r.score===''||r.score==null)&&isFinite(+r.score);D[r.id]=D[r.id]||{};if(ok)D[r.id][body.key]={title:body.title,score:Math.max(0,Math.min(+r.score,+body.max)),max:+body.max,note:r.note||''};else delete D[r.id][body.key]});demoScSave(D);return{ok:true}}
+ if(body.action==='adminDelScoreSet'){const D=demoSc();for(const id in D)delete D[id][body.key];demoScSave(D);return{ok:true}}
  if(body.action==='adminReset'){if(d[body.id])delete d[body.id][body.strand];demoSave(d);return{ok:true}}
 }
 async function call(body,errEl){try{const r=await api(body);if(!r.ok&&errEl)errEl.textContent=r.error||'เกิดข้อผิดพลาด';return r}catch(e){if(errEl)errEl.textContent='เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง';return{ok:false}}}
@@ -344,7 +359,7 @@ function drawEq(el,vals,opt){
  el.querySelectorAll('.avg').forEach(a=>{const h=a.parentNode.clientHeight||280;a.style.bottom=(2+parseFloat(a.dataset.f)*(h-4))+'px'});
 }
 
-let ME=null,TOKEN=null,PROG={},AVG={};
+let ME=null,TOKEN=null,PROG={},AVG={},SCORES=[];
 $('btnLogin').onclick=login;$('sid').onkeydown=e=>{if(e.key==='Enter')login()};
 async function login(){
  $('loginErr').textContent='';const id=$('sid').value.trim().replace(/[๐-๙]/g,c=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(c));
@@ -352,12 +367,12 @@ async function login(){
  $('btnLogin').disabled=true;$('btnLogin').textContent='กำลังตรวจสอบ…';
  const r=await call({action:'login',id},$('loginErr'));
  $('btnLogin').disabled=false;$('btnLogin').textContent='เข้าสู่ระบบ';
- if(!r.ok)return;ME=r.student;TOKEN=r.token;PROG=r.progress||{};AVG=r.classAvg||{};POS=r.classPos||[];try{sessionStorage.setItem('matheq_sess',JSON.stringify({token:TOKEN,student:ME}))}catch(e){}home()}
+ if(!r.ok)return;ME=r.student;TOKEN=r.token;PROG=r.progress||{};AVG=r.classAvg||{};POS=r.classPos||[];SCORES=r.scores||[];try{sessionStorage.setItem('matheq_sess',JSON.stringify({token:TOKEN,student:ME}))}catch(e){}home()}
 function summary(){let t=0,tot=0;STR.forEach(s=>{tot+=s.steps.length;t+=((PROG[s.id]||{}).passed||[]).length});return[t,tot]}
 function home(sel){
  if(sel)return self(sel);
  show('vHome');$('hName').textContent=ME.name;$('hSub').textContent=`${ME.cls} · เลขที่ ${ME.no} · รหัส ${ME.id}`;
- renderTrack();renderActs()}
+ renderTrack();renderScores();renderActs()}
 function self(sel){
  show('vSelf');$('sSub').textContent=`${ME.name} · ${ME.cls} · เลขที่ ${ME.no}`;
  const[t,tot]=summary();$('lcd').innerHTML=`${t}/${tot}<small>ขั้น</small>`;
@@ -400,9 +415,39 @@ function renderAdmin(){
   h+=`<tr><td>${st.cls}</td><td>${st.no}</td><td><a href="#" data-id="${st.id}" style="color:#9ccfff">${st.name}</a></td>`+STR.map(s=>{const c=cnt(st,s.id),T=BANKS[s.id].STEPS.length;
    if(c===null)return'<td><span class="cell sc0">-</span></td>';const f=c/T;return`<td><span class="cell ${f>=.5?'sc3':f>=.25?'sc2':'sc1'}">${c>=T?'✓':c}</span></td>`}).join('')+'</tr>'});
  $('aTb').innerHTML=h;$('aTb').querySelectorAll('a').forEach(a=>a.onclick=e=>{e.preventDefault();adminOne(a.dataset.id)});
- renderActsAdmin(L);renderRooms();
+ renderActsAdmin(L);renderRooms();renderScoreAdmin();
  if(ASEL)adminOne(ASEL,true)}
 
+let SCKEY=null,SCNEW=null;
+function scClasses(){return [...new Set(ADATA.map(s=>s.cls))].sort((a,b)=>a.localeCompare(b,'th'))}
+function scSets(c){const m={};ADATA.filter(s=>s.cls===c).forEach(s=>{for(const k in s.scores||{})m[k]=s.scores[k]});return m}
+function renderScoreAdmin(keepInputs){
+ const cs=scClasses();if(!cs.length)return;const cur=$('scCls').value;
+ if(!keepInputs||![...$('scCls').options].some(o=>o.value===cur)){$('scCls').innerHTML=cs.map(c=>`<option>${c}</option>`).join('');if(cur&&cs.includes(cur))$('scCls').value=cur}
+ const c=$('scCls').value,sets=scSets(c),keys=Object.keys(sets);
+ if(!SCNEW&&(!SCKEY||!keys.includes(SCKEY)))SCKEY=keys[0]||null;
+ $('scSet').innerHTML=keys.map(k=>`<option value="${k}">${sets[k].title}</option>`).join('')+'<option value="">+ รายการใหม่</option>';
+ $('scSet').value=SCNEW?'':(SCKEY||'');
+ const isNew=!$('scSet').value;
+ if(!keepInputs){$('scTitle').value=isNew?'':sets[SCKEY].title;$('scMax').value=isNew?($('scMax').value||10):sets[SCKEY].max}
+ $('scDel').style.display=isNew?'none':'';
+ const S=ADATA.filter(s=>s.cls===c).sort((a,b)=>a.no-b.no),k=$('scSet').value;
+ $('scTb').innerHTML='<tr><th>เลขที่</th><th>ชื่อ</th><th>คะแนน</th><th>หมายเหตุ</th></tr>'+S.map(s=>{const v=(s.scores||{})[k];return`<tr${s.off?' style="opacity:.5"':''}><td>${s.no}</td><td style="white-space:nowrap">${s.name}</td><td><input class="scv" data-id="${s.id}" type="number" step="any" min="0" value="${v?v.score:''}" style="width:80px"></td><td><input class="scn" data-id="${s.id}" value="${v?String(v.note||'').replace(/"/g,'&quot;'):''}" style="width:200px"></td></tr>`}).join('');
+ scInfo()}
+function scInfo(){const vs=[...document.querySelectorAll('#scTb .scv')].map(i=>i.value).filter(x=>x!==''&&isFinite(+x)).map(Number),mx=+$('scMax').value||0;
+ $('scInfo').textContent=vs.length?`กรอกแล้ว ${vs.length} คน · เฉลี่ย ${(vs.reduce((a,b)=>a+b,0)/vs.length).toFixed(2)} / ${mx} · สูงสุด ${Math.max(...vs)} · ต่ำสุด ${Math.min(...vs)}`:'ยังไม่ได้กรอก'}
+$('scCls').onchange=()=>{SCNEW=false;SCKEY=null;renderScoreAdmin()};
+$('scSet').onchange=()=>{if($('scSet').value){SCNEW=false;SCKEY=$('scSet').value}else{SCNEW=true;$('scTitle').value=''}renderScoreAdmin()};
+$('scTb').oninput=scInfo;$('scMax').oninput=scInfo;
+$('scSave').onclick=async()=>{
+ const title=$('scTitle').value.trim(),max=+$('scMax').value;if(!title||!(max>0)){alert('กรอกชื่อรายการและคะแนนเต็ม');return}
+ const over=[...document.querySelectorAll('#scTb .scv')].filter(i=>i.value!==''&&+i.value>max);if(over.length&&!confirm(over.length+' คนมีคะแนนเกินคะแนนเต็ม จะถูกตัดให้เท่าคะแนนเต็ม ดำเนินการต่อ?'))return;
+ let key=$('scSet').value;if(!key)key='Q'+Date.now().toString(36).toUpperCase();
+ const rows=[...document.querySelectorAll('#scTb .scv')].map(i=>({id:i.dataset.id,score:i.value,note:(document.querySelector('#scTb .scn[data-id="'+i.dataset.id+'"]')||{}).value||''}));
+ $('scSave').disabled=true;const r=await call({action:'adminSetScores',token:ATOKEN,key,title,max,rows});$('scSave').disabled=false;
+ if(!r.ok){alert(r.error||'บันทึกไม่สำเร็จ');return}
+ SCKEY=key;SCNEW=false;await loadAdmin();$('scInfo').textContent='บันทึกแล้ว ✓ · '+$('scInfo').textContent}
+$('scDel').onclick=async()=>{const k=$('scSet').value;if(!k||!confirm('ลบรายการคะแนนนี้ของทุกคน?'))return;const r=await call({action:'adminDelScoreSet',token:ATOKEN,key:k});if(!r.ok){alert(r.error||'ลบไม่สำเร็จ');return}SCKEY=null;await loadAdmin()};
 function renderRooms(){
  const el=$('aRooms');const rooms=[...new Set(ACTIVITIES.filter(a=>a.type==='lesson'&&a.cls!=='ม.3/1').map(a=>a.cls))].sort((x,y)=>x.localeCompare(y,'th'));
  const td=todayStr();let h='';
@@ -473,6 +518,6 @@ $('aOut').onclick=()=>{ATOKEN=null;ADATA=[];ASEL=null;show('vLogin')};
  if(!sess){show('vLogin');return}
  TOKEN=sess.token;const r=await call({action:'me',token:TOKEN});
  if(!r.ok){try{sessionStorage.removeItem('matheq_sess')}catch(e){}show('vLogin');return}
- ME=r.student;PROG=r.progress||{};AVG=r.classAvg||{};POS=r.classPos||[];
+ ME=r.student;PROG=r.progress||{};AVG=r.classAvg||{};POS=r.classPos||[];SCORES=r.scores||[];
  const q=new URLSearchParams(location.search).get('s');home(q&&STR.some(x=>x.id===q)?q:undefined)})();
 </script></body></html>

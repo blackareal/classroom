@@ -382,16 +382,23 @@ function demoPos(cls,selfId){const d=demoDB(),o=[];Object.keys(DEMO_ROSTER).forE
  for(let i=0;i<14;i++){const m={},up=(i*7+3)%(L.length+1);for(let k=0;k<up;k++){m[L[k].id]=L[k].total;m[L[k].id+'_CK']=1}if(up<L.length&&i%3===0)m[L[up].id]=L[up].total;o.push(m)}
  return o}
 function demoAvg(cls){const d=demoDB(),s={},n={};Object.keys(DEMO_ROSTER).forEach(id=>{if(DEMO_ROSTER[id].cls!==cls||!d[id])return;for(const k in d[id]){s[k]=(s[k]||0)+d[id][k].passed.length;n[k]=(n[k]||0)+1}});const o={};for(const k in s)o[k]={avg:Math.round(s[k]/n[k]*10)/10,n:n[k]};return o}
+let MEMSC={};
+function demoSc(){try{return JSON.parse(localStorage.getItem('idpDemoSc')||'{}')}catch(e){return MEMSC}}
+function demoScSave(d){MEMSC=d;try{localStorage.setItem('idpDemoSc',JSON.stringify(d))}catch(e){}}
+function demoScoresMap(id){return demoSc()[id]||{}}
+function demoScoresOf(id){const m=demoScoresMap(id);return Object.keys(m).map(k=>Object.assign({key:k,updated:''},m[k]))}
 async function api(body){
  if(!DEMO){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return await r.json()}
  const d=demoDB();
  if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347 / 12348)'};
-  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.id)}}
- if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.token)}}
+  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.id),scores:demoScoresOf(body.id)}}
+ if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.token),scores:demoScoresOf(body.token)}}
  if(body.action==='save'){d[body.token]=d[body.token]||{};{const o=d[body.token][body.strand],m=o?o.passed.slice():[];body.passed.forEach(x=>{if(m.indexOf(x)<0)m.push(x)});let fl=(body.failedAt?String(body.failedAt).split(','):[]).filter(x=>m.indexOf(x)<0);if(!fl.length&&o&&o.failedAt&&body.failedAt&&body.strand!=='GCX')fl=String(o.failedAt).split(',').filter(x=>m.indexOf(x)<0);d[body.token][body.strand]={passed:m,failedAt:fl.join(','),updated:new Date().toISOString()}}demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
  if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
- if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{}}))};
+ if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{},scores:demoScoresMap(id)}))};
  if(body.action==='adminMark'){d[body.id]=d[body.id]||{};if(body.on)d[body.id][body.strand]={passed:['CK'],failedAt:'',updated:new Date().toISOString()};else delete d[body.id][body.strand];demoSave(d);return{ok:true}}
+ if(body.action==='adminSetScores'){const D=demoSc();body.rows.forEach(r=>{const ok=!(r.score===''||r.score==null)&&isFinite(+r.score);D[r.id]=D[r.id]||{};if(ok)D[r.id][body.key]={title:body.title,score:Math.max(0,Math.min(+r.score,+body.max)),max:+body.max,note:r.note||''};else delete D[r.id][body.key]});demoScSave(D);return{ok:true}}
+ if(body.action==='adminDelScoreSet'){const D=demoSc();for(const id in D)delete D[id][body.key];demoScSave(D);return{ok:true}}
  if(body.action==='adminReset'){if(d[body.id])delete d[body.id][body.strand];demoSave(d);return{ok:true}}
 }
 async function call(body,errEl){try{const r=await api(body);if(!r.ok&&errEl)errEl.textContent=r.error||'เกิดข้อผิดพลาด';return r}catch(e){if(errEl)errEl.textContent='เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง';return{ok:false}}}
