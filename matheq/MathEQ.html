@@ -577,7 +577,7 @@ function renderRooms(){
  el.querySelectorAll('i[data-id]').forEach(i=>i.onclick=()=>adminOne(i.dataset.id));
 }
 function renderActsAdmin(L){
- const cl=new Set(L.map(x=>x.cls));const A=ACTIVITIES.filter(a=>cl.has(a.cls));const card=$('aActsCard');
+ const cl=new Set(L.map(x=>x.cls));const A=ACTIVITIES.map((a,i)=>[a,i]).filter(x=>cl.has(x[0].cls)).sort((x,y)=>String(x[0].date).localeCompare(String(y[0].date))||x[1]-y[1]).map(x=>x[0]);const card=$('aActsCard');
  if(!A.length){card.classList.add('hide');return}card.classList.remove('hide');
  let h='<tr><th>ห้อง</th><th>เลขที่</th><th>ชื่อ</th>'+A.map(a=>`<th title="${a.title}">${a.id==='GCX'?'ประตู':a.id==='C'?'ประเมิน C':a.type==='notebook'?'ตรวจสมุด '+a.id.replace('LS_','').replace('_CK',''):a.id.replace('LS_','')}</th>`).join('')+'</tr>';
  L.filter(s=>A.some(a=>a.cls===s.cls)).sort((a,b)=>a.cls.localeCompare(b.cls,'th')||a.no-b.no).forEach(st=>{h+=`<tr${st.off?' style="opacity:.45"':''}><td>${st.cls}</td><td>${st.no}</td><td><a href="#" data-id="${st.id}" style="color:#9ccfff">${st.name}</a>${st.off?' <span class="muted">(ไม่ร่วม)</span>':''}${st.special?' <span class="muted" style="color:#ffb74d">(พิเศษ)</span>':''}</td>`+A.map(a=>{if(a.cls!==st.cls)return'<td></td>';const p=st.progress[a.id];if(a.type==='notebook')return`<td><input type="checkbox" data-ckid="${st.id}" data-ckk="${a.id}" ${p&&p.passed.length?'checked':''} style="width:20px;height:20px"></td>`;if(!p)return'<td><span class="cell sc0">-</span></td>';const n=p.passed.length,f=n/a.total;return`<td><span class="cell ${f>=1?'sc3':f>=.5?'sc2':'sc1'}" title="${p.failedAt||''}">${n}/${a.total}</span></td>`}).join('')+'</tr>'});
