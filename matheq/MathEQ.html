@@ -155,6 +155,7 @@ html[data-theme=dark] .tcard a{color:#7db7ff}
 <div id="vHome" class="hide">
  <div class="top"><div><h1 id="hName"></h1><div class="sub" id="hSub"></div></div><div class="row"><button id="btnOut">ออกจากระบบ</button></div></div>
  <div class="card" id="track"></div>
+ <div class="card hide" id="avCard"></div>
  <div class="card hide" id="scoresCard"></div>
  <div class="card" id="acts"></div>
  <div class="card"><div class="row" style="justify-content:space-between"><div><h2 style="margin:0 0 4px">MathEQ เรียนรู้ด้วยตนเอง</h2><div class="muted">แบบทดสอบประเมินตนเองรายสาย · แท่ง EQ · ใบความรู้ · ฝึกพื้นฐาน</div></div><button class="pri" id="btnSelf">เข้า MathEQ เรียนรู้ด้วยตนเอง</button></div></div>
@@ -232,6 +233,8 @@ const ACTIVITIES=[
  {id:'LS_M1W04_CK',type:'notebook',title:'ม.1 13 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.1/1',date:'2026-11-13',file:'lesson_M1_w04.html',total:1},
  {id:'LS_M1W05',type:'lesson',title:'ม.1 · 19 พ.ย. · สมการ (4) ตัวแปรอยู่ทั้งสองข้าง',cls:'ม.1/1',date:'2026-11-19',file:'lesson_M1_w05.html',total:3},
  {id:'LS_M1W05_CK',type:'notebook',title:'ม.1 19 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.1/1',date:'2026-11-19',file:'lesson_M1_w05.html',total:1},
+ {id:'LS_M1W06',type:'lesson',title:'ม.1 · 25 พ.ย. · สมการ (5) สมการที่มีวงเล็บ',cls:'ม.1/1',date:'2026-11-25',file:'lesson_M1_w06.html',total:3},
+ {id:'LS_M1W06_CK',type:'notebook',title:'ม.1 25 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.1/1',date:'2026-11-25',file:'lesson_M1_w06.html',total:1},
  {id:'LS_M4W03',type:'lesson',title:'ม.4 · 16 พ.ย. · การเรียงสับเปลี่ยนที่มีเงื่อนไข',cls:'ม.4/1',date:'2026-11-16',file:'lesson_M4_w03.html',total:3},
  {id:'LS_M4W03_CK',type:'notebook',title:'ม.4 16 พ.ย. · ครูตรวจสมุดแล้ว',cls:'ม.4/1',date:'2026-11-16',file:'lesson_M4_w03.html',total:1},
  {id:'LS_M4W04',type:'lesson',title:'ม.4 · 19 พ.ย. · การเรียงสับเปลี่ยนเมื่อมีสิ่งของซ้ำ',cls:'ม.4/1',date:'2026-11-19',file:'lesson_M4_w04.html',total:3},
@@ -304,7 +307,7 @@ const $=id=>document.getElementById(id);
 const show=id=>{['vLogin','vAdminLogin','vHome','vSelf','vAdmin'].forEach(x=>$(x).classList.toggle('hide',x!==id))};
 if(DEMO)$('demoTag').classList.remove('hide');
 
-const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
+const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2,special:true},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
 let MEM={};
 function demoDB(){try{return JSON.parse(localStorage.getItem('idpDemo')||'{}')}catch(e){return MEM}}
 function demoSave(d){MEM=d;try{localStorage.setItem('idpDemo',JSON.stringify(d))}catch(e){}}
@@ -326,7 +329,7 @@ async function api(body){
  if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.token),scores:demoScoresOf(body.token)}}
  if(body.action==='save'){d[body.token]=d[body.token]||{};{const o=d[body.token][body.strand],m=o?o.passed.slice():[];body.passed.forEach(x=>{if(m.indexOf(x)<0)m.push(x)});let fl=(body.failedAt?String(body.failedAt).split(','):[]).filter(x=>m.indexOf(x)<0);if(!fl.length&&o&&o.failedAt&&body.failedAt&&body.strand!=='GCX')fl=String(o.failedAt).split(',').filter(x=>m.indexOf(x)<0);d[body.token][body.strand]={passed:m,failedAt:fl.join(','),updated:new Date().toISOString()}}demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
  if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
- if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{},scores:demoScoresMap(id)}))};
+ if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,special:!!DEMO_ROSTER[id].special,progress:d[id]||{},scores:demoScoresMap(id)}))};
  if(body.action==='adminMark'){d[body.id]=d[body.id]||{};if(body.on)d[body.id][body.strand]={passed:['CK'],failedAt:'',updated:new Date().toISOString()};else delete d[body.id][body.strand];demoSave(d);return{ok:true}}
  if(body.action==='adminSetScores'){const D=demoSc();body.rows.forEach(r=>{const ok=!(r.score===''||r.score==null)&&isFinite(+r.score);D[r.id]=D[r.id]||{};if(ok)D[r.id][body.key]={title:body.title,score:Math.max(0,Math.min(+r.score,+body.max)),max:+body.max,note:r.note||''};else delete D[r.id][body.key]});demoScSave(D);return{ok:true}}
  if(body.action==='adminDelScoreSet'){const D=demoSc();for(const id in D)delete D[id][body.key];demoScSave(D);return{ok:true}}
@@ -359,6 +362,104 @@ function drawEq(el,vals,opt){
  el.querySelectorAll('.avg').forEach(a=>{const h=a.parentNode.clientHeight||280;a.style.bottom=(2+parseFloat(a.dataset.f)*(h-4))+'px'});
 }
 
+/* ===== MathEQ Avatar (เฟส 1) — ตัวละครมินิมอล SVG + ไอเทมปลดล็อกจากสาย/ความพยายาม =====
+   เก็บชุดที่ใส่ใน Progress strand 'LS_AVT' (passed=['A'], failedAt = "k2,hN1,cA2,...") — ไม่ต้องแก้ Code.gs */
+const AV_COL={N:'#2ee66d',A:'#ffd23f',F:'#4fc3f7',D:'#ff8a3d',T:'#e57373',S:'#ba68c8',L:'#4db6ac',M:'#7986cb',C:'#f06292',E:'#ffc107'};
+const AV_SHIRT=['#4fc3f7','#81c784','#ffb74d','#ba68c8','#e57373','#90a4ae'];
+const AV_SLOTS=[['h','หมวก/ศีรษะ'],['g','แว่น'],['c','ผ้าคลุม/ปีก'],['b','ตรา'],['o','ออร่า']];
+const avBadge=(c,t)=>`<circle cx="60" cy="80" r="8" fill="${c}"/><text x="60" y="84" font-size="11" text-anchor="middle" fill="#fff" font-weight="700" font-family="sans-serif">${t}</text>`;
+const avAura=(c,k)=>{let s=`<circle cx="50" cy="62" r="50" fill="${c}" opacity=".16"/>`;
+ if(k==='ring')s+=`<circle cx="50" cy="62" r="46" fill="none" stroke="${c}" stroke-width="2" opacity=".7"/><circle cx="50" cy="62" r="38" fill="none" stroke="${c}" stroke-width="1.5" opacity=".5"/>`;
+ else if(k==='dots'){for(let i=0;i<12;i++){const a=i*Math.PI/6;s+=`<circle cx="${(50+47*Math.cos(a)).toFixed(1)}" cy="${(62+47*Math.sin(a)).toFixed(1)}" r="2.6" fill="${c}"/>`}}
+ else s+=`<circle cx="50" cy="62" r="46" fill="none" stroke="${c}" stroke-width="3" opacity=".6"/>`;
+ return s};
+const AV_ITEMS=[
+ {id:'N1',s:'N',slot:'h',tier:1,name:'หมวกแก๊ปนักคิดเลข',svg:c=>`<path d="M31 38 Q50 8 69 38Z" fill="${c}"/><rect x="27" y="36" width="46" height="5" rx="2" fill="${c}" opacity=".8"/>`},
+ {id:'N2',s:'N',slot:'o',tier:2,name:'ออร่าตัวเลข',svg:c=>avAura(c,'glow')},
+ {id:'A1',s:'A',slot:'g',tier:1,name:'แว่นกลมพีชคณิต',svg:c=>`<circle cx="43" cy="42" r="7" fill="none" stroke="${c}" stroke-width="2.4"/><circle cx="57" cy="42" r="7" fill="none" stroke="${c}" stroke-width="2.4"/><path d="M50 42h0" stroke="${c}" stroke-width="2.4"/>`},
+ {id:'A2',s:'A',slot:'c',tier:2,name:'ผ้าคลุมนักพีชคณิต',svg:c=>`<path d="M26 66 L74 66 L86 114 L14 114Z" fill="${c}" opacity=".9"/>`},
+ {id:'F1',s:'F',slot:'h',tier:1,name:'หมวกเบเรต์พิกัด',svg:c=>`<ellipse cx="46" cy="25" rx="22" ry="9" fill="${c}"/><circle cx="46" cy="15" r="3" fill="${c}"/>`},
+ {id:'F2',s:'F',slot:'b',tier:2,name:'ตราพิกัด',svg:c=>avBadge(c,'F')},
+ {id:'D1',s:'D',slot:'g',tier:1,name:'แว่นเหลี่ยมเรขาคณิต',svg:c=>`<rect x="36" y="36" width="13" height="11" rx="2" fill="none" stroke="${c}" stroke-width="2.4"/><rect x="51" y="36" width="13" height="11" rx="2" fill="none" stroke="${c}" stroke-width="2.4"/>`},
+ {id:'D2',s:'D',slot:'c',tier:2,name:'ปีกสามเหลี่ยม',svg:c=>`<path d="M30 68 L4 52 L12 92Z" fill="${c}"/><path d="M70 68 L96 52 L88 92Z" fill="${c}"/>`},
+ {id:'T1',s:'T',slot:'h',tier:1,name:'หูฟังคลื่นไซน์',svg:c=>`<path d="M30 42 A20 22 0 0 1 70 42" fill="none" stroke="${c}" stroke-width="5"/><rect x="24" y="38" width="9" height="16" rx="4" fill="${c}"/><rect x="67" y="38" width="9" height="16" rx="4" fill="${c}"/>`},
+ {id:'T2',s:'T',slot:'o',tier:2,name:'ออร่าคลื่น',svg:c=>avAura(c,'ring')},
+ {id:'S1',s:'S',slot:'h',tier:1,name:'หมวกจอมสถิติ',svg:c=>`<path d="M50 3 L72 34 L28 34Z" fill="${c}"/><rect x="24" y="32" width="52" height="5" rx="2" fill="${c}"/>`},
+ {id:'S2',s:'S',slot:'b',tier:2,name:'ตราสถิติ',svg:c=>avBadge(c,'S')},
+ {id:'L1',s:'L',slot:'h',tier:1,name:'มงกุฎเซต',svg:c=>`<path d="M31 30 L36 12 L44 24 L50 10 L56 24 L64 12 L69 30Z" fill="${c}"/>`},
+ {id:'L2',s:'L',slot:'b',tier:2,name:'ตราเซต',svg:c=>avBadge(c,'L')},
+ {id:'M1',s:'M',slot:'h',tier:1,name:'หมวกทรงสูง',svg:c=>`<rect x="36" y="8" width="28" height="26" rx="3" fill="${c}"/><rect x="28" y="32" width="44" height="5" rx="2" fill="${c}"/>`},
+ {id:'M2',s:'M',slot:'c',tier:2,name:'ผ้าคลุมเมทริกซ์',svg:c=>`<path d="M26 66 L74 66 L86 114 L14 114Z" fill="${c}" opacity=".9"/><path d="M34 80h32M34 92h32M42 70v40M58 70v40" stroke="#fff" stroke-width="1.2" opacity=".5"/>`},
+ {id:'C1',s:'C',slot:'h',tier:1,name:'ผ้าคาดหัวลิมิต',svg:c=>`<rect x="30" y="28" width="40" height="6" rx="3" fill="${c}"/><path d="M50 14l3 7 7 .5-5.5 4.5 2 7-6.5-4-6.5 4 2-7-5.5-4.5 7-.5z" fill="${c}"/>`},
+ {id:'C2',s:'C',slot:'o',tier:2,name:'ออร่าอนันต์',svg:c=>avAura(c,'dots')},
+ {id:'E1',s:'E',slot:'b',name:'ตราช่างฝึก',eff:'ผ่านฝึกพื้นฐานตั้งแต่ระดับ 4 ขึ้นไป',svg:c=>avBadge(c,'★')},
+ {id:'E2',s:'E',slot:'b',name:'ตรานักเก็บงาน',eff:'ทำบทเรียนครบ + ครูตรวจสมุดแล้ว 3 บท',svg:c=>avBadge(c,'✓')},
+ {id:'E3',s:'E',slot:'h',name:'ผ้าคาดทองผู้สม่ำเสมอ',eff:'ทำฝึกพื้นฐานครบ 10 ชุด',svg:c=>`<rect x="29" y="27" width="42" height="7" rx="3" fill="${c}"/><circle cx="50" cy="30" r="3.5" fill="#fff" opacity=".8"/>`}
+];
+const AV_BY=Object.fromEntries(AV_ITEMS.map(i=>[i.id,i]));
+function avT(s){return(BANKS[s]&&BANKS[s].STEPS.length)||0}
+function avNeed(it){const T=avT(it.s);return it.tier===1?Math.max(1,Math.ceil(T/3)):Math.max(1,Math.ceil(T*2/3))}
+function avCnt(s){return((PROG[s]||{}).passed||[]).length}
+function avEff(){const p=(PROG.LS_BASIC||{}).passed||[];
+ const lv=p.filter(x=>/^L\d+$/.test(x)).length,sets=p.filter(x=>x[0]==='S').length;
+ let les=0;try{const L=lessonSteps(),g=k=>((PROG[k]||{}).passed||[]).length;les=L.filter(a=>stState(a,g)===2).length}catch(e){}
+ return{E1:lv>=4,E2:les>=3,E3:sets>=10,lv,sets,les}}
+function avUnlocked(it){if(it.s==='E')return!!avEff()[it.id];return avCnt(it.s)>=avNeed(it)}
+function avReq(it){if(it.s==='E'){const e=avEff();return it.eff+(it.id==='E1'?` (ตอนนี้ ${e.lv})`:it.id==='E2'?` (ตอนนี้ ${e.les})`:` (ตอนนี้ ${e.sets})`)}
+ const sn=(STR.find(x=>x.id===it.s)||{}).name||it.s;return`ผ่านสาย ${it.s} ${sn} ให้ได้ ${avNeed(it)} ขั้น (ตอนนี้ ${avCnt(it.s)})`}
+function avParse(str){const o={k:0};String(str||'').split(',').forEach(t=>{if(!t)return;if(t[0]==='k'&&/^k[0-5]$/.test(t))o.k=+t[1];else if(AV_BY[t.slice(1)]&&AV_BY[t.slice(1)].slot===t[0])o[t[0]]=t.slice(1)});return o}
+function avStr(eq){let a=['k'+(eq.k||0)];AV_SLOTS.forEach(([s])=>{if(eq[s])a.push(s+eq[s])});return a.join(',')}
+function avEquipped(){const eq=avParse((PROG.LS_AVT||{}).failedAt);AV_SLOTS.forEach(([s])=>{if(eq[s]&&!avUnlocked(AV_BY[eq[s]]))delete eq[s]});return eq}
+/* ธีมตามชั้น: ม.1–2 = 'J' บอทน้อยวิวัฒนาการ · ม.4–6 = 'S' ไซเบอร์นีออน + แรงค์ */
+const AV_NAME_S={N1:'หมวกแก๊ปนีออน',N2:'ออร่าดิจิทัล',A1:'แว่นโฮโลกลม',A2:'แจ็กเก็ตคลุมไซเบอร์',F1:'เบเรต์สตรีท',F2:'ตรา F โฮโลแกรม',D1:'ไวเซอร์เหลี่ยม',D2:'ปีกนีออน',T1:'หูฟังพัลส์',T2:'ออร่าคลื่นพัลส์',S1:'ฮู้ดสถิติ',S2:'ตรา S โฮโลแกรม',L1:'มงกุฎโครงลวด',L2:'ตรา L โฮโลแกรม',M1:'หมวกทรงสูงเมทริกซ์',M2:'ผ้าคลุมโค้ดฝน',C1:'ผ้าคาดหัวนีออน',C2:'ออร่าอนันต์ไซเบอร์'};
+function avTheme(){const m=String((ME&&ME.cls)||'').match(/ม\.(\d)/);return m&&+m[1]<=2?'J':'S'}
+function avName(it){return avTheme()==='S'&&AV_NAME_S[it.id]?AV_NAME_S[it.id]:it.name}
+function avUnN(){return AV_ITEMS.filter(avUnlocked).length}
+function avStage(){const n=avUnN();return n>=9?3:n>=4?2:1}
+function avRank(){const n=avUnN();return n>=15?['แพลทินัม','#b388ff']:n>=10?['โกลด์','#ffd54f']:n>=5?['ซิลเวอร์','#cfd8dc']:['บรอนซ์','#e0955a']}
+function avSVG(eq,px,extra,theme){
+ theme=theme||avTheme();
+ const it=s=>eq[s]?AV_BY[eq[s]]:null,glow=theme==='S',draw=s=>{const i=it(s);if(!i)return'';const g=i.svg(AV_COL[i.s]);return glow&&s!=='o'?`<g filter="url(#avglow)">${g}</g>`:g};
+ const sh=AV_SHIRT[eq.k||0],st=avStage();
+ const defs=`<defs><filter id="avglow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
+ let body;
+ if(theme==='J'){
+  const ant=`<line x1="50" y1="22" x2="50" y2="11" stroke="#90a4ae" stroke-width="2.4"/><circle cx="50" cy="9" r="${st>=2?4.6:3.4}" fill="${st>=2?'#ffd23f':'#90a4ae'}"/>`;
+  const ears=st>=2?`<circle cx="26" cy="42" r="5" fill="${sh}"/><circle cx="74" cy="42" r="5" fill="${sh}"/>`:'';
+  const jets=st>=3?`<path d="M30 70 L12 84 L26 86Z" fill="${sh}" opacity=".8"/><path d="M70 70 L88 84 L74 86Z" fill="${sh}" opacity=".8"/><path d="M45 104h10l-5 10z" fill="#ffd23f"/><circle cx="20" cy="58" r="2" fill="#fff"/><circle cx="82" cy="52" r="1.6" fill="#fff"/>`:'';
+  body=`${jets}<rect x="31" y="64" width="38" height="36" rx="12" fill="#b0bec5"/><rect x="38" y="72" width="24" height="14" rx="5" fill="${sh}"/>${ears}<rect x="28" y="23" width="44" height="40" rx="14" fill="#cfd8dc"/><rect x="33" y="29" width="34" height="27" rx="9" fill="#263238"/><circle cx="43" cy="42" r="3.6" fill="${sh}"/><circle cx="57" cy="42" r="3.6" fill="${sh}"/><path d="M44 50 Q50 54 56 50" fill="none" stroke="${sh}" stroke-width="2" stroke-linecap="round"/>${ant}`;
+ }else{
+  const rk=avRank()[1];
+  body=`<path d="M28 100 Q28 62 50 62 Q72 62 72 100Z" fill="#1b2333"/><path d="M28 100 Q28 62 50 62 Q72 62 72 100" fill="none" stroke="${sh}" stroke-width="1.8" filter="url(#avglow)"/><path d="M50 64 L50 100" stroke="${sh}" stroke-width="1.4" opacity=".7"/><circle cx="50" cy="42" r="20" fill="#e8c4a0"/><path d="M30 38 Q50 14 70 38 L70 33 Q50 8 30 33Z" fill="#1b2333"/><rect x="33" y="38" width="34" height="8" rx="4" fill="${sh}" opacity=".85" filter="url(#avglow)"/><circle cx="43" cy="42" r="1.8" fill="#102027"/><circle cx="57" cy="42" r="1.8" fill="#102027"/><path d="M45 52 Q50 55 55 52" fill="none" stroke="#5d4037" stroke-width="1.8" stroke-linecap="round"/><circle cx="50" cy="63" r="3" fill="${rk}"/>`;
+ }
+ return`<svg viewBox="0 0 100 120" width="${px}" height="${px*1.2}" xmlns="http://www.w3.org/2000/svg" ${extra||''}>${defs}${draw('o')}${draw('c')}${body}${draw('g')}${draw('b')}${draw('h')}</svg>`}
+async function avSave(eq){PROG.LS_AVT={passed:['A'],failedAt:avStr(eq),updated:new Date().toISOString()};
+ try{await call({action:'save',token:TOKEN,strand:'LS_AVT',passed:['A'],failedAt:avStr(eq)})}catch(e){}}
+function avSeenKey(){return'matheq_av_seen_'+(ME&&ME.id)}
+function avNewCount(){let seen=[];try{seen=JSON.parse(localStorage.getItem(avSeenKey())||'null')}catch(e){}
+ const un=AV_ITEMS.filter(avUnlocked).map(i=>i.id);if(seen===null)return{n:0,un,first:true};return{n:un.filter(x=>!seen.includes(x)).length,un}}
+function avMarkSeen(){try{localStorage.setItem(avSeenKey(),JSON.stringify(AV_ITEMS.filter(avUnlocked).map(i=>i.id)))}catch(e){}}
+function renderAvatarCard(){
+ const el=$('avCard');if(!el||!ME)return;const eq=avEquipped(),un=AV_ITEMS.filter(avUnlocked).length,nw=avNewCount();
+ el.classList.remove('hide');
+ el.innerHTML=`<div class="row" style="gap:16px;align-items:center;flex-wrap:nowrap">${avSVG(eq,84)}<div style="flex:1"><h2 style="margin:0 0 4px">ตัวละครของฉัน</h2><div class="muted">ปลดล็อกไอเทมแล้ว ${un}/${AV_ITEMS.length} ชิ้น${nw.n&&!nw.first?` · <b style="color:#ffd23f">ใหม่ ${nw.n} ชิ้น!</b>`:''}</div><div style="margin:2px 0">${avTheme()==='J'?`<b style="color:#4dff9a">วิวัฒนาการระดับ ${avStage()}/3</b>${avStage()<3?` · ปลดล็อกถึง ${avStage()===1?4:9} ชิ้นเพื่อวิวัฒนาการ`:' · สูงสุดแล้ว!'}`:`<b style="color:${avRank()[1]}">แรงค์ ${avRank()[0]}</b>`}</div><div class="muted">ผ่านขั้นในสาย MathEQ และทำงานสม่ำเสมอ เพื่อปลดล็อกไอเทม</div><div style="margin-top:8px"><button class="pri" id="avOpen">แต่งตัวละคร</button></div></div></div>`;
+ $('avOpen').onclick=openAvatar}
+function openAvatar(){
+ let eq=avEquipped();avMarkSeen();
+ let ov=document.getElementById('avOv');if(!ov){ov=document.createElement('div');ov.id='avOv';ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:60;overflow:auto;padding:16px';document.body.appendChild(ov)}
+ ov.style.display='block';
+ const draw=()=>{
+  let h=`<div class="card" style="max-width:640px;margin:0 auto"><div class="row" style="justify-content:space-between"><h2 style="margin:0">แต่งตัวละคร</h2><button id="avClose">ปิด</button></div><div style="text-align:center;margin:8px 0">${avSVG(eq,150)}</div><div style="text-align:center">${avTheme()==='J'?`วิวัฒนาการระดับ ${avStage()}/3`:`แรงค์ ${avRank()[0]}`}</div><div class="muted" style="text-align:center">แตะไอเทมเพื่อใส่/ถอด · ไอเทมที่ยังล็อกจะบอกเงื่อนไข</div>`;
+  h+=`<div style="margin:10px 0"><b>สีเสื้อ</b><div class="row" style="margin-top:6px">${AV_SHIRT.map((c,i)=>`<button data-k="${i}" style="width:34px;height:34px;border-radius:50%;background:${c};border:${(eq.k||0)===i?'3px solid #fff':'2px solid #52627d'};padding:0"></button>`).join('')}</div></div>`;
+  AV_SLOTS.forEach(([s,nm])=>{const L=AV_ITEMS.filter(i=>i.slot===s);
+   h+=`<div style="margin:12px 0;border-top:1px solid #2a3652;padding-top:8px"><b>${nm}</b>`+L.map(i=>{const ok=avUnlocked(i),on=eq[s]===i.id,c=AV_COL[i.s];
+    return`<div style="display:flex;gap:10px;align-items:center;margin:6px 0;opacity:${ok?1:.5}"><span style="width:12px;height:12px;border-radius:50%;background:${c};flex:none"></span><div style="flex:1"><div>${avName(i)}${on?' <b style="color:#4dff9a">✓ ใส่อยู่</b>':''}</div>${ok?'':`<div class="muted" style="font-size:13px">🔒 ${avReq(i)}</div>`}</div>${ok?`<button data-i="${i.id}" data-s="${s}">${on?'ถอด':'ใส่'}</button>`:''}</div>`}).join('')+'</div>'});
+  h+='</div>';ov.innerHTML=h;
+  $('avClose').onclick=()=>{ov.style.display='none';renderAvatarCard()};
+  ov.querySelectorAll('button[data-k]').forEach(b=>b.onclick=async()=>{eq.k=+b.dataset.k;await avSave(eq);draw()});
+  ov.querySelectorAll('button[data-i]').forEach(b=>b.onclick=async()=>{const s=b.dataset.s;if(eq[s]===b.dataset.i)delete eq[s];else eq[s]=b.dataset.i;await avSave(eq);draw()})};
+ draw()}
+
 let ME=null,TOKEN=null,PROG={},AVG={},SCORES=[];
 $('btnLogin').onclick=login;$('sid').onkeydown=e=>{if(e.key==='Enter')login()};
 async function login(){
@@ -372,7 +473,7 @@ function summary(){let t=0,tot=0;STR.forEach(s=>{tot+=s.steps.length;t+=((PROG[s
 function home(sel){
  if(sel)return self(sel);
  show('vHome');$('hName').textContent=ME.name;$('hSub').textContent=`${ME.cls} · เลขที่ ${ME.no} · รหัส ${ME.id}`;
- renderTrack();renderScores();renderActs()}
+ renderTrack();renderAvatarCard();renderScores();renderActs()}
 function self(sel){
  show('vSelf');$('sSub').textContent=`${ME.name} · ${ME.cls} · เลขที่ ${ME.no}`;
  const[t,tot]=summary();$('lcd').innerHTML=`${t}/${tot}<small>ขั้น</small>`;
@@ -453,14 +554,16 @@ function renderRooms(){
  const td=todayStr();let h='';
  rooms.forEach(c=>{
   const L=ACTIVITIES.map((a,i)=>[a,i]).filter(x=>x[0].type==='lesson'&&x[0].cls===c).sort((x,y)=>x[0].date.localeCompare(y[0].date)||x[1]-y[1]).map(x=>x[0]);
-  const all=ADATA.filter(s=>s.cls===c),S=all.filter(s=>!s.off),offN=all.length-S.length;
+  const all=ADATA.filter(s=>s.cls===c),S=all.filter(s=>!s.off&&!s.special),SP=all.filter(s=>!s.off&&s.special),offN=all.filter(s=>s.off).length;
   const N=L.length+1,cnt=new Array(N).fill(0),pos={};
   S.forEach(s=>{const p=stPos(L,k=>{const q=s.progress[k];return q?q.passed.length:0});pos[s.id]=p;cnt[p+1]++});
   let teach=-1;L.forEach((a,i)=>{if(a.date<=td)teach=i});
   let mode=0;cnt.forEach((x,i)=>{if(x>=cnt[mode])mode=i});
   const lab=a=>{const t=a.title.split(' \u00b7 ');return t[t.length-1]};
-  let f='',d='',n='';
+  let f='',d='',n='',sp='';
+  const posSP={};SP.forEach(s=>{posSP[s.id]=stPos(L,k=>{const q=s.progress[k];return q?q.passed.length:0})});
   for(let k=0;k<N;k++){
+   sp+=`<div class="tkc"><div class="tkd" style="width:60px">${SP.filter(s=>posSP[s.id]+1===k).sort((x,y)=>x.no-y.no).map(s=>`<i data-id="${s.id}" title="${s.name} (เลขที่ ${s.no})" style="cursor:pointer;background:#ffb74d"></i>`).join('')}</div></div>`;
    f+=`<div style="text-align:center;min-height:24px">${k===teach+1?'<span class="tkf">ครูสอนถึงตรงนี้</span>':''}</div>`;
    const ds=S.filter(s=>pos[s.id]+1===k).sort((x,y)=>x.no-y.no).map(s=>`<i data-id="${s.id}" title="${s.name} (เลขที่ ${s.no})" style="cursor:pointer"></i>`).join('');
    d+=`<div class="tkc"><div class="tkd" style="width:60px">${ds}</div></div>`;
@@ -468,7 +571,7 @@ function renderRooms(){
    n+=`<div class="tkn">${k>0?'<div class="ln"></div>':''}<div class="${full?'c ok':'c'}">${k===0?'<span style="font-size:11px">เริ่ม</span>':(full?'✓':k)}</div><div class="lb">${k===0?'':lab(L[k-1])}</div><div class="nn">${cnt[k]} คน</div></div>`;
   }
   const gs=`grid-template-columns:repeat(${N},minmax(84px,1fr))`;
-  h+=`<div style="margin:0 0 16px;padding-bottom:10px;border-bottom:1px solid #2a3652"><div class="row" style="justify-content:space-between;align-items:baseline"><h2 style="margin:0 0 6px;font-size:19px">${c}</h2><div class="muted">${S.length} คน${offN?' · ไม่ร่วม '+offN:''}</div></div><div class="trk"><div class="g" style="${gs}">${f}</div><div class="g" style="${gs}">${d}</div><div class="g" style="${gs}">${n}</div></div></div>`;
+  h+=`<div style="margin:0 0 16px;padding-bottom:10px;border-bottom:1px solid #2a3652"><div class="row" style="justify-content:space-between;align-items:baseline"><h2 style="margin:0 0 6px;font-size:19px">${c}</h2><div class="muted">${S.length} คน${SP.length?' · พิเศษ '+SP.length:''}${offN?' · ไม่ร่วม '+offN:''}</div></div><div class="trk"><div class="g" style="${gs}">${f}</div><div class="g" style="${gs}">${d}</div><div class="g" style="${gs}">${n}</div>${SP.length?`<div class="muted" style="margin:8px 0 2px">กลุ่มพิเศษ ${SP.length} คน (เลนแยก · ตำแหน่งเทียบ step เดียวกัน)</div><div class="g" style="${gs}">${sp}</div>`:''}</div></div>`;
  });
  el.innerHTML=h||'<div class="muted">ยังไม่มีบทเรียน</div>';
  el.querySelectorAll('i[data-id]').forEach(i=>i.onclick=()=>adminOne(i.dataset.id));
@@ -477,7 +580,7 @@ function renderActsAdmin(L){
  const cl=new Set(L.map(x=>x.cls));const A=ACTIVITIES.filter(a=>cl.has(a.cls));const card=$('aActsCard');
  if(!A.length){card.classList.add('hide');return}card.classList.remove('hide');
  let h='<tr><th>ห้อง</th><th>เลขที่</th><th>ชื่อ</th>'+A.map(a=>`<th title="${a.title}">${a.id==='GCX'?'ประตู':a.id==='C'?'ประเมิน C':a.type==='notebook'?'ตรวจสมุด '+a.id.replace('LS_','').replace('_CK',''):a.id.replace('LS_','')}</th>`).join('')+'</tr>';
- L.filter(s=>A.some(a=>a.cls===s.cls)).sort((a,b)=>a.cls.localeCompare(b.cls,'th')||a.no-b.no).forEach(st=>{h+=`<tr${st.off?' style="opacity:.45"':''}><td>${st.cls}</td><td>${st.no}</td><td><a href="#" data-id="${st.id}" style="color:#9ccfff">${st.name}</a>${st.off?' <span class="muted">(ไม่ร่วม)</span>':''}</td>`+A.map(a=>{if(a.cls!==st.cls)return'<td></td>';const p=st.progress[a.id];if(a.type==='notebook')return`<td><input type="checkbox" data-ckid="${st.id}" data-ckk="${a.id}" ${p&&p.passed.length?'checked':''} style="width:20px;height:20px"></td>`;if(!p)return'<td><span class="cell sc0">-</span></td>';const n=p.passed.length,f=n/a.total;return`<td><span class="cell ${f>=1?'sc3':f>=.5?'sc2':'sc1'}" title="${p.failedAt||''}">${n}/${a.total}</span></td>`}).join('')+'</tr>'});
+ L.filter(s=>A.some(a=>a.cls===s.cls)).sort((a,b)=>a.cls.localeCompare(b.cls,'th')||a.no-b.no).forEach(st=>{h+=`<tr${st.off?' style="opacity:.45"':''}><td>${st.cls}</td><td>${st.no}</td><td><a href="#" data-id="${st.id}" style="color:#9ccfff">${st.name}</a>${st.off?' <span class="muted">(ไม่ร่วม)</span>':''}${st.special?' <span class="muted" style="color:#ffb74d">(พิเศษ)</span>':''}</td>`+A.map(a=>{if(a.cls!==st.cls)return'<td></td>';const p=st.progress[a.id];if(a.type==='notebook')return`<td><input type="checkbox" data-ckid="${st.id}" data-ckk="${a.id}" ${p&&p.passed.length?'checked':''} style="width:20px;height:20px"></td>`;if(!p)return'<td><span class="cell sc0">-</span></td>';const n=p.passed.length,f=n/a.total;return`<td><span class="cell ${f>=1?'sc3':f>=.5?'sc2':'sc1'}" title="${p.failedAt||''}">${n}/${a.total}</span></td>`}).join('')+'</tr>'});
  $('aActs').innerHTML=h;$('aActs').querySelectorAll('a[data-id]').forEach(a=>a.onclick=e=>{e.preventDefault();adminOne(a.dataset.id)});
  $('aActs').querySelectorAll('input[data-ckid]').forEach(c=>c.onchange=async()=>{const sid=c.dataset.ckid,k=c.dataset.ckk,on=c.checked;const r=await call({action:'adminMark',token:ATOKEN,id:sid,strand:k,on:on});if(!r.ok){c.checked=!on;alert(r.error||'บันทึกไม่สำเร็จ');return}const stu=ADATA.find(x=>x.id===sid);if(on)stu.progress[k]={passed:['CK'],failedAt:'',updated:''};else delete stu.progress[k]});
  renderPrev();renderSlides();renderStepSlides();renderBasicAdmin(L)}

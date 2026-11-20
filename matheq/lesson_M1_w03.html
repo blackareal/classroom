@@ -370,7 +370,7 @@ let TOKEN=null,ME=null,VIEW=null;
 try{if(TEACHER){VIEW=JSON.parse(sessionStorage.getItem("matheq_admin_view")||"null");if(VIEW){ME=VIEW.student;TOKEN='teacher'}}else{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token;ME=s&&s.student}}catch(e){}
 if(!TOKEN||!ME){location.replace("MathEQ.html")}
 const $=id=>document.getElementById(id);
-const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
+const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2,special:true},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
 let MEM={};
 function demoDB(){try{return JSON.parse(localStorage.getItem('idpDemo')||'{}')}catch(e){return MEM}}
 function demoSave(d){MEM=d;try{localStorage.setItem('idpDemo',JSON.stringify(d))}catch(e){}}
@@ -392,7 +392,7 @@ async function api(body){
  if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.token),scores:demoScoresOf(body.token)}}
  if(body.action==='save'){d[body.token]=d[body.token]||{};{const o=d[body.token][body.strand],m=o?o.passed.slice():[];body.passed.forEach(x=>{if(m.indexOf(x)<0)m.push(x)});let fl=(body.failedAt?String(body.failedAt).split(','):[]).filter(x=>m.indexOf(x)<0);if(!fl.length&&o&&o.failedAt&&body.failedAt&&body.strand!=='GCX')fl=String(o.failedAt).split(',').filter(x=>m.indexOf(x)<0);d[body.token][body.strand]={passed:m,failedAt:fl.join(','),updated:new Date().toISOString()}}demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
  if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
- if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,progress:d[id]||{},scores:demoScoresMap(id)}))};
+ if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,special:!!DEMO_ROSTER[id].special,progress:d[id]||{},scores:demoScoresMap(id)}))};
  if(body.action==='adminMark'){d[body.id]=d[body.id]||{};if(body.on)d[body.id][body.strand]={passed:['CK'],failedAt:'',updated:new Date().toISOString()};else delete d[body.id][body.strand];demoSave(d);return{ok:true}}
  if(body.action==='adminSetScores'){const D=demoSc();body.rows.forEach(r=>{const ok=!(r.score===''||r.score==null)&&isFinite(+r.score);D[r.id]=D[r.id]||{};if(ok)D[r.id][body.key]={title:body.title,score:Math.max(0,Math.min(+r.score,+body.max)),max:+body.max,note:r.note||''};else delete D[r.id][body.key]});demoScSave(D);return{ok:true}}
  if(body.action==='adminDelScoreSet'){const D=demoSc();for(const id in D)delete D[id][body.key];demoScSave(D);return{ok:true}}
