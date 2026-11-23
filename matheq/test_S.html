@@ -344,7 +344,7 @@ html[data-theme=dark] .tcard a{color:#7db7ff}
 const SID="S";
 let API_URL="";try{API_URL=sessionStorage.getItem("matheq_api")||""}catch(e){}
 const DEMO=!API_URL;
-let TOKEN=null;try{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token}catch(e){}
+let TOKEN=null;try{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token;if(s&&s.student&&s.student.ai){location.replace("MathEQ.html")}}catch(e){}
 if(!TOKEN){location.replace("MathEQ.html")}
 // ===== คลังข้อสอบสาย N (สร้างข้อจากเลขสุ่ม) =====
 const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));

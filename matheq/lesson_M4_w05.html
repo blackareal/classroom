@@ -366,9 +366,9 @@ const DEMO=!API_URL;
 const TEACHER=new URLSearchParams(location.search).get('teacher')==='1';
 let TOKEN=null,ME=null,VIEW=null;
 try{if(TEACHER){VIEW=JSON.parse(sessionStorage.getItem("matheq_admin_view")||"null");if(VIEW){ME=VIEW.student;TOKEN='teacher'}}else{const s=JSON.parse(sessionStorage.getItem("matheq_sess")||"null");TOKEN=s&&s.token;ME=s&&s.student}}catch(e){}
-if(!TOKEN||!ME){location.replace("MathEQ.html")}
+if(!TOKEN||!ME||(ME.ai&&!(typeof TEACHER!=="undefined"&&TEACHER))){location.replace("MathEQ.html")}
 const $=id=>document.getElementById(id);
-const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2,special:true},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
+const DEMO_ROSTER={"12345":{name:"ด.ช.ตัวอย่าง ทดลอง",cls:"ม.2/1",no:1},"12346":{name:"ด.ญ.ตัวอย่าง สอง",cls:"ม.2/1",no:2,special:true},"12399":{name:"ด.ช.ตัวอย่าง เอไอ",cls:"ม.4/1",no:9,ai:true},"12347":{name:"ด.ช.ตัวอย่าง สาม",cls:"ม.1/1",no:1},"12348":{name:"ด.ช.ตัวอย่าง ห้า",cls:"ม.5/1",no:1}};
 let MEM={};
 function demoDB(){try{return JSON.parse(localStorage.getItem('idpDemo')||'{}')}catch(e){return MEM}}
 function demoSave(d){MEM=d;try{localStorage.setItem('idpDemo',JSON.stringify(d))}catch(e){}}
@@ -385,12 +385,12 @@ function demoScoresOf(id){const m=demoScoresMap(id);return Object.keys(m).map(k=
 async function api(body){
  if(!DEMO){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return await r.json()}
  const d=demoDB();
- if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347 / 12348)'};
-  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no},progress:d[body.id]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.id),scores:demoScoresOf(body.id)}}
- if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no},progress:d[body.token]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.token),scores:demoScoresOf(body.token)}}
- if(body.action==='save'){d[body.token]=d[body.token]||{};{const o=d[body.token][body.strand],m=o?o.passed.slice():[];body.passed.forEach(x=>{if(m.indexOf(x)<0)m.push(x)});let fl=(body.failedAt?String(body.failedAt).split(','):[]).filter(x=>m.indexOf(x)<0);if(!fl.length&&o&&o.failedAt&&body.failedAt&&body.strand!=='GCX')fl=String(o.failedAt).split(',').filter(x=>m.indexOf(x)<0);d[body.token][body.strand]={passed:m,failedAt:fl.join(','),updated:new Date().toISOString()}}demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
+ if(body.action==='login'){const s=DEMO_ROSTER[body.id];if(!s)return{ok:false,error:'ไม่พบรหัสนักเรียนนี้ (โหมดทดลองใช้ 12345 / 12346 / 12347 / 12348 / 12399)'};
+  return{ok:true,token:body.id,student:{id:body.id,name:s.name,cls:s.cls,no:s.no,ai:!!s.ai},progress:d[body.id]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.id),scores:demoScoresOf(body.id)}}
+ if(body.action==='me'){if(!DEMO_ROSTER[body.token])return{ok:false,error:'เซสชันหมดอายุ'};const s=DEMO_ROSTER[body.token];return{ok:true,student:{id:body.token,name:s.name,cls:s.cls,no:s.no,ai:!!s.ai},progress:d[body.token]||{},classAvg:demoAvg(s.cls),classPos:demoPos(s.cls,body.token),scores:demoScoresOf(body.token)}}
+ if(body.action==='save'){if((DEMO_ROSTER[body.token]||{}).ai)return{ok:false,error:'ตรวจพบการใช้ AI โปรดติดต่อครูผู้สอน'};d[body.token]=d[body.token]||{};{const o=d[body.token][body.strand],m=o?o.passed.slice():[];body.passed.forEach(x=>{if(m.indexOf(x)<0)m.push(x)});let fl=(body.failedAt?String(body.failedAt).split(','):[]).filter(x=>m.indexOf(x)<0);if(!fl.length&&o&&o.failedAt&&body.failedAt&&body.strand!=='GCX')fl=String(o.failedAt).split(',').filter(x=>m.indexOf(x)<0);d[body.token][body.strand]={passed:m,failedAt:fl.join(','),updated:new Date().toISOString()}}demoSave(d);return{ok:true,progress:d[body.token],classAvg:demoAvg(DEMO_ROSTER[body.token].cls)}}
  if(body.action==='adminLogin')return body.password==='demo'?{ok:true,token:'demo'}:{ok:false,error:'รหัสผ่านครูไม่ถูกต้อง (โหมดทดลอง: demo)'};
- if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,special:!!DEMO_ROSTER[id].special,progress:d[id]||{},scores:demoScoresMap(id)}))};
+ if(body.action==='adminData')return{ok:true,students:Object.keys(DEMO_ROSTER).map(id=>({id,name:DEMO_ROSTER[id].name,cls:DEMO_ROSTER[id].cls,no:DEMO_ROSTER[id].no,special:!!DEMO_ROSTER[id].special,ai:!!DEMO_ROSTER[id].ai,progress:d[id]||{},scores:demoScoresMap(id)}))};
  if(body.action==='adminMark'){d[body.id]=d[body.id]||{};if(body.on)d[body.id][body.strand]={passed:['CK'],failedAt:'',updated:new Date().toISOString()};else delete d[body.id][body.strand];demoSave(d);return{ok:true}}
  if(body.action==='adminSetScores'){const D=demoSc();body.rows.forEach(r=>{const ok=!(r.score===''||r.score==null)&&isFinite(+r.score);D[r.id]=D[r.id]||{};if(ok)D[r.id][body.key]={title:body.title,score:Math.max(0,Math.min(+r.score,+body.max)),max:+body.max,note:r.note||''};else delete D[r.id][body.key]});demoScSave(D);return{ok:true}}
  if(body.action==='adminDelScoreSet'){const D=demoSc();for(const id in D)delete D[id][body.key];demoScSave(D);return{ok:true}}
@@ -401,7 +401,12 @@ async function call(body,errEl){try{const r=await api(body);if(!r.ok&&errEl)errE
 
 function hashStr(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return(h^=h>>>16)>>>0}}
 function rngFor(key){const seed=hashStr(key)();let a=seed;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-function mk(i){const r=rngFor(ME.id+'|'+LESSON+'|'+i);return{R:(a,b)=>a+Math.floor(r()*(b-a+1)),pick:arr=>arr[Math.floor(r()*arr.length)]}}
+/* กันโจทย์ที่ตัวเลขซ้ำกับตัวอย่าง: ถ้าซ้ำ จะสุ่มใหม่ด้วยเมล็ดอื่น (SALT=0 = ชุดเดิม) */
+let SALT=0;
+const NUMS=t=>(String(t).replace(/<[^>]*>/g,' ').replace(/\(ตอบ[^)]*\)/g,' ').replace(/ตัวอย่างที่\s*\d+/g,' ').replace(/&[a-z]+;/g,' ').replace(/−/g,'-').match(/-?\d+(?:\.\d+)?/g)||[]);
+function clashEx(q){const a=NUMS(q).join(',');if(!a)return false;return EXS.some(e=>{const b=NUMS(e[0]).join(',');if(!b)return false;const n=b.split(',').length;return a===b||(n>=2&&(','+a+',').indexOf(','+b+',')>=0)})}
+function gen(f,i){let o;for(let t=0;t<40;t++){SALT=t*7919;try{o=f(i)}finally{SALT=0}if(!clashEx(o.q))return o}return o}
+function mk(i){const r=rngFor(ME.id+'|'+LESSON+'|'+(SALT?i+'~'+SALT:i));return{R:(a,b)=>a+Math.floor(r()*(b-a+1)),pick:arr=>arr[Math.floor(r()*arr.length)]}}
 const numIn=s=>{s=String(s).trim().replace(/−|–/g,'-').replace(/,/g,'').replace(/[๐-๙]/g,c=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(c)).replace(/\s+/g,'');if(!s)return NaN;return /^-?\d+(\.\d+)?$/.test(s)?+s:NaN};
 const fct=n=>{let p=1;for(let k=2;k<=n;k++)p*=k;return p};
 const dn=(n,r)=>{const t=[];for(let k=0;k<r;k++)t.push(n-k);return t};            // n, n-1, ..., n-r+1
@@ -421,7 +426,7 @@ const NB=[
 const EXS=[["ตัวอย่างที่ 1 นักเรียน 6 คน นั่งล้อมโต๊ะกลมตัวเดียว ได้กี่แบบ",[["จำนวนวิธี","(6 − 1)!"],["","5!"],["","120 แบบ"]]],["ตัวอย่างที่ 2 นักเรียน 6 คน นั่งล้อมโต๊ะกลม โดยที่ ก. กับ ข. ต้องนั่งติดกัน ได้กี่แบบ",[["มัด ก. ข. เป็น 1 กลุ่ม","เหลือ 5 สิ่ง"],["เรียงวงกลม 5 สิ่ง","(5 − 1)! = 24 วิธี"],["สลับ ก. ข. ในกลุ่ม","2! = 2 วิธี"],["รวม","24 × 2"],["","48 แบบ"]]],["ตัวอย่างที่ 3 นักเรียน 6 คน นั่งล้อมโต๊ะกลม โดยที่ ก. กับ ข. ต้องไม่นั่งติดกัน ได้กี่แบบ",[["ทั้งหมด","(6 − 1)! = 120 แบบ"],["ติดกัน (ตัวอย่างที่ 2)","48 แบบ"],["ไม่ติดกัน","120 − 48"],["","72 แบบ"]]]];
 
 $('exs').innerHTML=EXS.map(e=>`<p style="margin:10px 0 0"><b>${mxFr(e[0])}</b></p>${mxEq(e[1])}`).join('');
-function renderNB(){$('nbList').innerHTML=NB.map((f,i)=>{const o=f(i);return `<div class="nbq"><b>ข้อ ${i+1}.</b> ${mxFr(o.q)}${(TEACHER||CKED)?`<div class="sol on"><b>เฉลยและวิธีทำ:</b> ${mxFr(o.sol)}</div>`:''}</div>`}).join('')}
+function renderNB(){$('nbList').innerHTML=NB.map((f,i)=>{const o=gen(f,i);return `<div class="nbq"><b>ข้อ ${i+1}.</b> ${mxFr(o.q)}${(TEACHER||CKED)?`<div class="sol on"><b>เฉลยและวิธีทำ:</b> ${mxFr(o.sol)}</div>`:''}</div>`}).join('')}
 function unlockNB(){if(!$('nb').classList.contains('hide'))return;renderNB();$('nb').classList.remove('hide');$('who3').textContent=ME.name;$('no3').textContent=ME.no}
 let CKED=false;
 function ckUI(on){CKED=!!on;const b=$('ckBadge');if(!b)return;b.className=on?'':'muted';b.style.cssText=on?'background:#e4f6ea;border:1px solid #2e9b55;border-radius:10px;padding:6px 12px;font-weight:700;color:#1b6b3a':'';b.textContent=on?'✓ ครูตรวจสมุดแล้ว':'รอครูตรวจสมุด'}
@@ -431,7 +436,7 @@ $('btnPrint').onclick=()=>window.print();
 const DONE=new Set();
 function render(){
  const el=$('ex');el.innerHTML='';
- EX.forEach((f,i)=>{const p=f(i);const d=document.createElement('div');d.className='exq'+(DONE.has('Q'+(i+1))?' done':'');d.id='q'+i;
+ EX.forEach((f,i)=>{const p=gen(f,i);const d=document.createElement('div');d.className='exq'+(DONE.has('Q'+(i+1))?' done':'');d.id='q'+i;
   d.innerHTML=`<div><b>ข้อ ${i+1}.</b> ${mxFr(p.q)}</div><div class="row" style="margin-top:8px"><input type="text" id="a${i}" autocomplete="off" inputmode="numeric" placeholder="คำตอบ"><button id="b${i}">ตรวจ</button><span id="r${i}"></span></div><div class="hint muted" id="h${i}"></div><div class="sol" id="s${i}">${mxFr(p.sol)}</div>`;
   el.appendChild(d);
   if(DONE.has('Q'+(i+1))){$('r'+i).textContent='✓ ทำถูกแล้ว';$('s'+i).classList.add('on')}
