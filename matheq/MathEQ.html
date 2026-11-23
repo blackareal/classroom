@@ -518,7 +518,8 @@ async function loadAdmin(){const r=await call({action:'adminData',token:ATOKEN},
  const cls=[...new Set(ADATA.map(s=>s.cls))].sort(),cur=$('aCls').value;$('aCls').innerHTML='<option value="*">ทุกห้อง</option>'+cls.map(c=>`<option>${c}</option>`).join('');if(cur&&[...$('aCls').options].some(o=>o.value===cur))$('aCls').value=cur;drawTabs(cls);
  show('vAdmin');renderAdmin()}
 const TABLB=c=>c==='*'?'ทุกห้อง':(c==='ม.2/1'?c:c.replace(/\/1$/,''));
-function drawTabs(cls){$('aTabs').innerHTML=['*',...cls].map(c=>`<button data-c="${c}" class="${$('aCls').value===c?'on':''}">${TABLB(c)}</button>`).join('');
+const NOTAB=c=>/^ม\.2\/2$|^ม\.3\//.test(c);
+function drawTabs(cls){$('aTabs').innerHTML=['*',...cls.filter(c=>!NOTAB(c))].map(c=>`<button data-c="${c}" class="${$('aCls').value===c?'on':''}">${TABLB(c)}</button>`).join('');
  $('aTabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{$('aCls').value=b.dataset.c;$('aCls').onchange()})}
 const selCls=()=>$('aCls').value;
 function renderOneAv(st){
