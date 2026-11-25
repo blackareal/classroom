@@ -52,7 +52,7 @@ function mxParenFr(s){
    if(ls>0&&/[\w฀-๿²³′]/.test(s.charAt(ls-1)))continue;
    if(s.charAt(r)==='('){d=0;for(k=r;k<s.length;k++){c=s.charAt(k);if(c==='(')d++;else if(c===')'){d--;if(d===0){re=k;break}}}
     if(re<0)continue;denTxt=s.slice(r+1,re);re=re+1}
-   else{var m=s.slice(r).match(/^\d+(?:\.\d+)?/);if(!m)continue;denTxt=m[0];re=r+m[0].length;if(/^[\/²³]/.test(s.charAt(re)))continue}
+   else{var m=s.slice(r).match(/^(?:\d+(?:\.\d+)?|[A-Za-z](?![A-Za-z0-9\u00b2\u00b3(!]))/);if(!m)continue;denTxt=m[0];re=r+m[0].length;if(/^[\/²³]/.test(s.charAt(re)))continue}
    numTxt=s.slice(ls+1,l);
    var out='<span class="fr"><i>'+numTxt+'</i><i>'+denTxt+'</i></span>';
    s=s.slice(0,ls)+out+s.slice(re);done=false;break}
@@ -203,7 +203,7 @@ function mxFix(root){
  /* เศษส่วนบน-ล่าง ในข้อความทุกที่ (ยกเว้น svg/script/style/ช่องกรอก) */
  var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),nodes=[],n;
  while((n=w.nextNode())){
-  if(!/\d\/\d|\u221a/.test(n.nodeValue))continue;
+  if(!/\d\/\d|\u221a|\)\/|\/\(/.test(n.nodeValue))continue;
   var pe=n.parentNode;
   if(!pe||(pe.closest&&pe.closest('svg,script,style,textarea,.fr,.nomfx,#saveSt,#rDesc,#rTitle,#gProg,#stepName,#rSub')))continue;
   nodes.push(n);
